@@ -1,0 +1,5 @@
+# Project exclude paths
+/Core/target/
+/Islands/target/
+/Login/target/
+/target/

@@ -1,0 +1,6 @@
+name: DG-Login
+version: 1.0
+main: pl.subtelny.login.Login
+depend:
+- Vault
+- DG-Core

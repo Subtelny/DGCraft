@@ -1,0 +1,6 @@
+name: DG-Islands
+version: 1.0
+author: Subtelny
+main: pl.subtelny.islands.Islands
+depend:
+  - DG-Core

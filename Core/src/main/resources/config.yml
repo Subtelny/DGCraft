@@ -1,0 +1,9 @@
+database:
+  driver: 'org.postgresql.Driver'
+  type: 'postgresql'
+  host: localhost
+  port: 5432
+  base: dgcraft
+  options: '?serverTimezone=UTC&autoReconnect=true&useSSL=false'
+  user: root
+  password: root
