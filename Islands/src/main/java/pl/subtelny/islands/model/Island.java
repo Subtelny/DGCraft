@@ -3,21 +3,22 @@ package pl.subtelny.islands.model;
 import com.google.common.collect.Sets;
 import java.time.LocalDate;
 import java.util.Set;
+import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.utils.cuboid.Cuboid;
 
 public abstract class Island {
-
-	private final IslandId islandId;
 
 	protected IslandMember owner;
 
 	protected Set<IslandMember> members = Sets.newHashSet();
 
-	private final Cuboid cuboid;
+	protected Cuboid cuboid;
 
 	private final LocalDate createdDate;
 
-	protected Island(IslandId islandId, Cuboid cuboid, LocalDate createdDate) {
+	private final IslandId islandId;
+
+	public Island(IslandId islandId, Cuboid cuboid, LocalDate createdDate) {
 		this.islandId = islandId;
 		this.cuboid = cuboid;
 		this.createdDate = createdDate;
@@ -43,10 +44,12 @@ public abstract class Island {
 		return cuboid;
 	}
 
-	abstract void changeOwner(IslandMember owner);
+	public abstract void changeOwner(IslandMember owner);
 
-	abstract void addMember(IslandMember member);
+	public abstract void addMember(IslandMember member);
 
-	abstract void removeMember(IslandMember member);
+	public abstract void removeMember(IslandMember member);
+
+	public abstract IslandType getIslandType();
 
 }

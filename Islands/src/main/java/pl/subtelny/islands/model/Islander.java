@@ -3,6 +3,7 @@ package pl.subtelny.islands.model;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import pl.subtelny.core.model.Account;
+import pl.subtelny.islands.model.guild.Guild;
 import pl.subtelny.validation.ValidationException;
 
 public class Islander implements IslandMember {
@@ -11,16 +12,22 @@ public class Islander implements IslandMember {
 
 	private Island island;
 
+	private Guild guild;
+
 	public Islander(Account account) {
 		this.account = account;
 	}
 
-	public Optional<Island> getIsland() {
-		return Optional.ofNullable(island);
-	}
-
 	public Account getAccount() {
 		return account;
+	}
+
+	public void setGuild(@Nullable Guild guild) {
+
+	}
+
+	public Optional<Guild> getGuild() {
+		return Optional.ofNullable(guild);
 	}
 
 	public void setIsland(@Nullable Island island) {
@@ -33,5 +40,9 @@ public class Islander implements IslandMember {
 		} else {
 			throw new ValidationException(String.format("This islander is not added to island %s", island.getIslandId()));
 		}
+	}
+
+	public Optional<Island> getIsland() {
+		return Optional.ofNullable(island);
 	}
 }
