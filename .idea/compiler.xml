@@ -9,6 +9,7 @@
         <module name="Login" />
         <module name="Core" />
         <module name="Islands" />
+        <module name="Abstract" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

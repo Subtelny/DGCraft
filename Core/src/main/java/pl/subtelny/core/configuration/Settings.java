@@ -8,21 +8,21 @@ import java.io.File;
 
 public class Settings {
 
-    public static String DB_DRIVER;
+    public static String DB_DRIVER = "org.postgresql.Driver";
 
-    public static String DB_TYPE;
+    public static String DB_TYPE = "postgresql";
 
-    public static String DB_HOST;
+    public static String DB_HOST = "localhost";
 
-    public static String DB_PORT;
+    public static String DB_PORT = "5432";
 
-    public static String DB_BASE;
+    public static String DB_BASE = "dgcraft";
 
-    public static String DB_OPTIONS;
+    public static String DB_OPTIONS = "?serverTimezone=UTC&autoReconnect=true&useSSL=false";
 
-    public static String DB_USER;
+    public static String DB_USER = "postgres";
 
-    public static String DB_PASSWORD;
+    public static String DB_PASSWORD = "admin";
 
     private final File file;
 

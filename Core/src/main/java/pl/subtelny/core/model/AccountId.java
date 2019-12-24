@@ -6,6 +6,10 @@ import java.util.UUID;
 
 public class AccountId extends BasicIdentity<UUID> {
 
+    public AccountId() {
+        super(id);
+    }
+
     public AccountId(UUID id) {
         super(id);
     }

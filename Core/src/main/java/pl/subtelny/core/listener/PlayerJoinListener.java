@@ -6,22 +6,20 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
-import pl.subtelny.core.service.AccountService;
 
 @Component
 public class PlayerJoinListener implements Listener {
 
-    private final AccountService userService;
+    //private final AccountService userService;
 
     @Autowired
-    public PlayerJoinListener(AccountService userService) {
-        this.userService = userService;
+    public PlayerJoinListener() {
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        userService.createUserIfNotExists(player);
+        //userService.createUserIfNotExists(player);
     }
 
 }
