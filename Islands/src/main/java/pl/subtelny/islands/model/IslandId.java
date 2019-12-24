@@ -2,14 +2,17 @@ package pl.subtelny.islands.model;
 
 import pl.subtelny.identity.BasicIdentity;
 
-public class IslandId extends BasicIdentity<Integer> {
+public class IslandId extends BasicIdentity<Long> {
 
-    public IslandId(Integer id) {
-        super(id);
-    }
+	public IslandId() {
+	}
 
-    public static IslandId of(Integer id) {
-        return new IslandId(id);
-    }
+	public IslandId(Long id) {
+		super(id);
+	}
+
+	public static IslandId of(Long id) {
+		return new IslandId(id);
+	}
 
 }

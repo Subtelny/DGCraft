@@ -7,38 +7,46 @@ import java.io.Serializable;
 
 public class BasicIdentity<T> implements Serializable {
 
-    private final T id;
+	private T id;
 
-    public BasicIdentity(T id) {
-        this.id = id;
-    }
+	public BasicIdentity() {
+	}
 
-    public T getId() {
-        return id;
-    }
+	public BasicIdentity(T id) {
+		this.id = id;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null) {
-            return false;
-        }
-        if (!(o instanceof BasicIdentity)) {
-            return false;
-        }
+	public T getId() {
+		return id;
+	}
 
-        BasicIdentity obj = (BasicIdentity) o;
-        return new EqualsBuilder()
-                .append(id, obj.id)
-                .isEquals();
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null) {
+			return false;
+		}
+		if (!(o instanceof BasicIdentity)) {
+			return false;
+		}
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .toHashCode();
-    }
+		BasicIdentity obj = (BasicIdentity) o;
+		return new EqualsBuilder()
+				.append(id, obj.id)
+				.isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 37)
+				.append(id)
+				.toHashCode();
+	}
+
+	@Override
+	public String toString() {
+		return id.toString();
+	}
 }

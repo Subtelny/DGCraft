@@ -1,18 +1,67 @@
 package pl.subtelny;
 
-import pl.subtelny.beans.BeanContext;
-import pl.subtelny.beans.BeanLoader;
-import pl.subtelny.core.model.Account;
-import pl.subtelny.core.model.AccountId;
-import pl.subtelny.core.repository.AnemiaAccountDaoStorage;
-import pl.subtelny.repository.Storage;
-
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import java.util.concurrent.ExecutionException;
 
 public class Test {
 
+	@org.junit.Test
+	public void test() throws ExecutionException {
+		LoadingCache<Long, Car> cache = CacheBuilder.newBuilder().build(new CacheLoader<Long, Car>() {
+
+			boolean smt = false;
+
+			@Override
+			public Car load(Long aLong) {
+				Car car = new Car();
+				car.setName("AUDI");
+				if (smt) {
+					car.setName("BMW");
+				}
+				smt = true;
+				return car;
+			}
+		});
+
+		Garage garage = new Garage();
+		garage.setCar(cache.get(1L));
+
+		System.out.println(garage.getCar().getName() + " - name of car");
+
+		cache.invalidate(1L);
+
+		System.out.println(garage.getCar().getName() + " - name of car #2");
+
+		Car car2 = cache.get(1L);
+		System.out.println(car2.getName() + " car2");
+	}
+
+	private class Car {
+
+		private String name;
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+	}
+
+	private class Garage {
+
+		private Car car;
+
+		public Car getCar() {
+			return car;
+		}
+
+		public void setCar(Car car) {
+			this.car = car;
+		}
+	}
 
 }

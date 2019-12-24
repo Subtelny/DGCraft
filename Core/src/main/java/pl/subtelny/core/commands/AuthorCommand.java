@@ -1,10 +1,8 @@
 package pl.subtelny.core.commands;
 
 import org.bukkit.command.CommandSender;
-import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.command.HeadCommand;
 import pl.subtelny.command.BukkitCommandAdapter;
-import pl.subtelny.core.repository.AnemiaAccountDaoStorage;
 import pl.subtelny.utils.MessageUtil;
 
 @HeadCommand(
@@ -15,13 +13,6 @@ import pl.subtelny.utils.MessageUtil;
         }
 )
 public class AuthorCommand extends BukkitCommandAdapter {
-
-    private final AnemiaAccountDaoStorage userRepository;
-
-    @Autowired
-    public AuthorCommand(AnemiaAccountDaoStorage userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public void handleCommand(CommandSender sender, String[] args) {

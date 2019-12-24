@@ -7,7 +7,9 @@ import java.time.LocalDate;
 
 public class Account extends BasicIdentity<AccountId> {
 
-    private String nickname;
+    private String name;
+
+    private String displayName;
 
     private LocalDate lastOnline;
 
@@ -15,18 +17,28 @@ public class Account extends BasicIdentity<AccountId> {
         super(id);
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getName() {
+        return name;
     }
 
     public LocalDate getLastOnline() {
         return lastOnline;
     }
 
-    public void setNickname(String nickname) {
-        Validate.notNull(nickname, "Nickname cannot be null");
-        Validate.isTrue(nickname.length() > 0, "Nickname length is zero");
-        this.nickname = nickname;
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		Validate.notNull(name, "DisplayName cannot be null");
+		Validate.isTrue(name.length() > 0, "DisplayName length is zero");
+		this.displayName = displayName;
+	}
+
+	public void setName(String name) {
+        Validate.notNull(name, "Name cannot be null");
+        Validate.isTrue(name.length() > 0, "Name length is zero");
+        this.name = name;
     }
 
     public void setLastOnline(LocalDate lastOnline) {

@@ -5,7 +5,7 @@ import pl.subtelny.identity.BasicIdentity;
 public class LoginHistoryId extends BasicIdentity<Integer> {
 
     public LoginHistoryId() {
-        super(id);
+        super();
     }
 
     public LoginHistoryId(Integer id) {
