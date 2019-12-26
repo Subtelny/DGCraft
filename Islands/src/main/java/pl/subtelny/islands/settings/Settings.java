@@ -4,15 +4,18 @@ import org.bukkit.World;
 
 public class Settings {
 
-	public static World ISLAND_WORLD;
+	public static class SkyblockIsland {
 
-	public static int SPACE_BETWEEN_ISLANDS;
+		public static World ISLAND_WORLD;
 
-	public static int ISLAND_SIZE;
+		public static int SPACE_BETWEEN_ISLANDS;
 
-	public static int EXTEND_LEVELS;
+		public static int ISLAND_SIZE;
 
-	public static int EXTEND_SIZE_PER_LEVEL;
+		public static int EXTEND_LEVELS;
 
+		public static int EXTEND_SIZE_PER_LEVEL;
+
+	}
 
 }

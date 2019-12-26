@@ -45,4 +45,5 @@ public class Account extends BasicIdentity<AccountId> {
         Validate.notNull(lastOnline, "LocalDate cannot be null");
         this.lastOnline = lastOnline;
     }
+
 }

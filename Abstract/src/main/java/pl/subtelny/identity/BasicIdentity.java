@@ -25,16 +25,15 @@ public class BasicIdentity<T> implements Serializable {
 		if (this == o) {
 			return true;
 		}
-		if (o == null) {
-			return false;
-		}
-		if (!(o instanceof BasicIdentity)) {
+
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 
-		BasicIdentity obj = (BasicIdentity) o;
+		BasicIdentity<?> that = (BasicIdentity<?>) o;
+
 		return new EqualsBuilder()
-				.append(id, obj.id)
+				.append(id, that.id)
 				.isEquals();
 	}
 

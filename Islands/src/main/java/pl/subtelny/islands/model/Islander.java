@@ -2,6 +2,8 @@ package pl.subtelny.islands.model;
 
 import java.util.Optional;
 import javax.annotation.Nullable;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import pl.subtelny.core.model.Account;
 import pl.subtelny.islands.model.guild.Guild;
 import pl.subtelny.validation.ValidationException;
@@ -23,7 +25,23 @@ public class Islander implements IslandMember {
 	}
 
 	public void setGuild(@Nullable Guild guild) {
+		if (guild == null) {
+			removeGuild();
+		} else {
+			if (!guild.isInGuild(this)) {
+				throw new ValidationException("This islander is not added to guild");
+			}
+			this.guild = guild;
+		}
+	}
 
+	private void removeGuild() {
+		if (guild != null) {
+			if (guild.isInGuild(this)) {
+				throw new ValidationException("Cannot remove Islander's guild. Firstly remove Islander from guild");
+			}
+			guild = null;
+		}
 	}
 
 	public Optional<Guild> getGuild() {
@@ -32,17 +50,49 @@ public class Islander implements IslandMember {
 
 	public void setIsland(@Nullable Island island) {
 		if (island == null) {
-			this.island = null;
-			return;
-		}
-		if (island.getMembers().contains(this)) {
-			this.island = island;
+			removeIsland();
 		} else {
-			throw new ValidationException(String.format("This islander is not added to island %s", island.getIslandId()));
+			if (!island.isInIsland(this)) {
+				throw new ValidationException("This islander is not added to island");
+			}
+			this.island = island;
+		}
+	}
+
+	private void removeIsland() {
+		if (island != null) {
+			if (island.isInIsland(this)) {
+				throw new ValidationException("Cannot remove Islander's island. Firstly remove Islander from island");
+			}
+			island = null;
 		}
 	}
 
 	public Optional<Island> getIsland() {
 		return Optional.ofNullable(island);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Islander islander = (Islander) o;
+
+		return new EqualsBuilder()
+				.append(account, islander.account)
+				.isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 37)
+				.append(account)
+				.toHashCode();
 	}
 }
