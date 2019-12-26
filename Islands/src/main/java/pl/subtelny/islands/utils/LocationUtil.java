@@ -28,7 +28,7 @@ public final class LocationUtil {
 			if (location.isPresent()) {
 				return location;
 			}
-			next = AlgorithmsUtil.getNext(blockX, blockZ);
+			next = AlgorithmsUtil.nextCoordsSpirally(blockX, blockZ);
 		}
 		return Optional.empty();
 	}

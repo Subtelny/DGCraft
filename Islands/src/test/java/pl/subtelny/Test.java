@@ -7,7 +7,7 @@ public class Test {
 
 	@org.junit.Test
 	public void test() {
-		Integer[] next = AlgorithmsUtil.getNext(0, 0);
+		Integer[] next = AlgorithmsUtil.nextCoordsSpirally(0, 0);
 
 		int minX = 0;
 		int minY = 0;
@@ -18,7 +18,7 @@ public class Test {
 
 		System.out.println("next " + Arrays.toString(next));
 
-		next = AlgorithmsUtil.getNext(next[0], next[1]);
+		next = AlgorithmsUtil.nextCoordsSpirally(next[0], next[1]);
 		System.out.println("next " + Arrays.toString(next));
 	}
 
@@ -33,7 +33,7 @@ public class Test {
 				break;
 			}
 			System.out.println(String.format("x:%s, y:%s", x,y));
-			next = AlgorithmsUtil.getNext(x,y);
+			next = AlgorithmsUtil.nextCoordsSpirally(x,y);
 		}
 
 	}

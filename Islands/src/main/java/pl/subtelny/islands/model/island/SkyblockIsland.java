@@ -12,8 +12,8 @@ import pl.subtelny.islands.model.IslandMember;
 import pl.subtelny.islands.model.IslandType;
 import pl.subtelny.islands.model.Islander;
 import pl.subtelny.islands.settings.Settings;
-import pl.subtelny.islands.utils.SkyblockIslandUtil;
 import pl.subtelny.islands.utils.LocationUtil;
+import pl.subtelny.islands.utils.SkyblockIslandUtil;
 import pl.subtelny.utils.cuboid.Cuboid;
 import pl.subtelny.validation.ValidationException;
 
@@ -30,28 +30,6 @@ public class SkyblockIsland extends Island {
 	protected SkyblockIsland(IslandId islandId, IslandCoordinates islandCoordinates, Cuboid cuboid, LocalDate createdDate) {
 		super(islandId, cuboid, createdDate);
 		this.islandCoordinates = islandCoordinates;
-	}
-
-	public void extendCuboid(int extendLevel) {
-		if (extendLevel > Settings.SkyblockIsland.EXTEND_LEVELS || extendLevel <= 0) {
-			throw new ValidationException(String.format("Value not match in bound %s-%s", 0, Settings.SkyblockIsland.EXTEND_LEVELS));
-		}
-		int x = islandCoordinates.getX();
-		int z = islandCoordinates.getZ();
-		int defaultSize = Settings.SkyblockIsland.ISLAND_SIZE;
-		int extendSize = Settings.SkyblockIsland.EXTEND_SIZE_PER_LEVEL * extendLevel;
-		int sumSize = defaultSize + extendSize;
-		int space = Settings.SkyblockIsland.SPACE_BETWEEN_ISLANDS;
-		if (extendLevel < Settings.SkyblockIsland.EXTEND_LEVELS) {
-			space = 0;
-		}
-		this.extendLevel = extendLevel;
-		this.cuboid = SkyblockIslandUtil.calculateIslandCuboid(Settings.SkyblockIsland.ISLAND_WORLD, x, z, sumSize, space);
-	}
-
-	@Override
-	public boolean canBuild(Player player) {
-		return isInIsland(player);
 	}
 
 	@Override
@@ -118,6 +96,23 @@ public class SkyblockIsland extends Island {
 		}
 		members.remove(islander);
 		islander.setIsland(null);
+	}
+
+	public void extendCuboid(int extendLevel) {
+		if (extendLevel > Settings.SkyblockIsland.EXTEND_LEVELS || extendLevel <= 0) {
+			throw new ValidationException(String.format("Value not match in bound %s-%s", 0, Settings.SkyblockIsland.EXTEND_LEVELS));
+		}
+		int x = islandCoordinates.getX();
+		int z = islandCoordinates.getZ();
+		int defaultSize = Settings.SkyblockIsland.ISLAND_SIZE;
+		int extendSize = Settings.SkyblockIsland.EXTEND_SIZE_PER_LEVEL * extendLevel;
+		int sumSize = defaultSize + extendSize;
+		int space = Settings.SkyblockIsland.SPACE_BETWEEN_ISLANDS;
+		if (extendLevel < Settings.SkyblockIsland.EXTEND_LEVELS) {
+			space = 0;
+		}
+		this.extendLevel = extendLevel;
+		this.cuboid = SkyblockIslandUtil.calculateIslandCuboid(Settings.SkyblockIsland.ISLAND_WORLD, x, z, sumSize, space);
 	}
 
 	@Override

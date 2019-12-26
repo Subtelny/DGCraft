@@ -4,7 +4,7 @@ import static java.lang.Math.abs;
 
 public class AlgorithmsUtil {
 
-	public static Integer[] getNext(int x, int y) {
+	public static Integer[] nextCoordsSpirally(int x, int y) {
 		if (x == y) {
 			if (x > 0)
 				return new Integer[]{x - 1, y};

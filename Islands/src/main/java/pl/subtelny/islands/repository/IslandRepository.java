@@ -4,7 +4,6 @@ import java.util.Optional;
 import pl.subtelny.beans.Component;
 import pl.subtelny.islands.model.Island;
 import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.model.island.SkyblockIsland;
 
 @Component
 public class IslandRepository {
@@ -16,7 +15,5 @@ public class IslandRepository {
 	public Optional<Island> findIsland(IslandId islandId) {
 		return Optional.empty();
 	}
-
-
 
 }
