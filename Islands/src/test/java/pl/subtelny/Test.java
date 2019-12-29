@@ -1,25 +1,34 @@
 package pl.subtelny;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.Arrays;
+import java.util.Optional;
+import java.util.UUID;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import pl.subtelny.core.model.AccountId;
 import pl.subtelny.islands.utils.AlgorithmsUtil;
 
 public class Test {
 
 	@org.junit.Test
 	public void test() {
-		Integer[] next = AlgorithmsUtil.nextCoordsSpirally(0, 0);
+		Cache<AccountId, Optional<String>> cache = Caffeine.newBuilder().build();
 
-		int minX = 0;
-		int minY = 0;
-		int maxX = 4;
-		int maxY = 4;
+		AccountId accountId = AccountId.of(UUID.randomUUID());
+		Optional<String> s = cache.get(accountId, accountId1 -> {
+			System.out.println("uno");
+			return Optional.empty();
+		});
 
-		bound(minX,maxX,minY,maxY);
+		System.out.println(s);
 
-		System.out.println("next " + Arrays.toString(next));
 
-		next = AlgorithmsUtil.nextCoordsSpirally(next[0], next[1]);
-		System.out.println("next " + Arrays.toString(next));
+		s = cache.get(accountId, accountId1 -> {
+			System.out.println("asd");
+			return Optional.empty();
+		});
+		System.out.println(s);
 	}
 
 	public void bound(int minX, int maxX, int minY, int maxY) {

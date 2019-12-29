@@ -28,7 +28,7 @@ public class SkyblockIsland extends Island {
 
 	private int extendLevel;
 
-	protected SkyblockIsland(IslandId islandId, IslandCoordinates islandCoordinates, Cuboid cuboid, LocalDate createdDate) {
+	public SkyblockIsland(IslandId islandId, IslandCoordinates islandCoordinates, Cuboid cuboid, LocalDate createdDate) {
 		super(islandId, cuboid, createdDate);
 		this.islandCoordinates = islandCoordinates;
 	}

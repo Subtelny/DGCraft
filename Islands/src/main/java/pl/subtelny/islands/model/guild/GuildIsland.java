@@ -51,12 +51,7 @@ public class GuildIsland extends Island {
 		if (!(newOwner instanceof Guild)) {
 			throw new ValidationException("Owner of this island have to be a guild");
 		}
-		Guild newOwnerGuild = (Guild) newOwner;
-		if (newOwnerGuild.getIsland().isPresent()) {
-			throw new ValidationException("Cannot change owners. New owner has own island");
-		}
-		this.owner = newOwnerGuild;
-		newOwnerGuild.setIsland(this);
+		this.owner = (Guild) newOwner;
 	}
 
 	@Override
