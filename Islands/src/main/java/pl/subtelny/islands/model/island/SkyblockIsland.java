@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import pl.subtelny.core.model.AccountId;
 import pl.subtelny.islands.model.Island;
 import pl.subtelny.islands.model.IslandMember;
+import pl.subtelny.islands.model.IslandMemberType;
 import pl.subtelny.islands.model.IslandType;
 import pl.subtelny.islands.model.Islander;
 import pl.subtelny.islands.settings.Settings;
@@ -19,11 +20,11 @@ import pl.subtelny.validation.ValidationException;
 
 public class SkyblockIsland extends Island {
 
+	private final IslandCoordinates islandCoordinates;
+
 	private Islander owner;
 
 	private Set<Islander> members = Sets.newConcurrentHashSet();
-
-	private final IslandCoordinates islandCoordinates;
 
 	private int extendLevel;
 
@@ -58,11 +59,11 @@ public class SkyblockIsland extends Island {
 
 	@Override
 	public void changeOwner(IslandMember newOwner) {
-		if (!(newOwner instanceof Islander)) {
+		if (newOwner.getIslandMemberType() != IslandMemberType.ISLANDER) {
 			throw new ValidationException("SkyblockIsland accepts only Islander as owner");
 		}
 		Islander newOwnerIslander = (Islander) newOwner;
-		Optional<Island> newOwnerIsland = newOwnerIslander.getIsland();
+		Optional<SkyblockIsland> newOwnerIsland = newOwnerIslander.getIsland();
 		if (newOwnerIsland.isPresent()) {
 			throw new ValidationException("Cannot change owners. New owner has own island");
 		}
@@ -72,11 +73,11 @@ public class SkyblockIsland extends Island {
 
 	@Override
 	public void addMember(IslandMember member) {
-		if (!(member instanceof Islander)) {
+		if (member.getIslandMemberType() != IslandMemberType.ISLANDER) {
 			throw new ValidationException("SkyblockIsland accepts only Islanders as members");
 		}
 		Islander islander = (Islander) member;
-		Optional<Island> islanderIsland = islander.getIsland();
+		Optional<SkyblockIsland> islanderIsland = islander.getIsland();
 		if (islanderIsland.isPresent()) {
 			throw new ValidationException("IslandMember already has a island");
 		}
@@ -86,11 +87,11 @@ public class SkyblockIsland extends Island {
 
 	@Override
 	public void removeMember(IslandMember member) {
-		if (!(member instanceof Islander)) {
+		if (member.getIslandMemberType() != IslandMemberType.ISLANDER) {
 			throw new ValidationException("SkyblockIsland accepts only Islanders as members");
 		}
 		Islander islander = (Islander) member;
-		Optional<Island> islanderIslandOpt = islander.getIsland();
+		Optional<SkyblockIsland> islanderIslandOpt = islander.getIsland();
 		if (islanderIslandOpt.isEmpty() || !islanderIslandOpt.get().equals(this)) {
 			throw new ValidationException("This Islander is not added to this island");
 		}

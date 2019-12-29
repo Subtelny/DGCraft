@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
 import pl.subtelny.islands.service.IslandService;
@@ -17,6 +18,10 @@ public class PlayerEventListener implements Listener {
 	@Autowired
 	public PlayerEventListener(IslandService islandService) {
 		this.islandService = islandService;
+	}
+
+	public void onPlayerJoin(PlayerJoinEvent e) {
+
 	}
 
 	@EventHandler

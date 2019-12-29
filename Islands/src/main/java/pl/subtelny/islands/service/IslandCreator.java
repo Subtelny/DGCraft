@@ -5,24 +5,20 @@ import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
 import pl.subtelny.islands.model.Island;
 import pl.subtelny.islands.model.island.IslandCoordinates;
-import pl.subtelny.islands.repository.IslandRepository;
-import pl.subtelny.islands.repository.SkyblockIslandStorage;
+import pl.subtelny.islands.repository.SkyblockIslandRepository;
 
 @Component
 public class IslandCreator {
 
-	private final IslandRepository islandRepository;
-
-	private final SkyblockIslandStorage skyblockIslandStorage;
+	private final SkyblockIslandRepository skyblockIslandRepository;
 
 	@Autowired
-	public IslandCreator(IslandRepository islandRepository, SkyblockIslandStorage skyblockIslandStorage) {
-		this.islandRepository = islandRepository;
-		this.skyblockIslandStorage = skyblockIslandStorage;
+	public IslandCreator(SkyblockIslandRepository skyblockIslandRepository) {
+		this.skyblockIslandRepository = skyblockIslandRepository;
 	}
 
 	public Island createIsland(SkyblockIslandCreateRequest request) {
-		Optional<IslandCoordinates> islandCoordinates = skyblockIslandStorage.nextFreeIslandCoordinates();
+
 
 
 		return null;

@@ -33,9 +33,9 @@
         <configuration>
           <jdbc>
             <driver>org.postgresql.Driver</driver>
-            <url>jdbc:postgresql://localhost:5432/dgcraft</url>
+            <url>jdbc:postgresql://localhost:5432/postgres</url>
             <user>postgres</user>
-            <password>admin</password>
+            <password>postgres</password>
           </jdbc>
           <generator>
             <database>
@@ -45,11 +45,11 @@
               <inputSchema>public</inputSchema>
             </database>
             <target>
-              <packageName>pl.subtelny.core.generated</packageName>
+              <packageName>pl.subtelny.islands.generated</packageName>
               <directory>src/main/java</directory>
             </target>
             <generate>
-              <daos>true</daos>
+              <daos>false</daos>
             </generate>
           </generator>
         </configuration>
@@ -75,6 +75,18 @@
       </plugin>
     </plugins>
   </build>
+  <repositories>
+    <repository>
+      <releases />
+      <snapshots />
+      <id>sk89q-snapshots</id>
+      <url>http://maven.sk89q.com/artifactory/repo</url>
+    </repository>
+    <repository>
+      <id>github-asyncworldedit-api</id>
+      <url>https://raw.githubusercontent.com/SBPrime/AsyncWorldEdit/maven-artifact/</url>
+    </repository>
+  </repositories>
   <dependencies>
     <dependency>
       <groupId>com.destroystokyo.paper</groupId>
@@ -83,24 +95,8 @@
       <scope>provided</scope>
       <exclusions>
         <exclusion>
-          <artifactId>commons-lang</artifactId>
-          <groupId>commons-lang</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>json-simple</artifactId>
-          <groupId>com.googlecode.json-simple</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>gson</artifactId>
-          <groupId>com.google.code.gson</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>bungeecord-chat</artifactId>
           <groupId>net.md-5</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>snakeyaml</artifactId>
-          <groupId>org.yaml</groupId>
         </exclusion>
         <exclusion>
           <artifactId>asm</artifactId>

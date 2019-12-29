@@ -8,27 +8,21 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-public class Storage<KEY, VALUE> {
+public abstract class Storage<KEY, VALUE> {
 
     private Cache<KEY, VALUE> cache;
 
-    public Storage() {
-        this.cache = initializeCache();
+    public Storage(Cache<KEY, VALUE> cache) {
+        this.cache = cache;
     }
 
-    private Cache<KEY, VALUE> initializeCache() {
-        return Caffeine.newBuilder()
-                .expireAfterAccess(1, TimeUnit.HOURS)
-                .build();
+    public VALUE getCache(KEY key) {
+        return cache.get(key, mappingFunction());
     }
 
-    public VALUE getCache(KEY key, Function<? super KEY, ? extends VALUE> mappingFunction) {
-        return cache.get(key, mappingFunction);
-    }
-
-    public Map<KEY, VALUE> getCache(List<KEY> keys, Function<Iterable<? extends KEY>, Map<KEY, VALUE>> mappingFunction) {
-        return cache.getAll(keys, mappingFunction);
-    }
+    /*public Map<KEY, VALUE> getCache(List<KEY> keys) {
+        return cache.getAll(keys, mappingFunctionIterable());
+    }*/
 
     public void clear() {
         cache.cleanUp();
@@ -37,5 +31,9 @@ public class Storage<KEY, VALUE> {
     public void invalidate(KEY key) {
         cache.invalidate(key);
     }
+
+    public abstract Function<? super KEY, ? extends VALUE> mappingFunction();
+
+	//public abstract Function<Iterable<? extends KEY>, Map<KEY, VALUE>> mappingFunctionIterable();
 
 }

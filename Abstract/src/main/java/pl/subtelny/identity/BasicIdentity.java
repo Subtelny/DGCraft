@@ -5,7 +5,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
-public class BasicIdentity<T> implements Serializable {
+public abstract class BasicIdentity<T> implements Serializable {
 
 	private T id;
 
@@ -48,4 +48,5 @@ public class BasicIdentity<T> implements Serializable {
 	public String toString() {
 		return id.toString();
 	}
+
 }

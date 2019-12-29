@@ -80,9 +80,9 @@
                 <configuration>
                     <jdbc>
                         <driver>org.postgresql.Driver</driver>
-                        <url>jdbc:postgresql://localhost:5432/dgcraft</url>
+                        <url>jdbc:postgresql://localhost:5432/postgres</url>
                         <user>postgres</user>
-                        <password>admin</password>
+                        <password>postgres</password>
                     </jdbc>
                     <generator>
                         <database>
@@ -92,12 +92,12 @@
                             <inputSchema>public</inputSchema>
                         </database>
                         <target>
-                            <packageName>pl.subtelny.core.generated</packageName>
+                            <packageName>pl.subtelny.islands.generated</packageName>
                             <directory>src/main/java</directory>
                         </target>
 
                         <generate>
-                            <daos>true</daos>
+                            <daos>false</daos>
                         </generate>
                     </generator>
                 </configuration>

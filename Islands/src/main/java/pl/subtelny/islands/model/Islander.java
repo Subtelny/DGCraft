@@ -6,22 +6,19 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import pl.subtelny.core.model.Account;
 import pl.subtelny.islands.model.guild.Guild;
+import pl.subtelny.islands.model.island.SkyblockIsland;
 import pl.subtelny.validation.ValidationException;
 
 public class Islander implements IslandMember {
 
 	private final Account account;
 
-	private Island island;
+	private SkyblockIsland island;
 
 	private Guild guild;
 
 	public Islander(Account account) {
 		this.account = account;
-	}
-
-	public Account getAccount() {
-		return account;
 	}
 
 	public void setGuild(@Nullable Guild guild) {
@@ -44,11 +41,7 @@ public class Islander implements IslandMember {
 		}
 	}
 
-	public Optional<Guild> getGuild() {
-		return Optional.ofNullable(guild);
-	}
-
-	public void setIsland(@Nullable Island island) {
+	public void setIsland(@Nullable SkyblockIsland island) {
 		if (island == null) {
 			removeIsland();
 		} else {
@@ -68,7 +61,15 @@ public class Islander implements IslandMember {
 		}
 	}
 
-	public Optional<Island> getIsland() {
+	public Optional<Guild> getGuild() {
+		return Optional.ofNullable(guild);
+	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public Optional<SkyblockIsland> getIsland() {
 		return Optional.ofNullable(island);
 	}
 
@@ -94,5 +95,10 @@ public class Islander implements IslandMember {
 		return new HashCodeBuilder(17, 37)
 				.append(account)
 				.toHashCode();
+	}
+
+	@Override
+	public IslandMemberType getIslandMemberType() {
+		return IslandMemberType.ISLANDER;
 	}
 }
