@@ -7,76 +7,85 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import org.jooq.Configuration;
-import org.jooq.Record1;
-import org.jooq.impl.DSL;
 import pl.subtelny.beans.Component;
 import pl.subtelny.core.model.AccountId;
 import pl.subtelny.database.DatabaseConfiguration;
-import pl.subtelny.islands.generated.tables.SkyblockIslands;
+import pl.subtelny.islands.model.Island;
+import pl.subtelny.islands.model.IslandType;
+import pl.subtelny.islands.model.Islander;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.model.island.SkyblockIsland;
-import pl.subtelny.islands.repository.loader.island.SkyblockIslandData;
-import pl.subtelny.islands.repository.loader.island.SkyblockIslandLoader;
-import pl.subtelny.islands.utils.SkyblockIslandUtil;
-import pl.subtelny.utils.cuboid.Cuboid;
+import pl.subtelny.islands.repository.loader.island.IslandIdLoader;
+import pl.subtelny.islands.repository.loader.island.IslandIdLoaderRequest;
 
 @Component
 public class SkyblockIslandRepository {
 
-	private Configuration configuration;
+	private final Configuration configuration;
+
+	private final IslandRepository islandRepository;
 
 	private Queue<IslandCoordinates> freeIslands = new ConcurrentLinkedQueue<>();
 
-	private Cache<IslandId, Optional<SkyblockIsland>> islandsCache;
-
 	private Cache<IslandCoordinates, Optional<IslandId>> islandCoordinatesCache;
 
-	private Cache<AccountId, Optional<IslandId>> islanderAccountIdCache;
+	private Cache<AccountId, Optional<IslandId>> islanderCache;
 
-	public SkyblockIslandRepository(DatabaseConfiguration databaseConfiguration) {
-		super(Caffeine.newBuilder().build());
-		this.islandCoordinatesCache = Caffeine.newBuilder().build();
-		this.islanderAccountIdCache = Caffeine.newBuilder().build();
-		this.islandsCache = Caffeine.newBuilder().build();
+	public SkyblockIslandRepository(IslandRepository islandRepository, DatabaseConfiguration databaseConfiguration) {
 		this.configuration = databaseConfiguration.getConfiguration();
+		this.islandRepository = islandRepository;
+		this.islandCoordinatesCache = Caffeine.newBuilder().build();
+		this.islanderCache = Caffeine.newBuilder().build();
 	}
 
-	public Optional<SkyblockIsland> findIsland(IslandId islandId) {
-		Optional<SkyblockIsland> islandOpt = islandsCache.get(islandId, this::findIsland);
-		if (islandOpt.isEmpty()) {
-			return Optional.empty();
-		}
-		return Optional.of(islandOpt.get());
+	public Optional<SkyblockIsland> findIsland(Islander islander) {
+		AccountId accountId = islander.getAccount().getId();
+		Optional<IslandId> islandId = islanderCache.get(accountId, this::findIslandIdByIslander);
+		return findIsland(islandId);
 	}
 
-	private Optional<SkyblockIsland> findIslandByIslandId(IslandId islandId) {
-		SkyblockIslandLoader loader = new SkyblockIslandLoader.Builder(configuration).where(islandId).build();
-		List<SkyblockIslandData> result = loader.perform().getIslandData();
-		if (result.size() == 0) {
+	private Optional<IslandId> findIslandIdByIslander(AccountId islander) {
+		IslandIdLoaderRequest request = IslandIdLoaderRequest.newIslandMemberBuilder()
+				.where(islander)
+				.build();
+		return performIslandIdLoader(request);
+	}
+
+	private Optional<IslandId> performIslandIdLoader(IslandIdLoaderRequest request) {
+		IslandIdLoader loader = new IslandIdLoader(configuration, request);
+		List<IslandId> islandIds = loader.perform().getIslandIds();
+		if (islandIds.size() == 0) {
 			return Optional.empty();
 		}
-		SkyblockIslandData islandData = result.get(0);
-		Cuboid cuboid = SkyblockIslandUtil.defaultCuboid(islandData.getIslandCoordinates());
-		SkyblockIsland island = new SkyblockIsland(islandData.getIslandId(), islandData.getIslandCoordinates(), cuboid, islandData.getCreatedDate());
-		return Optional.of(island);
+		return Optional.of(islandIds.get(0));
+	}
+
+	private Optional<SkyblockIsland> findIsland(Optional<IslandId> islandId) {
+		if (islandId.isEmpty()) {
+			return Optional.empty();
+		}
+		Optional<Island> cacheOpt = islandRepository.getCache(islandId.get());
+		if (cacheOpt.isEmpty()) {
+			return Optional.empty();
+		}
+		Island island = cacheOpt.get();
+		if (island.getIslandType() != IslandType.SKYBLOCK) {
+			return Optional.empty();
+		}
+		return Optional.of((SkyblockIsland) island);
 	}
 
 	public Optional<SkyblockIsland> findIsland(IslandCoordinates islandCoordinates) {
 		Optional<IslandId> islandId = islandCoordinatesCache.get(islandCoordinates, this::findIslandIdByIslandCoordinates);
-		if (islandId.isEmpty()) {
-			return Optional.empty();
-		}
-		return getCache(islandId.get());
+		return findIsland(islandId);
 	}
 
 	private Optional<IslandId> findIslandIdByIslandCoordinates(IslandCoordinates islandCoordinates) {
-		Optional<Record1<Integer>> recordOne = DSL.using(this.configuration)
-				.select(SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID)
-				.where(SkyblockIslands.SKYBLOCK_ISLANDS.X.eq(islandCoordinates.getX())
-						.and(SkyblockIslands.SKYBLOCK_ISLANDS.Z.eq(islandCoordinates.getZ())))
-				.fetchOptional();
-		return recordOne.map(integerRecord1 -> IslandId.of(integerRecord1.component1().longValue()));
+		IslandIdLoaderRequest request = IslandIdLoaderRequest.newSkyblockBuilder()
+				.where(islandCoordinates)
+				.build();
+		return performIslandIdLoader(request);
 	}
 
 	public void saveIsland(SkyblockIsland island) {

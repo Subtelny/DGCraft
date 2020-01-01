@@ -15,6 +15,7 @@ import org.jooq.Sequence;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
+import pl.subtelny.islands.generated.tables.GuildIslands;
 import pl.subtelny.islands.generated.tables.IslandMembers;
 import pl.subtelny.islands.generated.tables.Islands;
 import pl.subtelny.islands.generated.tables.SkyblockIslands;
@@ -33,12 +34,17 @@ import pl.subtelny.islands.generated.tables.SkyblockIslands;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = -2133019541;
+    private static final long serialVersionUID = 1101841353;
 
     /**
      * The reference instance of <code>public</code>
      */
     public static final Public PUBLIC = new Public();
+
+    /**
+     * The table <code>public.guild_islands</code>.
+     */
+    public final GuildIslands GUILD_ISLANDS = pl.subtelny.islands.generated.tables.GuildIslands.GUILD_ISLANDS;
 
     /**
      * The table <code>public.island_members</code>.
@@ -89,6 +95,7 @@ public class Public extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
+            GuildIslands.GUILD_ISLANDS,
             IslandMembers.ISLAND_MEMBERS,
             Islands.ISLANDS,
             SkyblockIslands.SKYBLOCK_ISLANDS);

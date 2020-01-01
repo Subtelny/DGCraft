@@ -1,6 +1,6 @@
 package pl.subtelny.islands.repository.loader;
 
-public abstract class Loader<REQUEST, RESULT> {
+public abstract class Loader<RESULT> {
 
 	public abstract RESULT perform();
 

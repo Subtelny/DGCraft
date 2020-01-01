@@ -6,6 +6,7 @@ package pl.subtelny.islands.generated.tables;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.processing.Generated;
 
@@ -41,7 +42,7 @@ import pl.subtelny.islands.generated.tables.records.SkyblockIslandsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SkyblockIslands extends TableImpl<SkyblockIslandsRecord> {
 
-    private static final long serialVersionUID = -52110788;
+    private static final long serialVersionUID = -711438358;
 
     /**
      * The reference instance of <code>public.skyblock_islands</code>
@@ -74,7 +75,7 @@ public class SkyblockIslands extends TableImpl<SkyblockIslandsRecord> {
     /**
      * The column <code>public.skyblock_islands.owner</code>.
      */
-    public final TableField<SkyblockIslandsRecord, Integer> OWNER = createField(DSL.name("owner"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<SkyblockIslandsRecord, UUID> OWNER = createField(DSL.name("owner"), org.jooq.impl.SQLDataType.UUID.nullable(false), this, "");
 
     /**
      * The column <code>public.skyblock_islands.points</code>.
@@ -126,7 +127,7 @@ public class SkyblockIslands extends TableImpl<SkyblockIslandsRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.SKYBLOCK_ISLANDS_PKEY, Indexes.SKYBLOCK_ISLANDS_X_Z_KEY);
+        return Arrays.<Index>asList(Indexes.SKYBLOCK_ISLANDS_OWNER_KEY, Indexes.SKYBLOCK_ISLANDS_PKEY, Indexes.SKYBLOCK_ISLANDS_X_Z_KEY);
     }
 
     @Override
@@ -136,7 +137,7 @@ public class SkyblockIslands extends TableImpl<SkyblockIslandsRecord> {
 
     @Override
     public List<UniqueKey<SkyblockIslandsRecord>> getKeys() {
-        return Arrays.<UniqueKey<SkyblockIslandsRecord>>asList(Keys.SKYBLOCK_ISLANDS_PKEY, Keys.SKYBLOCK_ISLANDS_X_Z_KEY);
+        return Arrays.<UniqueKey<SkyblockIslandsRecord>>asList(Keys.SKYBLOCK_ISLANDS_PKEY, Keys.SKYBLOCK_ISLANDS_X_Z_KEY, Keys.SKYBLOCK_ISLANDS_OWNER_KEY);
     }
 
     @Override
@@ -179,7 +180,7 @@ public class SkyblockIslands extends TableImpl<SkyblockIslandsRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<Integer, Integer, Integer, Integer, Integer, Integer> fieldsRow() {
+    public Row6<Integer, Integer, Integer, UUID, Integer, Integer> fieldsRow() {
         return (Row6) super.fieldsRow();
     }
 }

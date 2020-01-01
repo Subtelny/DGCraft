@@ -1,39 +1,22 @@
 package pl.subtelny.islands.repository.loader.island;
 
-import java.time.LocalDate;
-import org.bukkit.Location;
+import java.util.UUID;
+import pl.subtelny.islands.model.IslandType;
 import pl.subtelny.islands.model.island.IslandCoordinates;
-import pl.subtelny.islands.model.island.IslandId;
 
-public class SkyblockIslandData {
-
-	private IslandId islandId;
+public class SkyblockIslandData extends IslandData {
 
 	private IslandCoordinates islandCoordinates;
 
-	private LocalDate createdDate;
-
-	private int owner;
-
-	private Location spawn;
+	private UUID owner;
 
 	public SkyblockIslandData() {
 	}
 
-	public SkyblockIslandData(IslandId islandId, IslandCoordinates islandCoordinates, LocalDate createdDate, int owner, Location spawn) {
-		this.islandId = islandId;
+	public SkyblockIslandData(IslandCoordinates islandCoordinates, UUID owner, IslandData islandData) {
+		super(islandData.getIslandId(), IslandType.SKYBLOCK, islandData.getCreatedDate(), islandData.getSpawn());
 		this.islandCoordinates = islandCoordinates;
-		this.createdDate = createdDate;
 		this.owner = owner;
-		this.spawn = spawn;
-	}
-
-	public IslandId getIslandId() {
-		return islandId;
-	}
-
-	public void setIslandId(IslandId islandId) {
-		this.islandId = islandId;
 	}
 
 	public IslandCoordinates getIslandCoordinates() {
@@ -44,28 +27,11 @@ public class SkyblockIslandData {
 		this.islandCoordinates = islandCoordinates;
 	}
 
-	public LocalDate getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(LocalDate createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public int getOwner() {
+	public UUID getOwner() {
 		return owner;
 	}
 
-	public void setOwner(int owner) {
+	public void setOwner(UUID owner) {
 		this.owner = owner;
 	}
-
-	public Location getSpawn() {
-		return spawn;
-	}
-
-	public void setSpawn(Location spawn) {
-		this.spawn = spawn;
-	}
-
 }

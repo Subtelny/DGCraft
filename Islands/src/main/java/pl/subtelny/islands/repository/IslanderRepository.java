@@ -15,7 +15,7 @@ import pl.subtelny.islands.model.Islander;
 import pl.subtelny.repository.Storage;
 
 @Component
-public class IslanderRepository extends Storage<AccountId, Islander> {
+public class IslanderRepository extends Storage<AccountId, Optional<Islander>> {
 
 	private final AccountRepository accountRepository;
 
@@ -26,7 +26,7 @@ public class IslanderRepository extends Storage<AccountId, Islander> {
 	}
 
 	@NonNull
-	private static Cache<AccountId, Islander> getStorageCacheBuild() {
+	private static Cache<AccountId, Optional<Islander>> getStorageCacheBuild() {
 		return Caffeine.newBuilder().build();
 	}
 
@@ -39,9 +39,8 @@ public class IslanderRepository extends Storage<AccountId, Islander> {
 	}
 
 	@Override
-	public Function<? super AccountId, ? extends Islander> mappingFunction() {
-		return accountId -> loadIslander(accountId)
-				.orElseThrow(() -> new NoSuchElementException(String.format("Not found Islander for accountId %s", accountId)));
+	public Function<? super AccountId, ? extends Optional<Islander>> computeData() {
+		return this::loadIslander;
 	}
 
 }

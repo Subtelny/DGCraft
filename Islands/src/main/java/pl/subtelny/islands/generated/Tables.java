@@ -6,6 +6,7 @@ package pl.subtelny.islands.generated;
 
 import javax.annotation.processing.Generated;
 
+import pl.subtelny.islands.generated.tables.GuildIslands;
 import pl.subtelny.islands.generated.tables.IslandMembers;
 import pl.subtelny.islands.generated.tables.Islands;
 import pl.subtelny.islands.generated.tables.SkyblockIslands;
@@ -23,6 +24,11 @@ import pl.subtelny.islands.generated.tables.SkyblockIslands;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>public.guild_islands</code>.
+     */
+    public static final GuildIslands GUILD_ISLANDS = GuildIslands.GUILD_ISLANDS;
 
     /**
      * The table <code>public.island_members</code>.
