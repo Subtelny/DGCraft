@@ -32,7 +32,7 @@ public class IslandService {
 	public Optional<Island> findIslandAtLocation(Location location) {
 		if (Settings.SkyblockIsland.ISLAND_WORLD.equals(location.getWorld())) {
 			IslandCoordinates islandCoordinates = SkyblockIslandUtil.getIslandCoordinates(location);
-			Optional<SkyblockIsland> island = skyblockIslandRepository.findIsland(islandCoordinates);
+			Optional<SkyblockIsland> island = skyblockIslandRepository.findIslandByIslander(islandCoordinates);
 			return Optional.ofNullable(island.orElse(null));
 		}
 		//TODO

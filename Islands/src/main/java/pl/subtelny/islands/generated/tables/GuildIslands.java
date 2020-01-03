@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row3;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import pl.subtelny.islands.generated.tables.records.GuildIslandsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GuildIslands extends TableImpl<GuildIslandsRecord> {
 
-    private static final long serialVersionUID = 131392877;
+    private static final long serialVersionUID = 141273434;
 
     /**
      * The reference instance of <code>public.guild_islands</code>
@@ -71,6 +71,11 @@ public class GuildIslands extends TableImpl<GuildIslandsRecord> {
      * The column <code>public.guild_islands.protection</code>.
      */
     public final TableField<GuildIslandsRecord, Timestamp> PROTECTION = createField(DSL.name("protection"), org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
+
+    /**
+     * The column <code>public.guild_islands.cuboid</code>.
+     */
+    public final TableField<GuildIslandsRecord, String> CUBOID = createField(DSL.name("cuboid"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
      * Create a <code>public.guild_islands</code> table reference
@@ -161,11 +166,11 @@ public class GuildIslands extends TableImpl<GuildIslandsRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<Integer, Integer, Timestamp> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row4<Integer, Integer, Timestamp, String> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 }

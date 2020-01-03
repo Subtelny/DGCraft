@@ -39,10 +39,10 @@ public class SkyblockIslandRepository {
 		this.islanderCache = Caffeine.newBuilder().build();
 	}
 
-	public Optional<SkyblockIsland> findIsland(Islander islander) {
+	public Optional<SkyblockIsland> findIslandByIslander(Islander islander) {
 		AccountId accountId = islander.getAccount().getId();
 		Optional<IslandId> islandId = islanderCache.get(accountId, this::findIslandIdByIslander);
-		return findIsland(islandId);
+		return findIslandByIslander(islandId);
 	}
 
 	private Optional<IslandId> findIslandIdByIslander(AccountId islander) {
@@ -61,7 +61,7 @@ public class SkyblockIslandRepository {
 		return Optional.of(islandIds.get(0));
 	}
 
-	private Optional<SkyblockIsland> findIsland(Optional<IslandId> islandId) {
+	private Optional<SkyblockIsland> findIslandByIslander(Optional<IslandId> islandId) {
 		if (islandId.isEmpty()) {
 			return Optional.empty();
 		}
@@ -76,9 +76,9 @@ public class SkyblockIslandRepository {
 		return Optional.of((SkyblockIsland) island);
 	}
 
-	public Optional<SkyblockIsland> findIsland(IslandCoordinates islandCoordinates) {
+	public Optional<SkyblockIsland> findIslandByIslander(IslandCoordinates islandCoordinates) {
 		Optional<IslandId> islandId = islandCoordinatesCache.get(islandCoordinates, this::findIslandIdByIslandCoordinates);
-		return findIsland(islandId);
+		return findIslandByIslander(islandId);
 	}
 
 	private Optional<IslandId> findIslandIdByIslandCoordinates(IslandCoordinates islandCoordinates) {

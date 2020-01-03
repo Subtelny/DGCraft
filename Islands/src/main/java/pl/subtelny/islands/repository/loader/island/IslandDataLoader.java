@@ -16,6 +16,8 @@ import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.repository.loader.Loader;
 import pl.subtelny.islands.utils.LocationSerializer;
+import pl.subtelny.utils.CuboidUtil;
+import pl.subtelny.utils.cuboid.Cuboid;
 
 public class IslandDataLoader extends Loader<IslandDataLoaderResult> {
 
@@ -30,11 +32,11 @@ public class IslandDataLoader extends Loader<IslandDataLoaderResult> {
 
 	@Override
 	public IslandDataLoaderResult perform() {
-		List<IslandData> islandData = loadFromDbIslandRecord();
+		List<IslandData> islandData = loadIslandData();
 		return new IslandDataLoaderResult(islandData);
 	}
 
-	private List<IslandData> loadFromDbIslandRecord() {
+	private List<IslandData> loadIslandData() {
 		return DSL.using(this.configuration)
 				.select()
 				.from(Islands.ISLANDS)
@@ -77,7 +79,8 @@ public class IslandDataLoader extends Loader<IslandDataLoaderResult> {
 		GuildIslands guildIslands = GuildIslands.GUILD_ISLANDS;
 		int owner = record.get(guildIslands.OWNER);
 		LocalDateTime protection = record.get(guildIslands.PROTECTION).toLocalDateTime();
-		return new GuildIslandData(owner, protection, islandData);
+		Cuboid cuboid = CuboidUtil.deserialize(record.get(guildIslands.CUBOID));
+		return new GuildIslandData(owner, protection, islandData, cuboid);
 	}
 
 }

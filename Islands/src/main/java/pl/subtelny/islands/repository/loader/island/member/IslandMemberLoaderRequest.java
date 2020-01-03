@@ -7,6 +7,7 @@ import pl.subtelny.core.model.AccountId;
 import pl.subtelny.islands.generated.enums.Islandmembertype;
 import pl.subtelny.islands.generated.tables.IslandMembers;
 import pl.subtelny.islands.model.guild.GuildId;
+import pl.subtelny.islands.model.island.IslandId;
 
 public class IslandMemberLoaderRequest {
 
@@ -30,6 +31,11 @@ public class IslandMemberLoaderRequest {
 
 		private Builder() {
 			this.where = Lists.newArrayList();
+		}
+
+		public Builder where(IslandId islandId) {
+			where.add(IslandMembers.ISLAND_MEMBERS.ISLAND_ID.eq(islandId.getId().intValue()));
+			return this;
 		}
 
 		public Builder where(GuildId guildId) {
