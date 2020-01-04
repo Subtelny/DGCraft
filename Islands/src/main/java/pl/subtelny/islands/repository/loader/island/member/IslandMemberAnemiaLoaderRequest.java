@@ -9,11 +9,11 @@ import pl.subtelny.islands.generated.tables.IslandMembers;
 import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandId;
 
-public class IslandMemberLoaderRequest {
+public class IslandMemberAnemiaLoaderRequest {
 
 	private final List<Condition> where;
 
-	private IslandMemberLoaderRequest(List<Condition> where) {
+	private IslandMemberAnemiaLoaderRequest(List<Condition> where) {
 		this.where = where;
 	}
 
@@ -50,8 +50,8 @@ public class IslandMemberLoaderRequest {
 			return this;
 		}
 
-		public IslandMemberLoaderRequest build() {
-			return new IslandMemberLoaderRequest(where);
+		public IslandMemberAnemiaLoaderRequest build() {
+			return new IslandMemberAnemiaLoaderRequest(where);
 		}
 	}
 

@@ -3,16 +3,15 @@ package pl.subtelny.islands.repository.loader.island;
 import com.google.common.collect.Lists;
 import java.util.List;
 import org.jooq.Condition;
-import org.jooq.Configuration;
 import pl.subtelny.islands.generated.tables.SkyblockIslands;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
 
-public class IslandDataLoaderRequest {
+public class IslandAnemiaLoaderRequest {
 
 	private final List<Condition> where;
 
-	public IslandDataLoaderRequest(List<Condition> where) {
+	public IslandAnemiaLoaderRequest(List<Condition> where) {
 		this.where = where;
 	}
 
@@ -43,8 +42,8 @@ public class IslandDataLoaderRequest {
 			return this;
 		}
 
-		public IslandDataLoaderRequest build() {
-			return new IslandDataLoaderRequest(where);
+		public IslandAnemiaLoaderRequest build() {
+			return new IslandAnemiaLoaderRequest(where);
 		}
 
 	}

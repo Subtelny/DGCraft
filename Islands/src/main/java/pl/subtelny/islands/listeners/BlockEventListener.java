@@ -17,16 +17,21 @@ import org.bukkit.event.block.BlockSpreadEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
 import pl.subtelny.islands.model.Island;
+import pl.subtelny.islands.service.IslandActionGuard;
 import pl.subtelny.islands.service.IslandService;
 import pl.subtelny.utils.cuboid.Cuboid;
 
 @Component
 public class BlockEventListener implements Listener {
 
+	private final IslandActionGuard islandActionGuard;
+
 	private final IslandService islandService;
 
 	@Autowired
-	public BlockEventListener(IslandService islandService) {
+	public BlockEventListener(IslandActionGuard islandActionGuard,
+			IslandService islandService) {
+		this.islandActionGuard = islandActionGuard;
 		this.islandService = islandService;
 	}
 
@@ -37,7 +42,7 @@ public class BlockEventListener implements Listener {
 		}
 		Player player = e.getPlayer();
 		Location location = e.getBlock().getLocation();
-		boolean canBuild = islandService.accessToBuild(player, location);
+		boolean canBuild = islandActionGuard.accessToBuild(player, location);
 		if (!canBuild) {
 			e.setCancelled(true);
 			e.setDropItems(false);
@@ -52,7 +57,7 @@ public class BlockEventListener implements Listener {
 		}
 		Player player = e.getPlayer();
 		Location location = e.getBlock().getLocation();
-		boolean canBuild = islandService.accessToBuild(player, location);
+		boolean canBuild = islandActionGuard.accessToBuild(player, location);
 		if (!canBuild) {
 			e.setCancelled(true);
 			e.setBuild(false);
@@ -67,7 +72,7 @@ public class BlockEventListener implements Listener {
 		Player player = e.getPlayer();
 		if (player != null) {
 			Location location = e.getBlock().getLocation();
-			boolean canBuild = islandService.accessToBuild(player, location);
+			boolean canBuild = islandActionGuard.accessToBuild(player, location);
 			if (!canBuild) {
 				e.setBuildable(false);
 			}

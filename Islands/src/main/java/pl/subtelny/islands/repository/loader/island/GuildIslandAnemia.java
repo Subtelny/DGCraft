@@ -1,18 +1,19 @@
 package pl.subtelny.islands.repository.loader.island;
 
 import java.time.LocalDateTime;
+import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.utils.cuboid.Cuboid;
 
-public class GuildIslandData extends IslandData {
+public class GuildIslandAnemia extends IslandAnemia {
 
-	private int owner;
+	private GuildId owner;
 
 	private LocalDateTime protection;
 
 	private Cuboid cuboid;
 
-	public GuildIslandData(int owner, LocalDateTime protection, IslandData islandData, Cuboid cuboid) {
-		super(islandData.getIslandId(), islandData.getIslandType(), islandData.getCreatedDate(), islandData.getSpawn());
+	public GuildIslandAnemia(IslandAnemia islandAnemia, GuildId owner, LocalDateTime protection, Cuboid cuboid) {
+		super(islandAnemia.getIslandId(), islandAnemia.getIslandType(), islandAnemia.getCreatedDate(), islandAnemia.getSpawn());
 		this.owner = owner;
 		this.protection = protection;
 		this.cuboid = cuboid;
@@ -26,11 +27,11 @@ public class GuildIslandData extends IslandData {
 		this.cuboid = cuboid;
 	}
 
-	public int getOwner() {
+	public GuildId getOwner() {
 		return owner;
 	}
 
-	public void setOwner(int owner) {
+	public void setOwner(GuildId owner) {
 		this.owner = owner;
 	}
 

@@ -10,25 +10,25 @@ import pl.subtelny.islands.model.IslandMemberType;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.repository.loader.Loader;
 
-public class IslandMemberLoader extends Loader<IslandMemberLoaderResult> {
+public class IslandMemberAnemiaLoader extends Loader<IslandMemberAnemiaLoaderResult> {
 
 	private final Configuration configuration;
 
-	private final IslandMemberLoaderRequest request;
+	private final IslandMemberAnemiaLoaderRequest request;
 
-	public IslandMemberLoader(Configuration configuration, IslandMemberLoaderRequest request) {
+	public IslandMemberAnemiaLoader(Configuration configuration, IslandMemberAnemiaLoaderRequest request) {
 		this.configuration = configuration;
 		this.request = request;
 	}
 
 	@Override
-	public IslandMemberLoaderResult perform() {
-		List<IslandMemberData> islandMembersData = Lists.newArrayList();
+	public IslandMemberAnemiaLoaderResult perform() {
+		List<IslandMemberAnemia> islandMembersData = Lists.newArrayList();
 		islandMembersData.addAll(loadIslandMemberData());
-		return new IslandMemberLoaderResult(islandMembersData);
+		return new IslandMemberAnemiaLoaderResult(islandMembersData);
 	}
 
-	private List<IslandMemberData> loadIslandMemberData() {
+	private List<IslandMemberAnemia> loadIslandMemberData() {
 		return DSL.using(this.configuration)
 				.select()
 				.from(IslandMembers.ISLAND_MEMBERS)
@@ -36,11 +36,11 @@ public class IslandMemberLoader extends Loader<IslandMemberLoaderResult> {
 				.fetch(this::mapToIslandMemberData);
 	}
 
-	private IslandMemberData mapToIslandMemberData(Record record) {
+	private IslandMemberAnemia mapToIslandMemberData(Record record) {
 		IslandId islandId = IslandId.of(record.get(IslandMembers.ISLAND_MEMBERS.ISLAND_ID).longValue());
 		String id = record.get(IslandMembers.ISLAND_MEMBERS.ID);
 		IslandMemberType type = IslandMemberType.valueOf(record.get(IslandMembers.ISLAND_MEMBERS.MEMBER_TYPE).getLiteral());
-		return new IslandMemberData(islandId, id, type);
+		return new IslandMemberAnemia(islandId, id, type);
 	}
 
 }

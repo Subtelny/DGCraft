@@ -6,15 +6,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
-import pl.subtelny.core.service.AccountService;
+import pl.subtelny.core.service.AccountServiceImpl;
 
 @Component
 public class PlayerJoinListener implements Listener {
 
-    private final AccountService accountService;
+    private final AccountServiceImpl accountService;
 
     @Autowired
-    public PlayerJoinListener(AccountService accountService) {
+    public PlayerJoinListener(AccountServiceImpl accountService) {
 		this.accountService = accountService;
 	}
 

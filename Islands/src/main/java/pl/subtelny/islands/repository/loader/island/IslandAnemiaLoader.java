@@ -8,10 +8,12 @@ import org.bukkit.Location;
 import org.jooq.Configuration;
 import org.jooq.Record;
 import org.jooq.impl.DSL;
+import pl.subtelny.core.model.AccountId;
 import pl.subtelny.islands.generated.tables.GuildIslands;
 import pl.subtelny.islands.generated.tables.Islands;
 import pl.subtelny.islands.generated.tables.SkyblockIslands;
 import pl.subtelny.islands.model.IslandType;
+import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.repository.loader.Loader;
@@ -19,24 +21,24 @@ import pl.subtelny.islands.utils.LocationSerializer;
 import pl.subtelny.utils.CuboidUtil;
 import pl.subtelny.utils.cuboid.Cuboid;
 
-public class IslandDataLoader extends Loader<IslandDataLoaderResult> {
+public class IslandAnemiaLoader extends Loader<IslandAnemiaLoaderResult> {
 
 	private final Configuration configuration;
 
-	private final IslandDataLoaderRequest request;
+	private final IslandAnemiaLoaderRequest request;
 
-	public IslandDataLoader(Configuration configuration, IslandDataLoaderRequest request) {
+	public IslandAnemiaLoader(Configuration configuration, IslandAnemiaLoaderRequest request) {
 		this.configuration = configuration;
 		this.request = request;
 	}
 
 	@Override
-	public IslandDataLoaderResult perform() {
-		List<IslandData> islandData = loadIslandData();
-		return new IslandDataLoaderResult(islandData);
+	public IslandAnemiaLoaderResult perform() {
+		List<IslandAnemia> islandData = loadIslandAnemia();
+		return new IslandAnemiaLoaderResult(islandData);
 	}
 
-	private List<IslandData> loadIslandData() {
+	private List<IslandAnemia> loadIslandAnemia() {
 		return DSL.using(this.configuration)
 				.select()
 				.from(Islands.ISLANDS)
@@ -51,36 +53,39 @@ public class IslandDataLoader extends Loader<IslandDataLoaderResult> {
 				.fetch(this::computeIslandData);
 	}
 
-	private IslandData computeIslandData(Record record) {
+	private IslandAnemia computeIslandData(Record record) {
 		IslandType type = IslandType.valueOf(record.get(Islands.ISLANDS.TYPE).getLiteral());
-		IslandData islandData = mapIslandData(record, type);
+		IslandAnemia islandData = mapIslandData(record, type);
 		if (type == IslandType.SKYBLOCK) {
 			return mapSkyblockIslandData(islandData, record);
 		}
 		return mapGuildIslandData(islandData, record);
 	}
 
-	private IslandData mapIslandData(Record record, IslandType type) {
+	private IslandAnemia mapIslandData(Record record, IslandType type) {
 		LocalDate createdDate = record.get(Islands.ISLANDS.CREATED_DATE).toLocalDateTime().toLocalDate();
 		Location spawn = LocationSerializer.deserializeMinimalistic(record.get(Islands.ISLANDS.SPAWN));
 		IslandId islandId = IslandId.of(record.get(Islands.ISLANDS.ID).longValue());
-		return new IslandData(islandId, type, createdDate, spawn);
+		return new IslandAnemia(islandId, type, createdDate, spawn);
 	}
 
-	private SkyblockIslandData mapSkyblockIslandData(IslandData islandData, Record record) {
+	private SkyblockIslandAnemia mapSkyblockIslandData(IslandAnemia islandAnemia, Record record) {
 		UUID owner = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.OWNER);
+		AccountId ownerId = AccountId.of(owner);
 		int x = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.X);
 		int z = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.Z);
 		IslandCoordinates islandCoordinates = new IslandCoordinates(x, z);
-		return new SkyblockIslandData(islandCoordinates, owner, islandData);
+		int extendLevel = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.EXTEND_LEVEL);
+		return new SkyblockIslandAnemia(islandAnemia, islandCoordinates, ownerId, extendLevel);
 	}
 
-	private GuildIslandData mapGuildIslandData(IslandData islandData, Record record) {
+	private GuildIslandAnemia mapGuildIslandData(IslandAnemia islandAnemia, Record record) {
 		GuildIslands guildIslands = GuildIslands.GUILD_ISLANDS;
 		int owner = record.get(guildIslands.OWNER);
+		GuildId ownerId = GuildId.of(owner);
 		LocalDateTime protection = record.get(guildIslands.PROTECTION).toLocalDateTime();
 		Cuboid cuboid = CuboidUtil.deserialize(record.get(guildIslands.CUBOID));
-		return new GuildIslandData(owner, protection, islandData, cuboid);
+		return new GuildIslandAnemia(islandAnemia, ownerId, protection, cuboid);
 	}
 
 }

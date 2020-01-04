@@ -9,24 +9,20 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import pl.subtelny.islands.model.island.IslandId;
+import pl.subtelny.islands.repository.loader.island.IslandAnemia;
 import pl.subtelny.islands.utils.LocationUtil;
 import pl.subtelny.utils.cuboid.Cuboid;
 import pl.subtelny.validation.ValidationException;
 
-public abstract class Island {
+public abstract class Island extends Synchronizeable {
+
+	private final IslandAnemia islandAnemia;
 
 	protected Cuboid cuboid;
 
-	private Location spawn;
-
-	private final LocalDate createdDate;
-
-	private final IslandId islandId;
-
-	public Island(IslandId islandId, Cuboid cuboid, LocalDate createdDate) {
-		this.islandId = islandId;
+	public Island(IslandAnemia islandAnemia, Cuboid cuboid) {
 		this.cuboid = cuboid;
-		this.createdDate = createdDate;
+		this.islandAnemia = islandAnemia;
 	}
 
 	public boolean isInIsland(IslandMember islandMember) {
@@ -41,7 +37,7 @@ public abstract class Island {
 		if (!LocationUtil.isSafeForPlayer(spawn)) {
 			throw new ValidationException("Block under spawn have to be a solid material");
 		}
-		this.spawn = spawn;
+		this.islandAnemia.setSpawn(spawn);
 	}
 
 	public boolean canInteract(Entity entity, Entity toInteract) {
@@ -89,11 +85,11 @@ public abstract class Island {
 	public abstract IslandType getIslandType();
 
 	public IslandId getIslandId() {
-		return islandId;
+		return islandAnemia.getIslandId();
 	}
 
 	public LocalDate getCreatedDate() {
-		return createdDate;
+		return islandAnemia.getCreatedDate();
 	}
 
 	public Cuboid getCuboid() {
@@ -101,7 +97,11 @@ public abstract class Island {
 	}
 
 	public Location getSpawn() {
-		return spawn;
+		return islandAnemia.getSpawn();
+	}
+
+	public IslandAnemia getIslandAnemia() {
+		return islandAnemia;
 	}
 
 	@Override
@@ -117,14 +117,14 @@ public abstract class Island {
 		Island island = (Island) o;
 
 		return new EqualsBuilder()
-				.append(islandId, island.islandId)
+				.append(islandAnemia.getIslandId(), island.getIslandId())
 				.isEquals();
 	}
 
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(17, 37)
-				.append(islandId)
+				.append(islandAnemia.getIslandId())
 				.toHashCode();
 	}
 }

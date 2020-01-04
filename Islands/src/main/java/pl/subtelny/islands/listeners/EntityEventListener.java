@@ -17,6 +17,7 @@ import org.bukkit.event.entity.EntityTameEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
 import pl.subtelny.islands.model.Island;
+import pl.subtelny.islands.service.IslandActionGuard;
 import pl.subtelny.islands.service.IslandService;
 
 @Component
@@ -24,9 +25,12 @@ public class EntityEventListener implements Listener {
 
 	private final IslandService islandService;
 
+	private final IslandActionGuard islandActionGuard;
+
 	@Autowired
-	public EntityEventListener(IslandService islandService) {
+	public EntityEventListener(IslandService islandService, IslandActionGuard islandActionGuard) {
 		this.islandService = islandService;
+		this.islandActionGuard = islandActionGuard;
 	}
 
 	@EventHandler
@@ -72,7 +76,7 @@ public class EntityEventListener implements Listener {
 		}
 		Entity entity = e.getEntity();
 		Entity attacker = e.getDamager();
-		boolean canHit = islandService.accessToHit(attacker, entity);
+		boolean canHit = islandActionGuard.accessToHit(attacker, entity);
 		if (!canHit) {
 			e.setDamage(0);
 			e.setCancelled(true);
@@ -88,7 +92,7 @@ public class EntityEventListener implements Listener {
 		Player player = (Player) owner;
 		LivingEntity entity = e.getEntity();
 
-		boolean canInteract = islandService.accessToInteract(player, entity);
+		boolean canInteract = islandActionGuard.accessToInteract(player, entity);
 		if (!canInteract) {
 			e.setCancelled(true);
 		}

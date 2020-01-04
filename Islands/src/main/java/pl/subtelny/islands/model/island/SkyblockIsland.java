@@ -1,7 +1,7 @@
 package pl.subtelny.islands.model.island;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 import org.bukkit.Location;
@@ -12,6 +12,8 @@ import pl.subtelny.islands.model.IslandMember;
 import pl.subtelny.islands.model.IslandMemberType;
 import pl.subtelny.islands.model.IslandType;
 import pl.subtelny.islands.model.Islander;
+import pl.subtelny.islands.repository.loader.island.IslandAnemia;
+import pl.subtelny.islands.repository.loader.island.SkyblockIslandAnemia;
 import pl.subtelny.islands.settings.Settings;
 import pl.subtelny.islands.utils.LocationUtil;
 import pl.subtelny.islands.utils.SkyblockIslandUtil;
@@ -26,20 +28,36 @@ public class SkyblockIsland extends Island {
 
 	private Set<Islander> members = Sets.newConcurrentHashSet();
 
-	private int extendLevel;
-
-	public SkyblockIsland(IslandId islandId, IslandCoordinates islandCoordinates, Cuboid cuboid, LocalDate createdDate) {
-		super(islandId, cuboid, createdDate);
+	public SkyblockIsland(IslandAnemia islandAnemia, IslandCoordinates islandCoordinates, Cuboid cuboid) {
+		super(islandAnemia, cuboid);
+		Preconditions.checkArgument(islandAnemia.getIslandType() == IslandType.SKYBLOCK,
+				String.format("This IslandAnemia {%s} cannot be add to SkyblockIsland", islandAnemia));
 		this.islandCoordinates = islandCoordinates;
+	}
+
+	public void extendCuboid(int extendLevel) {
+		if (extendLevel > Settings.SkyblockIsland.EXTEND_LEVELS || extendLevel <= 0) {
+			throw new ValidationException(String.format("Value not match in bound %s-%s", 0, Settings.SkyblockIsland.EXTEND_LEVELS));
+		}
+		int x = islandCoordinates.getX();
+		int z = islandCoordinates.getZ();
+		int defaultSize = Settings.SkyblockIsland.ISLAND_SIZE;
+		int extendSize = Settings.SkyblockIsland.EXTEND_SIZE_PER_LEVEL * extendLevel;
+		int sumSize = defaultSize + extendSize;
+		int space = Settings.SkyblockIsland.SPACE_BETWEEN_ISLANDS;
+		if (extendLevel < Settings.SkyblockIsland.EXTEND_LEVELS) {
+			space = 0;
+		}
+		getIslandAnemia().setExtendLevel(extendLevel);
+		this.cuboid = SkyblockIslandUtil.calculateIslandCuboid(Settings.SkyblockIsland.ISLAND_WORLD, x, z, sumSize, space);
 	}
 
 	@Override
 	public boolean isInIsland(Player player) {
+		Set<Islander> members = Sets.newHashSet(this.members);
+		members.add(owner);
 		AccountId accountId = AccountId.of(player.getUniqueId());
-		if (owner.getAccount().getId().equals(accountId)) {
-			return true;
-		}
-		return members.stream().anyMatch(islander -> islander.getAccount().getId().equals(AccountId.of(player.getUniqueId())));
+		return members.stream().anyMatch(islander -> islander.getAccount().getId().equals(accountId));
 	}
 
 	@Override
@@ -99,21 +117,12 @@ public class SkyblockIsland extends Island {
 		islander.setIsland(null);
 	}
 
-	public void extendCuboid(int extendLevel) {
-		if (extendLevel > Settings.SkyblockIsland.EXTEND_LEVELS || extendLevel <= 0) {
-			throw new ValidationException(String.format("Value not match in bound %s-%s", 0, Settings.SkyblockIsland.EXTEND_LEVELS));
-		}
-		int x = islandCoordinates.getX();
-		int z = islandCoordinates.getZ();
-		int defaultSize = Settings.SkyblockIsland.ISLAND_SIZE;
-		int extendSize = Settings.SkyblockIsland.EXTEND_SIZE_PER_LEVEL * extendLevel;
-		int sumSize = defaultSize + extendSize;
-		int space = Settings.SkyblockIsland.SPACE_BETWEEN_ISLANDS;
-		if (extendLevel < Settings.SkyblockIsland.EXTEND_LEVELS) {
-			space = 0;
-		}
-		this.extendLevel = extendLevel;
-		this.cuboid = SkyblockIslandUtil.calculateIslandCuboid(Settings.SkyblockIsland.ISLAND_WORLD, x, z, sumSize, space);
+	public int getExtendLevel() {
+		return getIslandAnemia().getExtendLevel();
+	}
+
+	public IslandCoordinates getIslandCoordinates() {
+		return islandCoordinates;
 	}
 
 	@Override
@@ -131,11 +140,8 @@ public class SkyblockIsland extends Island {
 		return Sets.newHashSet(members);
 	}
 
-	public int getExtendLevel() {
-		return extendLevel;
-	}
-
-	public IslandCoordinates getIslandCoordinates() {
-		return islandCoordinates;
+	@Override
+	public SkyblockIslandAnemia getIslandAnemia() {
+		return (SkyblockIslandAnemia) super.getIslandAnemia();
 	}
 }

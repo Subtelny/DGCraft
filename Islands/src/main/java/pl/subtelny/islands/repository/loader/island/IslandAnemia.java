@@ -5,7 +5,7 @@ import org.bukkit.Location;
 import pl.subtelny.islands.model.IslandType;
 import pl.subtelny.islands.model.island.IslandId;
 
-public class IslandData {
+public class IslandAnemia {
 
 	private IslandId islandId;
 
@@ -15,10 +15,10 @@ public class IslandData {
 
 	private Location spawn;
 
-	public IslandData() {
+	public IslandAnemia() {
 	}
 
-	public IslandData(IslandId islandId, IslandType islandType, LocalDate createdDate, Location spawn) {
+	public IslandAnemia(IslandId islandId, IslandType islandType, LocalDate createdDate, Location spawn) {
 		this.islandId = islandId;
 		this.islandType = islandType;
 		this.createdDate = createdDate;

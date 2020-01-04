@@ -24,30 +24,20 @@ public class SkyblockIslandRepository {
 
 	private final Configuration configuration;
 
-	private final IslandRepository islandRepository;
-
-	private Queue<IslandCoordinates> freeIslands = new ConcurrentLinkedQueue<>();
-
-	private Cache<IslandCoordinates, Optional<IslandId>> islandCoordinatesCache;
-
-	private Cache<AccountId, Optional<IslandId>> islanderCache;
-
-	public SkyblockIslandRepository(IslandRepository islandRepository, DatabaseConfiguration databaseConfiguration) {
+	public SkyblockIslandRepository(DatabaseConfiguration databaseConfiguration) {
 		this.configuration = databaseConfiguration.getConfiguration();
-		this.islandRepository = islandRepository;
-		this.islandCoordinatesCache = Caffeine.newBuilder().build();
-		this.islanderCache = Caffeine.newBuilder().build();
 	}
 
-	public Optional<SkyblockIsland> findIslandByIslander(Islander islander) {
-		AccountId accountId = islander.getAccount().getId();
-		Optional<IslandId> islandId = islanderCache.get(accountId, this::findIslandIdByIslander);
-		return findIslandByIslander(islandId);
-	}
-
-	private Optional<IslandId> findIslandIdByIslander(AccountId islander) {
+	public Optional<IslandId> findIslandIdByIslander(AccountId accountId) {
 		IslandIdLoaderRequest request = IslandIdLoaderRequest.newIslandMemberBuilder()
-				.where(islander)
+				.where(accountId)
+				.build();
+		return performIslandIdLoader(request);
+	}
+
+	public Optional<IslandId> findIslandIdByIslandCoordinates(IslandCoordinates islandCoordinates) {
+		IslandIdLoaderRequest request = IslandIdLoaderRequest.newSkyblockBuilder()
+				.where(islandCoordinates)
 				.build();
 		return performIslandIdLoader(request);
 	}
@@ -61,39 +51,8 @@ public class SkyblockIslandRepository {
 		return Optional.of(islandIds.get(0));
 	}
 
-	private Optional<SkyblockIsland> findIslandByIslander(Optional<IslandId> islandId) {
-		if (islandId.isEmpty()) {
-			return Optional.empty();
-		}
-		Optional<Island> cacheOpt = islandRepository.getCache(islandId.get());
-		if (cacheOpt.isEmpty()) {
-			return Optional.empty();
-		}
-		Island island = cacheOpt.get();
-		if (island.getIslandType() != IslandType.SKYBLOCK) {
-			return Optional.empty();
-		}
-		return Optional.of((SkyblockIsland) island);
-	}
-
-	public Optional<SkyblockIsland> findIslandByIslander(IslandCoordinates islandCoordinates) {
-		Optional<IslandId> islandId = islandCoordinatesCache.get(islandCoordinates, this::findIslandIdByIslandCoordinates);
-		return findIslandByIslander(islandId);
-	}
-
-	private Optional<IslandId> findIslandIdByIslandCoordinates(IslandCoordinates islandCoordinates) {
-		IslandIdLoaderRequest request = IslandIdLoaderRequest.newSkyblockBuilder()
-				.where(islandCoordinates)
-				.build();
-		return performIslandIdLoader(request);
-	}
-
 	public void saveIsland(SkyblockIsland island) {
 
-	}
-
-	public Optional<IslandCoordinates> nextFreeIslandCoordinates() {
-		return Optional.ofNullable(freeIslands.poll());
 	}
 
 }

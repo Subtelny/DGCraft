@@ -1,5 +1,6 @@
 package pl.subtelny.islands.model.guild;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -10,6 +11,8 @@ import pl.subtelny.islands.model.Island;
 import pl.subtelny.islands.model.IslandMember;
 import pl.subtelny.islands.model.IslandType;
 import pl.subtelny.islands.model.island.IslandId;
+import pl.subtelny.islands.repository.loader.island.GuildIslandAnemia;
+import pl.subtelny.islands.repository.loader.island.IslandAnemia;
 import pl.subtelny.utils.cuboid.Cuboid;
 import pl.subtelny.validation.ValidationException;
 
@@ -17,8 +20,10 @@ public class GuildIsland extends Island {
 
 	private Guild owner;
 
-	public GuildIsland(IslandId islandId, Cuboid cuboid, LocalDate createdDate) {
-		super(islandId, cuboid, createdDate);
+	public GuildIsland(IslandAnemia islandAnemia, Cuboid cuboid) {
+		super(islandAnemia, cuboid);
+		Preconditions.checkArgument(islandAnemia.getIslandType() == IslandType.GUILD,
+				String.format("This IslandAnemia {%s} cannot be add to GuildIsland", islandAnemia));
 	}
 
 	@Override
@@ -69,4 +74,8 @@ public class GuildIsland extends Island {
 		return IslandType.GUILD;
 	}
 
+	@Override
+	public GuildIslandAnemia getIslandAnemia() {
+		return (GuildIslandAnemia) super.getIslandAnemia();
+	}
 }

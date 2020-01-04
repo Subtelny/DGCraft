@@ -9,7 +9,7 @@ import pl.subtelny.islands.model.IslandMemberType;
 import pl.subtelny.islands.model.Islander;
 import pl.subtelny.validation.ValidationException;
 
-public class Guild implements IslandMember {
+public class Guild extends IslandMember {
 
 	private Set<Islander> members = Sets.newConcurrentHashSet();
 

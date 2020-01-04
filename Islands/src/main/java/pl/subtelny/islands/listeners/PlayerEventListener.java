@@ -8,16 +8,17 @@ import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
+import pl.subtelny.islands.service.IslandActionGuard;
 import pl.subtelny.islands.service.IslandService;
 
 @Component
 public class PlayerEventListener implements Listener {
 
-	private final IslandService islandService;
+	private final IslandActionGuard islandActionGuard;
 
 	@Autowired
-	public PlayerEventListener(IslandService islandService) {
-		this.islandService = islandService;
+	public PlayerEventListener(IslandActionGuard islandActionGuard) {
+		this.islandActionGuard = islandActionGuard;
 	}
 
 	public void onPlayerJoin(PlayerJoinEvent e) {
@@ -29,7 +30,7 @@ public class PlayerEventListener implements Listener {
 		Player player = e.getPlayer();
 		Entity entity = e.getEntity();
 
-		boolean canInteract = islandService.accessToInteract(player, entity);
+		boolean canInteract = islandActionGuard.accessToInteract(player, entity);
 		if (!canInteract) {
 			e.setCancelled(true);
 		}

@@ -9,7 +9,7 @@ import pl.subtelny.islands.model.guild.Guild;
 import pl.subtelny.islands.model.island.SkyblockIsland;
 import pl.subtelny.validation.ValidationException;
 
-public class Islander implements IslandMember {
+public class Islander extends IslandMember {
 
 	private final Account account;
 
