@@ -21,7 +21,6 @@ public class Test {
 		beanLoader.initializeBeans();
 
 		Accounts accounts = CoreAPI.getAccounts();
-		Account account = accounts.getAccount(AccountId.of(UUID.randomUUID()));
 	}
 
 }

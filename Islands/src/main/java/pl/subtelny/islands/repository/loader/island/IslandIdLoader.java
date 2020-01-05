@@ -5,10 +5,10 @@ import java.util.List;
 import org.jooq.Configuration;
 import org.jooq.Record1;
 import org.jooq.impl.DSL;
-import pl.subtelny.islands.generated.tables.GuildIslands;
-import pl.subtelny.islands.generated.tables.IslandMembers;
-import pl.subtelny.islands.generated.tables.Islands;
-import pl.subtelny.islands.generated.tables.SkyblockIslands;
+import pl.subtelny.core.generated.tables.GuildIslands;
+import pl.subtelny.core.generated.tables.IslandMembers;
+import pl.subtelny.core.generated.tables.Islands;
+import pl.subtelny.core.generated.tables.SkyblockIslands;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.repository.loader.Loader;
 

@@ -5,7 +5,7 @@ import java.util.List;
 import org.jooq.Configuration;
 import org.jooq.Record;
 import org.jooq.impl.DSL;
-import pl.subtelny.islands.generated.tables.IslandMembers;
+import pl.subtelny.core.generated.tables.IslandMembers;
 import pl.subtelny.islands.model.IslandMemberType;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.repository.loader.Loader;

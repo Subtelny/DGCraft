@@ -1,4 +1,4 @@
-package pl.subtelny.islands.storage;
+package pl.subtelny.islands.repository.storage;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.Optional;
