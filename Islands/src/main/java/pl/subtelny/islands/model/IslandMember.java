@@ -1,6 +1,8 @@
 package pl.subtelny.islands.model;
 
-public abstract class IslandMember extends Synchronizeable {
+import pl.subtelny.model.SynchronizedEntity;
+
+public abstract class IslandMember extends SynchronizedEntity {
 
 	public abstract IslandMemberType getIslandMemberType();
 

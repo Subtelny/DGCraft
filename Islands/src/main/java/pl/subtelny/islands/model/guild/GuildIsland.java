@@ -34,7 +34,7 @@ public class GuildIsland extends Island {
 	@Override
 	public boolean isInIsland(Player player) {
 		return owner.getMembers()
-				.stream().anyMatch(islander -> islander.getAccount().getId().equals(AccountId.of(player.getUniqueId())));
+				.stream().anyMatch(islander -> islander.getAccount().getAccountAnemia().getAccountId().equals(AccountId.of(player.getUniqueId())));
 	}
 
 	@Override

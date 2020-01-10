@@ -1,9 +1,10 @@
 package pl.subtelny.islands.repository.loader.island;
 
-import java.time.LocalDate;
 import org.bukkit.Location;
 import pl.subtelny.islands.model.IslandType;
 import pl.subtelny.islands.model.island.IslandId;
+
+import java.time.LocalDateTime;
 
 public class IslandAnemia {
 
@@ -11,14 +12,14 @@ public class IslandAnemia {
 
 	private IslandType islandType;
 
-	private LocalDate createdDate;
+	private LocalDateTime createdDate;
 
 	private Location spawn;
 
 	public IslandAnemia() {
 	}
 
-	public IslandAnemia(IslandId islandId, IslandType islandType, LocalDate createdDate, Location spawn) {
+	public IslandAnemia(IslandId islandId, IslandType islandType, LocalDateTime createdDate, Location spawn) {
 		this.islandId = islandId;
 		this.islandType = islandType;
 		this.createdDate = createdDate;
@@ -41,11 +42,11 @@ public class IslandAnemia {
 		this.islandType = islandType;
 	}
 
-	public LocalDate getCreatedDate() {
+	public LocalDateTime getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(LocalDate createdDate) {
+	public void setCreatedDate(LocalDateTime createdDate) {
 		this.createdDate = createdDate;
 	}
 

@@ -11,10 +11,11 @@ import org.bukkit.entity.Player;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.repository.loader.island.IslandAnemia;
 import pl.subtelny.islands.utils.LocationUtil;
+import pl.subtelny.model.SynchronizedEntity;
 import pl.subtelny.utils.cuboid.Cuboid;
 import pl.subtelny.validation.ValidationException;
 
-public abstract class Island extends Synchronizeable {
+public abstract class Island extends SynchronizedEntity {
 
 	private final IslandAnemia islandAnemia;
 

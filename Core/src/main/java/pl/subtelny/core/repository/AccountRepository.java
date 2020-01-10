@@ -1,40 +1,45 @@
 package pl.subtelny.core.repository;
 
-import com.google.common.collect.Sets;
-import java.time.LocalDate;
-import java.util.Optional;
-import java.util.Set;
-import org.bukkit.entity.Player;
+import org.jooq.Configuration;
+import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
-import pl.subtelny.core.api.Accounts;
-import pl.subtelny.core.model.Account;
 import pl.subtelny.core.model.AccountId;
-import pl.subtelny.core.model.LoginHistory;
+import pl.subtelny.core.repository.loader.AccountAnemia;
+import pl.subtelny.core.repository.loader.AccountAnemiaLoader;
+import pl.subtelny.core.repository.loader.AccountAnemiaLoaderRequest;
+
+import java.util.List;
+import java.util.Optional;
 
 @Component
-public class AccountRepository implements Accounts {
+public class AccountRepository {
 
-	@Override
-	public Optional<Account> findAccount(AccountId accountId) {
-		//TODO
-		//to implement
-		return Optional.empty();
-	}
+    private final Configuration configuration;
 
-	public void saveAccount(Account account) {
-		//TODO
-		//to implement
-	}
+    @Autowired
+    public AccountRepository(Configuration configuration) {
+        this.configuration = configuration;
+    }
 
-	public void saveLoginHistory(LoginHistory loginHistory) {
-		//TODO
-		//to implement
-	}
+    public Optional<AccountAnemia> findAccount(AccountId accountId) {
+        AccountAnemiaLoaderRequest request = AccountAnemiaLoaderRequest.newBuilder()
+                .where(accountId)
+                .build();
+        return loadAccount(request);
+    }
 
-	public Set<LoginHistory> getLoginHistoriesOfAccount(AccountId accountId) {
-		//TODO
-		//to implement
-		return Sets.newHashSet();
-	}
+    private Optional<AccountAnemia> loadAccount(AccountAnemiaLoaderRequest request) {
+        AccountAnemiaLoader loader = new AccountAnemiaLoader(configuration, request);
+        List<AccountAnemia> loadedData = loader.perform().getLoadedData();
+        if (loadedData.size() == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(loadedData.get(0));
+    }
+
+    public void saveAccount(AccountAnemia account) {
+        //TODO
+        //to implement
+    }
 
 }

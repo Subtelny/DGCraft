@@ -3,6 +3,7 @@ package pl.subtelny.islands.repository.synchronizer;
 import org.jooq.Configuration;
 import pl.subtelny.core.model.AccountId;
 import pl.subtelny.islands.model.Island;
+import pl.subtelny.islands.model.IslandMember;
 import pl.subtelny.islands.model.IslandMemberType;
 import pl.subtelny.islands.model.Islander;
 import pl.subtelny.islands.model.island.IslandId;
@@ -10,8 +11,8 @@ import pl.subtelny.islands.model.island.SkyblockIsland;
 import pl.subtelny.islands.repository.loader.island.member.IslandMemberAnemia;
 import pl.subtelny.islands.repository.loader.island.member.IslandMemberAnemiaLoader;
 import pl.subtelny.islands.repository.loader.island.member.IslandMemberAnemiaLoaderRequest;
-import pl.subtelny.islands.repository.loader.island.member.IslandMemberAnemiaLoaderResult;
 import pl.subtelny.islands.repository.storage.IslanderStorage;
+import pl.subtelny.repository.LoaderResult;
 
 import java.util.List;
 import java.util.Map;
@@ -19,50 +20,64 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class SkyblockIslandSynchronizer {
+public class SkyblockIslandSynchronizer extends Synchronizer<SkyblockIsland> {
 
-    private final Configuration configuration;
+	private final Configuration configuration;
 
-    private final IslanderStorage islanderStorage;
+	private final IslanderStorage islanderStorage;
 
-    public SkyblockIslandSynchronizer(Configuration configuration,
-                                      IslanderStorage islanderStorage) {
-        this.configuration = configuration;
-        this.islanderStorage = islanderStorage;
-    }
+	public SkyblockIslandSynchronizer(Configuration configuration,
+			IslanderStorage islanderStorage) {
+		this.configuration = configuration;
+		this.islanderStorage = islanderStorage;
+	}
 
-    public synchronized void synchronizeIsland(SkyblockIsland island) {
-        if (island.isFullyLoaded()) {
-            return;
-        }
-        List<IslandMemberAnemia> islandMembersData = loadIslandMembersAnemia(island);
-        List<AccountId> accountIds = islandMembersData.stream()
-                .filter(i -> i.getIslandMemberType() == IslandMemberType.ISLANDER)
-                .map(i -> AccountId.of(UUID.fromString(i.getId())))
-                .collect(Collectors.toList());
+	public void synchronizeIsland(SkyblockIsland island) {
+		if (preventLock(island)) {
+			return;
+		}
+		lock(island);
+		try {
+			List<IslandMemberAnemia> islandMembersData = loadIslandMembersAnemia(island);
+			List<AccountId> accountIds = islandMembersData.stream()
+					.filter(i -> i.getIslandMemberType() == IslandMemberType.ISLANDER)
+					.map(i -> AccountId.of(UUID.fromString(i.getId())))
+					.collect(Collectors.toList());
 
-        AccountId owner = island.getIslandAnemia().getOwner();
-        accountIds.add(owner);
+			AccountId owner = island.getIslandAnemia().getOwner();
+			accountIds.add(owner);
 
-        Map<AccountId, Optional<Islander>> loadedIslanders = islanderStorage.getCache(accountIds);
-        loadedIslanders.values().stream()
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .filter(islander -> !island.isInIsland(islander))
-                .filter(i -> !i.getAccount().getId().equals(owner))
-                .forEach(island::addMember);
+			Map<AccountId, Optional<Islander>> loadedIslanders = islanderStorage.getCache(accountIds);
+			loadedIslanders.values().stream()
+					.filter(Optional::isPresent)
+					.map(Optional::get)
+					.filter(islander -> !island.isInIsland(islander))
+					.filter(i -> !i.getAccount().getAccountId().equals(owner))
+					.forEach(island::addMember);
 
-        loadedIslanders.get(owner).ifPresent(island::changeOwner);
-        island.setFullyLoaded(true);
-    }
+			loadedIslanders.get(owner).ifPresent(island::changeOwner);
+			island.setFullyLoaded(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			unlock(island);
+		}
+	}
 
-    private List<IslandMemberAnemia> loadIslandMembersAnemia(Island island) {
-        IslandId islandId = island.getIslandId();
-        IslandMemberAnemiaLoaderRequest request = IslandMemberAnemiaLoaderRequest.newBuilder()
-                .where(islandId)
-                .build();
-        IslandMemberAnemiaLoaderResult perform = new IslandMemberAnemiaLoader(configuration, request).perform();
-        return perform.getIslandMembersAnemia();
-    }
+	private boolean preventLock(SkyblockIsland island) {
+		if (island.isFullyLoaded()) {
+			return true;
+		}
+		return false;
+	}
+
+	private List<IslandMemberAnemia> loadIslandMembersAnemia(Island island) {
+		IslandId islandId = island.getIslandId();
+		IslandMemberAnemiaLoaderRequest request = IslandMemberAnemiaLoaderRequest.newBuilder()
+				.where(islandId)
+				.build();
+		LoaderResult<IslandMemberAnemia> perform = new IslandMemberAnemiaLoader(configuration, request).perform();
+		return perform.getLoadedData();
+	}
 
 }

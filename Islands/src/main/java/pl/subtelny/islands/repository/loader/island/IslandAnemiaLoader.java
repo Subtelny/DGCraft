@@ -16,12 +16,13 @@ import pl.subtelny.islands.model.IslandType;
 import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.repository.loader.Loader;
+import pl.subtelny.repository.Loader;
 import pl.subtelny.islands.utils.LocationSerializer;
+import pl.subtelny.repository.LoaderResult;
 import pl.subtelny.utils.CuboidUtil;
 import pl.subtelny.utils.cuboid.Cuboid;
 
-public class IslandAnemiaLoader extends Loader<IslandAnemiaLoaderResult> {
+public class IslandAnemiaLoader extends Loader<IslandAnemia> {
 
 	private final Configuration configuration;
 
@@ -33,9 +34,9 @@ public class IslandAnemiaLoader extends Loader<IslandAnemiaLoaderResult> {
 	}
 
 	@Override
-	public IslandAnemiaLoaderResult perform() {
+	public LoaderResult<IslandAnemia> perform() {
 		List<IslandAnemia> islandData = loadIslandAnemia();
-		return new IslandAnemiaLoaderResult(islandData);
+		return new LoaderResult<>(islandData);
 	}
 
 	private List<IslandAnemia> loadIslandAnemia() {
@@ -63,7 +64,7 @@ public class IslandAnemiaLoader extends Loader<IslandAnemiaLoaderResult> {
 	}
 
 	private IslandAnemia mapIslandData(Record record, IslandType type) {
-		LocalDate createdDate = record.get(Islands.ISLANDS.CREATED_DATE).toLocalDateTime().toLocalDate();
+		LocalDateTime createdDate = record.get(Islands.ISLANDS.CREATED_DATE).toLocalDateTime();
 		Location spawn = LocationSerializer.deserializeMinimalistic(record.get(Islands.ISLANDS.SPAWN));
 		IslandId islandId = IslandId.of(record.get(Islands.ISLANDS.ID).longValue());
 		return new IslandAnemia(islandId, type, createdDate, spawn);

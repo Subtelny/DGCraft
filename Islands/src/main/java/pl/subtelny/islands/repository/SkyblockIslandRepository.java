@@ -1,23 +1,17 @@
 package pl.subtelny.islands.repository;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import org.jooq.Configuration;
 import pl.subtelny.beans.Component;
 import pl.subtelny.core.model.AccountId;
 import pl.subtelny.database.DatabaseConfiguration;
-import pl.subtelny.islands.model.Island;
-import pl.subtelny.islands.model.IslandType;
-import pl.subtelny.islands.model.Islander;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.model.island.SkyblockIsland;
 import pl.subtelny.islands.repository.loader.island.IslandIdLoader;
 import pl.subtelny.islands.repository.loader.island.IslandIdLoaderRequest;
+
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class SkyblockIslandRepository {
@@ -44,7 +38,7 @@ public class SkyblockIslandRepository {
 
 	private Optional<IslandId> performIslandIdLoader(IslandIdLoaderRequest request) {
 		IslandIdLoader loader = new IslandIdLoader(configuration, request);
-		List<IslandId> islandIds = loader.perform().getIslandIds();
+		List<IslandId> islandIds = loader.perform().getLoadedData();
 		if (islandIds.size() == 0) {
 			return Optional.empty();
 		}
