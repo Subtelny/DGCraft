@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import org.jooq.Condition;
 import pl.subtelny.core.model.AccountId;
-import pl.subtelny.islands.generated.enums.Islandmembertype;
-import pl.subtelny.islands.generated.tables.IslandMembers;
+import pl.subtelny.core.generated.enums.Islandmembertype;
+import pl.subtelny.core.generated.tables.IslandMembers;
 import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandId;
 

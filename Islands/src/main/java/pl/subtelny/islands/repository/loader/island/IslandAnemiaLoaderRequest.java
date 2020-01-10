@@ -3,7 +3,7 @@ package pl.subtelny.islands.repository.loader.island;
 import com.google.common.collect.Lists;
 import java.util.List;
 import org.jooq.Condition;
-import pl.subtelny.islands.generated.tables.SkyblockIslands;
+import pl.subtelny.core.generated.tables.SkyblockIslands;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
 

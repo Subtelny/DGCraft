@@ -1,48 +1,92 @@
 package pl.subtelny.islands.repository.synchronizer;
 
-import org.jooq.Configuration;
+import pl.subtelny.beans.Autowired;
+import pl.subtelny.beans.Component;
 import pl.subtelny.islands.model.Islander;
 import pl.subtelny.islands.model.island.SkyblockIsland;
 import pl.subtelny.islands.repository.storage.SkyblockIslandStorage;
+import pl.subtelny.jobs.JobsProvider;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
-public class IslanderSynchronizer {
-
-    private final Configuration configuration;
+@Component
+public class IslanderSynchronizer extends Synchronizer<Islander> {
 
     private final SkyblockIslandStorage skyblockIslandStorage;
 
-    public IslanderSynchronizer(Configuration configuration,
-                                SkyblockIslandStorage skyblockIslandStorage) {
-        this.configuration = configuration;
+    @Autowired
+    public IslanderSynchronizer(SkyblockIslandStorage skyblockIslandStorage) {
         this.skyblockIslandStorage = skyblockIslandStorage;
     }
 
-    public synchronized void synchronizeIslander(Islander islander) {
-        if (islander.isFullyLoaded()) {
+    public void forceSynchronizeIslander(Islander islander) {
+        synchronizeIslander(islander, true);
+    }
+
+    public void synchronizeIslander(Islander islander) {
+        synchronizeIslander(islander, false);
+    }
+
+    private void synchronizeIslander(Islander islander, boolean force) {
+        if (preventLoad(islander, force)) {
             return;
         }
+        lock(islander);
+        try {
+            if (!preventLoad(islander, force)) {
+                CompletableFuture<Void> future = CompletableFuture.runAsync(() ->
+                        synchronizeIslanderIsland(islander), JobsProvider.getExecutor());
+                future.get();
+                islander.setFullyLoaded(true);
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } finally {
+            unlock(islander);
+        }
+    }
 
+    private boolean preventLoad(Islander islander, boolean force) {
+        if (!force) {
+            return islander.isFullyLoaded();
+        }
+        return false;
+    }
+
+    private void synchronizeIslanderIsland(Islander islander) {
         Optional<SkyblockIsland> islandOpt = skyblockIslandStorage.findSkyblockIslandByIslander(islander);
+        Optional<SkyblockIsland> currentIslandOpt = islander.getIsland();
+
         if (islandOpt.isPresent()) {
             SkyblockIsland island = islandOpt.get();
-            if (!island.isInIsland(islander)) {
-                island.addMember(islander);
+            if (currentIslandOpt.isEmpty()) {
+                if (island.isInIsland(islander)) {
+                    islander.setIsland(island);
+                } else {
+                    island.addMember(islander);
+                }
+            } else {
+                SkyblockIsland currentIsland = currentIslandOpt.get();
+                if (currentIsland.isInIsland(islander)) {
+                    currentIsland.removeMember(islander);
+                } else {
+                    islander.setIsland(null);
+                    island.addMember(islander);
+                }
+            }
+        } else {
+            if (currentIslandOpt.isPresent()) {
+                SkyblockIsland currentIsland = currentIslandOpt.get();
+                if (currentIsland.isInIsland(islander)) {
+                    currentIsland.removeMember(islander);
+                } else {
+                    islander.setIsland(null);
+                }
             }
         }
+
     }
 
-    private void recalculateIslanderIsland(Islander islander, SkyblockIsland foundIslanderIsland) {
-        Optional<SkyblockIsland> islandOpt = islander.getIsland();
-        if (islandOpt.isEmpty()) {
-            foundIslanderIsland.addMember(islander);
-            return;
-        }
-        SkyblockIsland island = islandOpt.get();
-        if (!island.equals(foundIslanderIsland)) {
-            island.removeMember(islander);
-            foundIslanderIsland.addMember(islander);
-        }
-    }
 }

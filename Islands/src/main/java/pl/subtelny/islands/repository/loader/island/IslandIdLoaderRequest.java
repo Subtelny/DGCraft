@@ -1,124 +1,128 @@
 package pl.subtelny.islands.repository.loader.island;
 
 import com.google.common.collect.Lists;
-import java.util.List;
-import java.util.UUID;
 import org.jooq.Condition;
+import pl.subtelny.core.generated.enums.Islandmembertype;
+import pl.subtelny.core.generated.tables.GuildIslands;
+import pl.subtelny.core.generated.tables.IslandMembers;
+import pl.subtelny.core.generated.tables.SkyblockIslands;
 import pl.subtelny.core.model.AccountId;
-import pl.subtelny.islands.generated.enums.Islandmembertype;
-import pl.subtelny.islands.generated.tables.GuildIslands;
-import pl.subtelny.islands.generated.tables.IslandMembers;
-import pl.subtelny.islands.generated.tables.SkyblockIslands;
 import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 
+import java.util.List;
+import java.util.UUID;
+
 public class IslandIdLoaderRequest {
 
-	private final List<Condition> where;
+    private final List<Condition> where;
 
-	private final RequestType requestType;
+    private final RequestType requestType;
 
-	public IslandIdLoaderRequest(List<Condition> where, RequestType requestType) {
-		this.where = where;
-		this.requestType = requestType;
-	}
+    public IslandIdLoaderRequest(List<Condition> where, RequestType requestType) {
+        this.where = where;
+        this.requestType = requestType;
+    }
 
-	public List<Condition> getWhere() {
-		return where;
-	}
+    public List<Condition> getWhere() {
+        return where;
+    }
 
-	public RequestType getRequestType() {
-		return requestType;
-	}
+    public RequestType getRequestType() {
+        return requestType;
+    }
 
-	public static SkyBlock newSkyblockBuilder() {
-		return new SkyBlock();
-	}
+    public static SkyblockBuilder newSkyblockBuilder() {
+        return new SkyblockBuilder();
+    }
 
-	public static IslandMember newIslandMemberBuilder() {
-		return new IslandMember();
-	}
+    public static IslandMemberBuilder newIslandMemberBuilder() {
+        return new IslandMemberBuilder();
+    }
 
-	public static Guild newGuildBuilder() {
-		return new Guild();
-	}
+    public static GuildBuilder newGuildBuilder() {
+        return new GuildBuilder();
+    }
 
-	private static class Island {
+    public static class IslandBuilder {
 
-		protected List<Condition> where = Lists.newArrayList();
+        protected List<Condition> where = Lists.newArrayList();
 
-		public List<Condition> getWhere() {
-			return where;
-		}
+        public List<Condition> getWhere() {
+            return where;
+        }
 
-	}
+    }
 
-	public static class IslandMember extends Island {
+    public static class IslandMemberBuilder extends IslandBuilder {
 
-		private IslandMember() { }
+        private IslandMemberBuilder() {
+        }
 
-		public IslandMember where(AccountId accountId) {
-			where.add(IslandMembers.ISLAND_MEMBERS.ID.eq(accountId.getId().toString())
-					.and(IslandMembers.ISLAND_MEMBERS.MEMBER_TYPE.eq(Islandmembertype.ISLANDER)));
-			return this;
-		}
+        public IslandMemberBuilder where(AccountId accountId) {
+            where.add(IslandMembers.ISLAND_MEMBERS.ID.eq(accountId.getId().toString())
+                    .and(IslandMembers.ISLAND_MEMBERS.MEMBER_TYPE.eq(Islandmembertype.ISLANDER)));
+            return this;
+        }
 
-		public IslandMember where(GuildId guildId) {
-			where.add(IslandMembers.ISLAND_MEMBERS.ID.eq(guildId.getId().toString())
-					.and(IslandMembers.ISLAND_MEMBERS.MEMBER_TYPE.eq(Islandmembertype.GUILD)));
-			return this;
-		}
+        public IslandMemberBuilder where(GuildId guildId) {
+            where.add(IslandMembers.ISLAND_MEMBERS.ID.eq(guildId.getId().toString())
+                    .and(IslandMembers.ISLAND_MEMBERS.MEMBER_TYPE.eq(Islandmembertype.GUILD)));
+            return this;
+        }
 
-		public IslandIdLoaderRequest build() {
-			return new IslandIdLoaderRequest(where, RequestType.SEARCH_ISLAND_MEMBER);
-		}
+        public IslandIdLoaderRequest build() {
+            return new IslandIdLoaderRequest(where, RequestType.SEARCH_ISLAND_MEMBER);
+        }
 
-	}
+    }
 
-	public static class Guild extends Island {
+    public static class GuildBuilder extends IslandBuilder {
 
-		private Guild() { }
+        private GuildBuilder() {
+        }
 
-		public Guild where(GuildId guildId) {
-			where.add(GuildIslands.GUILD_ISLANDS.OWNER.eq(guildId.getId()));
-			return this;
-		}
+        public GuildBuilder where(GuildId guildId) {
+            where.add(GuildIslands.GUILD_ISLANDS.OWNER.eq(guildId.getId()));
+            return this;
+        }
 
-		public IslandIdLoaderRequest build() {
-			return new IslandIdLoaderRequest(where, RequestType.SEARCH_GUILD_ISLAND);
-		}
+        public IslandIdLoaderRequest build() {
+            return new IslandIdLoaderRequest(where, RequestType.SEARCH_GUILD_ISLAND);
+        }
 
-	}
+    }
 
-	public static class SkyBlock extends Island {
+    public static class SkyblockBuilder extends IslandBuilder {
 
-		private SkyBlock() { }
+        private SkyblockBuilder() {
+        }
 
-		public SkyBlock where(IslandCoordinates islandCoordinates) {
-			int x = islandCoordinates.getX();
-			int z = islandCoordinates.getZ();
-			Condition condition = SkyblockIslands.SKYBLOCK_ISLANDS.X.eq(x)
-					.and(SkyblockIslands.SKYBLOCK_ISLANDS.Z.eq(z));
-			where.add(condition);
-			return this;
-		}
+        public SkyblockBuilder where(IslandCoordinates islandCoordinates) {
+            int x = islandCoordinates.getX();
+            int z = islandCoordinates.getZ();
+            Condition condition = SkyblockIslands.SKYBLOCK_ISLANDS.X.eq(x)
+                    .and(SkyblockIslands.SKYBLOCK_ISLANDS.Z.eq(z));
+            where.add(condition);
+            return this;
+        }
 
-		public SkyBlock where(UUID owner) {
-			where.add(SkyblockIslands.SKYBLOCK_ISLANDS.OWNER.eq(owner));
-			return this;
-		}
+        public SkyblockBuilder where(UUID owner) {
+            where.add(SkyblockIslands.SKYBLOCK_ISLANDS.OWNER.eq(owner));
+            return this;
+        }
 
-		public IslandIdLoaderRequest build() {
-			return new IslandIdLoaderRequest(where, RequestType.SEARCH_SKYBLOCK_ISLAND);
-		}
-	}
+        public IslandIdLoaderRequest build() {
+            return new IslandIdLoaderRequest(where, RequestType.SEARCH_SKYBLOCK_ISLAND);
+        }
+    }
 
-	public enum RequestType {
+    public enum RequestType {
 
-		SEARCH_ISLAND_MEMBER,
-		SEARCH_SKYBLOCK_ISLAND,
-		SEARCH_GUILD_ISLAND
+        SEARCH_ISLAND_MEMBER,
+        SEARCH_SKYBLOCK_ISLAND,
+        SEARCH_GUILD_ISLAND
 
-	}
+    }
 
 }

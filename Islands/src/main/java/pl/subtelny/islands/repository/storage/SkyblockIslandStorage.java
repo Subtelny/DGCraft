@@ -50,7 +50,7 @@ public class SkyblockIslandStorage {
 	}
 
 	public Optional<SkyblockIsland> findSkyblockIslandByIslander(Islander islander) {
-		AccountId accountId = islander.getAccount().getId();
+		AccountId accountId = islander.getAccount().getAccountId();
 		Optional<IslandId> islandIdOpt = islanderCache.get(accountId, skyblockIslandRepository::findIslandIdByIslander);
 		if (islandIdOpt.isPresent()) {
 			return findSkyblockIsland(islandIdOpt.get());

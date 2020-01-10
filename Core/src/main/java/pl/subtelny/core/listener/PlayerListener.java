@@ -2,26 +2,28 @@ package pl.subtelny.core.listener;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
-import pl.subtelny.core.service.AccountServiceImpl;
+import pl.subtelny.core.service.AccountService;
 
 @Component
-public class PlayerJoinListener implements Listener {
+public class PlayerListener implements Listener {
 
-    private final AccountServiceImpl accountService;
+    private final AccountService accountService;
 
     @Autowired
-    public PlayerJoinListener(AccountServiceImpl accountService) {
+    public PlayerListener(AccountService accountService) {
 		this.accountService = accountService;
 	}
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        accountService.syncAccountWithPlayer(player);
+        accountService.loadPlayer(player);
     }
 
 }

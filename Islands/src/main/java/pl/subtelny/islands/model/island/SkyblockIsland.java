@@ -56,7 +56,7 @@ public class SkyblockIsland extends Island {
         Set<Islander> members = Sets.newHashSet(this.members);
         members.add(owner);
         AccountId accountId = AccountId.of(player.getUniqueId());
-        return members.stream().anyMatch(islander -> islander.getAccount().getId().equals(accountId));
+        return members.stream().anyMatch(islander -> islander.getAccount().getAccountId().equals(accountId));
     }
 
     @Override
@@ -107,7 +107,7 @@ public class SkyblockIsland extends Island {
             islander.setIsland(null);
             return;
         }
-        String message = String.format("Islander {Id: %s} is not added to island {Id: %s}", islander.getAccount().getId(), getIslandId());
+        String message = String.format("Islander {Id: %s} is not added to island {Id: %s}", islander.getAccount().getAccountId(), getIslandId());
         throw new ValidationException(message);
     }
 

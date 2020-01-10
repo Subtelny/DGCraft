@@ -1,8 +1,8 @@
-package pl.subtelny.islands.model;
+package pl.subtelny.model;
 
-public abstract class Synchronizeable {
+public abstract class SynchronizedEntity {
 
-	private boolean fullyLoaded;
+	private volatile boolean fullyLoaded;
 
 	public boolean isFullyLoaded() {
 		return fullyLoaded;

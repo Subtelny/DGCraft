@@ -2,7 +2,7 @@ package pl.subtelny.islands.repository.loader.island.member;
 
 import org.jooq.Record;
 import org.jooq.RecordMapper;
-import pl.subtelny.islands.generated.tables.IslandMembers;
+import pl.subtelny.core.generated.tables.IslandMembers;
 import pl.subtelny.islands.model.IslandMemberType;
 import pl.subtelny.islands.model.island.IslandId;
 

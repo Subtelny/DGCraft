@@ -8,9 +8,10 @@ import org.jooq.impl.DSL;
 import pl.subtelny.core.generated.tables.IslandMembers;
 import pl.subtelny.islands.model.IslandMemberType;
 import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.repository.loader.Loader;
+import pl.subtelny.repository.Loader;
+import pl.subtelny.repository.LoaderResult;
 
-public class IslandMemberAnemiaLoader extends Loader<IslandMemberAnemiaLoaderResult> {
+public class IslandMemberAnemiaLoader extends Loader<IslandMemberAnemia> {
 
 	private final Configuration configuration;
 
@@ -22,10 +23,10 @@ public class IslandMemberAnemiaLoader extends Loader<IslandMemberAnemiaLoaderRes
 	}
 
 	@Override
-	public IslandMemberAnemiaLoaderResult perform() {
+	public LoaderResult<IslandMemberAnemia> perform() {
 		List<IslandMemberAnemia> islandMembersData = Lists.newArrayList();
 		islandMembersData.addAll(loadIslandMemberData());
-		return new IslandMemberAnemiaLoaderResult(islandMembersData);
+		return new LoaderResult(islandMembersData);
 	}
 
 	private List<IslandMemberAnemia> loadIslandMemberData() {

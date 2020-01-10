@@ -9,7 +9,7 @@ public final class JobsProvider {
 
 	private final static Executor executors = Executors.newCachedThreadPool();
 
-	public static Executor getExecutors() {
+	public static Executor getExecutor() {
 		return executors;
 	}
 

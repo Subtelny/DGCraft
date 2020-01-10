@@ -24,6 +24,10 @@ public abstract class Storage<KEY, VALUE> {
 		return cache.getAll(keys, computeDataIterable());
 	}
 
+	public void updateCache(KEY key, VALUE value) {
+		cache.put(key, value);
+	}
+
 	protected Function<Iterable<? extends KEY>, Map<KEY, VALUE>> computeDataIterable() {
 		return keys -> StreamSupport
 				.stream(keys.spliterator(), false)

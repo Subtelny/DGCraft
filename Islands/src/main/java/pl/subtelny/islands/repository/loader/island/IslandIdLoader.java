@@ -10,9 +10,10 @@ import pl.subtelny.core.generated.tables.IslandMembers;
 import pl.subtelny.core.generated.tables.Islands;
 import pl.subtelny.core.generated.tables.SkyblockIslands;
 import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.repository.loader.Loader;
+import pl.subtelny.repository.Loader;
+import pl.subtelny.repository.LoaderResult;
 
-public class IslandIdLoader extends Loader<IslandIdLoaderResult> {
+public class IslandIdLoader extends Loader<IslandId> {
 
 	private final Configuration configuration;
 
@@ -24,7 +25,7 @@ public class IslandIdLoader extends Loader<IslandIdLoaderResult> {
 	}
 
 	@Override
-	public IslandIdLoaderResult perform() {
+	public LoaderResult<IslandId> perform() {
 		IslandIdLoaderRequest.RequestType requestType = request.getRequestType();
 
 		List<IslandId> islandIds = Lists.newArrayList();
@@ -35,7 +36,7 @@ public class IslandIdLoader extends Loader<IslandIdLoaderResult> {
 		} else {
 			islandIds.addAll(loadByGuildIsland());
 		}
-		return new IslandIdLoaderResult(islandIds);
+		return new LoaderResult<>(islandIds);
 	}
 
 	private List<IslandId> loadByIslandMember() {

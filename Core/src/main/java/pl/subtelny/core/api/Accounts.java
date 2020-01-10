@@ -1,11 +1,15 @@
 package pl.subtelny.core.api;
 
-import java.util.Optional;
+import org.bukkit.entity.Player;
 import pl.subtelny.core.model.Account;
 import pl.subtelny.core.model.AccountId;
 
+import java.util.Optional;
+
 public interface Accounts {
 
-	Optional<Account> findAccount(AccountId accountId);
+    Account getAccount(Player player);
+
+    Optional<Account> findAccount(AccountId accountId);
 
 }

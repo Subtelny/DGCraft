@@ -3,6 +3,7 @@ package pl.subtelny.islands.repository.synchronizer;
 import org.jooq.Configuration;
 import pl.subtelny.core.model.AccountId;
 import pl.subtelny.islands.model.Island;
+import pl.subtelny.islands.model.IslandMember;
 import pl.subtelny.islands.model.IslandMemberType;
 import pl.subtelny.islands.model.Islander;
 import pl.subtelny.islands.model.island.IslandId;
@@ -10,8 +11,8 @@ import pl.subtelny.islands.model.island.SkyblockIsland;
 import pl.subtelny.islands.repository.loader.island.member.IslandMemberAnemia;
 import pl.subtelny.islands.repository.loader.island.member.IslandMemberAnemiaLoader;
 import pl.subtelny.islands.repository.loader.island.member.IslandMemberAnemiaLoaderRequest;
-import pl.subtelny.islands.repository.loader.island.member.IslandMemberAnemiaLoaderResult;
 import pl.subtelny.islands.repository.storage.IslanderStorage;
+import pl.subtelny.repository.LoaderResult;
 
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class SkyblockIslandSynchronizer {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .filter(islander -> !island.isInIsland(islander))
-                .filter(i -> !i.getAccount().getId().equals(owner))
+                .filter(i -> !i.getAccount().getAccountId().equals(owner))
                 .forEach(island::addMember);
 
         loadedIslanders.get(owner).ifPresent(island::changeOwner);
@@ -61,8 +62,8 @@ public class SkyblockIslandSynchronizer {
         IslandMemberAnemiaLoaderRequest request = IslandMemberAnemiaLoaderRequest.newBuilder()
                 .where(islandId)
                 .build();
-        IslandMemberAnemiaLoaderResult perform = new IslandMemberAnemiaLoader(configuration, request).perform();
-        return perform.getIslandMembersAnemia();
+        LoaderResult<IslandMemberAnemia> perform = new IslandMemberAnemiaLoader(configuration, request).perform();
+        return perform.getLoadedData();
     }
 
 }

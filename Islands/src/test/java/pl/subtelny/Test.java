@@ -2,49 +2,56 @@ package pl.subtelny;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import pl.subtelny.core.model.AccountId;
-import pl.subtelny.islands.utils.AlgorithmsUtil;
+import pl.subtelny.islands.repository.synchronizer.Synchronizer;
 
-public class Test {
+import java.util.concurrent.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-	@org.junit.Test
-	public void test() {
-		Cache<AccountId, Optional<String>> cache = Caffeine.newBuilder().build();
+import static java.util.concurrent.TimeUnit.SECONDS;
 
-		AccountId accountId = AccountId.of(UUID.randomUUID());
-		Optional<String> s = cache.get(accountId, accountId1 -> {
-			System.out.println("uno");
-			return Optional.empty();
-		});
+public class Test extends Synchronizer<Integer> {
 
-		System.out.println(s);
+    @org.junit.Test
+    public void test() {
+        Executor executor = Executors.newCachedThreadPool();
 
+        Cache<Integer, String> cache = Caffeine.newBuilder().build();
+        Integer key = 1;
 
-		s = cache.get(accountId, accountId1 -> {
-			System.out.println("asd");
-			return Optional.empty();
-		});
-		System.out.println(s);
-	}
+        CompletableFuture.runAsync(() -> {
+            System.out.println("START THREAD #1 = " + Thread.currentThread().getName());
+            String s = cache.get(key, integer -> computeCache(integer));
+            System.out.println(Thread.currentThread().getName() + " - " + s);
+        }, executor);
 
-	public void bound(int minX, int maxX, int minY, int maxY) {
+        CompletableFuture.runAsync(() -> {
+            System.out.println("START THREAD #2 = " + Thread.currentThread().getName());
+            //cache.put(key, key + "-heh");
+            String s = cache.get(1, this::computeCache);
+            System.out.println(Thread.currentThread().getName() + " - " + s);
+        }, executor);
+        CompletableFuture.runAsync(() -> {
+            System.out.println("START THREAD #3 = " + Thread.currentThread().getName());
+            String s = cache.get(key, this::computeCache);
+            System.out.println(Thread.currentThread().getName() + " - " + s);
+        }, executor);
 
-		Integer[] next = new Integer[]{2,2};
-		while (true) {
-			int x = next[0];
-			int y = next[1];
+        try {
+            SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
-			if(x > maxX || x < minX || y > maxY || y < minY) {
-				break;
-			}
-			System.out.println(String.format("x:%s, y:%s", x,y));
-			next = AlgorithmsUtil.nextCoordsSpirally(x,y);
-		}
-
-	}
+    private String computeCache(Integer key) {
+        try {
+            SECONDS.sleep(2);
+            return key + "-value";
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }
