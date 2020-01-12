@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public class AccountAnemiaLoader extends Loader<AccountAnemia> {
+public class AccountAnemiaLoadAction extends Loader<AccountAnemia> {
 
     private final Configuration configuration;
 
-    private final AccountAnemiaLoaderRequest request;
+    private final AccountAnemiaLoadRequest request;
 
-    public AccountAnemiaLoader(Configuration configuration, AccountAnemiaLoaderRequest request) {
+    public AccountAnemiaLoadAction(Configuration configuration, AccountAnemiaLoadRequest request) {
         this.configuration = configuration;
         this.request = request;
     }

@@ -13,25 +13,25 @@ import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.repository.Loader;
 import pl.subtelny.repository.LoaderResult;
 
-public class IslandIdLoader extends Loader<IslandId> {
+public class IslandIdLoadAction extends Loader<IslandId> {
 
 	private final Configuration configuration;
 
-	private final IslandIdLoaderRequest request;
+	private final IslandIdLoadRequest request;
 
-	public IslandIdLoader(Configuration configuration, IslandIdLoaderRequest request) {
+	public IslandIdLoadAction(Configuration configuration, IslandIdLoadRequest request) {
 		this.configuration = configuration;
 		this.request = request;
 	}
 
 	@Override
 	public LoaderResult<IslandId> perform() {
-		IslandIdLoaderRequest.RequestType requestType = request.getRequestType();
+		IslandIdLoadRequest.RequestType requestType = request.getRequestType();
 
 		List<IslandId> islandIds = Lists.newArrayList();
-		if (requestType == IslandIdLoaderRequest.RequestType.SEARCH_ISLAND_MEMBER) {
+		if (requestType == IslandIdLoadRequest.RequestType.SEARCH_ISLAND_MEMBER) {
 			islandIds.addAll(loadByIslandMember());
-		} else if (requestType == IslandIdLoaderRequest.RequestType.SEARCH_SKYBLOCK_ISLAND) {
+		} else if (requestType == IslandIdLoadRequest.RequestType.SEARCH_SKYBLOCK_ISLAND) {
 			islandIds.addAll(loadBySkyblockIsland());
 		} else {
 			islandIds.addAll(loadByGuildIsland());

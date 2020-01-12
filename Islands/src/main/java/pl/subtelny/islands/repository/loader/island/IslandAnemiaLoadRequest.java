@@ -7,11 +7,11 @@ import pl.subtelny.core.generated.tables.SkyblockIslands;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
 
-public class IslandAnemiaLoaderRequest {
+public class IslandAnemiaLoadRequest {
 
 	private final List<Condition> where;
 
-	public IslandAnemiaLoaderRequest(List<Condition> where) {
+	public IslandAnemiaLoadRequest(List<Condition> where) {
 		this.where = where;
 	}
 
@@ -42,8 +42,8 @@ public class IslandAnemiaLoaderRequest {
 			return this;
 		}
 
-		public IslandAnemiaLoaderRequest build() {
-			return new IslandAnemiaLoaderRequest(where);
+		public IslandAnemiaLoadRequest build() {
+			return new IslandAnemiaLoadRequest(where);
 		}
 
 	}

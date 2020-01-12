@@ -13,13 +13,13 @@ import pl.subtelny.islands.model.island.IslandCoordinates;
 import java.util.List;
 import java.util.UUID;
 
-public class IslandIdLoaderRequest {
+public class IslandIdLoadRequest {
 
     private final List<Condition> where;
 
     private final RequestType requestType;
 
-    public IslandIdLoaderRequest(List<Condition> where, RequestType requestType) {
+    public IslandIdLoadRequest(List<Condition> where, RequestType requestType) {
         this.where = where;
         this.requestType = requestType;
     }
@@ -71,8 +71,8 @@ public class IslandIdLoaderRequest {
             return this;
         }
 
-        public IslandIdLoaderRequest build() {
-            return new IslandIdLoaderRequest(where, RequestType.SEARCH_ISLAND_MEMBER);
+        public IslandIdLoadRequest build() {
+            return new IslandIdLoadRequest(where, RequestType.SEARCH_ISLAND_MEMBER);
         }
 
     }
@@ -87,8 +87,8 @@ public class IslandIdLoaderRequest {
             return this;
         }
 
-        public IslandIdLoaderRequest build() {
-            return new IslandIdLoaderRequest(where, RequestType.SEARCH_GUILD_ISLAND);
+        public IslandIdLoadRequest build() {
+            return new IslandIdLoadRequest(where, RequestType.SEARCH_GUILD_ISLAND);
         }
 
     }
@@ -112,8 +112,8 @@ public class IslandIdLoaderRequest {
             return this;
         }
 
-        public IslandIdLoaderRequest build() {
-            return new IslandIdLoaderRequest(where, RequestType.SEARCH_SKYBLOCK_ISLAND);
+        public IslandIdLoadRequest build() {
+            return new IslandIdLoadRequest(where, RequestType.SEARCH_SKYBLOCK_ISLAND);
         }
     }
 

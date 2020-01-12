@@ -7,11 +7,11 @@ import pl.subtelny.core.model.AccountId;
 
 import java.util.List;
 
-public class AccountAnemiaLoaderRequest {
+public class AccountAnemiaLoadRequest {
 
     private final List<Condition> where;
 
-    public AccountAnemiaLoaderRequest(List<Condition> where) {
+    public AccountAnemiaLoadRequest(List<Condition> where) {
         this.where = where;
     }
 
@@ -39,8 +39,8 @@ public class AccountAnemiaLoaderRequest {
             return this;
         }
 
-        public AccountAnemiaLoaderRequest build() {
-            return new AccountAnemiaLoaderRequest(where);
+        public AccountAnemiaLoadRequest build() {
+            return new AccountAnemiaLoadRequest(where);
         }
 
     }

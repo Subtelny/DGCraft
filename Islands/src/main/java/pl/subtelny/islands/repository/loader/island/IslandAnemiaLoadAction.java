@@ -1,6 +1,5 @@
 package pl.subtelny.islands.repository.loader.island;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -22,13 +21,13 @@ import pl.subtelny.repository.LoaderResult;
 import pl.subtelny.utils.CuboidUtil;
 import pl.subtelny.utils.cuboid.Cuboid;
 
-public class IslandAnemiaLoader extends Loader<IslandAnemia> {
+public class IslandAnemiaLoadAction extends Loader<IslandAnemia> {
 
 	private final Configuration configuration;
 
-	private final IslandAnemiaLoaderRequest request;
+	private final IslandAnemiaLoadRequest request;
 
-	public IslandAnemiaLoader(Configuration configuration, IslandAnemiaLoaderRequest request) {
+	public IslandAnemiaLoadAction(Configuration configuration, IslandAnemiaLoadRequest request) {
 		this.configuration = configuration;
 		this.request = request;
 	}

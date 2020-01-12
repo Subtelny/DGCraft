@@ -7,8 +7,8 @@ import pl.subtelny.database.DatabaseConfiguration;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.model.island.SkyblockIsland;
-import pl.subtelny.islands.repository.loader.island.IslandIdLoader;
-import pl.subtelny.islands.repository.loader.island.IslandIdLoaderRequest;
+import pl.subtelny.islands.repository.loader.island.IslandIdLoadAction;
+import pl.subtelny.islands.repository.loader.island.IslandIdLoadRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,21 +23,21 @@ public class SkyblockIslandRepository {
 	}
 
 	public Optional<IslandId> findIslandIdByIslander(AccountId accountId) {
-		IslandIdLoaderRequest request = IslandIdLoaderRequest.newIslandMemberBuilder()
+		IslandIdLoadRequest request = IslandIdLoadRequest.newIslandMemberBuilder()
 				.where(accountId)
 				.build();
 		return performIslandIdLoader(request);
 	}
 
 	public Optional<IslandId> findIslandIdByIslandCoordinates(IslandCoordinates islandCoordinates) {
-		IslandIdLoaderRequest request = IslandIdLoaderRequest.newSkyblockBuilder()
+		IslandIdLoadRequest request = IslandIdLoadRequest.newSkyblockBuilder()
 				.where(islandCoordinates)
 				.build();
 		return performIslandIdLoader(request);
 	}
 
-	private Optional<IslandId> performIslandIdLoader(IslandIdLoaderRequest request) {
-		IslandIdLoader loader = new IslandIdLoader(configuration, request);
+	private Optional<IslandId> performIslandIdLoader(IslandIdLoadRequest request) {
+		IslandIdLoadAction loader = new IslandIdLoadAction(configuration, request);
 		List<IslandId> islandIds = loader.perform().getLoadedData();
 		if (islandIds.size() == 0) {
 			return Optional.empty();

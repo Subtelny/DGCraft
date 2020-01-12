@@ -1,5 +1,7 @@
 package pl.subtelny.islands.repository.loader.island;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.bukkit.Location;
 import pl.subtelny.islands.model.IslandType;
 import pl.subtelny.islands.model.island.IslandId;
@@ -56,5 +58,35 @@ public class IslandAnemia {
 
 	public void setSpawn(Location spawn) {
 		this.spawn = spawn;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		IslandAnemia that = (IslandAnemia) o;
+
+		return new EqualsBuilder()
+				.append(islandId, that.islandId)
+				.append(islandType, that.islandType)
+				.append(createdDate, that.createdDate)
+				.append(spawn, that.spawn)
+				.isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 37)
+				.append(islandId)
+				.append(islandType)
+				.append(createdDate)
+				.append(spawn)
+				.toHashCode();
 	}
 }

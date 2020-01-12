@@ -33,7 +33,11 @@ public class SkyblockIslandSynchronizer extends Synchronizer<SkyblockIsland> {
 	}
 
 	public void synchronizeIsland(SkyblockIsland island) {
-		if (preventLock(island)) {
+		synchronizeIsland(island, false);
+	}
+
+	public void synchronizeIsland(SkyblockIsland island, boolean force) {
+		if (preventLock(island, force)) {
 			return;
 		}
 		lock(island);
@@ -64,11 +68,11 @@ public class SkyblockIslandSynchronizer extends Synchronizer<SkyblockIsland> {
 		}
 	}
 
-	private boolean preventLock(SkyblockIsland island) {
-		if (island.isFullyLoaded()) {
-			return true;
+	private boolean preventLock(SkyblockIsland island, boolean force) {
+		if (force) {
+			return false;
 		}
-		return false;
+		return island.isFullyLoaded();
 	}
 
 	private List<IslandMemberAnemia> loadIslandMembersAnemia(Island island) {
