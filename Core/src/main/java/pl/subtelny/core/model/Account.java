@@ -3,7 +3,7 @@ package pl.subtelny.core.model;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import pl.subtelny.core.repository.loader.AccountAnemia;
+import pl.subtelny.core.repository.AccountAnemia;
 import pl.subtelny.model.SynchronizedEntity;
 
 import java.time.LocalDateTime;

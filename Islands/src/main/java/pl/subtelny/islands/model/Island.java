@@ -1,6 +1,6 @@
 package pl.subtelny.islands.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -9,7 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.repository.loader.island.IslandAnemia;
+import pl.subtelny.islands.repository.island.IslandAnemia;
 import pl.subtelny.islands.utils.LocationUtil;
 import pl.subtelny.model.SynchronizedEntity;
 import pl.subtelny.utils.cuboid.Cuboid;
@@ -89,7 +89,7 @@ public abstract class Island extends SynchronizedEntity {
 		return islandAnemia.getIslandId();
 	}
 
-	public LocalDate getCreatedDate() {
+	public LocalDateTime getCreatedDate() {
 		return islandAnemia.getCreatedDate();
 	}
 

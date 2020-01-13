@@ -1,11 +1,15 @@
 package pl.subtelny.core.repository.loader;
 
+import com.google.common.collect.Lists;
+import java.util.Optional;
+import org.jooq.Condition;
 import org.jooq.Configuration;
 import org.jooq.Record;
 import org.jooq.impl.DSL;
 import pl.subtelny.core.generated.tables.Accounts;
 import pl.subtelny.core.model.AccountId;
-import pl.subtelny.repository.Loader;
+import pl.subtelny.core.repository.AccountAnemia;
+import pl.subtelny.repository.LoadAction;
 import pl.subtelny.repository.LoaderResult;
 
 import java.sql.Timestamp;
@@ -13,13 +17,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public class AccountAnemiaLoadAction extends Loader<AccountAnemia> {
+public class AccountAnemiaLoadAction implements LoadAction<AccountAnemia> {
 
     private final Configuration configuration;
 
-    private final AccountAnemiaLoadRequest request;
+    private final AccountLoadRequest request;
 
-    public AccountAnemiaLoadAction(Configuration configuration, AccountAnemiaLoadRequest request) {
+    public AccountAnemiaLoadAction(Configuration configuration, AccountLoadRequest request) {
         this.configuration = configuration;
         this.request = request;
     }
@@ -31,12 +35,31 @@ public class AccountAnemiaLoadAction extends Loader<AccountAnemia> {
     }
 
     private List<AccountAnemia> loadAccountAnemia() {
-        return DSL.using(configuration)
+		List<Condition> requestFieldsToConditions = mapRequestToConditions();
+		return DSL.using(configuration)
                 .select()
                 .from(Accounts.ACCOUNTS)
-                .where(request.getWhere())
+                .where(requestFieldsToConditions)
                 .fetch(this::mapToAccountAnemia);
     }
+
+	private List<Condition> mapRequestToConditions() {
+		Optional<AccountId> accountIdOpt = request.getAccountId();
+		Optional<String> nameOpt = request.getName();
+
+		List<Condition> conditions = Lists.newArrayList();
+		if(accountIdOpt.isPresent()) {
+			AccountId accountId = accountIdOpt.get();
+			Condition conditionId = Accounts.ACCOUNTS.ID.eq(accountId.getId());
+			conditions.add(conditionId);
+		}
+		if(nameOpt.isPresent()) {
+			String name = nameOpt.get();
+			Condition conditionName = Accounts.ACCOUNTS.NAME.eq(name);
+			conditions.add(conditionName);
+		}
+		return conditions;
+	}
 
     private AccountAnemia mapToAccountAnemia(Record record) {
         UUID uuid = record.get(Accounts.ACCOUNTS.ID);

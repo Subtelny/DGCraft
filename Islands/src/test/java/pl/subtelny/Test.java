@@ -2,11 +2,9 @@ package pl.subtelny;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import pl.subtelny.islands.repository.synchronizer.Synchronizer;
+import pl.subtelny.islands.repository.island.synchronizer.Synchronizer;
 
 import java.util.concurrent.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 

@@ -7,7 +7,7 @@ import pl.subtelny.core.api.Accounts;
 import pl.subtelny.core.model.Account;
 import pl.subtelny.core.model.AccountId;
 import pl.subtelny.core.repository.AccountRepository;
-import pl.subtelny.core.repository.loader.AccountAnemia;
+import pl.subtelny.core.repository.AccountAnemia;
 import pl.subtelny.core.repository.storage.AccountStorage;
 import pl.subtelny.jobs.JobsProvider;
 import java.time.LocalDateTime;

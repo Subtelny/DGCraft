@@ -8,7 +8,7 @@ import pl.subtelny.islands.model.Island;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.SkyblockIsland;
 import pl.subtelny.islands.settings.Settings;
-import pl.subtelny.islands.repository.storage.SkyblockIslandStorage;
+import pl.subtelny.islands.repository.island.storage.SkyblockIslandStorage;
 import pl.subtelny.islands.utils.SkyblockIslandUtil;
 
 @Component

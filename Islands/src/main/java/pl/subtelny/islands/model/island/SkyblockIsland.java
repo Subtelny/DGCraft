@@ -2,13 +2,12 @@ package pl.subtelny.islands.model.island;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import pl.subtelny.core.model.AccountId;
 import pl.subtelny.islands.model.*;
-import pl.subtelny.islands.repository.loader.island.IslandAnemia;
-import pl.subtelny.islands.repository.loader.island.SkyblockIslandAnemia;
+import pl.subtelny.islands.repository.island.IslandAnemia;
+import pl.subtelny.islands.repository.island.SkyblockIslandAnemia;
 import pl.subtelny.islands.settings.Settings;
 import pl.subtelny.islands.utils.LocationUtil;
 import pl.subtelny.islands.utils.SkyblockIslandUtil;
@@ -17,7 +16,6 @@ import pl.subtelny.validation.ValidationException;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 public class SkyblockIsland extends Island {
 
