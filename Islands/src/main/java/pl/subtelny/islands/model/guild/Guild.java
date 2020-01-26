@@ -1,28 +1,21 @@
 package pl.subtelny.islands.model.guild;
 
 import com.google.common.collect.Sets;
-import java.util.Optional;
 import java.util.Set;
-import javax.annotation.Nullable;
-import pl.subtelny.islands.model.IslandMember;
-import pl.subtelny.islands.model.IslandMemberType;
-import pl.subtelny.islands.model.Islander;
-import pl.subtelny.validation.ValidationException;
+import pl.subtelny.core.model.AccountId;
+import pl.subtelny.islands.model.islander.Islander;
 
-public class Guild extends IslandMember {
+public class Guild {
 
-	private Set<Islander> members = Sets.newConcurrentHashSet();
+	private Set<AccountId> members = Sets.newConcurrentHashSet();
 
 	public boolean isInGuild(Islander islander) {
-		return members.contains(islander);
+		AccountId accountId = islander.getAccount().getAccountId();
+		return members.contains(accountId);
 	}
 
-	public Set<Islander> getMembers() {
+	public Set<AccountId> getMembers() {
 		return Sets.newHashSet(members);
 	}
 
-	@Override
-	public IslandMemberType getIslandMemberType() {
-		return IslandMemberType.GUILD;
-	}
 }

@@ -16,7 +16,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
-import pl.subtelny.islands.model.Island;
+import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.service.IslandActionGuard;
 import pl.subtelny.islands.service.IslandService;
 import pl.subtelny.utils.cuboid.Cuboid;

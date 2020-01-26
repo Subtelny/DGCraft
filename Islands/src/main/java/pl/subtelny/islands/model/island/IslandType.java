@@ -1,4 +1,4 @@
-package pl.subtelny.islands.model;
+package pl.subtelny.islands.model.island;
 
 public enum IslandType {
 

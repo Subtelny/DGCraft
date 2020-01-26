@@ -3,7 +3,7 @@ package pl.subtelny.islands.service;
 import org.bukkit.entity.Player;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
-import pl.subtelny.islands.model.Islander;
+import pl.subtelny.islands.model.islander.Islander;
 import pl.subtelny.islands.repository.island.storage.IslanderStorage;
 import pl.subtelny.islands.repository.island.synchronizer.IslanderSynchronizer;
 import pl.subtelny.jobs.JobsProvider;

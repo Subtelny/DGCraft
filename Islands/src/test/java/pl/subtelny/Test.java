@@ -2,6 +2,10 @@ package pl.subtelny;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import pl.subtelny.identity.BasicIdentity;
 import pl.subtelny.islands.repository.island.synchronizer.Synchronizer;
 
 import java.util.concurrent.*;
@@ -12,44 +16,54 @@ public class Test extends Synchronizer<Integer> {
 
     @org.junit.Test
     public void test() {
-        Executor executor = Executors.newCachedThreadPool();
+    	Cache<Long, TestIsland> islandCache = Caffeine.newBuilder().build();
+    	Cache<UUID, TestIslander> islanderCache = Caffeine.newBuilder().build();
 
-        Cache<Integer, String> cache = Caffeine.newBuilder().build();
-        Integer key = 1;
+    	TestIslander islander = new TestIslander();
+    	islander.setId(UUID.randomUUID());
+    	islanderCache.put(islander.getId(), islander);
 
-        CompletableFuture.runAsync(() -> {
-            System.out.println("START THREAD #1 = " + Thread.currentThread().getName());
-            String s = cache.get(key, integer -> computeCache(integer));
-            System.out.println(Thread.currentThread().getName() + " - " + s);
-        }, executor);
+    	TestIsland island = new TestIsland();
+    	island.setId(1L);
+    	islandCache.put(island.getId(), island);
 
-        CompletableFuture.runAsync(() -> {
-            System.out.println("START THREAD #2 = " + Thread.currentThread().getName());
-            //cache.put(key, key + "-heh");
-            String s = cache.get(1, this::computeCache);
-            System.out.println(Thread.currentThread().getName() + " - " + s);
-        }, executor);
-        CompletableFuture.runAsync(() -> {
-            System.out.println("START THREAD #3 = " + Thread.currentThread().getName());
-            String s = cache.get(key, this::computeCache);
-            System.out.println(Thread.currentThread().getName() + " - " + s);
-        }, executor);
+    	islander.setTestIsland(island);
+    	island.addIslander(islander);
 
-        try {
-            SECONDS.sleep(10);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+		TestIsland ifPresent = islandCache.getIfPresent(island.getId());
+		TestIslander ifPresent1 = islanderCache.getIfPresent(islander.getId());
+		islandCache.invalidate(1L);
 
-    private String computeCache(Integer key) {
-        try {
-            SECONDS.sleep(2);
-            return key + "-value";
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+		System.out.println("Island: " + ifPresent + " -" + ifPresent.getIslanders());
+		System.out.println("Islander: " + ifPresent1 + " -" + ifPresent1.getTestIsland());
+
+
+	}
+
+    private class TestIsland extends BasicIdentity<Long> {
+
+    	private List<TestIslander> islanders = new ArrayList<>();
+
+		public List<TestIslander> getIslanders() {
+			return islanders;
+		}
+
+		public void addIslander(TestIslander islander) {
+			islanders.add(islander);
+		}
+	}
+
+	private class TestIslander extends BasicIdentity<UUID> {
+
+    	private TestIsland testIsland;
+
+		public TestIsland getTestIsland() {
+			return testIsland;
+		}
+
+		public void setTestIsland(TestIsland testIsland) {
+			this.testIsland = testIsland;
+		}
+	}
 
 }

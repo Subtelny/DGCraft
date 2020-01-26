@@ -1,4 +1,4 @@
-package pl.subtelny.islands.model;
+package pl.subtelny.islands.model.islander;
 
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -9,7 +9,7 @@ import pl.subtelny.islands.model.guild.Guild;
 import pl.subtelny.islands.model.island.SkyblockIsland;
 import pl.subtelny.validation.ValidationException;
 
-public class Islander extends IslandMember {
+public class Islander {
 
 	private final Account account;
 
@@ -87,6 +87,8 @@ public class Islander extends IslandMember {
 
 		return new EqualsBuilder()
 				.append(account, islander.account)
+				.append(island, islander.island)
+				.append(guild, islander.guild)
 				.isEquals();
 	}
 
@@ -97,8 +99,4 @@ public class Islander extends IslandMember {
 				.toHashCode();
 	}
 
-	@Override
-	public IslandMemberType getIslandMemberType() {
-		return IslandMemberType.ISLANDER;
-	}
 }

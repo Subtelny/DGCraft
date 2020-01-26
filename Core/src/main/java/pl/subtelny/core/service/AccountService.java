@@ -35,7 +35,7 @@ public class AccountService implements Accounts {
     @Override
     public Account getAccount(Player player) {
         AccountId accountId = AccountId.of(player.getUniqueId());
-        Optional<Account> accountOpt = accountStorage.getCache(accountId);
+        Optional<Account> accountOpt = null;//accountStorage.getCache(accountId);
         if (accountOpt.isEmpty()) {
             return createNewAccount(player);
         }
@@ -44,7 +44,7 @@ public class AccountService implements Accounts {
 
     @Override
     public Optional<Account> findAccount(AccountId accountId) {
-        return accountStorage.getCache(accountId);
+        return null;//accountStorage.getCache(accountId);
     }
 
     private Account createNewAccount(Player player) {

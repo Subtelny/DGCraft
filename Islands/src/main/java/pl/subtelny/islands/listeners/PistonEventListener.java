@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
-import pl.subtelny.islands.model.Island;
+import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.service.IslandService;
 
 @Component

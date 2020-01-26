@@ -5,7 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import pl.subtelny.beans.Component;
-import pl.subtelny.islands.model.Island;
+import pl.subtelny.islands.model.island.Island;
 
 @Component
 public class IslandActionGuard {

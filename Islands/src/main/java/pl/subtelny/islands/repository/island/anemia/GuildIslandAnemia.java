@@ -1,11 +1,10 @@
-package pl.subtelny.islands.repository.island;
+package pl.subtelny.islands.repository.island.anemia;
 
 import java.time.LocalDateTime;
 import org.bukkit.Location;
-import pl.subtelny.islands.model.IslandType;
+import pl.subtelny.islands.model.island.IslandType;
 import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.repository.island.IslandAnemia;
 import pl.subtelny.utils.cuboid.Cuboid;
 
 public class GuildIslandAnemia extends IslandAnemia {
@@ -17,7 +16,7 @@ public class GuildIslandAnemia extends IslandAnemia {
 	private Cuboid cuboid;
 
 	public GuildIslandAnemia(IslandId islandId, LocalDateTime createdDate, Location spawn, GuildId owner, LocalDateTime protection, Cuboid cuboid) {
-		super(islandId, IslandType.GUILD, createdDate, spawn);
+		super(islandId, createdDate, spawn);
 		this.owner = owner;
 		this.protection = protection;
 		this.cuboid = cuboid;
@@ -45,5 +44,10 @@ public class GuildIslandAnemia extends IslandAnemia {
 
 	public void setProtection(LocalDateTime protection) {
 		this.protection = protection;
+	}
+
+	@Override
+	public IslandType getIslandType() {
+		return IslandType.GUILD;
 	}
 }

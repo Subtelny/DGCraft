@@ -1,7 +1,7 @@
 package pl.subtelny.islands.repository.island.updater;
 
 import org.jooq.Configuration;
-import pl.subtelny.islands.repository.island.IslandAnemia;
+import pl.subtelny.islands.repository.island.anemia.IslandAnemia;
 import pl.subtelny.repository.Updater;
 
 public class IslandUpdater extends Updater<IslandAnemia> {

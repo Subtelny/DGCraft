@@ -4,6 +4,12 @@ import org.bukkit.World;
 
 public class Settings {
 
+	public static class GuildIsland {
+
+		public static World ISLAND_WORLD;
+
+	}
+
 	public static class SkyblockIsland {
 
 		public static World ISLAND_WORLD;

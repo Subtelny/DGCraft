@@ -6,11 +6,11 @@ import java.util.Optional;
 import java.util.Set;
 import org.bukkit.entity.Player;
 import pl.subtelny.core.model.AccountId;
-import pl.subtelny.islands.model.Island;
+import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.model.IslandMember;
-import pl.subtelny.islands.model.IslandType;
-import pl.subtelny.islands.repository.island.GuildIslandAnemia;
-import pl.subtelny.islands.repository.island.IslandAnemia;
+import pl.subtelny.islands.model.island.IslandType;
+import pl.subtelny.islands.repository.island.anemia.GuildIslandAnemia;
+import pl.subtelny.islands.repository.island.anemia.IslandAnemia;
 import pl.subtelny.utils.cuboid.Cuboid;
 import pl.subtelny.validation.ValidationException;
 

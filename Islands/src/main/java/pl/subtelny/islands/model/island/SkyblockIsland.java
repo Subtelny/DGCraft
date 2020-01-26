@@ -1,145 +1,130 @@
 package pl.subtelny.islands.model.island;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
+import java.util.Optional;
+import java.util.Set;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import pl.subtelny.core.model.AccountId;
-import pl.subtelny.islands.model.*;
-import pl.subtelny.islands.repository.island.IslandAnemia;
-import pl.subtelny.islands.repository.island.SkyblockIslandAnemia;
+import pl.subtelny.islands.model.islander.Islander;
+import pl.subtelny.islands.repository.island.anemia.SkyblockIslandAnemia;
 import pl.subtelny.islands.settings.Settings;
 import pl.subtelny.islands.utils.LocationUtil;
 import pl.subtelny.islands.utils.SkyblockIslandUtil;
 import pl.subtelny.utils.cuboid.Cuboid;
 import pl.subtelny.validation.ValidationException;
 
-import java.util.Optional;
-import java.util.Set;
-
 public class SkyblockIsland extends Island {
 
-    private final IslandCoordinates islandCoordinates;
+	private Set<AccountId> members = Sets.newConcurrentHashSet();
 
-    private Islander owner;
+	public SkyblockIsland(SkyblockIslandAnemia islandAnemia, Cuboid cuboid, Set<AccountId> members) {
+		super(islandAnemia, cuboid);
+		this.members = members;
+	}
 
-    private Set<Islander> members = Sets.newConcurrentHashSet();
+	public SkyblockIsland(SkyblockIslandAnemia islandAnemia, Cuboid cuboid) {
+		super(islandAnemia, cuboid);
+	}
 
-    public SkyblockIsland(IslandAnemia islandAnemia, IslandCoordinates islandCoordinates, Cuboid cuboid) {
-        super(islandAnemia, cuboid);
-        Preconditions.checkArgument(islandAnemia.getIslandType() == IslandType.SKYBLOCK,
-                String.format("This IslandAnemia {%s} cannot be add to SkyblockIsland", islandAnemia));
-        this.islandCoordinates = islandCoordinates;
-    }
+	public void extendCuboid(int extendLevel) {
+		if (extendLevel > Settings.SkyblockIsland.EXTEND_LEVELS || extendLevel <= 0) {
+			throw new ValidationException(String.format("Value not match in bound %s-%s", 0, Settings.SkyblockIsland.EXTEND_LEVELS));
+		}
+		IslandCoordinates islandCoordinates = getIslandAnemia().getIslandCoordinates();
+		int x = islandCoordinates.getX();
+		int z = islandCoordinates.getZ();
+		int defaultSize = Settings.SkyblockIsland.ISLAND_SIZE;
+		int extendSize = Settings.SkyblockIsland.EXTEND_SIZE_PER_LEVEL * extendLevel;
+		int sumSize = defaultSize + extendSize;
+		int space = Settings.SkyblockIsland.SPACE_BETWEEN_ISLANDS;
+		if (extendLevel < Settings.SkyblockIsland.EXTEND_LEVELS) {
+			space = 0;
+		}
+		getIslandAnemia().setExtendLevel(extendLevel);
+		this.cuboid = SkyblockIslandUtil.calculateIslandCuboid(Settings.SkyblockIsland.ISLAND_WORLD, x, z, sumSize, space);
+	}
 
-    public void extendCuboid(int extendLevel) {
-        if (extendLevel > Settings.SkyblockIsland.EXTEND_LEVELS || extendLevel <= 0) {
-            throw new ValidationException(String.format("Value not match in bound %s-%s", 0, Settings.SkyblockIsland.EXTEND_LEVELS));
-        }
-        int x = islandCoordinates.getX();
-        int z = islandCoordinates.getZ();
-        int defaultSize = Settings.SkyblockIsland.ISLAND_SIZE;
-        int extendSize = Settings.SkyblockIsland.EXTEND_SIZE_PER_LEVEL * extendLevel;
-        int sumSize = defaultSize + extendSize;
-        int space = Settings.SkyblockIsland.SPACE_BETWEEN_ISLANDS;
-        if (extendLevel < Settings.SkyblockIsland.EXTEND_LEVELS) {
-            space = 0;
-        }
-        getIslandAnemia().setExtendLevel(extendLevel);
-        this.cuboid = SkyblockIslandUtil.calculateIslandCuboid(Settings.SkyblockIsland.ISLAND_WORLD, x, z, sumSize, space);
-    }
+	@Override
+	public void recalculateSpawn() {
+		Location center = getCuboid().getCenter();
 
-    @Override
-    public boolean isInIsland(Player player) {
-        Set<Islander> members = Sets.newHashSet(this.members);
-        members.add(owner);
-        AccountId accountId = AccountId.of(player.getUniqueId());
-        return members.stream().anyMatch(islander -> islander.getAccount().getAccountId().equals(accountId));
-    }
+		int maxY = (int) getCuboid().getUpperY();
+		int maxX = (int) getCuboid().getUpperX();
+		int maxZ = (int) getCuboid().getUpperZ();
+		int minX = (int) getCuboid().getLowerX();
+		int minY = (int) getCuboid().getLowerY();
+		int minZ = (int) getCuboid().getLowerZ();
 
-    @Override
-    public void recalculateSpawn() {
-        Location center = getCuboid().getCenter();
+		Optional<Location> safe = LocationUtil.findSafeLocationSpirally(center, maxX, maxY, maxZ, minX, minY, minZ);
+		safe.ifPresent(this::changeSpawn);
+	}
 
-        int maxY = (int) getCuboid().getUpperY();
-        int maxX = (int) getCuboid().getUpperX();
-        int maxZ = (int) getCuboid().getUpperZ();
-        int minX = (int) getCuboid().getLowerX();
-        int minY = (int) getCuboid().getLowerY();
-        int minZ = (int) getCuboid().getLowerZ();
+	public boolean isInIsland(Islander islander) {
+		AccountId accountId = islander.getAccount().getAccountId();
+		return getMembersAndOwner().contains(accountId);
+	}
 
-        Optional<Location> safe = LocationUtil.findSafeLocationSpirally(center, maxX, maxY, maxZ, minX, minY, minZ);
-        safe.ifPresent(this::changeSpawn);
-    }
+	public void changeOwner(Islander newOwner) {
+		Optional<SkyblockIsland> newOwnerIsland = newOwner.getIsland();
+		if (newOwnerIsland.isPresent()) {
+			throw new ValidationException("Cannot change owners. New owner has own island");
+		}
+		SkyblockIslandAnemia islandAnemia = getIslandAnemia();
+		AccountId accountId = newOwner.getAccount().getAccountId();
+		islandAnemia.setOwner(accountId);
+		newOwner.setIsland(this);
+	}
 
-    @Override
-    public void changeOwner(IslandMember newOwner) {
-        validateIslandMemberType(newOwner);
-        Islander newOwnerIslander = (Islander) newOwner;
-        Optional<SkyblockIsland> newOwnerIsland = newOwnerIslander.getIsland();
-        if (newOwnerIsland.isPresent()) {
-            throw new ValidationException("Cannot change owners. New owner has own island");
-        }
-        this.owner = newOwnerIslander;
-        newOwnerIslander.setIsland(this);
-    }
+	public void addMember(Islander islander) {
+		Optional<SkyblockIsland> islanderIsland = islander.getIsland();
+		if (islanderIsland.isPresent()) {
+			throw new ValidationException("IslandMember already has an island");
+		}
+		AccountId accountId = islander.getAccount().getAccountId();
+		members.add(accountId);
+		islander.setIsland(this);
+	}
 
-    @Override
-    public void addMember(IslandMember member) {
-        validateIslandMemberType(member);
-        Islander islander = (Islander) member;
-        Optional<SkyblockIsland> islanderIsland = islander.getIsland();
-        if (islanderIsland.isPresent()) {
-            throw new ValidationException("IslandMember already has an island");
-        }
-        members.add(islander);
-        islander.setIsland(this);
-    }
+	public void removeMember(Islander islander) {
+		AccountId accountId = islander.getAccount().getAccountId();
+		if (members.contains(accountId)) {
+			members.remove(accountId);
+			islander.setIsland(null);
+			return;
+		}
+		String message = String.format("Islander {Id: %s} is not added to island {Id: %s}", accountId, getIslandId());
+		throw new ValidationException(message);
+	}
 
-    @Override
-    public void removeMember(IslandMember member) {
-        validateIslandMemberType(member);
-        Islander islander = (Islander) member;
-        if (members.contains(islander)) {
-            members.remove(islander);
-            islander.setIsland(null);
-            return;
-        }
-        String message = String.format("Islander {Id: %s} is not added to island {Id: %s}", islander.getAccount().getAccountId(), getIslandId());
-        throw new ValidationException(message);
-    }
+	public AccountId getOwner() {
+		return getIslandAnemia().getOwner();
+	}
 
-    private void validateIslandMemberType(IslandMember member) {
-        if (member.getIslandMemberType() != IslandMemberType.ISLANDER) {
-            throw new ValidationException("SkyblockIsland accepts only Islanders as members");
-        }
-    }
+	public Set<AccountId> getMembers() {
+		return Sets.newHashSet(members);
+	}
 
-    public int getExtendLevel() {
-        return getIslandAnemia().getExtendLevel();
-    }
+	public Set<AccountId> getMembersAndOwner() {
+		Set<AccountId> members = getMembers();
+		members.add(getIslandAnemia().getOwner());
+		return members;
+	}
 
-    public IslandCoordinates getIslandCoordinates() {
-        return islandCoordinates;
-    }
+	public int getExtendLevel() {
+		return getIslandAnemia().getExtendLevel();
+	}
 
-    @Override
-    public IslandType getIslandType() {
-        return IslandType.SKYBLOCK;
-    }
+	public IslandCoordinates getIslandCoordinates() {
+		return getIslandAnemia().getIslandCoordinates();
+	}
 
-    @Override
-    public Optional<IslandMember> getOwner() {
-        return Optional.ofNullable(owner);
-    }
+	@Override
+	public IslandType getIslandType() {
+		return IslandType.SKYBLOCK;
+	}
 
-    @Override
-    public Set<IslandMember> getMembers() {
-        return Sets.newHashSet(members);
-    }
-
-    @Override
-    public SkyblockIslandAnemia getIslandAnemia() {
-        return (SkyblockIslandAnemia) super.getIslandAnemia();
-    }
+	@Override
+	protected SkyblockIslandAnemia getIslandAnemia() {
+		return (SkyblockIslandAnemia) super.getIslandAnemia();
+	}
 }

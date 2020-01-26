@@ -30,17 +30,17 @@ public class AccountAnemiaLoadAction implements LoadAction<AccountAnemia> {
 
     @Override
     public LoaderResult<AccountAnemia> perform() {
-        List<AccountAnemia> accountAnemias = loadAccountAnemia();
+        AccountAnemia accountAnemias = loadAccountAnemia();
         return new LoaderResult<>(accountAnemias);
     }
 
-    private List<AccountAnemia> loadAccountAnemia() {
+    private AccountAnemia loadAccountAnemia() {
 		List<Condition> requestFieldsToConditions = mapRequestToConditions();
 		return DSL.using(configuration)
                 .select()
                 .from(Accounts.ACCOUNTS)
                 .where(requestFieldsToConditions)
-                .fetch(this::mapToAccountAnemia);
+                .fetchOne(this::mapToAccountAnemia);
     }
 
 	private List<Condition> mapRequestToConditions() {

@@ -1,10 +1,9 @@
-package pl.subtelny.islands.repository.island;
+package pl.subtelny.islands.repository.island.anemia;
 
 import java.time.LocalDateTime;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import pl.subtelny.core.model.AccountId;
-import pl.subtelny.islands.model.IslandType;
+import pl.subtelny.islands.model.island.IslandType;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
 
@@ -18,7 +17,7 @@ public class SkyblockIslandAnemia extends IslandAnemia {
 
 	public SkyblockIslandAnemia(IslandId islandId, LocalDateTime createdDate, Location spawn,
 			IslandCoordinates islandCoordinates, AccountId owner, int extendLevel) {
-		super(islandId, IslandType.SKYBLOCK, createdDate, spawn);
+		super(islandId, createdDate, spawn);
 		this.islandCoordinates = islandCoordinates;
 		this.owner = owner;
 		this.extendLevel = extendLevel;
@@ -46,5 +45,10 @@ public class SkyblockIslandAnemia extends IslandAnemia {
 
 	public void setExtendLevel(int extendLevel) {
 		this.extendLevel = extendLevel;
+	}
+
+	@Override
+	public IslandType getIslandType() {
+		return IslandType.SKYBLOCK;
 	}
 }

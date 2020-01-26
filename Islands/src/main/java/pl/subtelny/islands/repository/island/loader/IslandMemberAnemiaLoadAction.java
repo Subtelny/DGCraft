@@ -1,6 +1,5 @@
 package pl.subtelny.islands.repository.island.loader;
 
-import com.google.common.collect.Lists;
 import java.util.List;
 import org.jooq.Configuration;
 import org.jooq.Record;
@@ -8,26 +7,25 @@ import org.jooq.impl.DSL;
 import pl.subtelny.core.generated.tables.IslandMembers;
 import pl.subtelny.islands.model.IslandMemberType;
 import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.repository.island.IslandMemberAnemia;
+import pl.subtelny.islands.repository.island.anemia.IslandMemberAnemia;
 import pl.subtelny.repository.LoadAction;
 import pl.subtelny.repository.LoaderResult;
 
-public class IslandMemberAnemiaLoader extends LoadAction<IslandMemberAnemia> {
+public class IslandMemberAnemiaLoadAction implements LoadAction<List<IslandMemberAnemia>> {
 
 	private final Configuration configuration;
 
 	private final IslandMemberAnemiaLoaderRequest request;
 
-	public IslandMemberAnemiaLoader(Configuration configuration, IslandMemberAnemiaLoaderRequest request) {
+	public IslandMemberAnemiaLoadAction(Configuration configuration, IslandMemberAnemiaLoaderRequest request) {
 		this.configuration = configuration;
 		this.request = request;
 	}
 
 	@Override
-	public LoaderResult<IslandMemberAnemia> perform() {
-		List<IslandMemberAnemia> islandMembersData = Lists.newArrayList();
-		islandMembersData.addAll(loadIslandMemberData());
-		return new LoaderResult(islandMembersData);
+	public LoaderResult<List<IslandMemberAnemia>> perform() {
+		List<IslandMemberAnemia> islandMemberAnemia = loadIslandMemberData();
+		return new LoaderResult(islandMemberAnemia);
 	}
 
 	private List<IslandMemberAnemia> loadIslandMemberData() {

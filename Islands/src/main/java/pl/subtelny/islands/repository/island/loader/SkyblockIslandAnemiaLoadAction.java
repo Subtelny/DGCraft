@@ -13,10 +13,10 @@ import pl.subtelny.core.generated.enums.Islandtype;
 import pl.subtelny.core.generated.tables.Islands;
 import pl.subtelny.core.generated.tables.SkyblockIslands;
 import pl.subtelny.core.model.AccountId;
-import pl.subtelny.islands.model.IslandType;
+import pl.subtelny.islands.model.island.IslandType;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.repository.island.SkyblockIslandAnemia;
+import pl.subtelny.islands.repository.island.anemia.SkyblockIslandAnemia;
 import pl.subtelny.islands.utils.LocationSerializer;
 
 public class SkyblockIslandAnemiaLoadAction extends IslandAnemiaLoadAction<SkyblockIslandAnemia> {
@@ -86,7 +86,7 @@ public class SkyblockIslandAnemiaLoadAction extends IslandAnemiaLoadAction<Skybl
 		return IslandType.SKYBLOCK;
 	}
 
-	private class SkyblockIslandAnemiaDTO {
+	private static class SkyblockIslandAnemiaDTO {
 
 		public LocalDateTime createdDate;
 

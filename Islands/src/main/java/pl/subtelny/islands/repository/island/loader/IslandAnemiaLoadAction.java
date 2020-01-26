@@ -10,7 +10,7 @@ import org.jooq.impl.DSL;
 import pl.subtelny.core.generated.tables.GuildIslands;
 import pl.subtelny.core.generated.tables.Islands;
 import pl.subtelny.core.generated.tables.SkyblockIslands;
-import pl.subtelny.islands.model.IslandType;
+import pl.subtelny.islands.model.island.IslandType;
 import pl.subtelny.repository.LoadAction;
 import pl.subtelny.repository.LoaderResult;
 import pl.subtelny.validation.ValidationException;
@@ -25,17 +25,17 @@ public abstract class IslandAnemiaLoadAction<ANEMIA> implements LoadAction<ANEMI
 
 	@Override
 	public LoaderResult<ANEMIA> perform() {
-		List<ANEMIA> islandAnemia = loadIslandAnemia();
-		return new LoaderResult<ANEMIA>(islandAnemia);
+		ANEMIA islandAnemia = loadIslandAnemia();
+		return new LoaderResult<>(islandAnemia);
 	}
 
-	private List<ANEMIA> loadIslandAnemia() {
+	private ANEMIA loadIslandAnemia() {
 		SelectJoinStep<Record> from = DSL.using(configuration)
 				.select()
 				.from(Islands.ISLANDS);
 		return addJoinIslandToQuery(from)
 				.where(whereConditions())
-				.fetch(this::fetchMapRecordIntoAnemia);
+				.fetchOne(this::fetchMapRecordIntoAnemia);
 	}
 
 	private SelectOnConditionStep<Record> addJoinIslandToQuery(SelectJoinStep<Record> from) {

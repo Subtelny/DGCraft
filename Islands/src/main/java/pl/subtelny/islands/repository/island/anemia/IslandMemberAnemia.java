@@ -1,4 +1,4 @@
-package pl.subtelny.islands.repository.island;
+package pl.subtelny.islands.repository.island.anemia;
 
 import pl.subtelny.islands.model.IslandMemberType;
 import pl.subtelny.islands.model.island.IslandId;
@@ -10,9 +10,6 @@ public class IslandMemberAnemia {
 	private String id;
 
 	private IslandMemberType islandMemberType;
-
-	public IslandMemberAnemia() {
-	}
 
 	public IslandMemberAnemia(IslandId islandId, String id, IslandMemberType islandMemberType) {
 		this.islandId = islandId;

@@ -1,6 +1,5 @@
 package pl.subtelny.core.repository.loader;
 
-import java.util.List;
 import java.util.Optional;
 import org.jooq.Configuration;
 import pl.subtelny.core.model.Account;
@@ -25,11 +24,8 @@ public class AccountLoader {
 
 	private Optional<AccountAnemia> performAction(AccountLoadRequest request) {
 		AccountAnemiaLoadAction loader = new AccountAnemiaLoadAction(configuration, request);
-		List<AccountAnemia> loadedData = loader.perform().getLoadedData();
-		if (loadedData.size() == 0) {
-			return Optional.empty();
-		}
-		return Optional.of(loadedData.get(0));
+		AccountAnemia loadedData = loader.perform().getLoadedData();
+		return Optional.ofNullable(loadedData);
 	}
 
 	private static class AccountMapper {

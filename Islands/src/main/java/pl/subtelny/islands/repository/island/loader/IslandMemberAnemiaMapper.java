@@ -5,7 +5,7 @@ import org.jooq.RecordMapper;
 import pl.subtelny.core.generated.tables.IslandMembers;
 import pl.subtelny.islands.model.IslandMemberType;
 import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.repository.island.IslandMemberAnemia;
+import pl.subtelny.islands.repository.island.anemia.IslandMemberAnemia;
 
 class IslandMemberAnemiaMapper implements RecordMapper<Record, IslandMemberAnemia> {
 

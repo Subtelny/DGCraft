@@ -26,16 +26,16 @@ public class AccountAnemiaLoader extends Loader<AccountAnemia> {
 
     @Override
     public LoaderResult<AccountAnemia> perform() {
-        List<AccountAnemia> accountAnemias = loadAccountAnemia();
+        AccountAnemia accountAnemias = loadAccountAnemia();
         return new LoaderResult<>(accountAnemias);
     }
 
-    private List<AccountAnemia> loadAccountAnemia() {
+    private AccountAnemia loadAccountAnemia() {
         return DSL.using(configuration)
                 .select()
                 .from(Accounts.ACCOUNTS)
                 .where(request.getWhere())
-                .fetch(this::mapToAccountAnemia);
+                .fetchOne(this::mapToAccountAnemia);
     }
 
     private AccountAnemia mapToAccountAnemia(Record record) {

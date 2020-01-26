@@ -20,6 +20,10 @@ public abstract class BasicIdentity<T> implements Serializable {
 		return id;
 	}
 
+	public void setId(T id) {
+		this.id = id;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
