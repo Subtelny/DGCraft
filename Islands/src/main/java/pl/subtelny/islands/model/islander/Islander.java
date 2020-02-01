@@ -6,6 +6,8 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import pl.subtelny.core.model.Account;
 import pl.subtelny.islands.model.guild.Guild;
+import pl.subtelny.islands.model.guild.GuildId;
+import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.model.island.SkyblockIsland;
 import pl.subtelny.validation.ValidationException;
 
@@ -13,9 +15,15 @@ public class Islander {
 
 	private final Account account;
 
-	private SkyblockIsland island;
+	private IslandId skyblockIsland;
 
-	private Guild guild;
+	private GuildId guild;
+
+	public Islander(Account account, IslandId skyblockIsland, GuildId guild) {
+		this.account = account;
+		this.skyblockIsland = skyblockIsland;
+		this.guild = guild;
+	}
 
 	public Islander(Account account) {
 		this.account = account;
@@ -23,54 +31,36 @@ public class Islander {
 
 	public void setGuild(@Nullable Guild guild) {
 		if (guild == null) {
-			removeGuild();
+			this.guild = null;
 		} else {
 			if (!guild.isInGuild(this)) {
 				throw new ValidationException("This islander is not added to guild");
 			}
-			this.guild = guild;
+			this.guild = guild.getGuildId();
 		}
 	}
 
-	private void removeGuild() {
-		if (guild != null) {
-			if (guild.isInGuild(this)) {
-				throw new ValidationException("Cannot remove Islander's guild. Firstly remove Islander from guild");
-			}
-			guild = null;
-		}
-	}
-
-	public void setIsland(@Nullable SkyblockIsland island) {
-		if (island == null) {
-			removeIsland();
+	public void setIsland(@Nullable SkyblockIsland skyblockIsland) {
+		if (skyblockIsland == null) {
+			this.skyblockIsland = null;
 		} else {
-			if (!island.isInIsland(this)) {
+			if (!skyblockIsland.isInIsland(this)) {
 				throw new ValidationException("This islander is not added to island");
 			}
-			this.island = island;
+			this.skyblockIsland = skyblockIsland.getIslandId();
 		}
 	}
 
-	private void removeIsland() {
-		if (island != null) {
-			if (island.isInIsland(this)) {
-				throw new ValidationException("Cannot remove Islander's island. Firstly remove Islander from island");
-			}
-			island = null;
-		}
-	}
-
-	public Optional<Guild> getGuild() {
+	public Optional<GuildId> getGuild() {
 		return Optional.ofNullable(guild);
+	}
+
+	public Optional<IslandId> getSkyblockIsland() {
+		return Optional.ofNullable(skyblockIsland);
 	}
 
 	public Account getAccount() {
 		return account;
-	}
-
-	public Optional<SkyblockIsland> getIsland() {
-		return Optional.ofNullable(island);
 	}
 
 	@Override
@@ -87,7 +77,7 @@ public class Islander {
 
 		return new EqualsBuilder()
 				.append(account, islander.account)
-				.append(island, islander.island)
+				.append(skyblockIsland, islander.skyblockIsland)
 				.append(guild, islander.guild)
 				.isEquals();
 	}

@@ -8,7 +8,8 @@ import javax.annotation.processing.Generated;
 
 import pl.subtelny.core.generated.tables.Accounts;
 import pl.subtelny.core.generated.tables.GuildIslands;
-import pl.subtelny.core.generated.tables.IslandMembers;
+import pl.subtelny.core.generated.tables.Guilds;
+import pl.subtelny.core.generated.tables.Islanders;
 import pl.subtelny.core.generated.tables.Islands;
 import pl.subtelny.core.generated.tables.SkyblockIslands;
 
@@ -37,9 +38,14 @@ public class Tables {
     public static final GuildIslands GUILD_ISLANDS = GuildIslands.GUILD_ISLANDS;
 
     /**
-     * The table <code>public.island_members</code>.
+     * The table <code>public.guilds</code>.
      */
-    public static final IslandMembers ISLAND_MEMBERS = IslandMembers.ISLAND_MEMBERS;
+    public static final Guilds GUILDS = Guilds.GUILDS;
+
+    /**
+     * The table <code>public.islanders</code>.
+     */
+    public static final Islanders ISLANDERS = Islanders.ISLANDERS;
 
     /**
      * The table <code>public.islands</code>.

@@ -42,7 +42,7 @@ import pl.subtelny.core.generated.tables.records.GuildIslandsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GuildIslands extends TableImpl<GuildIslandsRecord> {
 
-    private static final long serialVersionUID = 140207659;
+    private static final long serialVersionUID = 1351292921;
 
     /**
      * The reference instance of <code>public.guild_islands</code>
@@ -132,11 +132,15 @@ public class GuildIslands extends TableImpl<GuildIslandsRecord> {
 
     @Override
     public List<ForeignKey<GuildIslandsRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<GuildIslandsRecord, ?>>asList(Keys.GUILD_ISLANDS__GUILD_ISLANDS_ISLAND_ID_FKEY);
+        return Arrays.<ForeignKey<GuildIslandsRecord, ?>>asList(Keys.GUILD_ISLANDS__GUILD_ISLANDS_ISLAND_ID_FKEY, Keys.GUILD_ISLANDS__GUILD_ISLANDS_OWNER_FKEY);
     }
 
     public Islands islands() {
         return new Islands(this, Keys.GUILD_ISLANDS__GUILD_ISLANDS_ISLAND_ID_FKEY);
+    }
+
+    public Guilds guilds() {
+        return new Guilds(this, Keys.GUILD_ISLANDS__GUILD_ISLANDS_OWNER_FKEY);
     }
 
     @Override

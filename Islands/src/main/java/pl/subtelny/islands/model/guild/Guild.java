@@ -18,4 +18,7 @@ public class Guild {
 		return Sets.newHashSet(members);
 	}
 
+	public GuildId getGuildId() {
+		return null;
+	}
 }

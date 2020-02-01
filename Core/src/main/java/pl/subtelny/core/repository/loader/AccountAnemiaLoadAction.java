@@ -1,10 +1,10 @@
 package pl.subtelny.core.repository.loader;
 
 import com.google.common.collect.Lists;
-import java.util.Optional;
 import org.jooq.Condition;
 import org.jooq.Configuration;
 import org.jooq.Record;
+import org.jooq.SelectConditionStep;
 import org.jooq.impl.DSL;
 import pl.subtelny.core.generated.tables.Accounts;
 import pl.subtelny.core.model.AccountId;
@@ -15,6 +15,7 @@ import pl.subtelny.repository.LoaderResult;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class AccountAnemiaLoadAction implements LoadAction<AccountAnemia> {
@@ -30,36 +31,50 @@ public class AccountAnemiaLoadAction implements LoadAction<AccountAnemia> {
 
     @Override
     public LoaderResult<AccountAnemia> perform() {
-        AccountAnemia accountAnemias = loadAccountAnemia();
+        AccountAnemia accountAnemias = loadOneAccountAnemia();
         return new LoaderResult<>(accountAnemias);
     }
 
-    private AccountAnemia loadAccountAnemia() {
-		List<Condition> requestFieldsToConditions = mapRequestToConditions();
-		return DSL.using(configuration)
-                .select()
-                .from(Accounts.ACCOUNTS)
-                .where(requestFieldsToConditions)
+    @Override
+    public LoaderResult<List<AccountAnemia>> performList() {
+        List<AccountAnemia> accountAnemias = loadAllAccountAnemia();
+        return new LoaderResult<>(accountAnemias);
+    }
+
+    private AccountAnemia loadOneAccountAnemia() {
+        return constructQuery(mapRequestToConditions())
                 .fetchOne(this::mapToAccountAnemia);
     }
 
-	private List<Condition> mapRequestToConditions() {
-		Optional<AccountId> accountIdOpt = request.getAccountId();
-		Optional<String> nameOpt = request.getName();
+    private List<AccountAnemia> loadAllAccountAnemia() {
+        return constructQuery(mapRequestToConditions())
+                .fetch(this::mapToAccountAnemia);
+    }
 
-		List<Condition> conditions = Lists.newArrayList();
-		if(accountIdOpt.isPresent()) {
-			AccountId accountId = accountIdOpt.get();
-			Condition conditionId = Accounts.ACCOUNTS.ID.eq(accountId.getId());
-			conditions.add(conditionId);
-		}
-		if(nameOpt.isPresent()) {
-			String name = nameOpt.get();
-			Condition conditionName = Accounts.ACCOUNTS.NAME.eq(name);
-			conditions.add(conditionName);
-		}
-		return conditions;
-	}
+    private SelectConditionStep<Record> constructQuery(List<Condition> requestFieldsToConditions) {
+        return DSL.using(configuration)
+                .select()
+                .from(Accounts.ACCOUNTS)
+                .where(requestFieldsToConditions);
+    }
+
+    private List<Condition> mapRequestToConditions() {
+        Optional<AccountId> accountIdOpt = request.getAccountId();
+        Optional<String> nameOpt = request.getName();
+
+        List<Condition> conditions = Lists.newArrayList();
+        if (accountIdOpt.isPresent()) {
+            AccountId accountId = accountIdOpt.get();
+            Condition conditionId = Accounts.ACCOUNTS.ID.eq(accountId.getId());
+            conditions.add(conditionId);
+        }
+        if (nameOpt.isPresent()) {
+            String name = nameOpt.get();
+            Condition conditionName = Accounts.ACCOUNTS.NAME.eq(name);
+            conditions.add(conditionName);
+        }
+        return conditions;
+    }
 
     private AccountAnemia mapToAccountAnemia(Record record) {
         UUID uuid = record.get(Accounts.ACCOUNTS.ID);

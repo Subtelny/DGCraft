@@ -1,11 +1,8 @@
 package pl.subtelny.islands.repository.island.loader;
 
 import java.util.List;
-import org.jooq.Condition;
-import org.jooq.Configuration;
-import org.jooq.Record;
-import org.jooq.SelectJoinStep;
-import org.jooq.SelectOnConditionStep;
+
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import pl.subtelny.core.generated.tables.GuildIslands;
 import pl.subtelny.core.generated.tables.Islands;
@@ -25,17 +22,32 @@ public abstract class IslandAnemiaLoadAction<ANEMIA> implements LoadAction<ANEMI
 
 	@Override
 	public LoaderResult<ANEMIA> perform() {
-		ANEMIA islandAnemia = loadIslandAnemia();
+		ANEMIA islandAnemia = loadOneIslandAnemia();
 		return new LoaderResult<>(islandAnemia);
 	}
 
-	private ANEMIA loadIslandAnemia() {
+	@Override
+	public LoaderResult<List<ANEMIA>> performList() {
+		List<ANEMIA> islandAnemia = loadAllIslandAnemia();
+		return new LoaderResult<>(islandAnemia);
+	}
+
+	private ANEMIA loadOneIslandAnemia() {
+		return constructQuery()
+				.fetchOne(this::fetchMapRecordIntoAnemia);
+	}
+
+	private List<ANEMIA> loadAllIslandAnemia() {
+		return constructQuery()
+				.fetch(this::fetchMapRecordIntoAnemia);
+	}
+
+	private SelectConditionStep<Record> constructQuery() {
 		SelectJoinStep<Record> from = DSL.using(configuration)
 				.select()
 				.from(Islands.ISLANDS);
 		return addJoinIslandToQuery(from)
-				.where(whereConditions())
-				.fetchOne(this::fetchMapRecordIntoAnemia);
+				.where(whereConditions());
 	}
 
 	private SelectOnConditionStep<Record> addJoinIslandToQuery(SelectJoinStep<Record> from) {

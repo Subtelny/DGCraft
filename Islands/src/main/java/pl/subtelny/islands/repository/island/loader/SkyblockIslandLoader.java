@@ -5,9 +5,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import com.google.common.collect.Sets;
 import org.jooq.Configuration;
+import org.jooq.impl.DSL;
+import pl.subtelny.core.generated.tables.Islanders;
 import pl.subtelny.core.model.AccountId;
 import pl.subtelny.islands.model.IslandMemberType;
+import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.model.island.SkyblockIsland;
 import pl.subtelny.islands.repository.island.anemia.IslandMemberAnemia;
 import pl.subtelny.islands.repository.island.anemia.SkyblockIslandAnemia;
@@ -26,15 +31,19 @@ public class SkyblockIslandLoader extends IslandLoader<SkyblockIslandAnemia, Sky
 	}
 
 	@Override
-	protected SkyblockIsland mapAnemiaToDomain(SkyblockIslandAnemia anemia,
-			List<IslandMemberAnemia> islandMembers) {
-
-		Set<AccountId> members = islandMembers.stream()
-				.filter(memberAnemia -> memberAnemia.getIslandMemberType() == IslandMemberType.ISLANDER)
-				.map(memberAnemia -> AccountId.of(UUID.fromString(memberAnemia.getId())))
-				.collect(Collectors.toSet());
+	protected SkyblockIsland mapAnemiaToDomain(SkyblockIslandAnemia anemia) {
+		List<AccountId> members = loadIslandMembers(anemia.getIslandId());
+		members.removeIf(accountId -> accountId.equals(anemia.getOwner()));
 
 		Cuboid cuboid = SkyblockIslandUtil.defaultCuboid(anemia.getIslandCoordinates());
-		return new SkyblockIsland(anemia, cuboid, members);
+		return new SkyblockIsland(anemia, cuboid, Sets.newHashSet(members));
+	}
+
+	protected List<AccountId> loadIslandMembers(IslandId islandId) {
+		return DSL.using(configuration)
+				.select(Islanders.ISLANDERS.ID)
+				.from(Islanders.ISLANDERS)
+				.where(Islanders.ISLANDERS.SKYBLOCK_ISLAND.eq(islandId.getId()))
+				.fetch(uuidRecord1 -> AccountId.of(uuidRecord1.component1()));
 	}
 }

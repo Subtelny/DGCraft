@@ -65,7 +65,7 @@ public class SkyblockIsland extends Island {
 	}
 
 	public void changeOwner(Islander newOwner) {
-		Optional<SkyblockIsland> newOwnerIsland = newOwner.getIsland();
+		Optional<IslandId> newOwnerIsland = newOwner.getSkyblockIsland();
 		if (newOwnerIsland.isPresent()) {
 			throw new ValidationException("Cannot change owners. New owner has own island");
 		}
@@ -76,7 +76,7 @@ public class SkyblockIsland extends Island {
 	}
 
 	public void addMember(Islander islander) {
-		Optional<SkyblockIsland> islanderIsland = islander.getIsland();
+		Optional<IslandId> islanderIsland = islander.getSkyblockIsland();
 		if (islanderIsland.isPresent()) {
 			throw new ValidationException("IslandMember already has an island");
 		}

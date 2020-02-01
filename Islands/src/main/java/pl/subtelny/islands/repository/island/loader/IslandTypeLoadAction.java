@@ -1,5 +1,8 @@
 package pl.subtelny.islands.repository.island.loader;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import org.jooq.Configuration;
 import org.jooq.Record1;
@@ -26,6 +29,12 @@ public class IslandTypeLoadAction implements LoadAction<Optional<IslandType>> {
 	public LoaderResult<Optional<IslandType>> perform() {
 		Optional<IslandType> islandTypeOpt = findIslandType(islandId);
 		return new LoaderResult<>(islandTypeOpt);
+	}
+
+	@Override
+	public LoaderResult<List<Optional<IslandType>>> performList() {
+		Optional<IslandType> islandTypeOpt = findIslandType(islandId);
+		return new LoaderResult<>(Collections.singletonList(islandTypeOpt));
 	}
 
 	private Optional<IslandType> findIslandType(IslandId islandId) {
