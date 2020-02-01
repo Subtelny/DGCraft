@@ -15,6 +15,9 @@ public class GuildIslandAnemia extends IslandAnemia {
 
 	private Cuboid cuboid;
 
+	public GuildIslandAnemia() {
+	}
+
 	public GuildIslandAnemia(IslandId islandId, LocalDateTime createdDate, Location spawn, GuildId owner, LocalDateTime protection, Cuboid cuboid) {
 		super(islandId, createdDate, spawn);
 		this.owner = owner;

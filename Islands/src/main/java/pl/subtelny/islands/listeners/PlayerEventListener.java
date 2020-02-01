@@ -7,9 +7,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
 import pl.subtelny.islands.service.IslandActionGuard;
+import pl.subtelny.islands.service.IslandActionGuardResult;
 import pl.subtelny.islands.service.IslanderService;
 
 @Component
@@ -29,7 +31,7 @@ public class PlayerEventListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        islanderService.loadIslander(player);
+        islanderService.createIslanderIfNotExists(player);
     }
 
     @EventHandler
@@ -37,10 +39,14 @@ public class PlayerEventListener implements Listener {
         Player player = e.getPlayer();
         Entity entity = e.getEntity();
 
-        boolean canInteract = islandActionGuard.accessToInteract(player, entity);
-        if (!canInteract) {
+        IslandActionGuardResult result = islandActionGuard.accessToInteract(player, entity);
+        if (!hasAccessToAction(result)) {
             e.setCancelled(true);
         }
+    }
+
+    private boolean hasAccessToAction(IslandActionGuardResult result) {
+        return IslandActionGuardResult.ACTION_PERMITED == result;
     }
 
 }

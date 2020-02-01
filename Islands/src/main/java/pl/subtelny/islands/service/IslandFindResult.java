@@ -8,18 +8,26 @@ public class IslandFindResult {
 
 	private CompletableFuture<Optional<Island>> island;
 
-	private boolean isLoading;
+	public IslandFindResult() {
+	}
 
-	public IslandFindResult(CompletableFuture<Optional<Island>> island, boolean isLoading) {
+	public IslandFindResult(CompletableFuture<Optional<Island>> island) {
 		this.island = island;
-		this.isLoading = isLoading;
 	}
 
 	public CompletableFuture<Optional<Island>> getIsland() {
 		return island;
 	}
 
+	public boolean isEmpty() {
+		return island == null;
+	}
+
 	public boolean isLoading() {
-		return isLoading;
+		if(isEmpty()) {
+			return false;
+		}
+		CompletableFuture<Optional<Island>> islandOpt = getIsland();
+		return !islandOpt.isDone();
 	}
 }

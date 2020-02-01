@@ -15,12 +15,18 @@ public class SkyblockIslandAnemia extends IslandAnemia {
 
 	private int extendLevel;
 
+	private int points;
+
+	public SkyblockIslandAnemia() {
+	}
+
 	public SkyblockIslandAnemia(IslandId islandId, LocalDateTime createdDate, Location spawn,
-			IslandCoordinates islandCoordinates, AccountId owner, int extendLevel) {
+								IslandCoordinates islandCoordinates, AccountId owner, int extendLevel, int points) {
 		super(islandId, createdDate, spawn);
 		this.islandCoordinates = islandCoordinates;
 		this.owner = owner;
 		this.extendLevel = extendLevel;
+		this.points = points;
 	}
 
 	public IslandCoordinates getIslandCoordinates() {
@@ -45,6 +51,14 @@ public class SkyblockIslandAnemia extends IslandAnemia {
 
 	public void setExtendLevel(int extendLevel) {
 		this.extendLevel = extendLevel;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
 	}
 
 	@Override

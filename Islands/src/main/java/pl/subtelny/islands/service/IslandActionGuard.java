@@ -1,55 +1,98 @@
 package pl.subtelny.islands.service;
 
-import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import pl.subtelny.beans.Component;
 import pl.subtelny.islands.model.island.Island;
+import pl.subtelny.validation.ValidationException;
+
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Component
 public class IslandActionGuard {
 
-	private final IslandService islandService;
+    private final IslandService islandService;
 
-	public IslandActionGuard(IslandService islandService) {
-		this.islandService = islandService;
-	}
+    public IslandActionGuard(IslandService islandService) {
+        this.islandService = islandService;
+    }
 
-	public boolean accessToInteract(Entity entity, Entity toIncteract) {
-		if (entity.hasPermission("dgcraft.islands.interact.bypass")) {
-			return true;
-		}
-		Optional<Island> islandAtLocationOpt = islandService.findIslandAtLocation(toIncteract.getLocation());
-		if (islandAtLocationOpt.isPresent()) {
-			Island islandAtLocation = islandAtLocationOpt.get();
-			return islandAtLocation.canInteract(entity, toIncteract);
-		}
-		return true;
-	}
+    public IslandActionGuardResult accessToInteract(Entity entity, Entity toInteract) {
+        if (entity.hasPermission("dgcraft.islands.interact.bypass")) {
+            return IslandActionGuardResult.ACTION_PERMITED;
+        }
+        Location location = toInteract.getLocation();
+        return isPlayerWithAccessToLocation(entity, location);
+    }
 
-	public boolean accessToHit(Entity attacker, Entity victim) {
-		if (attacker.hasPermission("dgcraft.islands.attack.bypass")) {
-			return true;
-		}
-		Optional<Island> victimsIslandOpt = islandService.findIslandAtLocation(victim.getLocation());
-		if (victimsIslandOpt.isPresent()) {
-			Island victimsIsland = victimsIslandOpt.get();
-			return victimsIsland.canHit(attacker, victim);
-		}
-		return true;
-	}
+    public IslandActionGuardResult accessToHit(Entity attacker, Entity victim) {
+        if (attacker.hasPermission("dgcraft.islands.attack.bypass")) {
+            return IslandActionGuardResult.ACTION_PERMITED;
+        }
+        Location location = victim.getLocation();
+        return isPlayerWithAccessToLocation(attacker, location);
+    }
 
-	public boolean accessToBuild(Player player, Location location) {
-		if (player.hasPermission("dgcraft.islands.build.bypass")) {
-			return true;
-		}
-		Optional<Island> islandAtLocationOpt = islandService.findIslandAtLocation(location);
-		if (islandAtLocationOpt.isPresent()) {
-			Island islandAtLocation = islandAtLocationOpt.get();
-			return islandAtLocation.canBuild(player);
-		}
-		return true;
-	}
+    private IslandActionGuardResult isPlayerWithAccessToLocation(Entity entity, Location location) {
+        if (isPlayer(entity)) {
+            Player player = (Player) entity;
+            return playerHasAccessToLocation(player, location);
+        }
+        return IslandActionGuardResult.ACTION_PERMITED;
+    }
+
+    private boolean isPlayer(Entity entity) {
+        return entity.getType() == EntityType.PLAYER;
+    }
+
+    public IslandActionGuardResult accessToBuild(Player player, Location location) {
+        if (player.hasPermission("dgcraft.islands.build.bypass")) {
+            return IslandActionGuardResult.ACTION_PERMITED;
+        }
+        return playerHasAccessToLocation(player, location);
+    }
+
+    private IslandActionGuardResult playerHasAccessToLocation(Player entity, Location location) {
+        IslandFindResult islandFindResult = findIslandAtLocationAndValidate(location);
+        if (!islandFindResult.isEmpty()) {
+            if (islandFindResult.isLoading()) {
+                return IslandActionGuardResult.ISLAND_LOADING;
+            }
+            if (!playerIsInIsland(entity, islandFindResult)) {
+                return IslandActionGuardResult.ACTION_PROHIBITED;
+            }
+        }
+        return IslandActionGuardResult.ACTION_PERMITED;
+    }
+
+    private IslandFindResult findIslandAtLocationAndValidate(Location location) {
+        IslandFindResult islandFindResult = islandService.findIslandAtLocation(location);
+        if (islandFindResult.isLoading()) {
+            throw ValidationException.of("Island is loading");
+        }
+        return islandFindResult;
+    }
+
+    private boolean playerIsInIsland(Player player, IslandFindResult islandFindResult) {
+        Optional<Island> islandOpt = getIslandFromResult(islandFindResult);
+        if (islandOpt.isPresent()) {
+            Island island = islandOpt.get();
+            return islandService.isInIsland(player, island);
+        }
+        return false;
+    }
+
+    private Optional<Island> getIslandFromResult(IslandFindResult result) {
+        CompletableFuture<Optional<Island>> future = result.getIsland();
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw ValidationException.of("There is problem with load island");
+        }
+    }
 
 }

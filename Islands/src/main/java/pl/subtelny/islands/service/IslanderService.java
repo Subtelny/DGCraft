@@ -3,43 +3,31 @@ package pl.subtelny.islands.service;
 import org.bukkit.entity.Player;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
+import pl.subtelny.core.model.AccountId;
 import pl.subtelny.islands.model.islander.Islander;
-import pl.subtelny.islands.repository.island.storage.IslanderStorage;
-import pl.subtelny.islands.repository.island.synchronizer.IslanderSynchronizer;
+import pl.subtelny.islands.repository.islander.IslanderRepository;
 import pl.subtelny.jobs.JobsProvider;
-import pl.subtelny.validation.ValidationException;
 
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @Component
 public class IslanderService {
 
-    private final IslanderSynchronizer islanderSynchronizer;
-
-    private final IslanderStorage islanderStorage;
+    private final IslanderRepository islanderRepository;
 
     @Autowired
-    public IslanderService(IslanderSynchronizer islanderSynchronizer,
-                           IslanderStorage islanderStorage) {
-        this.islanderSynchronizer = islanderSynchronizer;
-        this.islanderStorage = islanderStorage;
+    public IslanderService(IslanderRepository islanderRepository) {
+        this.islanderRepository = islanderRepository;
     }
 
-    public void loadIslander(Player player) {
-        CompletableFuture.runAsync(() -> getIslander(player), JobsProvider.getExecutor());
-    }
+    public void createIslanderIfNotExists(Player player) {
+        JobsProvider.async(() -> {
+            AccountId accountId = AccountId.of(player.getUniqueId());
+            Optional<Islander> islander = islanderRepository.findIslander(accountId);
+            if (islander.isEmpty()) {
 
-    public Islander getIslander(Player player) {
-        Optional<Islander> islanderOpt = islanderStorage.findIslander(player);
-        if (islanderOpt.isPresent()) {
-            Islander islander = islanderOpt.get();
-            if (!islander.isFullyLoaded()) {
-                islanderSynchronizer.synchronizeIslander(islander);
             }
-            return islander;
-        }
-        throw ValidationException.of("Cannot get Islander!");
+        });
     }
 
 }

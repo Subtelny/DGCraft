@@ -1,6 +1,5 @@
 package pl.subtelny.islands.repository.island.updater;
 
-import java.sql.Timestamp;
 import org.jooq.Configuration;
 import org.jooq.impl.DSL;
 import pl.subtelny.core.generated.enums.Islandtype;
@@ -10,35 +9,34 @@ import pl.subtelny.islands.repository.island.anemia.IslandAnemia;
 import pl.subtelny.islands.utils.LocationSerializer;
 import pl.subtelny.repository.UpdateAction;
 
-public class IslandAnemiaUpdateAction implements UpdateAction<IslandAnemia> {
+import java.sql.Timestamp;
 
-	private final Configuration configuration;
+public abstract class IslandAnemiaUpdateAction<T extends IslandAnemia> implements UpdateAction<T> {
 
-	public IslandAnemiaUpdateAction(Configuration configuration) {
-		this.configuration = configuration;
-	}
+    protected final Configuration configuration;
 
-	@Override
-	public void perform(IslandAnemia islandAnemia) {
-		saveIslandAnemia(islandAnemia);
-	}
+    public IslandAnemiaUpdateAction(Configuration configuration) {
+        this.configuration = configuration;
+    }
 
-	private void saveIslandAnemia(IslandAnemia islandAnemia) {
-		IslandsRecord islandsRecord = DSL.using(configuration).newRecord(Islands.ISLANDS);
-		Timestamp createdDate = Timestamp.valueOf(islandAnemia.getCreatedDate());
-		islandsRecord.setCreatedDate(createdDate);
+    @Override
+    public void perform(T islandAnemia) {
+        saveIslandAnemia(islandAnemia);
+        saveBasedIslandAnemia(islandAnemia);
+    }
 
-		String serializedSpawn = LocationSerializer.serializeMinimalistic(islandAnemia.getSpawn());
-		islandsRecord.setSpawn(serializedSpawn);
+    public abstract void saveBasedIslandAnemia(T islandAnemia);
 
-		Islandtype islandType = Islandtype.valueOf(islandAnemia.getIslandType().name());
-		islandsRecord.setType(islandType);
+    private void saveIslandAnemia(IslandAnemia islandAnemia) {
+        IslandsRecord islandsRecord = DSL.using(configuration).newRecord(Islands.ISLANDS);
+        Timestamp createdDate = Timestamp.valueOf(islandAnemia.getCreatedDate());
+        islandsRecord.setCreatedDate(createdDate);
 
-		if (islandAnemia.getIslandId().getId() != null) {
-			islandsRecord.setId(Math.toIntExact(islandAnemia.getIslandId().getId()));
-			islandsRecord.update();
-		} else {
-			islandsRecord.store();
-		}
-	}
+        String serializedSpawn = LocationSerializer.serializeMinimalistic(islandAnemia.getSpawn());
+        islandsRecord.setSpawn(serializedSpawn);
+
+        Islandtype islandType = Islandtype.valueOf(islandAnemia.getIslandType().name());
+        islandsRecord.setType(islandType);
+        islandsRecord.store();
+    }
 }

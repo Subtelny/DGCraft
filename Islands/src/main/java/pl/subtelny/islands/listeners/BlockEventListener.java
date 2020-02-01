@@ -1,25 +1,19 @@
 package pl.subtelny.islands.listeners;
 
-import java.util.List;
-import java.util.Optional;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockCanBuildEvent;
-import org.bukkit.event.block.BlockFertilizeEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.block.*;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
 import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.service.IslandActionGuard;
+import pl.subtelny.islands.service.IslandActionGuardResult;
+import pl.subtelny.islands.service.IslandFindResult;
 import pl.subtelny.islands.service.IslandService;
-import pl.subtelny.utils.cuboid.Cuboid;
+
+import java.util.Optional;
 
 @Component
 public class BlockEventListener implements Listener {
@@ -42,8 +36,8 @@ public class BlockEventListener implements Listener {
 		}
 		Player player = e.getPlayer();
 		Location location = e.getBlock().getLocation();
-		boolean canBuild = islandActionGuard.accessToBuild(player, location);
-		if (!canBuild) {
+		IslandActionGuardResult result = islandActionGuard.accessToBuild(player, location);
+		if (isAccessToAction(result)) {
 			e.setCancelled(true);
 			e.setDropItems(false);
 			e.setExpToDrop(0);
@@ -57,11 +51,15 @@ public class BlockEventListener implements Listener {
 		}
 		Player player = e.getPlayer();
 		Location location = e.getBlock().getLocation();
-		boolean canBuild = islandActionGuard.accessToBuild(player, location);
-		if (!canBuild) {
+		IslandActionGuardResult result = islandActionGuard.accessToBuild(player, location);
+		if (isAccessToAction(result)) {
 			e.setCancelled(true);
 			e.setBuild(false);
 		}
+	}
+
+	private boolean isAccessToAction(IslandActionGuardResult canBuild) {
+		return IslandActionGuardResult.ACTION_PERMITED != canBuild;
 	}
 
 	@EventHandler
@@ -72,8 +70,8 @@ public class BlockEventListener implements Listener {
 		Player player = e.getPlayer();
 		if (player != null) {
 			Location location = e.getBlock().getLocation();
-			boolean canBuild = islandActionGuard.accessToBuild(player, location);
-			if (!canBuild) {
+			IslandActionGuardResult result = islandActionGuard.accessToBuild(player, location);
+			if (isAccessToAction(result)) {
 				e.setBuildable(false);
 			}
 		}
@@ -104,34 +102,17 @@ public class BlockEventListener implements Listener {
 	}
 
 	private boolean locationsNotMatchSameIsland(Location source, Location target) {
-		Optional<Island> islandOpt = islandService.findIslandAtLocation(source);
-		if (islandOpt.isPresent()) {
+		IslandFindResult result = islandService.findIslandAtLocation(source);
+		if(result.isLoading() || result.isEmpty()) {
+			return true;
+		}
+
+		Optional<Island> islandOpt = result.getIsland().getNow(Optional.empty());
+		if(islandOpt.isPresent()) {
 			Island island = islandOpt.get();
 			return !island.getCuboid().containsLocation(target);
 		}
 		return true;
-	}
-
-	@EventHandler
-	public void onBlockFertilize(BlockFertilizeEvent e) {
-		if(e.isCancelled()) {
-			return;
-		}
-
-		Location location = e.getBlock().getLocation();
-		Optional<Island> islandOpt = islandService.findIslandAtLocation(location);
-		if (islandOpt.isPresent()) {
-			Island island = islandOpt.get();
-			if (!island.canBuild(e.getPlayer())) {
-				e.setCancelled(true);
-				return;
-			}
-			Cuboid cuboid = island.getCuboid();
-			List<BlockState> blocks = e.getBlocks();
-			blocks.stream()
-					.filter(blockState -> !cuboid.containsLocation(blockState.getLocation()))
-					.forEach(blockState -> blockState.setType(Material.AIR));
-		}
 	}
 
 }

@@ -2,6 +2,8 @@ package pl.subtelny.islands.settings;
 
 import org.bukkit.World;
 
+import java.io.File;
+
 public class Settings {
 
 	public static class GuildIsland {
@@ -21,6 +23,10 @@ public class Settings {
 		public static int EXTEND_LEVELS;
 
 		public static int EXTEND_SIZE_PER_LEVEL;
+
+		public static void loadFromFile(File file) {
+			//kod
+		}
 
 	}
 

@@ -19,7 +19,7 @@ public class GuildIsland extends Island {
 	private Guild owner;
 
 	public GuildIsland(IslandAnemia islandAnemia, Cuboid cuboid) {
-		super(islandAnemia, cuboid);
+		super(cuboid);
 		Preconditions.checkArgument(islandAnemia.getIslandType() == IslandType.GUILD,
 				String.format("This IslandAnemia {%s} cannot be add to GuildIsland", islandAnemia));
 	}

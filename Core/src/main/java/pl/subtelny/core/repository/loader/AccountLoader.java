@@ -24,7 +24,7 @@ public class AccountLoader {
 
 	private Optional<AccountAnemia> performAction(AccountLoadRequest request) {
 		AccountAnemiaLoadAction loader = new AccountAnemiaLoadAction(configuration, request);
-		AccountAnemia loadedData = loader.perform().getLoadedData();
+		AccountAnemia loadedData = loader.perform();
 		return Optional.ofNullable(loadedData);
 	}
 

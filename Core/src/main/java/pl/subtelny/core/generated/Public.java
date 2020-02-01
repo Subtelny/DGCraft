@@ -17,7 +17,8 @@ import org.jooq.impl.SchemaImpl;
 
 import pl.subtelny.core.generated.tables.Accounts;
 import pl.subtelny.core.generated.tables.GuildIslands;
-import pl.subtelny.core.generated.tables.IslandMembers;
+import pl.subtelny.core.generated.tables.Guilds;
+import pl.subtelny.core.generated.tables.Islanders;
 import pl.subtelny.core.generated.tables.Islands;
 import pl.subtelny.core.generated.tables.SkyblockIslands;
 
@@ -35,7 +36,7 @@ import pl.subtelny.core.generated.tables.SkyblockIslands;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = 1969879954;
+    private static final long serialVersionUID = -1117004050;
 
     /**
      * The reference instance of <code>public</code>
@@ -53,9 +54,14 @@ public class Public extends SchemaImpl {
     public final GuildIslands GUILD_ISLANDS = pl.subtelny.core.generated.tables.GuildIslands.GUILD_ISLANDS;
 
     /**
-     * The table <code>public.island_members</code>.
+     * The table <code>public.guilds</code>.
      */
-    public final IslandMembers ISLAND_MEMBERS = pl.subtelny.core.generated.tables.IslandMembers.ISLAND_MEMBERS;
+    public final Guilds GUILDS = pl.subtelny.core.generated.tables.Guilds.GUILDS;
+
+    /**
+     * The table <code>public.islanders</code>.
+     */
+    public final Islanders ISLANDERS = pl.subtelny.core.generated.tables.Islanders.ISLANDERS;
 
     /**
      * The table <code>public.islands</code>.
@@ -89,6 +95,7 @@ public class Public extends SchemaImpl {
 
     private final List<Sequence<?>> getSequences0() {
         return Arrays.<Sequence<?>>asList(
+            Sequences.GUILDS_ID_SEQ,
             Sequences.ISLANDS_ID_SEQ);
     }
 
@@ -103,7 +110,8 @@ public class Public extends SchemaImpl {
         return Arrays.<Table<?>>asList(
             Accounts.ACCOUNTS,
             GuildIslands.GUILD_ISLANDS,
-            IslandMembers.ISLAND_MEMBERS,
+            Guilds.GUILDS,
+            Islanders.ISLANDERS,
             Islands.ISLANDS,
             SkyblockIslands.SKYBLOCK_ISLANDS);
     }

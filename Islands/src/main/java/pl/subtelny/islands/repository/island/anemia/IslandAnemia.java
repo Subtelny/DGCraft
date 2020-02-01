@@ -16,6 +16,9 @@ public abstract class IslandAnemia {
 
 	private Location spawn;
 
+	public IslandAnemia() {
+	}
+
 	public IslandAnemia(IslandId islandId, LocalDateTime createdDate, Location spawn) {
 		this.islandId = islandId;
 		this.createdDate = createdDate;
