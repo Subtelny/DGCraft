@@ -8,4 +8,6 @@ public interface LoadAction<RESULT> {
 
 	List<RESULT> performList();
 
+	LoaderResult<List<RESULT>> performList();
+
 }
