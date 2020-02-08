@@ -32,6 +32,10 @@ public abstract class Storage<KEY, VALUE> {
 		}
 	}
 
+	public void put(KEY key, VALUE value) {
+		cache.put(key, value);
+	}
+
 	public void updateCache(KEY key, VALUE value) {
 		cache.put(key, value);
 	}

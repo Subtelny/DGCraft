@@ -13,21 +13,41 @@ import java.util.Optional;
 @Component
 public class IslanderService {
 
-    private final IslanderRepository islanderRepository;
+	private final IslanderRepository islanderRepository;
 
-    @Autowired
-    public IslanderService(IslanderRepository islanderRepository) {
-        this.islanderRepository = islanderRepository;
-    }
+	@Autowired
+	public IslanderService(IslanderRepository islanderRepository) {
+		this.islanderRepository = islanderRepository;
+	}
 
-    public void createIslanderIfNotExists(Player player) {
-        JobsProvider.async(() -> {
-            AccountId accountId = AccountId.of(player.getUniqueId());
-            Optional<Islander> islander = islanderRepository.findIslander(accountId);
-            if (islander.isEmpty()) {
+	public void loadIslander(Player player) {
+		JobsProvider.supplyAsync(() -> createPlayerIfAbsent(player));
+	}
 
-            }
-        });
-    }
+	private Islander createPlayerIfAbsent(Player player) {
+		Optional<Islander> islanderOpt = isIslanderExist(player);
+		if (islanderOpt.isEmpty()) {
+			return createIslander(player);
+		}
+	}
 
+	private Optional<Islander> isIslanderExist(Player player) {
+		AccountId accountId = getAccountIdFromPlayer(player);
+		return islanderRepository.findIslander(accountId);
+	}
+
+	private Islander createIslander(Player player) {
+		Islander islander = new Islander(getAccountIdFromPlayer(player));
+		JobsProvider.async(() -> islanderRepository.updateIslander(islander));
+		return islander;
+	}
+
+	public Islander getIslander(Player player) {
+		AccountId accountId = getAccountIdFromPlayer(player);
+		return islanderRepository.getIslanderIfPresent(accountId).orElse(createIslander(player));
+	}
+
+	private AccountId getAccountIdFromPlayer(Player player) {
+		return AccountId.of(player.getUniqueId());
+	}
 }

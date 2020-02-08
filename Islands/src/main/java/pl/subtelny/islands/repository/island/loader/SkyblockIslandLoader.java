@@ -35,6 +35,7 @@ public class SkyblockIslandLoader extends IslandLoader<SkyblockIslandAnemia, Sky
         IslandCoordinates islandCoordinates = anemia.getIslandCoordinates();
         AccountId owner = anemia.getOwner();
         int extendLevel = anemia.getExtendLevel();
+        int points = anemia.getPoints();
         return new SkyblockIsland(cuboid, Sets.newHashSet(members), islandCoordinates, owner, extendLevel, points);
     }
 

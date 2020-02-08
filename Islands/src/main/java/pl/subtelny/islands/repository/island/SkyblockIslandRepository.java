@@ -77,10 +77,6 @@ public class SkyblockIslandRepository {
 		return Optional.empty();
 	}
 
-	public void saveIsland(SkyblockIsland island) {
-
-	}
-
 	public Optional<IslandCoordinates> nextFreeIslandCoordinates() {
 		return skyblockIslandStorage.nextFreeIslandCoordinates();
 	}

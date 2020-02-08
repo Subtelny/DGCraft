@@ -17,9 +17,9 @@ public class AccountUpdater extends Updater<AccountAnemia> {
 	}
 
 	@Override
-	protected void performAction(AccountAnemia accountAnemia) {
+	protected void performAction(AccountAnemia entity) {
 		AccountAnemiaUpdateAction action = new AccountAnemiaUpdateAction(configuration);
-		action.perform(accountAnemia);
+		action.perform(entity);
 	}
 
 }

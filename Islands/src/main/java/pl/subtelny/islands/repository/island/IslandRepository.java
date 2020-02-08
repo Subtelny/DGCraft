@@ -36,6 +36,7 @@ public class IslandRepository {
     }
 
     public void updateIsland(Island island) {
+    	islandStorage.put(island.getIslandId(), Optional.of(island));
     	islandUpdater.updateIsland(island);
     }
 

@@ -1,15 +1,18 @@
 package pl.subtelny.islands.repository.island.loader;
 
 import java.util.List;
-
-import org.jooq.*;
+import org.jooq.Condition;
+import org.jooq.Configuration;
+import org.jooq.Record;
+import org.jooq.SelectConditionStep;
+import org.jooq.SelectJoinStep;
+import org.jooq.SelectOnConditionStep;
 import org.jooq.impl.DSL;
 import pl.subtelny.core.generated.tables.GuildIslands;
 import pl.subtelny.core.generated.tables.Islands;
 import pl.subtelny.core.generated.tables.SkyblockIslands;
 import pl.subtelny.islands.model.island.IslandType;
 import pl.subtelny.repository.LoadAction;
-import pl.subtelny.repository.LoaderResult;
 import pl.subtelny.validation.ValidationException;
 
 public abstract class IslandAnemiaLoadAction<ANEMIA> implements LoadAction<ANEMIA> {

@@ -26,7 +26,7 @@ public abstract class IslandLoader<ANEMIA extends IslandAnemia, DOMAIN extends I
 
 
 	private Optional<ANEMIA> performAction(IslandAnemiaLoadAction<ANEMIA> loadAction) {
-		ANEMIA loadedData = loadAction.perform().getLoadedData();
+		ANEMIA loadedData = loadAction.perform();
 		return Optional.ofNullable(loadedData);
 	}
 

@@ -19,21 +19,24 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class IslandService {
 
+	private final IslanderService islanderService;
+
     private final SkyblockIslandRepository skyblockIslandRepository;
 
     private final IslandRepository islandRepository;
 
     @Autowired
-    public IslandService(SkyblockIslandRepository skyblockIslandRepository,
-                         IslandRepository islandRepository) {
-        this.skyblockIslandRepository = skyblockIslandRepository;
+    public IslandService(IslanderService islanderService, SkyblockIslandRepository skyblockIslandRepository,
+			IslandRepository islandRepository) {
+		this.islanderService = islanderService;
+		this.skyblockIslandRepository = skyblockIslandRepository;
         this.islandRepository = islandRepository;
     }
 
     public boolean isInIsland(Player player, Island island) {
     	if(island.getIslandType() == IslandType.SKYBLOCK) {
 			SkyblockIsland skyblockIsland = (SkyblockIsland) island;
-			Islander islander = null;; //TODO islanderService.getIslander(player);
+			Islander islander = islanderService.getIslander(player);
 			return skyblockIsland.isInIsland(islander);
 		}
     	return false;
@@ -49,7 +52,7 @@ public class IslandService {
             //TODO
             //guilds
         }
-        return new IslandFindResult();
+        return IslandFindResult.NOT_ISLAND_WORLD;
     }
 
     private IslandFindResult findSkyblockIsland(IslandCoordinates islandCoordinates) {

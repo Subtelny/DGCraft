@@ -1,8 +1,5 @@
 package pl.subtelny.islands.listeners;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.AnimalTamer;
@@ -16,86 +13,65 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
-import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.service.IslandActionGuard;
+import pl.subtelny.islands.service.IslandActionGuardResult;
 import pl.subtelny.islands.service.IslandService;
+
+import java.util.List;
 
 @Component
 public class EntityEventListener implements Listener {
 
-	private final IslandService islandService;
+    private final IslandService islandService;
 
-	private final IslandActionGuard islandActionGuard;
+    private final IslandActionGuard islandActionGuard;
 
-	@Autowired
-	public EntityEventListener(IslandService islandService, IslandActionGuard islandActionGuard) {
-		this.islandService = islandService;
-		this.islandActionGuard = islandActionGuard;
-	}
+    @Autowired
+    public EntityEventListener(IslandService islandService, IslandActionGuard islandActionGuard) {
+        this.islandService = islandService;
+        this.islandActionGuard = islandActionGuard;
+    }
 
-	@EventHandler
-	public void onEntityExplode(EntityExplodeEvent e) {
-		if (e.isCancelled()) {
-			return;
-		}
-		Location from = e.getLocation();
-		List<Block> blocks = e.blockList();
+    @EventHandler
+    public void onEntityExplode(EntityExplodeEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
+        Location source = e.getLocation();
+        List<Block> blocks = e.blockList();
+        IslandActionGuardResult result = islandActionGuard.accessToExplodeAndValidateBlocks(source, blocks);
+        if (IslandActionGuardResult.ACTION_PERMITED != result) {
+            e.setCancelled(true);
+        }
+    }
 
-		Optional<Island> islandFromOpt = islandService.findIslandAtLocation(from);
-		Iterator<Block> iterator = blocks.iterator();
-		while (iterator.hasNext()) {
-			Block next = iterator.next();
-			Location location = next.getLocation();
-			if (!preventExplode(islandFromOpt, location)) {
-				iterator.remove();
-			}
-		}
-	}
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
+        Entity entity = e.getEntity();
+        Entity attacker = e.getDamager();
+        IslandActionGuardResult result = islandActionGuard.accessToHit(attacker, entity);
+        if (IslandActionGuardResult.ACTION_PERMITED != result) {
+            e.setDamage(0);
+            e.setCancelled(true);
+        }
+    }
 
-	private boolean preventExplode(Optional<Island> islandFromOpt, Location match) {
-		Optional<Island> islandMatchOpt = islandService.findIslandAtLocation(match);
+    @EventHandler
+    public void onEntityTame(EntityTameEvent e) {
+        AnimalTamer owner = e.getOwner();
+        if (e.isCancelled() || !(owner instanceof Player)) {
+            return;
+        }
+        Player player = (Player) owner;
+        LivingEntity entity = e.getEntity();
 
-		if (islandFromOpt.isEmpty() && islandMatchOpt.isPresent()) {
-			return true;
-		}
-		if (islandFromOpt.isPresent() && islandMatchOpt.isEmpty()) {
-			return true;
-		}
-		if (islandFromOpt.isPresent()) {
-			Island islandFrom = islandFromOpt.get();
-			Island islandMatch = islandMatchOpt.get();
-			return !islandFrom.equals(islandMatch);
-		}
-		return false;
-	}
-
-	@EventHandler
-	public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
-		if (e.isCancelled()) {
-			return;
-		}
-		Entity entity = e.getEntity();
-		Entity attacker = e.getDamager();
-		boolean canHit = islandActionGuard.accessToHit(attacker, entity);
-		if (!canHit) {
-			e.setDamage(0);
-			e.setCancelled(true);
-		}
-	}
-
-	@EventHandler
-	public void onEntityTame(EntityTameEvent e) {
-		AnimalTamer owner = e.getOwner();
-		if (e.isCancelled() || !(owner instanceof Player)) {
-			return;
-		}
-		Player player = (Player) owner;
-		LivingEntity entity = e.getEntity();
-
-		boolean canInteract = islandActionGuard.accessToInteract(player, entity);
-		if (!canInteract) {
-			e.setCancelled(true);
-		}
-	}
+        IslandActionGuardResult result = islandActionGuard.accessToInteract(player, entity);
+        if (IslandActionGuardResult.ACTION_PERMITED != result) {
+            e.setCancelled(true);
+        }
+    }
 
 }
