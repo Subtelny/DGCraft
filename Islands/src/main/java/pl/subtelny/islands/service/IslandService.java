@@ -49,7 +49,7 @@ public class IslandService {
             //TODO
             //guilds
         }
-        return new IslandFindResult();
+        return IslandFindResult.NOT_ISLAND_WORLD;
     }
 
     private IslandFindResult findSkyblockIsland(IslandCoordinates islandCoordinates) {
