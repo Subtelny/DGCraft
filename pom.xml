@@ -12,6 +12,11 @@
         <module>Core</module>
         <module>Islands</module>
         <module>Abstract</module>
+        <module>Components</module>
+        <module>components-api</module>
+        <module>components-core</module>
+        <module>Components/components-api</module>
+        <module>Components/components-core</module>
     </modules>
 
     <repositories>
@@ -30,11 +35,6 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>co.aikar</groupId>
-            <artifactId>taskchain-bukkit</artifactId>
-            <version>3.7.2</version>
-        </dependency>
         <!-- _________________________  JOOQ _______________________________________________________________________ -->
         <dependency>
             <groupId>org.jooq</groupId>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.13.2-R0.1-SNAPSHOT</version>
+            <version>1.14.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

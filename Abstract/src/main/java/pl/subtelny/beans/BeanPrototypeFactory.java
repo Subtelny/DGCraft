@@ -49,7 +49,9 @@ final class BeanPrototypeFactory {
                 properConstructor = constructor;
                 for (Parameter parameter : parameters) {
                     if (!isProperParameter(parameter)) {
-                        throw new BeanPreparePrototypeException("Not found " + parameter.getType().getName() + " class in components");
+                        throw new BeanPreparePrototypeException(String.format("Not found %s class in components while creating class %s",
+                                parameter.getType().getName(),
+                                clazz.getName()));
                     }
                 }
             }

@@ -1,4 +1,4 @@
-package pl.subtelny.islands.utils;
+package pl.subtelny.utils;
 
 import static java.lang.Math.abs;
 

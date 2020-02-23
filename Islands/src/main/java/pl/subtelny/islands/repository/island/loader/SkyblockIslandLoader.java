@@ -31,7 +31,7 @@ public class SkyblockIslandLoader extends IslandLoader<SkyblockIslandAnemia, Sky
         List<AccountId> members = loadIslandMembers(anemia.getIslandId());
         members.removeIf(accountId -> accountId.equals(anemia.getOwner()));
 
-        Cuboid cuboid = SkyblockIslandUtil.defaultCuboid(anemia.getIslandCoordinates());
+        Cuboid cuboid = SkyblockIslandUtil.buildExtendedCuboid(anemia.getIslandCoordinates(), anemia.getExtendLevel());
         IslandCoordinates islandCoordinates = anemia.getIslandCoordinates();
         AccountId owner = anemia.getOwner();
         int extendLevel = anemia.getExtendLevel();

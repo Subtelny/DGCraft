@@ -9,7 +9,7 @@ import org.bukkit.event.world.StructureGrowEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
 import pl.subtelny.islands.model.island.Island;
-import pl.subtelny.islands.service.IslandFindResult;
+import pl.subtelny.islands.repository.island.IslandFindResult;
 import pl.subtelny.islands.service.IslandService;
 import pl.subtelny.utils.cuboid.Cuboid;
 
@@ -32,11 +32,10 @@ public class StructureGrowEventListener implements Listener {
         if (e.isCancelled()) {
             return;
         }
-
         Location location = e.getLocation();
         IslandFindResult result = islandService.findIslandAtLocation(location);
-        if (!result.isEmpty() || result.isLoading()) {
-            CompletableFuture<Optional<Island>> future = result.getIsland();
+        if (result.isLoading() || result.isLoaded()) {
+            CompletableFuture<Optional<Island>> future = result.getResult();
             future.thenAccept(islandOpt -> removeBlocksWhenNotInIsland(e.getBlocks(), islandOpt));
         }
     }

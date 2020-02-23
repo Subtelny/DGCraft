@@ -1,4 +1,4 @@
-package pl.subtelny.utils;
+package pl.subtelny.utils.cuboid;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

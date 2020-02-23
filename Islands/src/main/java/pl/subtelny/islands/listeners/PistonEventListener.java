@@ -1,54 +1,52 @@
 package pl.subtelny.islands.listeners;
 
-import java.util.List;
-import java.util.Optional;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
-import pl.subtelny.islands.model.island.Island;
-import pl.subtelny.islands.service.IslandService;
+import pl.subtelny.islands.guard.IslandActionGuard;
+import pl.subtelny.islands.guard.IslandActionGuardResult;
+
+import java.util.List;
 
 @Component
 public class PistonEventListener implements Listener {
 
-	private final IslandService islandService;
+    private final IslandActionGuard islandActionGuard;
 
-	@Autowired
-	public PistonEventListener(IslandService islandService) {
-		this.islandService = islandService;
-	}
+    @Autowired
+    public PistonEventListener(IslandActionGuard islandActionGuard) {
+        this.islandActionGuard = islandActionGuard;
+    }
 
-	@EventHandler
-	public void onBlockPistonExtend(BlockPistonExtendEvent e) {
-		if (e.isCancelled()) {
-			return;
-		}
-		List<Block> blocks = e.getBlocks();
-		Block lastBlock;
-		if (blocks.size() == 0) {
-			lastBlock = e.getBlock().getRelative(e.getDirection());
-		} else {
-			lastBlock = blocks.get(blocks.size() - 1).getRelative(e.getDirection());
-		}
+    @EventHandler
+    public void onBlockPistonExtend(BlockPistonExtendEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
+        Block lastBlock = getLastBlock(e);
+        Location from = e.getBlock().getLocation();
+        Location to = lastBlock.getLocation();
 
-		Optional<Island> islandFromPiston = islandService.findIslandAtLocation(e.getBlock().getLocation());
-		Optional<Island> islandAtLastBlock = islandService.findIslandAtLocation(lastBlock.getLocation());
+        IslandActionGuardResult result = islandActionGuard.accessToSpreadBlock(from, to);
+        if (isAccessToActionRejected(result)) {
+            e.setCancelled(true);
+        }
+    }
 
-		if (islandFromPiston.isPresent()) {
-			if (islandAtLastBlock.isEmpty()) {
-				e.setCancelled(true);
-				return;
-			}
-			Island islandPiston = islandFromPiston.get();
-			Island islandLastBlock = islandAtLastBlock.get();
-			if (!islandPiston.equals(islandLastBlock)) {
-				e.setCancelled(true);
-			}
-		} else if (islandAtLastBlock.isPresent()) {
-			e.setCancelled(true);
-		}
-	}
+    private Block getLastBlock(BlockPistonExtendEvent e) {
+        List<Block> blocks = e.getBlocks();
+        if (blocks.size() == 0) {
+            return e.getBlock().getRelative(e.getDirection());
+        } else {
+            return blocks.get(blocks.size() - 1).getRelative(e.getDirection());
+        }
+    }
+
+    private boolean isAccessToActionRejected(IslandActionGuardResult result) {
+        return IslandActionGuardResult.ACTION_PERMITED != result;
+    }
 }

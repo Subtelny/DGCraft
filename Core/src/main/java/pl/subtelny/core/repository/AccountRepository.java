@@ -10,6 +10,7 @@ import pl.subtelny.core.repository.loader.AccountLoadRequest;
 import pl.subtelny.core.repository.loader.AccountLoader;
 import pl.subtelny.core.repository.storage.AccountStorage;
 import pl.subtelny.core.repository.updater.AccountUpdater;
+import pl.subtelny.database.DatabaseConfiguration;
 
 @Component
 public class AccountRepository {
@@ -21,10 +22,15 @@ public class AccountRepository {
 	private final AccountLoader accountLoader;
 
 	@Autowired
-	public AccountRepository(Configuration configuration) {
+	public AccountRepository(DatabaseConfiguration databaseConfiguration) {
 		accountStorage = new AccountStorage();
+		Configuration configuration = databaseConfiguration.getConfiguration();
 		accountUpdater = new AccountUpdater(configuration);
 		accountLoader = new AccountLoader(configuration);
+	}
+
+	public Optional<Account> getAccountIfPresent(AccountId accountId) {
+		return accountStorage.getCacheIfPresent(accountId);
 	}
 
 	public Optional<Account> findAccount(AccountId accountId) {
@@ -36,26 +42,9 @@ public class AccountRepository {
 		});
 	}
 
-	private Optional<Account> findAccount(AccountLoadRequest request) {
-		Optional<AccountId> accountId = accountStorage.getCache(request, request1 -> {
-			Optional<Account> accountOpt = accountLoader.loadAccount(request1);
-			if (accountOpt.isPresent()) {
-				Account account = accountOpt.get();
-				AccountId id = account.getAccountId();
-				accountStorage.putIfAbsent(id, accountOpt);
-				return Optional.of(id);
-			}
-			return Optional.empty();
-		});
-		if (accountId.isPresent()) {
-			return findAccount(accountId.get());
-		}
-		return Optional.empty();
-	}
-
-	public void saveAccount(AccountAnemia accountAnemia) {
-		accountStorage.invalidateRequests(accountAnemia);
-		accountUpdater.updateAccount(accountAnemia);
+	public void saveAccount(Account account) {
+		accountStorage.put(account.getAccountId(), Optional.of(account));
+		accountUpdater.updateAccount(account.getAccountAnemia());
 	}
 
 }

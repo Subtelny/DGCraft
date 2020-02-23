@@ -11,12 +11,12 @@ import pl.subtelny.beans.Component;
 import pl.subtelny.core.service.AccountService;
 
 @Component
-public class PlayerListener implements Listener {
+public class PlayerEventListener implements Listener {
 
     private final AccountService accountService;
 
     @Autowired
-    public PlayerListener(AccountService accountService) {
+    public PlayerEventListener(AccountService accountService) {
 		this.accountService = accountService;
 	}
 

@@ -1,4 +1,4 @@
-package pl.subtelny.islands.utils;
+package pl.subtelny.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

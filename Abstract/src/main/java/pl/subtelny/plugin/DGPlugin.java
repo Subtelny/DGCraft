@@ -26,8 +26,10 @@ public abstract class DGPlugin extends JavaPlugin {
 
     private void initializeBeans() {
         String path = this.getClass().getPackage().getName();
+        System.out.println("beanLoader path " + path);
         BeanLoader beanLoader = new BeanLoader(path);
         beanLoader.initializeBeans();
+
     }
 
     @Override
@@ -43,12 +45,16 @@ public abstract class DGPlugin extends JavaPlugin {
         PluginCommands pluginCommands = new PluginCommands(this);
         bukkitAdapterCommands.stream()
                 .filter(i -> i.getClass().isAnnotationPresent(HeadCommand.class))
-                .forEach(adapter -> {
-                    HeadCommand pluginCommand = adapter.getClass().getAnnotation(HeadCommand.class);
-                    List<String> commands = Lists.asList(pluginCommand.command(), pluginCommand.aliases());
-                    PluginCommand bukkitCommand = pluginCommands.registerCommand(commands);
-                    bukkitCommand.setExecutor(adapter);
-                });
+                .forEach(adapter -> registerCommands(pluginCommands, adapter));
+    }
+
+    private void registerCommands(PluginCommands pluginCommands, BukkitCommandAdapter adapter) {
+        HeadCommand pluginCommand = adapter.getClass().getAnnotation(HeadCommand.class);
+        List<String> commands = Lists.asList(pluginCommand.command(), pluginCommand.aliases());
+        PluginCommand bukkitCommand = pluginCommands.registerCommand(commands);
+        bukkitCommand.setExecutor(adapter);
+
+        System.out.println("registered " + commands + " - " + this.getName());
     }
 
     private List<BukkitCommandAdapter> loadBukkitCommands() {

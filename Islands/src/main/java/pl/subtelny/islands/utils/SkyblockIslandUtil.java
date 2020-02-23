@@ -8,11 +8,26 @@ import pl.subtelny.utils.cuboid.Cuboid;
 
 public final class SkyblockIslandUtil {
 
-	public static Cuboid defaultCuboid(IslandCoordinates islandCoordinates) {
-		World islandWorld = Settings.SkyblockIsland.ISLAND_WORLD;
-		int islandSize = Settings.SkyblockIsland.ISLAND_SIZE;
+	public static Cuboid buildFullyExtendedCuboid(IslandCoordinates islandCoordinates) {
 		int spaceBetweenIslands = Settings.SkyblockIsland.SPACE_BETWEEN_ISLANDS;
-		return calculateIslandCuboid(islandWorld, islandCoordinates.getX(), islandCoordinates.getZ(), islandSize, spaceBetweenIslands);
+		return buildCuboid(islandCoordinates, Settings.SkyblockIsland.ISLAND_SIZE, spaceBetweenIslands);
+	}
+
+	public static Cuboid buildExtendedCuboid(IslandCoordinates islandCoordinates, int extendLevel) {
+		int totalIslandSize = Settings.SkyblockIsland.ISLAND_SIZE;
+		int islandSizeToExtendLevel = Settings.SkyblockIsland.getIslandSizeToExtendLevel(extendLevel);
+		int spaceBetweenIslands = (totalIslandSize - islandSizeToExtendLevel)
+				+ Settings.SkyblockIsland.SPACE_BETWEEN_ISLANDS;
+		return buildCuboid(islandCoordinates, islandSizeToExtendLevel, spaceBetweenIslands);
+	}
+
+	private static Cuboid buildCuboid(IslandCoordinates islandCoordinates, int islandSize, int spaceBetweenIslands) {
+		World islandWorld = Settings.SkyblockIsland.ISLAND_WORLD;
+		return calculateIslandCuboid(islandWorld,
+				islandCoordinates.getX(),
+				islandCoordinates.getZ(),
+				islandSize,
+				spaceBetweenIslands);
 	}
 
 	public static Cuboid calculateIslandCuboid(World world, int x, int z, int size, int space) {
@@ -22,7 +37,7 @@ public final class SkyblockIslandUtil {
 		int z2 = z * size + size - space;
 
 		Location firstCorner = new Location(world, x1, z1, 0);
-		Location secondCorner = new Location(world, x2, z2, 0);
+		Location secondCorner = new Location(world, x2, z2, 256);
 		return new Cuboid("IslandCuboid", firstCorner, secondCorner);
 	}
 

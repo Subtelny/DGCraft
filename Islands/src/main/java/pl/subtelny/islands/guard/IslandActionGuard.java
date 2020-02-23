@@ -1,22 +1,20 @@
-package pl.subtelny.islands.service;
+package pl.subtelny.islands.guard;
 
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import pl.subtelny.beans.Component;
 import pl.subtelny.islands.model.island.Island;
-import pl.subtelny.islands.settings.Settings;
+import pl.subtelny.islands.repository.island.IslandFindResult;
+import pl.subtelny.islands.service.IslandService;
+import pl.subtelny.islands.service.IslanderService;
 import pl.subtelny.utils.cuboid.Cuboid;
-import pl.subtelny.validation.ValidationException;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @Component
 public class IslandActionGuard {
@@ -27,27 +25,67 @@ public class IslandActionGuard {
 
     public static final String BUILD_BYPASS_PERMISSION = "dgcraft.islands.build.bypass";
 
+    public static final String ENTER_BYPASS_PERMISSION = "dgcraft.islands.enter.bypass";
+
     private final IslandService islandService;
 
-    public IslandActionGuard(IslandService islandService) {
+    private final IslanderService islanderService;
+
+    public IslandActionGuard(IslandService islandService, IslanderService islanderService) {
         this.islandService = islandService;
+        this.islanderService = islanderService;
+    }
+
+    public IslandActionGuardResult accessToEnter(Player player, Location location) {
+        if (player.hasPermission(ENTER_BYPASS_PERMISSION)) {
+            return IslandActionGuardResult.ACTION_PERMITED;
+        }
+        return playerHasAccessToLocation(player, location);
+    }
+
+    public IslandActionGuardResult accessToSpreadBlock(Location source, Location target) {
+        IslandFindResult islandSourceResult = islandService.findIslandAtLocation(source);
+        IslandActionGuardResult sourceResult = locationInIsland(source, islandSourceResult);
+        if (sourceResult.isActionPermited()) {
+            Optional<Island> sourceIslandOpt = islandSourceResult.getResult().getNow(Optional.empty());
+            if (sourceIslandOpt.isPresent()) {
+                return locationMatchIsland(target, sourceIslandOpt.get());
+            }
+        }
+        return sourceResult;
+    }
+
+    private IslandActionGuardResult locationInIsland(Location location, IslandFindResult result) {
+        if (result.isNotIslandWorld()) {
+            return IslandActionGuardResult.NOT_ISLAND_WORLD;
+        }
+        if (result.isLoading()) {
+            return IslandActionGuardResult.ISLAND_LOADING;
+        }
+        Optional<Island> islandOpt = result.getResult().getNow(Optional.empty());
+        if (islandOpt.isEmpty()) {
+            return IslandActionGuardResult.ACTION_PROHIBITED;
+        }
+        return locationMatchIsland(location, islandOpt.get());
+    }
+
+    private IslandActionGuardResult locationMatchIsland(Location location, Island island) {
+        boolean isInIsland = island.getCuboid().containsLocation(location);
+        if (isInIsland) {
+            return IslandActionGuardResult.ACTION_PERMITED;
+        }
+        return IslandActionGuardResult.ACTION_PROHIBITED;
     }
 
     public IslandActionGuardResult accessToExplodeAndValidateBlocks(Location source, List<Block> blocks) {
         IslandFindResult islandAtLocation = islandService.findIslandAtLocation(source);
-        if (islandAtLocation.isNotIslandWorld()) {
-            return IslandActionGuardResult.ACTION_PERMITED;
+        IslandActionGuardResult result = locationInIsland(source, islandAtLocation);
+        if (result.isActionPermited()) {
+            islandAtLocation.getResult()
+                    .getNow(Optional.empty())
+                    .ifPresent(island -> removeNonMatchingBlocksIntoIsland(island, blocks));
         }
-        if (islandAtLocation.isLoading()) {
-            return IslandActionGuardResult.ISLAND_LOADING;
-        }
-        Optional<Island> islandOpt = getIslandFromResult(islandAtLocation);
-        if (islandOpt.isEmpty()) {
-            return accessToOutsideOfIsland(source);
-        }
-        Island island = islandOpt.get();
-        removeNonMatchingBlocksIntoIsland(island, blocks);
-        return IslandActionGuardResult.ACTION_PERMITED;
+        return result;
     }
 
     private void removeNonMatchingBlocksIntoIsland(Island island, List<Block> blocks) {
@@ -97,7 +135,7 @@ public class IslandActionGuard {
         return playerHasAccessToLocation(player, location);
     }
 
-    private IslandActionGuardResult playerHasAccessToLocation(Player entity, Location location) {
+    private IslandActionGuardResult playerHasAccessToLocation(Player player, Location location) {
         IslandFindResult islandFindResult = islandService.findIslandAtLocation(location);
         if (islandFindResult.isNotIslandWorld()) {
             return IslandActionGuardResult.ACTION_PERMITED;
@@ -105,37 +143,21 @@ public class IslandActionGuard {
         if (islandFindResult.isLoading()) {
             return IslandActionGuardResult.ISLAND_LOADING;
         }
-        if (playerIsInIsland(entity, islandFindResult)) {
+        if (playerHasAccessToBuildOnIsland(player, location, islandFindResult)) {
             return IslandActionGuardResult.ACTION_PERMITED;
         }
         return IslandActionGuardResult.ACTION_PROHIBITED;
     }
 
-    private IslandActionGuardResult accessToOutsideOfIsland(Location location) {
-        World world = location.getWorld();
-        World skyblockIslandWorld = Settings.SkyblockIsland.ISLAND_WORLD;
-        if (skyblockIslandWorld.equals(world)) {
-            return IslandActionGuardResult.ACTION_PROHIBITED;
-        }
-        return IslandActionGuardResult.ACTION_PERMITED;
-    }
-
-    private boolean playerIsInIsland(Player player, IslandFindResult islandFindResult) {
-        Optional<Island> islandOpt = getIslandFromResult(islandFindResult);
+    private boolean playerHasAccessToBuildOnIsland(Player player, Location location, IslandFindResult islandFindResult) {
+        Optional<Island> islandOpt = islandFindResult.getResult().getNow(Optional.empty());
         if (islandOpt.isPresent()) {
             Island island = islandOpt.get();
-            return islandService.isInIsland(player, island);
+            if (islandService.isInIsland(player, island)) {
+                return island.getCuboid().containsLocation(location);
+            }
         }
         return false;
-    }
-
-    private Optional<Island> getIslandFromResult(IslandFindResult result) {
-        CompletableFuture<Optional<Island>> future = result.getIsland();
-        try {
-            return future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw ValidationException.of("There is problem with load island");
-        }
     }
 
 }

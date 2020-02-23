@@ -3,7 +3,8 @@ package pl.subtelny.islands.model.island;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.bukkit.Location;
-import pl.subtelny.islands.utils.LocationUtil;
+import pl.subtelny.islands.model.islander.Islander;
+import pl.subtelny.utils.LocationUtil;
 import pl.subtelny.utils.cuboid.Cuboid;
 import pl.subtelny.validation.ValidationException;
 
@@ -29,6 +30,8 @@ public abstract class Island {
 		}
 		this.spawn = spawn;
 	}
+
+	public abstract boolean isInIsland(Islander islander);
 
 	public abstract void recalculateSpawn();
 

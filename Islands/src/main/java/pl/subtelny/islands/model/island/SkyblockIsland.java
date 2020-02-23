@@ -5,8 +5,8 @@ import org.bukkit.Location;
 import pl.subtelny.core.model.AccountId;
 import pl.subtelny.islands.model.islander.Islander;
 import pl.subtelny.islands.settings.Settings;
-import pl.subtelny.islands.utils.LocationUtil;
 import pl.subtelny.islands.utils.SkyblockIslandUtil;
+import pl.subtelny.utils.LocationUtil;
 import pl.subtelny.utils.cuboid.Cuboid;
 import pl.subtelny.validation.ValidationException;
 
@@ -38,22 +38,10 @@ public class SkyblockIsland extends Island {
         super(cuboid);
     }
 
-    public void extendCuboid(int extendLevel) {
-        if (extendLevel > Settings.SkyblockIsland.EXTEND_LEVELS || extendLevel <= 0) {
-            throw new ValidationException(String.format("Value not match in bound %s-%s", 0, Settings.SkyblockIsland.EXTEND_LEVELS));
-        }
-        IslandCoordinates islandCoordinates = getIslandCoordinates();
-        int x = islandCoordinates.getX();
-        int z = islandCoordinates.getZ();
-        int defaultSize = Settings.SkyblockIsland.ISLAND_SIZE;
-        int extendSize = Settings.SkyblockIsland.EXTEND_SIZE_PER_LEVEL * extendLevel;
-        int sumSize = defaultSize + extendSize;
-        int space = Settings.SkyblockIsland.SPACE_BETWEEN_ISLANDS;
-        if (extendLevel < Settings.SkyblockIsland.EXTEND_LEVELS) {
-            space = 0;
-        }
-        this.extendLevel = extendLevel;
-        this.cuboid = SkyblockIslandUtil.calculateIslandCuboid(Settings.SkyblockIsland.ISLAND_WORLD, x, z, sumSize, space);
+    @Override
+    public boolean isInIsland(Islander islander) {
+        AccountId accountId = islander.getAccount();
+        return getMembersAndOwner().contains(accountId);
     }
 
     @Override
@@ -71,9 +59,14 @@ public class SkyblockIsland extends Island {
         safe.ifPresent(this::changeSpawn);
     }
 
-    public boolean isInIsland(Islander islander) {
-        AccountId accountId = islander.getAccount();
-        return getMembersAndOwner().contains(accountId);
+    public void extendCuboid(int extendLevel) {
+        int totalExtendLevels = Settings.SkyblockIsland.getTotalExtendLevels();
+        if (totalExtendLevels < extendLevel) {
+            throw ValidationException.of(String.format("Extend level %s is out of bound. There is only %s extend levels.",
+                    totalExtendLevels, extendLevel));
+        }
+        this.cuboid = SkyblockIslandUtil.buildExtendedCuboid(islandCoordinates, extendLevel);
+        this.extendLevel = extendLevel;
     }
 
     public void changeOwner(Islander newOwner) {
@@ -106,15 +99,15 @@ public class SkyblockIsland extends Island {
         throw new ValidationException(message);
     }
 
-	public int getPoints() {
-		return points;
-	}
+    public int getPoints() {
+        return points;
+    }
 
-	public void setPoints(int points) {
-		this.points = points;
-	}
+    public void setPoints(int points) {
+        this.points = points;
+    }
 
-	public AccountId getOwner() {
+    public AccountId getOwner() {
         return owner;
     }
 
