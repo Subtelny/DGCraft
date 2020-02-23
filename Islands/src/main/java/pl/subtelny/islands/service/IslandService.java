@@ -7,6 +7,7 @@ import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
 import pl.subtelny.islands.model.island.*;
 import pl.subtelny.islands.model.islander.Islander;
+import pl.subtelny.islands.repository.island.IslandFindResult;
 import pl.subtelny.islands.repository.island.IslandRepository;
 import pl.subtelny.islands.repository.island.SkyblockIslandRepository;
 import pl.subtelny.islands.settings.Settings;
@@ -23,23 +24,16 @@ public class IslandService {
 
     private final SkyblockIslandRepository skyblockIslandRepository;
 
-    private final IslandRepository islandRepository;
-
     @Autowired
-    public IslandService(IslanderService islanderService, SkyblockIslandRepository skyblockIslandRepository,
-			IslandRepository islandRepository) {
+    public IslandService(IslanderService islanderService,
+                         SkyblockIslandRepository skyblockIslandRepository) {
 		this.islanderService = islanderService;
 		this.skyblockIslandRepository = skyblockIslandRepository;
-        this.islandRepository = islandRepository;
     }
 
     public boolean isInIsland(Player player, Island island) {
-    	if(island.getIslandType() == IslandType.SKYBLOCK) {
-			SkyblockIsland skyblockIsland = (SkyblockIsland) island;
-			Islander islander = islanderService.getIslander(player);
-			return skyblockIsland.isInIsland(islander);
-		}
-    	return false;
+        Islander islander = islanderService.getIslander(player);
+        return island.isInIsland(islander);
     }
 
     public IslandFindResult findIslandAtLocation(Location location) {

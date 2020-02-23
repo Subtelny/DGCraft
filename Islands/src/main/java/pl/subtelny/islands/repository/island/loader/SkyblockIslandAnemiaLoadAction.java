@@ -13,7 +13,7 @@ import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.model.island.IslandType;
 import pl.subtelny.islands.repository.island.anemia.SkyblockIslandAnemia;
-import pl.subtelny.islands.utils.LocationSerializer;
+import pl.subtelny.utils.LocationSerializer;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -2,5 +2,5 @@ name: DG-Core
 version: 1.0
 author: Subtelny
 main: pl.subtelny.core.Core
-#depend:
-#  - Vault
+depend:
+  - AsyncWorldEdit

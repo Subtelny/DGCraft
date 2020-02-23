@@ -1,5 +1,6 @@
 package pl.subtelny.islands.listeners;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -7,11 +8,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
-import pl.subtelny.islands.service.IslandActionGuard;
-import pl.subtelny.islands.service.IslandActionGuardResult;
+import pl.subtelny.islands.guard.IslandActionGuard;
+import pl.subtelny.islands.guard.IslandActionGuardResult;
 import pl.subtelny.islands.service.IslanderService;
+import pl.subtelny.utils.LocationUtil;
+import pl.subtelny.utils.PlayerUtil;
 
 @Component
 public class PlayerEventListener implements Listener {
@@ -34,18 +38,45 @@ public class PlayerEventListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerMove(PlayerMoveEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
+        Location to = e.getTo();
+        if (to == null) {
+            return;
+        }
+        Location from = e.getFrom();
+        if (LocationUtil.isSameLocationPrecisionToBlock(from, to)) {
+            return;
+        }
+
+        Player player = e.getPlayer();
+        IslandActionGuardResult result = islandActionGuard.accessToEnter(player, to);
+        if (isAccessToActionRejected(result)) {
+            e.setCancelled(true);
+            Location teleportTo = LocationUtil.toLocationWithCenteredBlock(from);
+            player.teleport(teleportTo);
+
+            if (result.isIslandLoading()) {
+                PlayerUtil.message(player, "Wyspa jest w trakcie ladowania");
+            }
+        }
+    }
+
+    @EventHandler
     public void onPlayerLeashEntity(PlayerLeashEntityEvent e) {
         Player player = e.getPlayer();
         Entity entity = e.getEntity();
 
         IslandActionGuardResult result = islandActionGuard.accessToInteract(player, entity);
-        if (!hasAccessToAction(result)) {
+        if (isAccessToActionRejected(result)) {
             e.setCancelled(true);
         }
     }
 
-    private boolean hasAccessToAction(IslandActionGuardResult result) {
-        return IslandActionGuardResult.ACTION_PERMITED == result;
+    private boolean isAccessToActionRejected(IslandActionGuardResult result) {
+        return IslandActionGuardResult.ACTION_PERMITED != result;
     }
 
 }

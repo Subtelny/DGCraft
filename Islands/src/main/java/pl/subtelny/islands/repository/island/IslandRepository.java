@@ -28,11 +28,12 @@ public class IslandRepository {
     @Autowired
     public IslandRepository(SkyblockIslandRepository skyblockIslandRepository,
                             DatabaseConfiguration databaseConfiguration,
-                            IslandStorage islandStorage, IslandUpdater islandUpdater) {
+                            IslandStorage islandStorage) {
         this.skyblockIslandRepository = skyblockIslandRepository;
         this.islandStorage = islandStorage;
-        this.configuration = databaseConfiguration.getConfiguration();
-        this.islandUpdater = islandUpdater;
+        Configuration configuration = databaseConfiguration.getConfiguration();
+        this.configuration = configuration;
+        this.islandUpdater = new IslandUpdater(configuration);
     }
 
     public void updateIsland(Island island) {
@@ -61,12 +62,14 @@ public class IslandRepository {
 
     private Optional<Island> loadIslandByIslandType(IslandId islandId, IslandType type) {
         if (type == IslandType.SKYBLOCK) {
-            Optional<SkyblockIsland> skyblockIslandOpt = skyblockIslandRepository.findSkyblockIsland(islandId);
-            if (skyblockIslandOpt.isPresent()) {
-                return Optional.of(skyblockIslandOpt.get());
-            }
+            return loadSkyblockIsland(islandId);
         }
         return Optional.empty();
+    }
+
+    private Optional<Island> loadSkyblockIsland(IslandId islandId) {
+        Optional<SkyblockIsland> skyblockIslandOpt = skyblockIslandRepository.findSkyblockIsland(islandId);
+        return skyblockIslandOpt.map(skyblockIsland -> skyblockIsland);
     }
 
 }

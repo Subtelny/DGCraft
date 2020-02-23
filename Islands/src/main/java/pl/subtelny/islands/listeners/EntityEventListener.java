@@ -13,22 +13,18 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
-import pl.subtelny.islands.service.IslandActionGuard;
-import pl.subtelny.islands.service.IslandActionGuardResult;
-import pl.subtelny.islands.service.IslandService;
+import pl.subtelny.islands.guard.IslandActionGuard;
+import pl.subtelny.islands.guard.IslandActionGuardResult;
 
 import java.util.List;
 
 @Component
 public class EntityEventListener implements Listener {
 
-    private final IslandService islandService;
-
     private final IslandActionGuard islandActionGuard;
 
     @Autowired
-    public EntityEventListener(IslandService islandService, IslandActionGuard islandActionGuard) {
-        this.islandService = islandService;
+    public EntityEventListener(IslandActionGuard islandActionGuard) {
         this.islandActionGuard = islandActionGuard;
     }
 
@@ -40,7 +36,7 @@ public class EntityEventListener implements Listener {
         Location source = e.getLocation();
         List<Block> blocks = e.blockList();
         IslandActionGuardResult result = islandActionGuard.accessToExplodeAndValidateBlocks(source, blocks);
-        if (IslandActionGuardResult.ACTION_PERMITED != result) {
+        if (isAccessToActionRejected(result)) {
             e.setCancelled(true);
         }
     }
@@ -53,7 +49,7 @@ public class EntityEventListener implements Listener {
         Entity entity = e.getEntity();
         Entity attacker = e.getDamager();
         IslandActionGuardResult result = islandActionGuard.accessToHit(attacker, entity);
-        if (IslandActionGuardResult.ACTION_PERMITED != result) {
+        if (isAccessToActionRejected(result)) {
             e.setDamage(0);
             e.setCancelled(true);
         }
@@ -69,9 +65,13 @@ public class EntityEventListener implements Listener {
         LivingEntity entity = e.getEntity();
 
         IslandActionGuardResult result = islandActionGuard.accessToInteract(player, entity);
-        if (IslandActionGuardResult.ACTION_PERMITED != result) {
+        if (isAccessToActionRejected(result)) {
             e.setCancelled(true);
         }
+    }
+
+    private boolean isAccessToActionRejected(IslandActionGuardResult result) {
+        return IslandActionGuardResult.ACTION_PERMITED != result;
     }
 
 }

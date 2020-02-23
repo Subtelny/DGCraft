@@ -7,8 +7,8 @@ import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.projectiles.ProjectileSource;
 import pl.subtelny.beans.Autowired;
 import pl.subtelny.beans.Component;
-import pl.subtelny.islands.service.IslandActionGuard;
-import pl.subtelny.islands.service.IslandService;
+import pl.subtelny.islands.guard.IslandActionGuard;
+import pl.subtelny.islands.guard.IslandActionGuardResult;
 
 @Component
 public class PotionSplashEventListener implements Listener {
@@ -29,7 +29,8 @@ public class PotionSplashEventListener implements Listener {
 		if (shooter instanceof Entity) {
 			Entity attacker = (Entity) shooter;
 			e.getAffectedEntities().forEach(livingEntity -> {
-				if (!islandActionGuard.accessToHit(attacker, livingEntity)) {
+				IslandActionGuardResult result = islandActionGuard.accessToHit(attacker, livingEntity);
+				if (!result.isActionPermited()) {
 					e.setIntensity(livingEntity, 0);
 				}
 			});
