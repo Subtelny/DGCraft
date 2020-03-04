@@ -2,9 +2,7 @@
   <artifact type="jar" build-on-make="true" name="Core">
     <output-path>$PROJECT_DIR$/../Desktop/Minecraft Serwer/plugins</output-path>
     <root id="archive" name="Core.jar">
-      <element id="module-output" name="Core" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/reflections/reflections/0.9.11/reflections-0.9.11.jar" path-in-jar="/" />
-      <element id="module-output" name="Minecraft" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/javassist/javassist/3.21.0-GA/javassist-3.21.0-GA.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/postgresql/postgresql/42.2.8/postgresql-42.2.8.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/zaxxer/HikariCP/3.4.1/HikariCP-3.4.1.jar" path-in-jar="/" />
@@ -12,6 +10,11 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/reactivestreams/reactive-streams/1.0.2/reactive-streams-1.0.2.jar" path-in-jar="/" />
       <element id="module-output" name="Abstract" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/ben-manes/caffeine/caffeine/2.8.0/caffeine-2.8.0.jar" path-in-jar="/" />
+      <element id="module-output" name="components-api" />
+      <element id="module-output" name="components-core" />
+      <element id="module-output" name="core-core" />
+      <element id="module-output" name="core-api" />
+      <element id="module-output" name="utils" />
     </root>
   </artifact>
 </component>

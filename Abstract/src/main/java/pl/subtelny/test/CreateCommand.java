@@ -1,14 +1,13 @@
 package pl.subtelny.test;
 
 import org.bukkit.command.CommandSender;
-import pl.subtelny.beans.command.SubCommand;
 import pl.subtelny.command.BaseCommand;
 import pl.subtelny.utils.MessageUtil;
 
-@SubCommand(
-        baseCommand = IslandCommand.class,
-        command = "stworz"
-)
+//@SubCommand(
+//        baseCommand = IslandCommand.class,
+//        command = "stworz"
+//)
 public class CreateCommand extends BaseCommand {
 
     @Override

@@ -8,10 +8,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.subtelny.beans.BeanContext;
-import pl.subtelny.beans.BeanLoader;
-import pl.subtelny.beans.command.HeadCommand;
 import pl.subtelny.command.BukkitCommandAdapter;
+import pl.subtelny.components.api.BeanContext;
 
 public abstract class DGPlugin extends JavaPlugin {
 
@@ -20,16 +18,17 @@ public abstract class DGPlugin extends JavaPlugin {
 	@Override
     public void onLoad() {
 		plugin = this;
-        onLoaded();
         initializeBeans();
+        onLoaded();
     }
 
     private void initializeBeans() {
         String path = this.getClass().getPackage().getName();
         System.out.println("beanLoader path " + path);
-        BeanLoader beanLoader = new BeanLoader(path);
-        beanLoader.initializeBeans();
+        //BeanLoader beanLoader = new BeanLoader(path);
+        //beanLoader.initializeBeans();
 
+        BeanContext.initializeBeans(getName(), path);
     }
 
     @Override
@@ -43,22 +42,22 @@ public abstract class DGPlugin extends JavaPlugin {
         List<BukkitCommandAdapter> bukkitAdapterCommands = loadBukkitCommands();
 
         PluginCommands pluginCommands = new PluginCommands(this);
-        bukkitAdapterCommands.stream()
-                .filter(i -> i.getClass().isAnnotationPresent(HeadCommand.class))
-                .forEach(adapter -> registerCommands(pluginCommands, adapter));
+        //bukkitAdapterCommands.stream()
+        //        .filter(i -> i.getClass().isAnnotationPresent(HeadCommand.class))
+        //        .forEach(adapter -> registerCommands(pluginCommands, adapter));
     }
 
     private void registerCommands(PluginCommands pluginCommands, BukkitCommandAdapter adapter) {
-        HeadCommand pluginCommand = adapter.getClass().getAnnotation(HeadCommand.class);
-        List<String> commands = Lists.asList(pluginCommand.command(), pluginCommand.aliases());
-        PluginCommand bukkitCommand = pluginCommands.registerCommand(commands);
-        bukkitCommand.setExecutor(adapter);
-
-        System.out.println("registered " + commands + " - " + this.getName());
+        //HeadCommand pluginCommand = adapter.getClass().getAnnotation(HeadCommand.class);
+        //List<String> commands = Lists.asList(pluginCommand.command(), pluginCommand.aliases());
+        //PluginCommand bukkitCommand = pluginCommands.registerCommand(commands);
+        //bukkitCommand.setExecutor(adapter);
+//
+        //System.out.println("registered " + commands + " - " + this.getName());
     }
 
     private List<BukkitCommandAdapter> loadBukkitCommands() {
-        return BeanContext.getBeans(BukkitCommandAdapter.class);
+        return null;//BeanContext.getBeans(BukkitCommandAdapter.class);
     }
 
     private void initializeListeners() {
@@ -68,7 +67,7 @@ public abstract class DGPlugin extends JavaPlugin {
     }
 
     private List<Listener> loadListeners() {
-        return BeanContext.getBeans(Listener.class);
+        return null;//BeanContext.getBeans(Listener.class);
     }
 
     public abstract void onLoaded();

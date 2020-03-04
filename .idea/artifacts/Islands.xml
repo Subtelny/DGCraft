@@ -2,7 +2,7 @@
   <artifact type="jar" build-on-make="true" name="Islands">
     <output-path>$PROJECT_DIR$/../Desktop/Minecraft Serwer/plugins</output-path>
     <root id="archive" name="Islands.jar">
-      <element id="module-output" name="Islands" />
+      <element id="module-output" name="islands-core" />
     </root>
   </artifact>
 </component>

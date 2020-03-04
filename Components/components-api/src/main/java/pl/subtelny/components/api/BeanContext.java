@@ -5,51 +5,62 @@ import java.util.Map;
 
 public final class BeanContext {
 
-	private static BeanContext context;
+    private static BeanContext context;
 
-	private final BeanService beanService;
+    private final BeanService beanService;
 
-	public BeanContext() {
-		this.beanService = new BeanServiceImpl();
-	}
+    public BeanContext(BeanService beanService) {
+        this.beanService = beanService;
+    }
 
-	public BeanService getBeanService() {
-		return beanService;
-	}
+    public BeanService getBeanService() {
+        return beanService;
+    }
 
-	public static void initializeBeans(String context, ClassLoader classLoader) {
-		getContext().getBeanService().initializeBeans(context, classLoader);
-	}
+    public static void initializeBeans(String contextId, String path) {
+        getContext().getBeanService().initializeBeans(toBeanContextId(contextId), path);
+    }
 
-	public static <T> T initializePrototypeBean(String context, Class<T> clazz) {
-		return getContext().getBeanService().initializePrototypeBean(context, clazz);
-	}
+    public static <T> T initializePrototypeBean(String contextId, Class<T> clazz) {
+        return getContext().getBeanService().initializePrototypeBean(toBeanContextId(contextId), clazz);
+    }
 
-	public static <T> List<T> getBeans(String context, Class<T> clazz) {
-		return getContext().getBeanService().getBeans(context, clazz);
-	}
+    public static <T> List<T> getBeans(String contextId, Class<T> clazz) {
+        return getContext().getBeanService().getBeans(toBeanContextId(contextId), clazz);
+    }
 
-	public static <T> T getBean(String context, String beanName, Class<T> clazz) {
-		return getContext().getBeanService().getBean(context, beanName, clazz);
-	}
+    public static <T> T getBean(String contextId, String beanName, Class<T> clazz) {
+        return getContext().getBeanService().getBean(toBeanContextId(contextId), beanName, clazz);
+    }
 
-	public static <T> T getBean(String context, Class<?> clazz) {
-		return getContext().getBeanService().getBean(context, clazz);
-	}
+    public static <T> T getBean(String contextId, Class<?> clazz) {
+        return getContext().getBeanService().getBean(toBeanContextId(contextId), clazz);
+    }
 
-	public static Object getBean(String context, String beanName) {
-		return getContext().getBeanService().getBean(context, beanName);
-	}
+    public static Object getBean(String contextId, String beanName) {
+        return getContext().getBeanService().getBean(toBeanContextId(contextId), beanName);
+    }
 
-	public static Map<String, Object> getBeans(String context) {
-		return getContext().getBeanService().getBeans(context);
-	}
+    public static Map<String, Object> getBeans(String contextId) {
+        return getContext().getBeanService().getBeans(toBeanContextId(contextId));
+    }
 
-	private static BeanContext getContext() {
-		if (context == null) {
-			context = new BeanContext();
-		}
-		return context;
-	}
+    private static BeanContextId toBeanContextId(String contextId) {
+        return BeanContextId.of(contextId);
+    }
+
+    public static void initializeContext(BeanService beanService) {
+        if (context != null) {
+            throw new IllegalArgumentException("BeanContext is already initialized");
+        }
+        context = new BeanContext(beanService);
+    }
+
+    private static BeanContext getContext() {
+        if (context == null) {
+            throw new IllegalArgumentException("BeanContext is not initialized");
+        }
+        return context;
+    }
 
 }

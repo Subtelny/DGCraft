@@ -5,18 +5,18 @@ import java.util.Map;
 
 public interface BeanService {
 
-	void initializeBeans(String context, ClassLoader classLoader);
+	void initializeBeans(BeanContextId contextId, String path);
 
-	<T> T initializePrototypeBean(String context, Class<T> clazz);
+	<T> T initializePrototypeBean(BeanContextId contextId, Class<T> clazz);
 
-	<T> List<T> getBeans(String context, Class<T> clazz);
+	<T> List<T> getBeans(BeanContextId contextId, Class<T> clazz);
 
-	<T> T getBean(String context, String beanName, Class<T> clazz);
+	<T> T getBean(BeanContextId contextId, String beanName, Class<T> clazz);
 
-	<T> T getBean(String context, Class<?> clazz);
+	<T> T getBean(BeanContextId contextId, Class<?> clazz);
 
-	Object getBean(String context, String beanName);
+	Object getBean(BeanContextId contextId, String beanName);
 
-	Map<String, Object> getBeans(String context);
+	Map<String, Object> getBeans(BeanContextId contextId);
 
 }

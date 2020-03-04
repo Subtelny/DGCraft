@@ -11,6 +11,18 @@
 
     <artifactId>Abstract</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>pl.subtelny</groupId>
+            <artifactId>components-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pl.subtelny</groupId>
+            <artifactId>utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <resources>

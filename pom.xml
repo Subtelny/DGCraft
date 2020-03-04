@@ -9,16 +9,18 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>Core</module>
+        <module>Core-Plugin</module>
+        <module>Core-Plugin/core-api</module>
+        <module>Core-Plugin/core-core</module>
         <module>Islands</module>
         <module>Abstract</module>
         <module>Components</module>
-        <module>components-api</module>
-        <module>components-core</module>
         <module>Components/components-api</module>
         <module>Components/components-core</module>
-		<module>Components/components-context</module>
-	</modules>
+        <module>Islands-Plugin</module>
+        <module>Utilities</module>
+        <module>Utilities/utils</module>
+    </modules>
 
     <repositories>
         <repository>
