@@ -5,8 +5,8 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
-import pl.subtelny.components.api.Autowired;
-import pl.subtelny.components.api.Component;
+import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.guard.IslandActionGuard;
 import pl.subtelny.islands.guard.IslandActionGuardResult;
 

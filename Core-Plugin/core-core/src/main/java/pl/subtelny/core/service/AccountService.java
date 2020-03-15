@@ -1,12 +1,11 @@
 package pl.subtelny.core.service;
 
-import pl.subtelny.components.api.Autowired;
-import pl.subtelny.components.api.Component;
-import pl.subtelny.core.model.AccountEntity;
-import pl.subtelny.core.model.AccountId;
-import pl.subtelny.core.repository.AccountRepository;
 import org.bukkit.entity.Player;
-import pl.subtelny.core.repository.AccountAnemia;
+import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.components.core.api.Component;
+import pl.subtelny.core.api.account.AccountId;
+import pl.subtelny.core.repository.AccountRepository;
+import pl.subtelny.core.repository.entity.AccountEntity;
 import pl.subtelny.jobs.JobsProvider;
 
 import java.time.LocalDateTime;
@@ -36,11 +35,12 @@ public class AccountService {
 
     private void createNewAccount(Player player) {
         AccountId accountId = AccountId.of(player.getUniqueId());
-        AccountAnemia accountAnemia = new AccountAnemia(accountId);
-        AccountEntity account = new AccountEntity(accountAnemia);
-        account.setDisplayName(player.getDisplayName());
-        account.setLastOnline(LocalDateTime.now());
-        account.setName(player.getName());
+        AccountEntity account = new AccountEntity(
+                accountId,
+                player.getName(),
+                player.getDisplayName(),
+                LocalDateTime.now()
+        );
         accountRepository.saveAccount(account);
     }
 

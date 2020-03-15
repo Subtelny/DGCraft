@@ -9,8 +9,8 @@ import pl.subtelny.islands.utils.SkyblockIslandUtil;
 import org.jooq.Configuration;
 import org.jooq.impl.DSL;
 import pl.subtelny.core.generated.tables.Islanders;
-import pl.subtelny.core.model.AccountId;
-import pl.subtelny.utils.cuboid.Cuboid;
+import pl.subtelny.core.api.account.AccountId;
+import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.util.List;
 import java.util.Optional;

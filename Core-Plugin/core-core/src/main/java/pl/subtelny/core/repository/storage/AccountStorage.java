@@ -1,8 +1,8 @@
 package pl.subtelny.core.repository.storage;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import pl.subtelny.core.model.AccountEntity;
-import pl.subtelny.core.model.AccountId;
+import pl.subtelny.core.repository.entity.AccountEntity;
+import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.repository.Storage;
 
 import java.util.Optional;

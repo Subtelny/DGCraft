@@ -2,7 +2,7 @@ package pl.subtelny.islands.repository.islander.loader;
 
 import pl.subtelny.islands.model.islander.Islander;
 import org.jooq.Configuration;
-import pl.subtelny.core.model.AccountId;
+import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.repository.islander.anemia.IslanderAnemia;

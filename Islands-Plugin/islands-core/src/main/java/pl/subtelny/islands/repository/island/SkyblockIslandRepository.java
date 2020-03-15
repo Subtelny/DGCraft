@@ -2,9 +2,9 @@ package pl.subtelny.islands.repository.island;
 
 import java.util.Optional;
 import org.jooq.Configuration;
-import pl.subtelny.components.api.Autowired;
-import pl.subtelny.components.api.Component;
-import pl.subtelny.database.DatabaseConfiguration;
+import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.components.core.api.Component;
+import pl.subtelny.core.api.database.DatabaseConfiguration;
 import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;

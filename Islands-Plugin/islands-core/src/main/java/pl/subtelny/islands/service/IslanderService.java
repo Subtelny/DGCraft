@@ -1,9 +1,9 @@
 package pl.subtelny.islands.service;
 
 import org.bukkit.entity.Player;
-import pl.subtelny.components.api.Autowired;
-import pl.subtelny.components.api.Component;
-import pl.subtelny.core.model.AccountId;
+import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.components.core.api.Component;
+import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.islands.model.islander.Islander;
 import pl.subtelny.islands.repository.islander.IslanderRepository;
 import pl.subtelny.jobs.JobsProvider;

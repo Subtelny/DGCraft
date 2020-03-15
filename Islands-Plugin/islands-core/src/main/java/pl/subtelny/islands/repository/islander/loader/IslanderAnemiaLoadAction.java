@@ -6,7 +6,7 @@ import org.jooq.Condition;
 import org.jooq.Configuration;
 import org.jooq.impl.DSL;
 import pl.subtelny.core.generated.tables.Islanders;
-import pl.subtelny.core.model.AccountId;
+import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.repository.LoadAction;

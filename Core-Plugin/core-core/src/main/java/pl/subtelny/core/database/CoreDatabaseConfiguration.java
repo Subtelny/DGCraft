@@ -5,9 +5,9 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.jooq.Configuration;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DefaultConfiguration;
-import pl.subtelny.components.api.Component;
+import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.configuration.Settings;
-import pl.subtelny.database.DatabaseConfiguration;
+import pl.subtelny.core.api.database.DatabaseConfiguration;
 
 import javax.sql.DataSource;
 

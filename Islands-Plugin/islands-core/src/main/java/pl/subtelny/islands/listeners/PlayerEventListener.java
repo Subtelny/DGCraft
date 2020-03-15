@@ -9,13 +9,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import pl.subtelny.components.api.Autowired;
-import pl.subtelny.components.api.Component;
+import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.guard.IslandActionGuard;
 import pl.subtelny.islands.guard.IslandActionGuardResult;
 import pl.subtelny.islands.service.IslanderService;
-import pl.subtelny.utils.LocationUtil;
-import pl.subtelny.utils.PlayerUtil;
+import pl.subtelny.utilities.location.LocationUtil;
+import pl.subtelny.utilities.PlayerUtil;
 
 @Component
 public class PlayerEventListener implements Listener {

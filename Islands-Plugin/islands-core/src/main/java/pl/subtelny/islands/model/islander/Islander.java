@@ -4,12 +4,12 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import pl.subtelny.core.model.AccountId;
+import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.islands.model.guild.Guild;
 import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.model.island.SkyblockIsland;
-import pl.subtelny.validation.ValidationException;
+import pl.subtelny.utilities.exception.ValidationException;
 
 public class Islander {
 

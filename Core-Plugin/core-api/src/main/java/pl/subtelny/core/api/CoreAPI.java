@@ -1,5 +1,7 @@
 package pl.subtelny.core.api;
 
+import pl.subtelny.core.api.account.Accounts;
+
 //@Component
 public final class CoreAPI {
 

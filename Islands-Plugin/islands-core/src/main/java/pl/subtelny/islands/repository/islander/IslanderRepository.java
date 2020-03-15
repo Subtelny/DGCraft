@@ -1,15 +1,15 @@
 package pl.subtelny.islands.repository.islander;
 
-import pl.subtelny.components.api.Autowired;
-import pl.subtelny.components.api.Component;
+import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.model.islander.Islander;
 import pl.subtelny.islands.repository.islander.loader.IslanderLoadRequest;
 import pl.subtelny.islands.repository.islander.loader.IslanderLoader;
 import pl.subtelny.islands.repository.islander.storage.IslanderStorage;
 import pl.subtelny.islands.repository.islander.updater.IslanderUpdater;
 import org.jooq.Configuration;
-import pl.subtelny.core.model.AccountId;
-import pl.subtelny.database.DatabaseConfiguration;
+import pl.subtelny.core.api.account.AccountId;
+import pl.subtelny.core.api.database.DatabaseConfiguration;
 
 import java.util.Optional;
 

@@ -5,12 +5,12 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import pl.subtelny.components.api.Component;
+import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.repository.island.IslandFindResult;
 import pl.subtelny.islands.service.IslandService;
 import pl.subtelny.islands.service.IslanderService;
-import pl.subtelny.utils.cuboid.Cuboid;
+import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.util.Iterator;
 import java.util.List;

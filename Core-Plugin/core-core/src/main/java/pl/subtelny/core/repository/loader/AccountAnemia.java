@@ -1,6 +1,6 @@
 package pl.subtelny.core.repository.loader;
 
-import pl.subtelny.core.model.AccountId;
+import pl.subtelny.core.api.account.AccountId;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 

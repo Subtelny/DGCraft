@@ -1,16 +1,17 @@
 package pl.subtelny.core.commands;
 
 import org.bukkit.command.CommandSender;
-import pl.subtelny.command.BukkitCommandAdapter;
-import pl.subtelny.utils.MessageUtil;
+import pl.subtelny.commands.api.BukkitCommandAdapter;
+import pl.subtelny.commands.api.PluginCommand;
+import pl.subtelny.utilities.MessageUtil;
 
-//@HeadCommand(
-//        command = "author",
-//        aliases = {
-//                "autor",
-//                "autorzy"
-//        }
-//)
+@PluginCommand(
+        command = "author",
+        aliases = {
+                "autor",
+                "autorzy"
+        }
+)
 public class AuthorCommand extends BukkitCommandAdapter {
 
     @Override

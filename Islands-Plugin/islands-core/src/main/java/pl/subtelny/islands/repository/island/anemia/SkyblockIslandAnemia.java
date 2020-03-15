@@ -2,7 +2,7 @@ package pl.subtelny.islands.repository.island.anemia;
 
 import java.time.LocalDateTime;
 import org.bukkit.Location;
-import pl.subtelny.core.model.AccountId;
+import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.islands.model.island.IslandType;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;

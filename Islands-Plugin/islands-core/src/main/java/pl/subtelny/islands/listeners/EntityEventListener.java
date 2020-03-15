@@ -1,7 +1,7 @@
 package pl.subtelny.islands.listeners;
 
-import pl.subtelny.components.api.Autowired;
-import pl.subtelny.components.api.Component;
+import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.guard.IslandActionGuard;
 import pl.subtelny.islands.guard.IslandActionGuardResult;
 import org.bukkit.Location;

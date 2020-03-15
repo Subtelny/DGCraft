@@ -2,7 +2,7 @@ package pl.subtelny.core.configuration;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import pl.subtelny.utils.FileUtil;
+import pl.subtelny.utilities.FileUtil;
 
 import java.io.File;
 

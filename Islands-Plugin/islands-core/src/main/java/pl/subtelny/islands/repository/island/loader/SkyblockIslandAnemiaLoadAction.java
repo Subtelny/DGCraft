@@ -12,8 +12,8 @@ import org.jooq.Record;
 import pl.subtelny.core.generated.enums.Islandtype;
 import pl.subtelny.core.generated.tables.Islands;
 import pl.subtelny.core.generated.tables.SkyblockIslands;
-import pl.subtelny.core.model.AccountId;
-import pl.subtelny.utils.LocationSerializer;
+import pl.subtelny.core.api.account.AccountId;
+import pl.subtelny.utilities.location.LocationSerializer;
 
 import java.time.LocalDateTime;
 import java.util.List;

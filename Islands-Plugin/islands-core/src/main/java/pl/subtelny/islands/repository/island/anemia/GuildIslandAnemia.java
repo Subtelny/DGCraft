@@ -5,7 +5,7 @@ import org.bukkit.Location;
 import pl.subtelny.islands.model.island.IslandType;
 import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.utils.cuboid.Cuboid;
+import pl.subtelny.utilities.cuboid.Cuboid;
 
 public class GuildIslandAnemia extends IslandAnemia {
 

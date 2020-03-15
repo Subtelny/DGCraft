@@ -20,6 +20,9 @@
         <module>Islands-Plugin</module>
         <module>Utilities</module>
         <module>Utilities/utils</module>
+        <module>Commands</module>
+        <module>Commands/commands-api</module>
+        <module>Commands/commands-core</module>
     </modules>
 
     <repositories>

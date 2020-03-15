@@ -1,6 +1,6 @@
 package pl.subtelny.islands.repository.islander.loader;
 
-import pl.subtelny.core.model.AccountId;
+import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandId;
 

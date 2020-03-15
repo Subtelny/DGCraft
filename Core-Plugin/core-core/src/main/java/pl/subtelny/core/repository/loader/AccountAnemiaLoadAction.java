@@ -1,7 +1,7 @@
 package pl.subtelny.core.repository.loader;
 
 import com.google.common.collect.Lists;
-import pl.subtelny.core.model.AccountId;
+import pl.subtelny.core.api.account.AccountId;
 import org.jooq.Condition;
 import org.jooq.Configuration;
 import org.jooq.Record;

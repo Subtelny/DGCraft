@@ -14,7 +14,7 @@ import pl.subtelny.core.generated.tables.GuildIslands;
 import pl.subtelny.core.generated.tables.Islands;
 import pl.subtelny.core.generated.tables.SkyblockIslands;
 import pl.subtelny.repository.LoadAction;
-import pl.subtelny.validation.ValidationException;
+import pl.subtelny.utilities.exception.ValidationException;
 
 public abstract class IslandAnemiaLoadAction<ANEMIA> implements LoadAction<ANEMIA> {
 

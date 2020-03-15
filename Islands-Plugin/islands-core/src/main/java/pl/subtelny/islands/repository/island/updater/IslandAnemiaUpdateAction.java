@@ -6,7 +6,7 @@ import org.jooq.impl.DSL;
 import pl.subtelny.core.generated.enums.Islandtype;
 import pl.subtelny.core.generated.tables.Islands;
 import pl.subtelny.core.generated.tables.records.IslandsRecord;
-import pl.subtelny.utils.LocationSerializer;
+import pl.subtelny.utilities.location.LocationSerializer;
 import pl.subtelny.repository.UpdateAction;
 
 import java.sql.Timestamp;

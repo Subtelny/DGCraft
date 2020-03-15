@@ -1,7 +1,7 @@
 package pl.subtelny.islands.service;
 
-import pl.subtelny.components.api.Autowired;
-import pl.subtelny.components.api.Component;
+import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.repository.island.IslandFindResult;

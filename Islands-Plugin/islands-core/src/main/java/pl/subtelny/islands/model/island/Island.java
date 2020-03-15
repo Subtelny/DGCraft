@@ -4,9 +4,9 @@ import pl.subtelny.islands.model.islander.Islander;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.bukkit.Location;
-import pl.subtelny.utils.LocationUtil;
-import pl.subtelny.utils.cuboid.Cuboid;
-import pl.subtelny.validation.ValidationException;
+import pl.subtelny.utilities.exception.ValidationException;
+import pl.subtelny.utilities.location.LocationUtil;
+import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.time.LocalDateTime;
 

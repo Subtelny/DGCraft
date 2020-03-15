@@ -2,7 +2,7 @@ package pl.subtelny.core.repository.loader;
 
 import java.util.Optional;
 
-import pl.subtelny.core.model.AccountId;
+import pl.subtelny.core.api.account.AccountId;
 
 public class AccountLoadRequest {
 

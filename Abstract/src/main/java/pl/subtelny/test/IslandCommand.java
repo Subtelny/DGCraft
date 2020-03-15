@@ -1,16 +1,17 @@
 package pl.subtelny.test;
 
 import org.bukkit.command.CommandSender;
-import pl.subtelny.command.BukkitCommandAdapter;
-import pl.subtelny.utils.MessageUtil;
+import pl.subtelny.commands.api.BukkitCommandAdapter;
+import pl.subtelny.commands.api.PluginCommand;
+import pl.subtelny.utilities.MessageUtil;
 
-//@HeadCommand(
-//        command = "wyspa",
-//        aliases = {
-//                "w",
-//                "island"
-//        }
-//)
+@PluginCommand(
+        command = "wyspa",
+        aliases = {
+                "island",
+                "w"
+        }
+)
 public class IslandCommand extends BukkitCommandAdapter {
 
     public IslandCommand() {

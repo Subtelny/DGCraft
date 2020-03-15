@@ -5,7 +5,7 @@ import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.model.island.IslandType;
 import pl.subtelny.islands.model.islander.Islander;
 import pl.subtelny.islands.repository.island.anemia.IslandAnemia;
-import pl.subtelny.utils.cuboid.Cuboid;
+import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.util.Optional;
 

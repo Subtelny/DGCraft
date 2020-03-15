@@ -1,7 +1,7 @@
 package pl.subtelny.islands.listeners;
 
-import pl.subtelny.components.api.Autowired;
-import pl.subtelny.components.api.Component;
+import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.repository.island.IslandFindResult;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.StructureGrowEvent;
 import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.service.IslandService;
-import pl.subtelny.utils.cuboid.Cuboid;
+import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.util.List;
 import java.util.Optional;

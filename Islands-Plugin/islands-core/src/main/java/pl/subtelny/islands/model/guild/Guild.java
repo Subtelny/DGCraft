@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 import java.util.Set;
 
 import pl.subtelny.islands.model.islander.Islander;
-import pl.subtelny.core.model.AccountId;
+import pl.subtelny.core.api.account.AccountId;
 
 public class Guild {
 

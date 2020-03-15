@@ -1,13 +1,14 @@
 package pl.subtelny.core.commands;
 
 import org.bukkit.command.CommandSender;
-import pl.subtelny.command.BaseCommand;
-import pl.subtelny.utils.MessageUtil;
+import pl.subtelny.commands.api.BaseCommand;
+import pl.subtelny.commands.api.PluginSubCommand;
+import pl.subtelny.utilities.MessageUtil;
 
-//@SubCommand(
-//        baseCommand = AuthorCommand.class,
-//        command = "test"
-//)
+@PluginSubCommand(
+        mainCommand = AuthorCommand.class,
+        command = "test"
+)
 public class TestCommand extends BaseCommand {
 
     @Override
