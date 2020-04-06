@@ -34,7 +34,7 @@ public class CommandsInitializer {
 
     private <T> List<T> getCommandsByClassAndAnnotation(Class<T> clazz, Class annotation) {
         return commands.stream()
-                .filter(command -> command.getClass().isAssignableFrom(clazz))
+                .filter(command -> clazz.isAssignableFrom(command.getClass()))
                 .filter(command -> command.getClass().isAnnotationPresent(annotation))
                 .map(command -> (T) command)
                 .collect(Collectors.toList());
@@ -43,7 +43,7 @@ public class CommandsInitializer {
     private void registerMainCommand(BukkitCommandAdapter adapter) {
         PluginCommand pluginCommand = adapter.getClass().getAnnotation(PluginCommand.class);
         org.bukkit.command.PluginCommand registeredCommand = pluginCommands
-                .registerCommand(pluginCommand.command(), Arrays.asList(pluginCommand.aliases()));
+                .registerCommand(pluginCommand.command(), Arrays.asList(pluginCommand.aliases()), adapter);
         registeredCommand.setExecutor(adapter);
     }
 

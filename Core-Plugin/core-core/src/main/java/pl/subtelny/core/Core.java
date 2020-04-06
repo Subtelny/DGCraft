@@ -1,37 +1,41 @@
 package pl.subtelny.core;
 
 import com.google.common.collect.Lists;
-import pl.subtelny.commands.api.context.CommandsContext;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.reflections.util.ClasspathHelper;
 import pl.subtelny.components.core.BeanServiceImpl;
-import pl.subtelny.components.core.api.BeanContext;
+import pl.subtelny.components.core.api.BeanService;
 import pl.subtelny.core.configuration.Settings;
-import pl.subtelny.plugin.DGPlugin;
+import pl.subtelny.core.dependencies.DependenciesService;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public class Core extends DGPlugin {
+public class Core extends JavaPlugin {
+
+    private final static String PLUGINS_PATH = "pl.subtelny";
+
+    private final BeanService beanService = new BeanServiceImpl();
 
     @Override
     public void onLoad() {
-        BeanContext.initializeContext(new BeanServiceImpl());
-        super.onLoad();
+        loadBeans();
+    }
+
+    private void loadBeans() {
+        ClassLoader classLoader = ClasspathHelper.staticClassLoader();
+        List<String> paths = Lists.newArrayList(PLUGINS_PATH);
+        beanService.initializeBeans(classLoader, paths);
     }
 
     @Override
-    public void onLoaded() {
+    public void onEnable() {
         new Settings(this);
+        loadDependencies();
     }
 
-    @Override
-    public void onEnabled() {
-    }
-
-    @Override
-    protected List<String> reflectionPaths() {
-        String commandsPackage = "pl.subtelny.commands";
-        return Lists.asList(commandsPackage, super.reflectionPaths().toArray(new String[0]));
+    private void loadDependencies() {
+        DependenciesService dependenciesService = new DependenciesService(this, beanService);
+        dependenciesService.registerPluginsComponents();
     }
 
 }

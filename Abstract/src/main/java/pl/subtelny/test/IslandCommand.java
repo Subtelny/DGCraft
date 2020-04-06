@@ -5,13 +5,13 @@ import pl.subtelny.commands.api.BukkitCommandAdapter;
 import pl.subtelny.commands.api.PluginCommand;
 import pl.subtelny.utilities.MessageUtil;
 
-@PluginCommand(
-        command = "wyspa",
-        aliases = {
-                "island",
-                "w"
-        }
-)
+//@PluginCommand(
+//        command = "wyspa",
+//        aliases = {
+//                "island",
+//                "w"
+//        }
+//)
 public class IslandCommand extends BukkitCommandAdapter {
 
     public IslandCommand() {

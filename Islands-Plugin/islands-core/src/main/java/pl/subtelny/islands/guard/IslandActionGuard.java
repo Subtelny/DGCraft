@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.repository.island.IslandFindResult;
@@ -31,6 +32,7 @@ public class IslandActionGuard {
 
     private final IslanderService islanderService;
 
+    @Autowired
     public IslandActionGuard(IslandService islandService, IslanderService islanderService) {
         this.islandService = islandService;
         this.islanderService = islanderService;

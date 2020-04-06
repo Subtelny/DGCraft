@@ -11,22 +11,27 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.core.api.database.DatabaseConfiguration;
 import pl.subtelny.islands.guard.IslandActionGuard;
 import pl.subtelny.islands.guard.IslandActionGuardResult;
 import pl.subtelny.islands.service.IslanderService;
-import pl.subtelny.utilities.location.LocationUtil;
 import pl.subtelny.utilities.PlayerUtil;
+import pl.subtelny.utilities.location.LocationUtil;
 
 @Component
 public class PlayerEventListener implements Listener {
+
+    private final DatabaseConfiguration databaseConfiguration;
 
     private final IslanderService islanderService;
 
     private final IslandActionGuard islandActionGuard;
 
     @Autowired
-    public PlayerEventListener(IslanderService islanderService,
+    public PlayerEventListener(DatabaseConfiguration databaseConfiguration,
+                               IslanderService islanderService,
                                IslandActionGuard islandActionGuard) {
+        this.databaseConfiguration = databaseConfiguration;
         this.islanderService = islanderService;
         this.islandActionGuard = islandActionGuard;
     }

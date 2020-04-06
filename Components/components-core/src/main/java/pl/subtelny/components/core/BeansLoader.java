@@ -1,5 +1,6 @@
 package pl.subtelny.components.core;
 
+import com.google.common.collect.Lists;
 import org.reflections.Reflections;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.prototype.BeanPrototype;
@@ -14,19 +15,24 @@ public class BeansLoader {
 
     private final List<String> paths;
 
-    public BeansLoader(List<String> paths) {
+    private final ClassLoader classLoader;
+
+    public BeansLoader(List<String> paths, ClassLoader classLoader) {
         this.paths = paths;
+        this.classLoader = classLoader;
     }
 
-    public Map<String, Object> loadBeans() {
-        Reflections reflections = buildReflections(paths);
+    public Map<Class, Object> loadBeans() {
+        Reflections reflections = buildReflections();
         Set<Class<?>> componentClasses = findComponentClasses(reflections);
         List<BeanPrototype> beanPrototypes = loadBeanPrototypes(componentClasses);
         return initializeBeans(beanPrototypes);
     }
 
-    private Reflections buildReflections(List<String> paths) {
-        return new Reflections(paths.toArray());
+    private Reflections buildReflections() {
+        List<Object> objects = Lists.newArrayList(classLoader);
+        objects.addAll(paths);
+        return new Reflections(objects);
     }
 
     private Set<Class<?>> findComponentClasses(Reflections reflections) {
@@ -43,15 +49,9 @@ public class BeansLoader {
                 .collect(Collectors.toList());
     }
 
-    private Map<String, Object> initializeBeans(List<BeanPrototype> beanPrototypes) {
+    private Map<Class, Object> initializeBeans(List<BeanPrototype> beanPrototypes) {
         BeansInitializer initializer = new BeansInitializer(beanPrototypes);
-        Map<Class, Object> initializedBeans = initializer.initializeBeans();
-        return initializedBeans.entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                        classObjectEntry -> classObjectEntry.getKey().getName(),
-                        Map.Entry::getValue)
-                );
+        return initializer.initializeBeans();
     }
 
 }

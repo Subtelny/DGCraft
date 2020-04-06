@@ -4,6 +4,7 @@ import pl.subtelny.components.core.prototype.BeanPrototype;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class BeanValidatorService {
 
@@ -12,7 +13,8 @@ public class BeanValidatorService {
         beanPrototypes.forEach(beanPrototype -> validateBean(beanPrototype, beanValidators));
     }
 
-    private void validateBean(BeanPrototype beanPrototype, List<BeanValidateable> beanValidators) {
+    private void validateBean(BeanPrototype beanPrototype,
+                              List<BeanValidateable> beanValidators) {
         beanValidators.forEach(beanValidate -> beanValidate.validate(beanPrototype));
     }
 

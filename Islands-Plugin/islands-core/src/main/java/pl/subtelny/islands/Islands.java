@@ -1,26 +1,12 @@
 package pl.subtelny.islands;
 
-import pl.subtelny.components.core.api.BeanContext;
-import pl.subtelny.components.core.api.BeanContextId;
-import pl.subtelny.plugin.DGPlugin;
+import pl.subtelny.plugin.JavaDGPlugin;
 
-import java.util.Map;
-
-public class Islands extends DGPlugin {
+public class Islands extends JavaDGPlugin {
 
     @Override
-    public void onLoaded() {
-        System.out.println("ON LOADED DG-ISLAND");
+    public void onInitialize() {
+
     }
 
-    @Override
-    public void onEnabled() {
-        System.out.println("ON ENABLED DG-ISLAND");
-
-
-        Map<String, Object> beans = BeanContext.getBeans(BeanContextId.of("DG-Core"));
-        beans.forEach((s, o) -> {
-            System.out.println(String.format("%s - %s", s.toString(), o.toString()));
-        });
-    }
 }

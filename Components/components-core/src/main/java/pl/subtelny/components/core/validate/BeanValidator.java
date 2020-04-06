@@ -4,6 +4,7 @@ import pl.subtelny.components.core.api.BeanContextException;
 import pl.subtelny.components.core.prototype.BeanPrototype;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 abstract class BeanValidator implements BeanValidateable {

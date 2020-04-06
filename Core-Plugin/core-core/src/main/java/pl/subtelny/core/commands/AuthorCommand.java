@@ -14,6 +14,8 @@ import pl.subtelny.utilities.MessageUtil;
 )
 public class AuthorCommand extends BukkitCommandAdapter {
 
+
+
     @Override
     public void handleCommand(CommandSender sender, String[] args) {
         MessageUtil.message(sender, "&fSubtelny :o " + Thread.activeCount());

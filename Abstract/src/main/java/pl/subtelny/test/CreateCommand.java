@@ -5,10 +5,10 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.utilities.MessageUtil;
 
-@PluginSubCommand(
-        command = "test",
-        mainCommand = IslandCommand.class
-)
+//@PluginSubCommand(
+//        command = "test",
+//        mainCommand = IslandCommand.class
+//)
 public class CreateCommand extends BaseCommand {
 
     @Override

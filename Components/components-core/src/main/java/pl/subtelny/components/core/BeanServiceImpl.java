@@ -1,6 +1,5 @@
 package pl.subtelny.components.core;
 
-import pl.subtelny.components.core.api.BeanContextId;
 import pl.subtelny.components.core.api.BeanService;
 
 import java.util.List;
@@ -8,52 +7,35 @@ import java.util.Map;
 
 public class BeanServiceImpl implements BeanService {
 
-	private final BeanContextStorage beanContextStorage;
+	private final BeanStorage beanStorage = new BeanStorage();
 
 	public BeanServiceImpl() {
-		this.beanContextStorage = new BeanContextStorage();
 	}
 
 	@Override
-	public void initializeBeans(BeanContextId contextId, List<String> paths) {
-		BeansLoader loader = new BeansLoader(paths);
-		Map<String, Object> loadedBeans = loader.loadBeans();
-		BeanStorage beanStorage = new BeanStorage(loadedBeans);
-		beanContextStorage.setBeanStorage(contextId, beanStorage);
+	public void initializeBeans(ClassLoader classLoader, List<String> paths) {
+		BeansLoader loader = new BeansLoader(paths, classLoader);
+		Map<Class, Object> loadedBeans = loader.loadBeans();
+		beanStorage.addBeans(loadedBeans);
 	}
 
 	@Override
-	public <T> T initializePrototypeBean(BeanContextId contextId, Class<T> clazz) {
+	public <T> T initializePrototypeBean(Class<T> clazz) {
 		return null;
 	}
 
 	@Override
-	public <T> List<T> getBeans(BeanContextId contextId, Class<T> clazz) {
-		BeanStorage beanStorage = beanContextStorage.getBeanStorage(contextId);
+	public <T> List<T> getBeans(Class<T> clazz) {
 		return beanStorage.getBeans(clazz);
 	}
 
 	@Override
-	public <T> T getBean(BeanContextId contextId, String beanName, Class<T> clazz) {
-		BeanStorage beanStorage = beanContextStorage.getBeanStorage(contextId);
-		return beanStorage.getBean(beanName, clazz);
-	}
-
-	@Override
-	public <T> T getBean(BeanContextId contextId, Class<?> clazz) {
-		BeanStorage beanStorage = beanContextStorage.getBeanStorage(contextId);
+	public <T> T getBean(Class<?> clazz) {
 		return beanStorage.getBean(clazz);
 	}
 
 	@Override
-	public Object getBean(BeanContextId contextId, String beanName) {
-		BeanStorage beanStorage = beanContextStorage.getBeanStorage(contextId);
-		return beanStorage.getBean(beanName);
-	}
-
-	@Override
-	public Map<String, Object> getBeans(BeanContextId contextId) {
-		BeanStorage beanStorage = beanContextStorage.getBeanStorage(contextId);
+	public Map<Class, Object> getBeans() {
 		return beanStorage.getBeans();
 	}
 }

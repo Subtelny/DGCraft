@@ -1,5 +1,6 @@
 package pl.subtelny.components.core;
 
+import com.google.common.collect.Maps;
 import pl.subtelny.components.core.api.BeanContextException;
 
 import java.util.HashMap;
@@ -9,10 +10,10 @@ import java.util.stream.Collectors;
 
 public class BeanStorage {
 
-    private Map<String, Object> beans;
+    private Map<Class, Object> beans = Maps.newHashMap();
 
-    public BeanStorage(Map<String, Object> beans) {
-        this.beans = beans;
+    public void addBeans(Map<Class, Object> beans) {
+        this.beans.putAll(beans);
     }
 
     public <T> List<T> getBeans(Class<T> clazz) {
@@ -30,22 +31,7 @@ public class BeanStorage {
                 .orElseThrow(() -> BeanContextException.of("Not found any bean for class " + clazz.getName()));
     }
 
-    public Object getBean(String beanName) {
-        if (!beans.containsKey(beanName)) {
-            throw BeanContextException.of("Bean with name " + beanName + " not exist");
-        }
-        return beans.get(beanName);
-    }
-
-    public <T> T getBean(String beanName, Class<T> clazz) {
-        Object bean = getBean(beanName);
-        if (bean.getClass().isAssignableFrom(clazz)) {
-            return (T) bean;
-        }
-        throw BeanContextException.of("Cannot cast bean " + beanName + " into " + clazz.getName() + " class");
-    }
-
-    public Map<String, Object> getBeans() {
+    public Map<Class, Object> getBeans() {
         return new HashMap<>(beans);
     }
 
