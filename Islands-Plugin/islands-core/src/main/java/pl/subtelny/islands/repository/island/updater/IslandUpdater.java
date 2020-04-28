@@ -7,6 +7,8 @@ import pl.subtelny.islands.repository.island.anemia.IslandAnemiaFactory;
 import org.jooq.Configuration;
 import pl.subtelny.repository.Updater;
 
+import java.util.concurrent.CompletableFuture;
+
 public class IslandUpdater extends Updater<Island> {
 
     private final Configuration configuration;
@@ -16,14 +18,20 @@ public class IslandUpdater extends Updater<Island> {
 	}
 
 	public void updateIsland(Island island) {
-        addToQueue(island);
+        performAction(island);
     }
 
     @Override
-    protected void performAction(Island entity) {
+    public void performAction(Island entity) {
         IslandAnemia islandAnemia = IslandAnemiaFactory.toAnemia(entity);
         IslandAnemiaUpdateAction action = determineIslandUpdateAction(entity.getIslandType());
         action.perform(islandAnemia);
+    }
+
+    @Override
+    public CompletableFuture<Integer> performActionAsync(Island island) {
+
+        return null;
     }
 
     private IslandAnemiaUpdateAction determineIslandUpdateAction(IslandType islandType) {

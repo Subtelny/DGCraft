@@ -1,10 +1,9 @@
 package pl.subtelny.components.core;
 
 import com.google.common.collect.Lists;
-import org.reflections.Reflections;
-import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.prototype.BeanPrototype;
 import pl.subtelny.components.core.prototype.BeanPrototypeConstructor;
+import pl.subtelny.components.core.reflections.ComponentReflections;
 
 import java.util.List;
 import java.util.Map;
@@ -23,23 +22,16 @@ public class BeansLoader {
     }
 
     public Map<Class, Object> loadBeans() {
-        Reflections reflections = buildReflections();
-        Set<Class<?>> componentClasses = findComponentClasses(reflections);
+        ComponentReflections reflections = buildReflections();
+        Set<Class<?>> componentClasses = reflections.getComponentTypes();
         List<BeanPrototype> beanPrototypes = loadBeanPrototypes(componentClasses);
         return initializeBeans(beanPrototypes);
     }
 
-    private Reflections buildReflections() {
+    private ComponentReflections buildReflections() {
         List<Object> objects = Lists.newArrayList(classLoader);
         objects.addAll(paths);
-        return new Reflections(objects);
-    }
-
-    private Set<Class<?>> findComponentClasses(Reflections reflections) {
-        return reflections.getTypesAnnotatedWith(Component.class)
-                .stream()
-                .filter(aClass -> !aClass.isAnnotation())
-                .collect(Collectors.toSet());
+        return new ComponentReflections(objects);
     }
 
     private List<BeanPrototype> loadBeanPrototypes(Set<Class<?>> componentClasses) {

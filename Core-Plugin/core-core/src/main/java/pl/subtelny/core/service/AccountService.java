@@ -3,13 +3,15 @@ package pl.subtelny.core.service;
 import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.core.repository.AccountRepository;
-import pl.subtelny.core.repository.entity.AccountEntity;
+import pl.subtelny.core.api.account.CityType;
+import pl.subtelny.core.repository.account.AccountRepository;
 import pl.subtelny.jobs.JobsProvider;
 
-import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class AccountService {
@@ -21,27 +23,19 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public void loadPlayer(Player player) {
+    public CompletableFuture<Account> loadAccount(Player player) {
         AccountId accountId = AccountId.of(player.getUniqueId());
-        JobsProvider.async(() -> loadOrCreateAccountIfNotExist(player, accountId));
+        return JobsProvider.supplyAsync(() -> loadAccount(accountId));
     }
 
-    private void loadOrCreateAccountIfNotExist(Player player, AccountId accountId) {
-        Optional<AccountEntity> accountOpt = accountRepository.findAccount(accountId);
-        if (accountOpt.isEmpty()) {
-            createNewAccount(player);
-        }
+    private Account loadAccount(AccountId accountId) {
+        Optional<Account> accountOpt = accountRepository.findAccount(accountId);
+        return accountOpt.orElseThrow(() -> new NoSuchElementException("Not found account for id " + accountId));
     }
 
-    private void createNewAccount(Player player) {
+    private void createAccount(Player player, CityType cityType) {
         AccountId accountId = AccountId.of(player.getUniqueId());
-        AccountEntity account = new AccountEntity(
-                accountId,
-                player.getName(),
-                player.getDisplayName(),
-                LocalDateTime.now()
-        );
-        accountRepository.saveAccount(account);
+        accountRepository.createAccount(accountId, player.getDisplayName(), player.getDisplayName(), cityType);
     }
 
 }

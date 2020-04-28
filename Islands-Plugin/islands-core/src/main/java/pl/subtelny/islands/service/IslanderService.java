@@ -22,7 +22,9 @@ public class IslanderService {
     }
 
     public void loadIslander(Player player) {
-        JobsProvider.async(() -> loadOrCreateIslanderIfAbsent(player));
+        JobsProvider.runAsync(() -> {
+            loadOrCreateIslanderIfAbsent(player);
+        });
     }
 
     private void loadOrCreateIslanderIfAbsent(Player player) {

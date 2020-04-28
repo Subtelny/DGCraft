@@ -29,9 +29,23 @@ public class BeansInitializer {
 
     public Map<Class, Object> initializeBeans() {
         beanPrototypes.stream()
-                .sorted(Comparator.comparingInt(beanPrototype -> beanPrototype.getConstructor().getParameterCount()))
+                .sorted(Comparator.comparingInt(this::getBeanPrototypeDependencyCount))
                 .forEach(this::computeBeanIfAbsent);
         return initializedBeans;
+    }
+
+    private int getBeanPrototypeDependencyCount(BeanPrototype beanPrototype) {
+        Class[] parameterTypes = beanPrototype.getConstructor().getParameterTypes();
+        List<BeanPrototype> dependencyBeans = Arrays.stream(parameterTypes)
+                .map(aClass ->
+                        beanPrototypes.stream()
+                                .filter(bean -> bean.isBeanPrototypeClass(aClass))
+                                .findAny()
+                                .get()
+                )
+                .collect(Collectors.toList());
+        int deepDependencyCount = dependencyBeans.stream().map(this::getBeanPrototypeDependencyCount).mapToInt(Integer::intValue).sum();
+        return dependencyBeans.size() + deepDependencyCount;
     }
 
     private Object computeBeanIfAbsent(BeanPrototype beanPrototype) {

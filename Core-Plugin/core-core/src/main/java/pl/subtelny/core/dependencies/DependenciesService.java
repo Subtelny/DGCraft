@@ -30,13 +30,31 @@ public class DependenciesService {
     }
 
     public void registerPluginsComponents() {
-        waitForPlugins()
+        final Set<DGPlugin> dgPlugins = getDependencyPlugins();
+        waitForPlugins(dgPlugins)
                 .thenAccept(aVoid -> registerCommands())
                 .thenAccept(aVoid -> registerListeners())
+                .thenAccept(aVoid -> informDependencyPlugins(dgPlugins))
                 .handle((aVoid, throwable) -> {
                     throwable.printStackTrace();
                     return throwable;
                 });
+    }
+
+    private Set<DGPlugin> getDependencyPlugins() {
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        return Arrays.stream(pluginManager.getPlugins())
+                .filter(plugin -> plugin instanceof DGPlugin)
+                .map(plugin -> ((DGPlugin) plugin))
+                .collect(Collectors.toSet());
+    }
+
+    private CompletableFuture<Void> waitForPlugins(Set<DGPlugin> dgPlugins) {
+        Set<Plugin> plugins = dgPlugins.stream()
+                .map(plugin -> (Plugin) plugin)
+                .collect(Collectors.toSet());
+        PluginsLoadedFuture pluginsLoadedFuture = new PluginsLoadedFuture(plugin, plugins);
+        return pluginsLoadedFuture.waitForAllPlugins();
     }
 
     private void registerListeners() {
@@ -53,18 +71,8 @@ public class DependenciesService {
         logger.info(String.format("Loaded %s commands", commands.size()));
     }
 
-    private CompletableFuture<Void> waitForPlugins() {
-        Set<Plugin> notLoadedDGPlugins = getNotLoadedDGPlugins();
-        PluginsLoadedFuture pluginsLoadedFuture = new PluginsLoadedFuture(plugin, notLoadedDGPlugins);
-        return pluginsLoadedFuture.waitForAllPlugins();
-    }
-
-    private Set<Plugin> getNotLoadedDGPlugins() {
-        PluginManager pluginManager = Bukkit.getPluginManager();
-        return Arrays.stream(pluginManager.getPlugins())
-                .filter(plugin -> plugin instanceof DGPlugin)
-                .filter(plugin -> !plugin.isEnabled())
-                .collect(Collectors.toSet());
+    private void informDependencyPlugins(Set<DGPlugin> plugins) {
+        plugins.forEach(DGPlugin::onInitialize);
     }
 
 }

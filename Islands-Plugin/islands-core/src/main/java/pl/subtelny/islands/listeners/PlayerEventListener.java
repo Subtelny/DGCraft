@@ -15,6 +15,7 @@ import pl.subtelny.core.api.database.DatabaseConfiguration;
 import pl.subtelny.islands.guard.IslandActionGuard;
 import pl.subtelny.islands.guard.IslandActionGuardResult;
 import pl.subtelny.islands.service.IslanderService;
+import pl.subtelny.utilities.MessageUtil;
 import pl.subtelny.utilities.PlayerUtil;
 import pl.subtelny.utilities.location.LocationUtil;
 
@@ -64,7 +65,7 @@ public class PlayerEventListener implements Listener {
             player.teleport(teleportTo);
 
             if (result.isIslandLoading()) {
-                PlayerUtil.message(player, "Wyspa jest w trakcie ladowania");
+                MessageUtil.message(player, "Wyspa jest w trakcie ladowania");
             }
         }
     }

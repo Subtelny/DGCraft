@@ -8,6 +8,8 @@ import java.io.File;
 
 public class Settings {
 
+    private static final String CONFIG_FILE_NAME = "config.yml";
+
     public static String DB_DRIVER = "org.postgresql.Driver";
 
     public static String DB_TYPE = "postgresql";
@@ -27,11 +29,10 @@ public class Settings {
     private final File file;
 
     public Settings(Plugin plugin) {
-        file = FileUtil.copyFile(plugin, "config.yml");
-        initializeFields();
+        file = FileUtil.copyFile(plugin, CONFIG_FILE_NAME);
     }
 
-    private void initializeFields() {
+    public void initializeFields() {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         DB_DRIVER = config.getString("database.driver");
         DB_TYPE = config.getString("database.type");

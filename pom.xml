@@ -12,7 +12,6 @@
         <module>Core-Plugin</module>
         <module>Core-Plugin/core-api</module>
         <module>Core-Plugin/core-core</module>
-        <module>Islands</module>
         <module>Abstract</module>
         <module>Components</module>
         <module>Components/components-api</module>

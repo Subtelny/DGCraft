@@ -1,18 +1,20 @@
 package pl.subtelny.core;
 
-import com.google.common.collect.Lists;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 import org.reflections.util.ClasspathHelper;
 import pl.subtelny.components.core.BeanServiceImpl;
 import pl.subtelny.components.core.api.BeanService;
+import pl.subtelny.core.api.plugin.DGPlugin;
+import pl.subtelny.core.configuration.Messages;
 import pl.subtelny.core.configuration.Settings;
 import pl.subtelny.core.dependencies.DependenciesService;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Core extends JavaPlugin {
-
-    private final static String PLUGINS_PATH = "pl.subtelny";
+public class Core extends DGPlugin {
 
     private final BeanService beanService = new BeanServiceImpl();
 
@@ -21,16 +23,27 @@ public class Core extends JavaPlugin {
         loadBeans();
     }
 
-    private void loadBeans() {
-        ClassLoader classLoader = ClasspathHelper.staticClassLoader();
-        List<String> paths = Lists.newArrayList(PLUGINS_PATH);
-        beanService.initializeBeans(classLoader, paths);
+    @Override
+    public void onEnabled() {
+        new Settings(this).initializeFields();
+        new Messages(this).initMessages();
+        loadDependencies();
     }
 
     @Override
-    public void onEnable() {
-        new Settings(this);
-        loadDependencies();
+    public void onInitialize() {
+
+    }
+
+    private void loadBeans() {
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        List<String> paths = Arrays.stream(pluginManager.getPlugins())
+                .filter(plugin -> plugin instanceof DGPlugin)
+                .map(plugin -> (DGPlugin) plugin)
+                .flatMap(plugin -> plugin.componentsPaths().stream())
+                .collect(Collectors.toList());
+        ClassLoader classLoader = ClasspathHelper.staticClassLoader();
+        beanService.initializeBeans(classLoader, paths);
     }
 
     private void loadDependencies() {
@@ -38,4 +51,8 @@ public class Core extends JavaPlugin {
         dependenciesService.registerPluginsComponents();
     }
 
+    @Override
+    public List<String> componentsPaths() {
+        return Arrays.asList("pl.subtelny.test", getClass().getPackageName());
+    }
 }

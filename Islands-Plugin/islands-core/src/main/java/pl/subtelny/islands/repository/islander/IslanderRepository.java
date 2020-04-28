@@ -45,7 +45,7 @@ public class IslanderRepository {
 
 	public void updateIslander(Islander islander) {
 		islanderStorage.put(islander.getAccount(), Optional.of(islander));
-		islanderUpdater.addToQueue(islander);
+		islanderUpdater.performActionAsync(islander);
 	}
 
 }
