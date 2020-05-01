@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import org.jooq.Condition;
 import org.jooq.SortField;
 import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.core.generated.tables.LoginHistories;
 import pl.subtelny.core.repository.loginhistory.OrderBy;
+import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.utilities.Period;
 
 import java.sql.Timestamp;

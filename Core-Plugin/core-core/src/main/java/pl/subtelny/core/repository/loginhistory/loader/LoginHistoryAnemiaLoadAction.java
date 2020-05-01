@@ -3,7 +3,7 @@ package pl.subtelny.core.repository.loginhistory.loader;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.core.generated.tables.LoginHistories;
+import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.core.repository.loginhistory.LoginHistoryAnemia;
 import pl.subtelny.core.repository.loginhistory.entity.LoginHistoryId;
 import pl.subtelny.repository.LoadAction;

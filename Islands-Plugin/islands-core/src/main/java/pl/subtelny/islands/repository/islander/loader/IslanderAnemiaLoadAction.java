@@ -1,12 +1,12 @@
 package pl.subtelny.islands.repository.islander.loader;
 
 import com.google.common.collect.Lists;
+import pl.subtelny.core.api.account.AccountId;
+import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.islands.repository.islander.anemia.IslanderAnemia;
 import org.jooq.Condition;
 import org.jooq.Configuration;
 import org.jooq.impl.DSL;
-import pl.subtelny.core.generated.tables.Islanders;
-import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.repository.LoadAction;

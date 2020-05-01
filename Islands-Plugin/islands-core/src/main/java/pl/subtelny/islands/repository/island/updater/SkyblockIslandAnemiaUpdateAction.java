@@ -4,8 +4,10 @@ import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.repository.island.anemia.SkyblockIslandAnemia;
 import org.jooq.Configuration;
 import org.jooq.impl.DSL;
-import pl.subtelny.core.generated.tables.SkyblockIslands;
-import pl.subtelny.core.generated.tables.records.SkyblockIslandsRecord;
+import pl.subtelny.generated.tables.tables.SkyblockIslands;
+import pl.subtelny.generated.tables.tables.records.SkyblockIslandsRecord;
+
+import java.util.concurrent.CompletionStage;
 
 public class SkyblockIslandAnemiaUpdateAction extends IslandAnemiaUpdateAction<SkyblockIslandAnemia> {
 
@@ -28,4 +30,8 @@ public class SkyblockIslandAnemiaUpdateAction extends IslandAnemiaUpdateAction<S
         record.store();
     }
 
+    @Override
+    public CompletionStage<Integer> performAsync(SkyblockIslandAnemia skyblockIslandAnemia) {
+        return null;
+    }
 }

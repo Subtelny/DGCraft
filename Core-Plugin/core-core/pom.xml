@@ -3,14 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>Minecraft</artifactId>
+        <artifactId>Core-Plugin</artifactId>
         <groupId>pl.subtelny</groupId>
-        <version>1.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <version>static</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>core-core</artifactId>
+    <version>1</version>
 
     <repositories>
         <repository>
@@ -42,11 +42,6 @@
             <version>7.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>3.4.1</version>
-        </dependency>
-        <dependency>
             <groupId>pl.subtelny</groupId>
             <artifactId>Abstract</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -54,28 +49,32 @@
         <dependency>
             <groupId>pl.subtelny</groupId>
             <artifactId>components-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1</version>
         </dependency>
         <dependency>
             <groupId>pl.subtelny</groupId>
             <artifactId>components-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1</version>
         </dependency>
         <dependency>
             <groupId>pl.subtelny</groupId>
-            <artifactId>dgcore-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>core-api</artifactId>
+            <version>1</version>
         </dependency>
         <dependency>
             <groupId>pl.subtelny</groupId>
             <artifactId>utils</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1</version>
         </dependency>
         <dependency>
             <groupId>pl.subtelny</groupId>
             <artifactId>commands-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>1</version>
+        </dependency>
+        <dependency>
+            <groupId>pl.subtelny</groupId>
+            <artifactId>generated-tables</artifactId>
+            <version>1</version>
         </dependency>
     </dependencies>
 
@@ -91,42 +90,6 @@
         </resources>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
-            <plugin>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen-maven</artifactId>
-                <version>3.12.3</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <jdbc>
-                        <driver>org.postgresql.Driver</driver>
-                        <url>jdbc:postgresql://localhost:5432/dgcraft</url>
-                        <user>postgres</user>
-                        <password>admin</password>
-                    </jdbc>
-                    <generator>
-                        <database>
-                            <name>org.jooq.meta.postgres.PostgresDatabase</name>
-                            <includes>.*</includes>
-                            <excludes/>
-                            <inputSchema>public</inputSchema>
-                        </database>
-                        <target>
-                            <packageName>pl.subtelny.core.generated</packageName>
-                            <directory>src/main/java</directory>
-                        </target>
-
-                        <generate>
-                            <daos>false</daos>
-                        </generate>
-                    </generator>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

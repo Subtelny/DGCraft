@@ -6,9 +6,9 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
 import org.junit.Test;
 import pl.subtelny.core.configuration.Settings;
-import pl.subtelny.core.generated.enums.Citytype;
-import pl.subtelny.core.generated.tables.Accounts;
-import pl.subtelny.core.generated.tables.records.AccountsRecord;
+import pl.subtelny.generated.tables.enums.Citytype;
+import pl.subtelny.generated.tables.tables.Accounts;
+import pl.subtelny.generated.tables.tables.records.AccountsRecord;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;

@@ -1,6 +1,7 @@
 package pl.subtelny.islands.repository.island.loader;
 
 import com.google.common.collect.Sets;
+import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.model.island.SkyblockIsland;
@@ -8,7 +9,6 @@ import pl.subtelny.islands.repository.island.anemia.SkyblockIslandAnemia;
 import pl.subtelny.islands.utils.SkyblockIslandUtil;
 import org.jooq.Configuration;
 import org.jooq.impl.DSL;
-import pl.subtelny.core.generated.tables.Islanders;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.utilities.cuboid.Cuboid;
 

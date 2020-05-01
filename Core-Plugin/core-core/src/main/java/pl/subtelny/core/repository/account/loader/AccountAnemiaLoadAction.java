@@ -6,8 +6,8 @@ import org.jooq.SelectConditionStep;
 import org.jooq.impl.DSL;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.core.api.account.CityType;
-import pl.subtelny.core.generated.enums.Citytype;
-import pl.subtelny.core.generated.tables.Accounts;
+import pl.subtelny.generated.tables.enums.Citytype;
+import pl.subtelny.generated.tables.tables.Accounts;
 import pl.subtelny.core.repository.account.AccountAnemia;
 import pl.subtelny.repository.LoadAction;
 
@@ -63,7 +63,7 @@ public class AccountAnemiaLoadAction implements LoadAction<AccountAnemia> {
 
         AccountId accountId = AccountId.of(uuid);
         LocalDateTime lastOnline = lastOnlineRaw.toLocalDateTime();
-        CityType cityType = CityType.of(city.getName());
+        CityType cityType = CityType.of(city.getLiteral());
         return new AccountAnemia(accountId, name, displayName, lastOnline, cityType);
     }
 

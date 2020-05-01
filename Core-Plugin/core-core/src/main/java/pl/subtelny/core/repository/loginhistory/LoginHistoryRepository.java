@@ -53,9 +53,12 @@ public class LoginHistoryRepository {
 
     public void createNewLoginHistory(AccountId accountId, LocalDateTime loginTime) {
         Period period = Period.of(loginTime, LocalDateTime.now());
-        LoginHistoryEntity entity = new LoginHistoryEntity(new LoginHistoryId(null), period, accountId);
+        LoginHistoryEntity entity = new LoginHistoryEntity(new LoginHistoryId(0), period, accountId);
         storage.put(LoginHistoryCacheKey.of(accountId, "last"), Collections.singletonList(entity));
-        updater.updateLoginHistoryAsync(toAnemia(entity));
+        updater.updateLoginHistoryAsync(toAnemia(entity)).handle((integer, throwable) -> {
+            throwable.printStackTrace();;
+            return throwable;
+        });
     }
 
     private LoginHistoryAnemia toAnemia(LoginHistoryEntity entity) {

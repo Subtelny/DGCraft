@@ -1,12 +1,12 @@
 package pl.subtelny.islands.repository.island.loader;
 
+import pl.subtelny.generated.tables.enums.Islandtype;
+import pl.subtelny.generated.tables.tables.Islands;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.model.island.IslandType;
 import org.jooq.Configuration;
 import org.jooq.Record1;
 import org.jooq.impl.DSL;
-import pl.subtelny.core.generated.enums.Islandtype;
-import pl.subtelny.core.generated.tables.Islands;
 import pl.subtelny.repository.LoadAction;
 
 import java.util.Collections;

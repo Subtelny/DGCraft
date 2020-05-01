@@ -9,9 +9,9 @@ import org.bukkit.Location;
 import org.jooq.Condition;
 import org.jooq.Configuration;
 import org.jooq.Record;
-import pl.subtelny.core.generated.enums.Islandtype;
-import pl.subtelny.core.generated.tables.Islands;
-import pl.subtelny.core.generated.tables.SkyblockIslands;
+import pl.subtelny.generated.tables.enums.Islandtype;
+import pl.subtelny.generated.tables.tables.Islands;
+import pl.subtelny.generated.tables.tables.SkyblockIslands;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.utilities.location.LocationSerializer;
 

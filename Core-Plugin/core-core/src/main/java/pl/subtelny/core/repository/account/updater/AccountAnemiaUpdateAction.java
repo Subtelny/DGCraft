@@ -4,12 +4,12 @@ import java.sql.Timestamp;
 import java.util.concurrent.CompletionStage;
 
 import org.jooq.InsertOnDuplicateSetMoreStep;
-import pl.subtelny.core.generated.enums.Citytype;
-import pl.subtelny.core.generated.tables.records.AccountsRecord;
 import pl.subtelny.core.repository.account.AccountAnemia;
 import org.jooq.Configuration;
 import org.jooq.impl.DSL;
-import pl.subtelny.core.generated.tables.Accounts;
+import pl.subtelny.generated.tables.enums.Citytype;
+import pl.subtelny.generated.tables.tables.Accounts;
+import pl.subtelny.generated.tables.tables.records.AccountsRecord;
 import pl.subtelny.repository.UpdateAction;
 
 public class AccountAnemiaUpdateAction implements UpdateAction<AccountAnemia> {

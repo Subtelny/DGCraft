@@ -2,12 +2,14 @@ package pl.subtelny.islands.repository.islander.updater;
 
 import org.jooq.Configuration;
 import org.jooq.impl.DSL;
-import pl.subtelny.core.generated.tables.Islanders;
-import pl.subtelny.core.generated.tables.records.IslandersRecord;
+import pl.subtelny.generated.tables.tables.Islanders;
+import pl.subtelny.generated.tables.tables.records.IslandersRecord;
 import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.repository.islander.anemia.IslanderAnemia;
 import pl.subtelny.repository.UpdateAction;
+
+import java.util.concurrent.CompletionStage;
 
 public class IslanderAnemiaUpdateAction implements UpdateAction<IslanderAnemia> {
 
@@ -34,5 +36,10 @@ public class IslanderAnemiaUpdateAction implements UpdateAction<IslanderAnemia> 
                 .onDuplicateKeyUpdate()
                 .set(islandersRecord)
                 .execute();
+    }
+
+    @Override
+    public CompletionStage<Integer> performAsync(IslanderAnemia islanderAnemia) {
+        return null;
     }
 }

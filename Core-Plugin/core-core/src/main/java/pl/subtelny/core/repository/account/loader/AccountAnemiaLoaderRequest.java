@@ -3,7 +3,7 @@ package pl.subtelny.core.repository.account.loader;
 import com.google.common.collect.Lists;
 import pl.subtelny.core.api.account.AccountId;
 import org.jooq.Condition;
-import pl.subtelny.core.generated.tables.Accounts;
+import pl.subtelny.generated.tables.tables.Accounts;
 
 import java.util.List;
 import java.util.Optional;

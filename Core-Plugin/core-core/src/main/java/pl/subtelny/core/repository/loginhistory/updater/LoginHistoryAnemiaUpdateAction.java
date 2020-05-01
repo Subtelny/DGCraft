@@ -1,10 +1,10 @@
 package pl.subtelny.core.repository.loginhistory.updater;
 
 import org.jooq.Configuration;
-import org.jooq.InsertOnDuplicateSetMoreStep;
+import org.jooq.InsertReturningStep;
 import org.jooq.impl.DSL;
-import pl.subtelny.core.generated.tables.LoginHistories;
-import pl.subtelny.core.generated.tables.records.LoginHistoriesRecord;
+import pl.subtelny.generated.tables.tables.LoginHistories;
+import pl.subtelny.generated.tables.tables.records.LoginHistoriesRecord;
 import pl.subtelny.core.repository.loginhistory.LoginHistoryAnemia;
 import pl.subtelny.repository.UpdateAction;
 
@@ -29,7 +29,7 @@ public class LoginHistoryAnemiaUpdateAction implements UpdateAction<LoginHistory
         return prepareExecute(anemia).executeAsync();
     }
 
-    private InsertOnDuplicateSetMoreStep<LoginHistoriesRecord> prepareExecute(LoginHistoryAnemia anemia) {
+    private InsertReturningStep<LoginHistoriesRecord> prepareExecute(LoginHistoryAnemia anemia) {
         LoginHistoriesRecord record = toRecord(anemia);
         return DSL.using(configuration)
                 .insertInto(LoginHistories.LOGIN_HISTORIES)
@@ -40,10 +40,10 @@ public class LoginHistoryAnemiaUpdateAction implements UpdateAction<LoginHistory
 
     public LoginHistoriesRecord toRecord(LoginHistoryAnemia anemia) {
         LoginHistoriesRecord record = DSL.using(configuration).newRecord(LoginHistories.LOGIN_HISTORIES);
+        record.setId(anemia.getId().getId());
         record.setAccount(anemia.getAccountId().getId());
         record.setLoginTime(Timestamp.valueOf(anemia.getLoginTime()));
         record.setLogoutTime(Timestamp.valueOf(anemia.getLogoutTime()));
-        record.setId(anemia.getId().getId());
         return record;
     }
 

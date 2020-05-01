@@ -1,11 +1,11 @@
 package pl.subtelny.islands.repository.island.updater;
 
+import pl.subtelny.generated.tables.enums.Islandtype;
+import pl.subtelny.generated.tables.tables.Islands;
+import pl.subtelny.generated.tables.tables.records.IslandsRecord;
 import pl.subtelny.islands.repository.island.anemia.IslandAnemia;
 import org.jooq.Configuration;
 import org.jooq.impl.DSL;
-import pl.subtelny.core.generated.enums.Islandtype;
-import pl.subtelny.core.generated.tables.Islands;
-import pl.subtelny.core.generated.tables.records.IslandsRecord;
 import pl.subtelny.utilities.location.LocationSerializer;
 import pl.subtelny.repository.UpdateAction;
 

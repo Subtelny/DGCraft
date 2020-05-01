@@ -37,10 +37,16 @@ public class LoginHistoryService {
 
     public void playerLogout(Player player) {
         LocalDateTime loginTime = loginTimeCache.get(player);
-        if(loginTime != null) {
+        if (loginTime != null) {
             loginTimeCache.remove(player);
             accountService.loadAccount(player)
-                    .whenComplete((account, throwable) -> repository.createNewLoginHistory(account.getAccountId(), loginTime));
+                    .whenComplete((account, throwable) -> {
+                        repository.createNewLoginHistory(account.getAccountId(), loginTime);
+                    })
+                    .handle((account, throwable) -> {
+                        throwable.printStackTrace();
+                        return throwable;
+                    });
         }
     }
 
