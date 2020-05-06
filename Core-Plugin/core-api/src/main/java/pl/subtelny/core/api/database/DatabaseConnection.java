@@ -4,7 +4,7 @@ import org.jooq.Configuration;
 
 import javax.sql.DataSource;
 
-public interface DatabaseConfiguration {
+public interface DatabaseConnection {
 
     DataSource getDataSource();
 

@@ -6,8 +6,6 @@ import org.reflections.util.ClasspathHelper;
 import pl.subtelny.components.core.BeanServiceImpl;
 import pl.subtelny.components.core.api.BeanService;
 import pl.subtelny.core.api.plugin.DGPlugin;
-import pl.subtelny.core.configuration.Messages;
-import pl.subtelny.core.configuration.Settings;
 import pl.subtelny.core.dependencies.DependenciesService;
 
 import java.util.Arrays;
@@ -25,8 +23,6 @@ public class Core extends DGPlugin {
 
     @Override
     public void onEnabled() {
-        new Settings(this).initializeFields();
-        new Messages(this).initMessages();
         loadDependencies();
     }
 
@@ -49,10 +45,5 @@ public class Core extends DGPlugin {
     private void loadDependencies() {
         DependenciesService dependenciesService = new DependenciesService(this, beanService);
         dependenciesService.registerPluginsComponents();
-    }
-
-    @Override
-    public List<String> componentsPaths() {
-        return Arrays.asList("pl.subtelny.test", getClass().getPackageName());
     }
 }

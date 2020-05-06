@@ -1,9 +1,6 @@
-package pl.subtelny.commands.core;
+package pl.subtelny.commands.api;
 
 import org.bukkit.plugin.Plugin;
-import pl.subtelny.commands.api.BaseCommand;
-import pl.subtelny.commands.api.PluginCommand;
-import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.utilities.exception.ValidationException;
 
 import java.lang.annotation.Annotation;

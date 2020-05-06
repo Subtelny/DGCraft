@@ -6,17 +6,17 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="commands-core" />
         <module name="core-core" />
         <module name="core-api" />
-        <module name="components-api" />
-        <module name="Abstract" />
-        <module name="generated-tables" />
         <module name="islands-core" />
-        <module name="components-core" />
-        <module name="commands-api" />
-        <module name="utils" />
+        <module name="commands-core" />
+        <module name="generated-tables" />
+        <module name="components-api" />
         <module name="dgcore-core" />
+        <module name="commands-api" />
+        <module name="Abstract" />
+        <module name="utils" />
+        <module name="components-core" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

@@ -17,7 +17,7 @@ public abstract class BaseCommand implements Command {
         validatePlayerOnlyUsage(sender);
 
         Optional<Command> nextCommand = findNextCommand(args);
-        if(nextCommand.isEmpty()) {
+        if (nextCommand.isEmpty()) {
             handleCommand(sender, args);
         } else {
             String[] argsWithoutCommand = Arrays.copyOfRange(args, 1, args.length);
@@ -26,26 +26,26 @@ public abstract class BaseCommand implements Command {
         return false;
     }
 
+    public void registerSubCommand(String command, Command subCommand) {
+        subCommands.put(command, subCommand);
+    }
+
     public abstract void handleCommand(CommandSender sender, String[] args);
 
     private void validatePlayerOnlyUsage(CommandSender sender) {
-        if(isPlayerOnlyUsage()) {
-            if(!(sender instanceof Player)) {
+        if (isPlayerOnlyUsage()) {
+            if (!(sender instanceof Player)) {
                 throw new CommandException("Komenda dostepna tylko dla graczy");
             }
         }
     }
 
     private Optional<Command> findNextCommand(String[] args) {
-        if(args.length == 0) {
+        if (args.length == 0) {
             return Optional.empty();
         }
         String nextArg = args[0];
         return getSubCommand(nextArg);
-    }
-
-    public void registerSubCommand(String command, Command subCommand) {
-        subCommands.put(command, subCommand);
     }
 
     private Optional<Command> getSubCommand(String command) {

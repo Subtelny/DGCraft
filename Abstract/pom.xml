@@ -30,9 +30,8 @@
         </dependency>
         <dependency>
             <groupId>pl.subtelny</groupId>
-            <artifactId>dgcore-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <artifactId>core-api</artifactId>
+            <version>1</version>
         </dependency>
     </dependencies>
 

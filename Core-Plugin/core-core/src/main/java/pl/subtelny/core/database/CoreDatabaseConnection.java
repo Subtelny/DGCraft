@@ -6,48 +6,16 @@ import org.jooq.Configuration;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DefaultConfiguration;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.core.configuration.Settings;
-import pl.subtelny.core.api.database.DatabaseConfiguration;
+import pl.subtelny.core.api.database.DatabaseConnection;
 
 import javax.sql.DataSource;
 
 @Component
-public class CoreDatabaseConfiguration implements DatabaseConfiguration {
+public class CoreDatabaseConnection implements DatabaseConnection {
 
     private DataSource dataSource;
 
     private Configuration configuration;
-
-    public CoreDatabaseConfiguration() {
-        dataSource = initializeDataSource();
-        configuration = initializeConfiguration();
-    }
-
-    private Configuration initializeConfiguration() {
-        return new DefaultConfiguration()
-                .set(dataSource)
-                .set(SQLDialect.POSTGRES);
-    }
-
-    private DataSource initializeDataSource() {
-        HikariConfig config = new HikariConfig();
-        String jdbcUrlBuilder = "jdbc:" +
-                Settings.DB_TYPE +
-                "://" +
-                Settings.DB_HOST +
-                ":" +
-                Settings.DB_PORT +
-                "/" +
-                Settings.DB_BASE +
-                Settings.DB_OPTIONS;
-        config.setJdbcUrl(jdbcUrlBuilder);
-        config.setDriverClassName(Settings.DB_DRIVER);
-        config.setUsername(Settings.DB_USER);
-        config.setPassword(Settings.DB_PASSWORD);
-        config.setAutoCommit(true);
-        config.setMaximumPoolSize(25);
-        return new HikariDataSource(config);
-    }
 
     @Override
     public DataSource getDataSource() {
@@ -57,6 +25,37 @@ public class CoreDatabaseConfiguration implements DatabaseConfiguration {
     @Override
     public Configuration getConfiguration() {
         return configuration;
+    }
+
+    public void setupDatabase(DatabaseConfiguration setup) {
+        configuration = initializeConfiguration();
+        dataSource = initializeDataSource(setup);
+    }
+
+    private Configuration initializeConfiguration() {
+        return new DefaultConfiguration()
+                .set(dataSource)
+                .set(SQLDialect.POSTGRES);
+    }
+
+    private DataSource initializeDataSource(DatabaseConfiguration setup) {
+        HikariConfig config = new HikariConfig();
+        String jdbcUrlBuilder = "jdbc:" +
+                setup.getDbType() +
+                "://" +
+                setup.getDbHost() +
+                ":" +
+                setup.getDbPort() +
+                "/" +
+                setup.getDbBase() +
+                setup.getDbOptions();
+        config.setJdbcUrl(jdbcUrlBuilder);
+        config.setDriverClassName(setup.getDbDriver());
+        config.setUsername(setup.getDbUser());
+        config.setPassword(setup.getDbPassword());
+        config.setAutoCommit(true);
+        config.setMaximumPoolSize(25);
+        return new HikariDataSource(config);
     }
 
 }

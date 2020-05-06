@@ -68,7 +68,7 @@
         </dependency>
         <dependency>
             <groupId>pl.subtelny</groupId>
-            <artifactId>commands-core</artifactId>
+            <artifactId>commands-api</artifactId>
             <version>1</version>
         </dependency>
         <dependency>

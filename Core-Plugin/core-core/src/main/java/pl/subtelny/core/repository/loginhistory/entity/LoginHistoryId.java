@@ -12,6 +12,10 @@ public class LoginHistoryId extends BasicIdentity<Integer> {
         super(id);
     }
 
+    public static LoginHistoryId empty() {
+        return of(null);
+    }
+
     public static LoginHistoryId of(Integer id) {
         return new LoginHistoryId(id);
     }

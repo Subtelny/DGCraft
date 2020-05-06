@@ -56,11 +56,9 @@ public class BeansInitializer {
     private Object createBeanInstance(BeanPrototype beanPrototype) {
         Constructor constructor = beanPrototype.getConstructor();
         Parameter[] parameters = constructor.getParameters();
-
         List<Object> beans = Arrays.stream(parameters)
                 .map(this::computeParameter)
                 .collect(Collectors.toList());
-
         try {
             return constructor.newInstance(beans.toArray());
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {

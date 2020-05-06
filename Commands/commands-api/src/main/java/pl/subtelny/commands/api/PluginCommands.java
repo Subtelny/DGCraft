@@ -1,4 +1,4 @@
-package pl.subtelny.commands.core;
+package pl.subtelny.commands.api;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;

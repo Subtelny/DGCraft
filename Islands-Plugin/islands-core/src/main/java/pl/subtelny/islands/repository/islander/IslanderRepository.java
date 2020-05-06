@@ -9,7 +9,7 @@ import pl.subtelny.islands.repository.islander.storage.IslanderStorage;
 import pl.subtelny.islands.repository.islander.updater.IslanderUpdater;
 import org.jooq.Configuration;
 import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.core.api.database.DatabaseConfiguration;
+import pl.subtelny.core.api.database.DatabaseConnection;
 
 import java.util.Optional;
 
@@ -23,7 +23,7 @@ public class IslanderRepository {
 	private final IslanderUpdater islanderUpdater;
 
 	@Autowired
-	public IslanderRepository(DatabaseConfiguration databaseConfiguration, IslanderStorage islanderStorage) {
+	public IslanderRepository(DatabaseConnection databaseConfiguration, IslanderStorage islanderStorage) {
 		this.islanderStorage = islanderStorage;
 		Configuration configuration = databaseConfiguration.getConfiguration();
 		this.islanderLoader = new IslanderLoader(configuration);

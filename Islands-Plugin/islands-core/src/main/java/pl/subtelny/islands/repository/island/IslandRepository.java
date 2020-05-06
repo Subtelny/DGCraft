@@ -3,7 +3,7 @@ package pl.subtelny.islands.repository.island;
 import org.jooq.Configuration;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.core.api.database.DatabaseConfiguration;
+import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.model.island.IslandType;
@@ -27,7 +27,7 @@ public class IslandRepository {
 
     @Autowired
     public IslandRepository(SkyblockIslandRepository skyblockIslandRepository,
-                            DatabaseConfiguration databaseConfiguration,
+                            DatabaseConnection databaseConfiguration,
                             IslandStorage islandStorage) {
         this.skyblockIslandRepository = skyblockIslandRepository;
         this.islandStorage = islandStorage;

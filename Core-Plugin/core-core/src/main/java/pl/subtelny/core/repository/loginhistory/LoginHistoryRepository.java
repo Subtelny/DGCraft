@@ -4,7 +4,7 @@ import org.jooq.Configuration;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.core.api.database.DatabaseConfiguration;
+import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.loginhistory.LoginHistory;
 import pl.subtelny.core.repository.loginhistory.entity.LoginHistoryEntity;
 import pl.subtelny.core.repository.loginhistory.entity.LoginHistoryId;
@@ -14,6 +14,7 @@ import pl.subtelny.core.repository.loginhistory.storage.LoginHistoryCacheKey;
 import pl.subtelny.core.repository.loginhistory.storage.LoginHistoryStorage;
 import pl.subtelny.core.repository.loginhistory.updater.LoginHistoryUpdater;
 import pl.subtelny.utilities.Period;
+import pl.subtelny.utilities.query.OrderBy;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -28,7 +29,7 @@ public class LoginHistoryRepository {
     private final LoginHistoryUpdater updater;
 
     @Autowired
-    public LoginHistoryRepository(DatabaseConfiguration databaseConfiguration) {
+    public LoginHistoryRepository(DatabaseConnection databaseConfiguration) {
         this.storage = new LoginHistoryStorage();
         Configuration configuration = databaseConfiguration.getConfiguration();
         this.loader = new LoginHistoryLoader(configuration);
@@ -53,7 +54,7 @@ public class LoginHistoryRepository {
 
     public void createNewLoginHistory(AccountId accountId, LocalDateTime loginTime) {
         Period period = Period.of(loginTime, LocalDateTime.now());
-        LoginHistoryEntity entity = new LoginHistoryEntity(new LoginHistoryId(0), period, accountId);
+        LoginHistoryEntity entity = new LoginHistoryEntity(LoginHistoryId.empty(), period, accountId);
         storage.put(LoginHistoryCacheKey.of(accountId, "last"), Collections.singletonList(entity));
         updater.updateLoginHistoryAsync(toAnemia(entity)).handle((integer, throwable) -> {
             throwable.printStackTrace();;

@@ -5,12 +5,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import pl.subtelny.commands.api.BaseCommand;
-import pl.subtelny.commands.core.CommandsInitializer;
 import pl.subtelny.components.core.api.BeanService;
+import pl.subtelny.components.core.api.DependencyInitialized;
 import pl.subtelny.core.api.plugin.DGPlugin;
+import pl.subtelny.commands.api.CommandsInitializer;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
@@ -34,6 +36,7 @@ public class DependenciesService {
         waitForPlugins(dgPlugins)
                 .thenAccept(aVoid -> registerCommands())
                 .thenAccept(aVoid -> registerListeners())
+                .thenAccept(aVoid -> informBeans())
                 .thenAccept(aVoid -> informDependencyPlugins(dgPlugins))
                 .handle((aVoid, throwable) -> {
                     throwable.printStackTrace();
@@ -60,7 +63,10 @@ public class DependenciesService {
     private void registerListeners() {
         List<Listener> listeners = beanService.getBeans(Listener.class);
         PluginManager pluginManager = Bukkit.getPluginManager();
-        listeners.forEach(listener -> pluginManager.registerEvents(listener, plugin));
+        listeners.forEach(listener -> {
+            DGPlugin pluginForBean = findPluginForBean(listener);
+            pluginManager.registerEvents(listener, pluginForBean);
+        });
         logger.info(String.format("Loaded %s listeners", listeners.size()));
     }
 
@@ -69,6 +75,22 @@ public class DependenciesService {
         CommandsInitializer commandsInitializer = new CommandsInitializer(plugin, commands);
         commandsInitializer.registerCommands();
         logger.info(String.format("Loaded %s commands", commands.size()));
+    }
+
+    private void informBeans() {
+        List<DependencyInitialized> beans = beanService.getBeans(DependencyInitialized.class);
+        beans.forEach(beansInitialized -> {
+            DGPlugin pluginForBean = findPluginForBean(beansInitialized);
+            beansInitialized.dependencyInitialized(pluginForBean);
+        });
+    }
+
+    private DGPlugin findPluginForBean(Object bean) {
+        String packageName = bean.getClass().getPackageName();
+        Optional<DGPlugin> any = getDependencyPlugins().stream()
+                .filter(plugin -> plugin.componentsPaths().stream().anyMatch(packageName::startsWith))
+                .findAny();
+        return any.orElse(null);
     }
 
     private void informDependencyPlugins(Set<DGPlugin> plugins) {

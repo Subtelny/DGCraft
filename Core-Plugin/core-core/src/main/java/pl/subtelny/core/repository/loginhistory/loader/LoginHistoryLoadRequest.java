@@ -1,7 +1,7 @@
 package pl.subtelny.core.repository.loginhistory.loader;
 
 import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.core.repository.loginhistory.OrderBy;
+import pl.subtelny.utilities.query.OrderBy;
 import pl.subtelny.utilities.Period;
 
 import java.util.Optional;

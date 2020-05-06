@@ -5,8 +5,8 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.core.api.account.CityType;
-import pl.subtelny.core.api.database.DatabaseConfiguration;
+import pl.subtelny.core.api.account.CreateAccountRequest;
+import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.repository.account.entity.AccountEntity;
 import pl.subtelny.core.repository.account.loader.AccountLoadRequest;
 import pl.subtelny.core.repository.account.loader.AccountLoader;
@@ -26,7 +26,7 @@ public class AccountRepository {
     private final AccountLoader accountLoader;
 
     @Autowired
-    public AccountRepository(DatabaseConfiguration databaseConfiguration) {
+    public AccountRepository(DatabaseConnection databaseConfiguration) {
         accountStorage = new AccountStorage();
         Configuration configuration = databaseConfiguration.getConfiguration();
         accountUpdater = new AccountUpdater(configuration);
@@ -46,23 +46,23 @@ public class AccountRepository {
         });
     }
 
-    public void createAccount(AccountId accountId, String name, String displayName, CityType cityType) {
+    public void createAccount(CreateAccountRequest request) {
         AccountEntity account = new AccountEntity(
-                accountId,
-                name,
-                displayName,
+                request.getAccountId(),
+                request.getName(),
+                request.getDisplayName(),
                 LocalDateTime.now(),
-                cityType
+                request.getCityType()
         );
         saveAccount(account);
     }
 
-    public void saveAccount(AccountEntity account) {
+    public void saveAccount(Account account) {
         accountStorage.put(account.getAccountId(), Optional.of(account));
         accountUpdater.updateAccountAsync(toAnemia(account));
     }
 
-    private AccountAnemia toAnemia(AccountEntity entity) {
+    private AccountAnemia toAnemia(Account entity) {
         AccountAnemia anemia = new AccountAnemia(entity.getAccountId());
         anemia.setDisplayName(entity.getDisplayName());
         anemia.setLastOnline(entity.getLastOnline());

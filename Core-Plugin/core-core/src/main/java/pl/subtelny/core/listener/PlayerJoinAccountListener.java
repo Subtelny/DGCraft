@@ -11,39 +11,42 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.Core;
+import pl.subtelny.core.api.account.Accounts;
 import pl.subtelny.core.configuration.Messages;
-import pl.subtelny.core.service.AccountService;
+import pl.subtelny.jobs.JobsProvider;
 import pl.subtelny.utilities.MessageUtil;
 import pl.subtelny.utilities.PlayerUtil;
 import pl.subtelny.utilities.location.LocationUtil;
 import pl.subtelny.utilities.log.Log;
-import pl.subtelny.utilities.thread.ThreadUtil;
 
 import javax.annotation.Nullable;
 import java.util.Set;
 
 @Component
-public class PlayerEventListener implements Listener {
+public class PlayerJoinAccountListener implements Listener {
 
     private static final String PLAYER_DATA_IS_LOADING = "player_data_is_loading";
 
     private static final String ACCOUNT_DATA_LOADED_EXCEPTIONALLY = "account_data_loaded_exceptionally";
 
-    private final AccountService accountService;
+    private final Set<Player> markerPlayers = Sets.newConcurrentHashSet();
 
-    private final Set<Player> notLoadedPlayers = Sets.newConcurrentHashSet();
+    private final Messages messages;
+
+    private final Accounts accounts;
 
     @Autowired
-    public PlayerEventListener(AccountService accountService) {
-        this.accountService = accountService;
+    public PlayerJoinAccountListener(Messages messages, Accounts accounts) {
+        this.messages = messages;
+        this.accounts = accounts;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        notLoadedPlayers.add(player);
-        accountService.loadAccount(player)
-                .whenComplete((aVoid, throwable) -> notLoadedPlayers.remove(player))
+        markPlayer(player);
+        accounts.findAccountAsync(player)
+                .whenComplete((account, throwable) -> unmarkPlayer(player))
                 .handle((aVoid, throwable) -> {
                     dataLoadedExceptionally(player, throwable);
                     return throwable;
@@ -60,20 +63,32 @@ public class PlayerEventListener implements Listener {
             return;
         }
         Player player = e.getPlayer();
-        if (notLoadedPlayers.contains(player)) {
+        if (isPlayerMarked(player)) {
             e.setCancelled(true);
-            MessageUtil.message(player, Messages.get(PLAYER_DATA_IS_LOADING));
+            MessageUtil.message(player, messages.get(PLAYER_DATA_IS_LOADING));
         }
     }
 
     private void dataLoadedExceptionally(@Nullable Player player, Throwable throwable) {
         if (player != null) {
             Log.warning(String.format("Player %s kicked of data load failed reason: %s ", player.getName(), throwable.getMessage()));
-            ThreadUtil.runSync(Core.plugin, () -> {
-                String message = Messages.get(ACCOUNT_DATA_LOADED_EXCEPTIONALLY);
+            JobsProvider.runSync(Core.plugin, () -> {
+                String message = messages.get(ACCOUNT_DATA_LOADED_EXCEPTIONALLY);
                 PlayerUtil.kick(player, message);
             });
         }
+    }
+
+    private void markPlayer(Player player) {
+        markerPlayers.add(player);
+    }
+
+    private void unmarkPlayer(Player player) {
+        markerPlayers.remove(player);
+    }
+
+    private boolean isPlayerMarked(Player player) {
+        return markerPlayers.contains(player);
     }
 
 }

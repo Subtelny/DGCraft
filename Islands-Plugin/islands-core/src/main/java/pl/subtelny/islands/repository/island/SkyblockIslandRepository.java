@@ -4,7 +4,7 @@ import java.util.Optional;
 import org.jooq.Configuration;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.core.api.database.DatabaseConfiguration;
+import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
@@ -24,8 +24,8 @@ public class SkyblockIslandRepository {
 	private final SkyblockIslandStorage skyblockIslandStorage;
 
 	@Autowired
-	public SkyblockIslandRepository(DatabaseConfiguration databaseConfiguration,
-			IslandStorage islandStorage) {
+	public SkyblockIslandRepository(DatabaseConnection databaseConfiguration,
+                                    IslandStorage islandStorage) {
 		this.islandStorage = islandStorage;
 		Configuration configuration = databaseConfiguration.getConfiguration();
 		this.skyblockIslandStorage = new SkyblockIslandStorage();

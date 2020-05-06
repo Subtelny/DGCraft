@@ -1,9 +1,11 @@
 package pl.subtelny.core.configuration;
 
 import com.google.common.collect.Maps;
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import pl.subtelny.components.core.api.Component;
 import pl.subtelny.utilities.FileUtil;
 
 import java.io.File;
@@ -12,24 +14,29 @@ import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+@Component
 public final class Messages {
 
     private final static String MESSAGES_PATH = "messages";
 
     private final static String MESSAGES_FILE_NAME = "messages.yml";
 
-    private static Messages instance;
-
-    private final File file;
-
     private Map<String, String> messages = Maps.newHashMap();
 
-    public Messages(Plugin plugin) {
-        instance = this;
+    private File file;
+
+    public void initMessages(Plugin plugin) {
+        Validate.isTrue(file != null, "Message's file already initialized");
         file = FileUtil.copyFile(plugin, MESSAGES_FILE_NAME);
+        loadMessages();
     }
 
-    public void initMessages() {
+    public void reloadMessages() {
+        Validate.notNull(file, "Messages file're not initialized yet");
+        loadMessages();
+    }
+
+    private void loadMessages() {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection configurationSection = config.getConfigurationSection(MESSAGES_PATH);
         if (configurationSection != null) {
@@ -50,18 +57,8 @@ public final class Messages {
         return config.getString(path);
     }
 
-    private String getMessage(String path) {
+    public String get(String path) {
         return Optional.ofNullable(messages.get(path)).orElse(path);
-    }
-
-    public static void reloadMessages() {
-        Messages instance = Messages.instance;
-        instance.messages.clear();
-        instance.initMessages();
-    }
-
-    public static String get(String path) {
-        return instance.getMessage(path);
     }
 
 }

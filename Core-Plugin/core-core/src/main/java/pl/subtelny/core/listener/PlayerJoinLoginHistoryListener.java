@@ -10,12 +10,12 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.service.LoginHistoryService;
 
 @Component
-public class PlayerLoginHistoryListener implements Listener {
+public class PlayerJoinLoginHistoryListener implements Listener {
 
     private final LoginHistoryService loginHistoryService;
 
     @Autowired
-    public PlayerLoginHistoryListener(LoginHistoryService loginHistoryService) {
+    public PlayerJoinLoginHistoryListener(LoginHistoryService loginHistoryService) {
         this.loginHistoryService = loginHistoryService;
     }
 
