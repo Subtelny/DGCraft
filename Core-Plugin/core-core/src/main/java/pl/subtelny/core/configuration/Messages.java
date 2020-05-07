@@ -26,7 +26,7 @@ public final class Messages {
     private File file;
 
     public void initMessages(Plugin plugin) {
-        Validate.isTrue(file != null, "Message's file already initialized");
+        Validate.isTrue(file == null, "Message's file already initialized");
         file = FileUtil.copyFile(plugin, MESSAGES_FILE_NAME);
         loadMessages();
     }

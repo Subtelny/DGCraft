@@ -13,8 +13,8 @@ import pl.subtelny.core.api.city.CityPortal;
 import pl.subtelny.core.api.city.CityRepository;
 import pl.subtelny.core.city.CityImpl;
 import pl.subtelny.core.city.CityPortalCuboid;
-import pl.subtelny.utilities.ConfigUtil;
 import pl.subtelny.utilities.FileUtil;
+import pl.subtelny.utilities.config.LocationFileParserStrategy;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.io.File;
@@ -53,14 +53,15 @@ public class FileCityRepository implements CityRepository {
     private City mapConfigIntoCity(YamlConfiguration config, String rawCityType) {
         CityType cityType = CityType.valueOf(rawCityType);
         CityPortal cityPortal = mapConfigIntoCityPortal(config, "cities." + rawCityType);
-        Location spawn = ConfigUtil.loadLocation(config, "cities." + rawCityType + ".spawn");
+        Location spawn = new LocationFileParserStrategy(file).load("cities." + rawCityType + ".spawn");
         return new CityImpl(cityPortal, spawn, cityType);
     }
 
     private CityPortal mapConfigIntoCityPortal(YamlConfiguration config, String cityPath) {
-        Location loc1 = ConfigUtil.loadLocation(config, cityPath + ".portal.loc1");
-        Location loc2 = ConfigUtil.loadLocation(config, cityPath + ".portal.loc2");
-        Location target = ConfigUtil.loadLocation(config, cityPath + ".portal.target");
+        LocationFileParserStrategy parser = new LocationFileParserStrategy(file);
+        Location loc1 = parser.load( cityPath + ".portal.loc1");
+        Location loc2 = parser.load( cityPath + ".portal.loc2");
+        Location target = parser.load( cityPath + ".portal.target");
         Cuboid cuboid = new Cuboid(cityPath, loc1, loc2);
         return new CityPortalCuboid(cuboid, target);
     }
