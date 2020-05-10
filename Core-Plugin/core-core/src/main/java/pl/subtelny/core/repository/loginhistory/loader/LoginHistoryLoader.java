@@ -1,7 +1,6 @@
 package pl.subtelny.core.repository.loginhistory.loader;
 
-
-import org.jooq.Configuration;
+import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.loginhistory.LoginHistory;
 import pl.subtelny.core.repository.loginhistory.LoginHistoryAnemia;
 import pl.subtelny.core.repository.loginhistory.entity.LoginHistoryEntity;
@@ -13,10 +12,10 @@ import java.util.stream.Collectors;
 
 public class LoginHistoryLoader {
 
-    private final Configuration configuration;
+    private final DatabaseConnection databaseConnection;
 
-    public LoginHistoryLoader(Configuration configuration) {
-        this.configuration = configuration;
+    public LoginHistoryLoader(DatabaseConnection databaseConnection) {
+        this.databaseConnection = databaseConnection;
     }
 
     public Optional<LoginHistory> loadLoginHistory(LoginHistoryLoadRequest request) {
@@ -32,12 +31,12 @@ public class LoginHistoryLoader {
     }
 
     private Optional<LoginHistoryAnemia> load(LoginHistoryLoadRequest request) {
-        LoginHistoryAnemiaLoadAction action = new LoginHistoryAnemiaLoadAction(configuration, request);
+        LoginHistoryAnemiaLoadAction action = new LoginHistoryAnemiaLoadAction(databaseConnection.getConfiguration(), request);
         return Optional.ofNullable(action.perform());
     }
 
     private List<LoginHistoryAnemia> loadAll(LoginHistoryLoadRequest request) {
-        LoginHistoryAnemiaLoadAction action = new LoginHistoryAnemiaLoadAction(configuration, request);
+        LoginHistoryAnemiaLoadAction action = new LoginHistoryAnemiaLoadAction(databaseConnection.getConfiguration(), request);
         return action.performList();
     }
 

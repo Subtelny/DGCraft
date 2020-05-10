@@ -6,9 +6,9 @@ import org.jooq.SelectConditionStep;
 import org.jooq.impl.DSL;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.core.api.account.CityType;
+import pl.subtelny.core.repository.account.AccountAnemia;
 import pl.subtelny.generated.tables.enums.Citytype;
 import pl.subtelny.generated.tables.tables.Accounts;
-import pl.subtelny.core.repository.account.AccountAnemia;
 import pl.subtelny.repository.LoadAction;
 
 import java.sql.Timestamp;

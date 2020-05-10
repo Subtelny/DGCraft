@@ -1,6 +1,5 @@
 package pl.subtelny.core.repository.account;
 
-import org.jooq.Configuration;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.account.Account;
@@ -26,11 +25,10 @@ public class AccountRepository {
     private final AccountLoader accountLoader;
 
     @Autowired
-    public AccountRepository(DatabaseConnection databaseConfiguration) {
+    public AccountRepository(DatabaseConnection databaseConnection) {
         accountStorage = new AccountStorage();
-        Configuration configuration = databaseConfiguration.getConfiguration();
-        accountUpdater = new AccountUpdater(configuration);
-        accountLoader = new AccountLoader(configuration);
+        accountUpdater = new AccountUpdater(databaseConnection);
+        accountLoader = new AccountLoader(databaseConnection);
     }
 
     public Optional<Account> getAccountIfPresent(AccountId accountId) {

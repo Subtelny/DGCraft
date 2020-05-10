@@ -17,16 +17,21 @@ public class Settings {
 
     private static final String CONFIG_FILE_NAME = "config.yml";
 
+    private static final String LOCATIONS_FILE_NAME = "locations.yml";
+
     private Cache<String, Object> cache = Caffeine.newBuilder().build();
 
-    private File file;
+    private File configFile;
+
+    private File locationsFile;
 
     public void initSettings(Plugin plugin) {
-        file = FileUtil.copyFile(plugin, CONFIG_FILE_NAME);
+        configFile = FileUtil.copyFile(plugin, CONFIG_FILE_NAME);
+        locationsFile = FileUtil.copyFile(plugin, LOCATIONS_FILE_NAME);
     }
 
     public <T> void set(String path, Class<T> clazz, T value) {
-        findStrategyForType(clazz).save(path, value);
+        findStrategyForType(clazz).set(path, value).save();
         cache.put(path, value);
     }
 
@@ -36,9 +41,9 @@ public class Settings {
 
     private FileParserStrategy findStrategyForType(Class clazz) {
         if (Location.class.equals(clazz)) {
-            return new LocationFileParserStrategy(file);
+            return new LocationFileParserStrategy(locationsFile);
         }
-        return new ObjectFileParserStrategy(file);
+        return new ObjectFileParserStrategy(configFile);
     }
 
 }

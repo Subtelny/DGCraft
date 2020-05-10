@@ -4,6 +4,6 @@ public interface FileParserStrategy<T> {
 
     T load(String path);
 
-    void save(String path, T value);
+    Saveable set(String path, T value);
 
 }

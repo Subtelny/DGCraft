@@ -2,6 +2,7 @@ package pl.subtelny.core.repository.loginhistory.updater;
 
 import org.jooq.Configuration;
 import org.jooq.InsertReturningStep;
+import org.jooq.InsertSetMoreStep;
 import org.jooq.impl.DSL;
 import pl.subtelny.core.repository.loginhistory.LoginHistoryAnemia;
 import pl.subtelny.core.repository.loginhistory.entity.LoginHistoryId;
@@ -32,9 +33,13 @@ public class LoginHistoryAnemiaUpdateAction implements UpdateAction<LoginHistory
 
     private InsertReturningStep<LoginHistoriesRecord> prepareExecute(LoginHistoryAnemia anemia) {
         LoginHistoriesRecord record = toRecord(anemia);
-        return DSL.using(configuration)
+        InsertSetMoreStep<LoginHistoriesRecord> set = DSL.using(configuration)
                 .insertInto(LoginHistories.LOGIN_HISTORIES)
-                .set(record)
+                .set(record);
+        if (record.getId() == null) {
+            return set;
+        }
+        return set
                 .onDuplicateKeyUpdate()
                 .set(record);
     }

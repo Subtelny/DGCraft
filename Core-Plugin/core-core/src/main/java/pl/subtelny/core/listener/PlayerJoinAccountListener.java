@@ -50,6 +50,7 @@ public class PlayerJoinAccountListener implements Listener {
                 .whenComplete((account, throwable) -> unmarkPlayer(player))
                 .handle((aVoid, throwable) -> {
                     dataLoadedExceptionally(player, throwable);
+                    throwable.printStackTrace();
                     return throwable;
                 });
     }

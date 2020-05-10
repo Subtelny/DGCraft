@@ -6,12 +6,15 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.account.Accounts;
 import pl.subtelny.core.repository.loginhistory.LoginHistoryRepository;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class LoginHistoryService {
+
+    private static final int MIN_MINUTES_TO_LOG_TIME = 2;
 
     private final Accounts accounts;
 
@@ -32,6 +35,10 @@ public class LoginHistoryService {
     public void playerLogout(Player player) {
         LocalDateTime loginTime = loginTimeCache.get(player);
         if (loginTime != null) {
+            LocalDateTime now = LocalDateTime.now();
+            if (Duration.between(loginTime, now).toMinutes() < MIN_MINUTES_TO_LOG_TIME) {
+                return;
+            }
             loginTimeCache.remove(player);
             accounts.findAccountAsync(player)
                     .whenComplete((accountOpt, throwable) ->

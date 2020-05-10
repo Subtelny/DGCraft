@@ -28,8 +28,8 @@ public class CoreDatabaseConnection implements DatabaseConnection {
     }
 
     public void setupDatabase(DatabaseConfiguration setup) {
-        configuration = initializeConfiguration();
         dataSource = initializeDataSource(setup);
+        configuration = initializeConfiguration();
     }
 
     private Configuration initializeConfiguration() {

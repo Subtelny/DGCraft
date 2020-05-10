@@ -14,7 +14,8 @@ public class ObjectFileParserStrategy<T> extends AbstractFileParserStrategy<T> {
     }
 
     @Override
-    public void save(String path, T value) {
+    public Saveable set(String path, T value) {
         configuration.set(path, value);
+        return this;
     }
 }

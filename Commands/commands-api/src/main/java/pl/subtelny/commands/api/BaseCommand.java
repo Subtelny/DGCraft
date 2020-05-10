@@ -49,7 +49,7 @@ public abstract class BaseCommand implements Command {
     }
 
     private Optional<Command> getSubCommand(String command) {
-        return Optional.of(subCommands.get(command));
+        return Optional.ofNullable(subCommands.get(command));
     }
 
 }

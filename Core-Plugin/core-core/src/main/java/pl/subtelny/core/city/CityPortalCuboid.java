@@ -16,6 +16,10 @@ public class CityPortalCuboid implements CityPortal {
         this.teleportTarget = teleportTarget;
     }
 
+    public Cuboid getCuboid() {
+        return cuboid;
+    }
+
     @Override
     public boolean isPortalLocation(Location location) {
         return cuboid.containsLocation(location);

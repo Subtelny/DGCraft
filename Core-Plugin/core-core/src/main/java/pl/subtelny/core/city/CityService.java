@@ -6,6 +6,7 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.api.account.Accounts;
+import pl.subtelny.core.api.account.CityType;
 import pl.subtelny.core.api.city.City;
 import pl.subtelny.core.api.city.CityPortal;
 import pl.subtelny.core.api.city.CityRepository;
@@ -24,6 +25,10 @@ public class CityService {
     public CityService(CityRepository cityRepository, Accounts accounts) {
         this.cityRepository = cityRepository;
         this.accounts = accounts;
+    }
+
+    public City getCity(CityType cityType) {
+        return cityRepository.get(cityType);
     }
 
     public Optional<CityPortal> findPortalAtLocation(Location location) {

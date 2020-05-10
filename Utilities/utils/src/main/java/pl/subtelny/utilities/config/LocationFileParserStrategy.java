@@ -29,7 +29,7 @@ public class LocationFileParserStrategy extends AbstractFileParserStrategy<Locat
     }
 
     @Override
-    public void save(String path, Location value) {
+    public LocationFileParserStrategy set(String path, Location value) {
         String worldName = value.getWorld().getName();
         double x = value.getX();
         double y = value.getY();
@@ -43,5 +43,6 @@ public class LocationFileParserStrategy extends AbstractFileParserStrategy<Locat
         configuration.set(path + ".z", z);
         configuration.set(path + ".yaw", yaw);
         configuration.set(path + ".pitch", pitch);
+        return this;
     }
 }

@@ -1,6 +1,5 @@
 package pl.subtelny.core.repository.loginhistory;
 
-import org.jooq.Configuration;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.account.AccountId;
@@ -31,9 +30,8 @@ public class LoginHistoryRepository {
     @Autowired
     public LoginHistoryRepository(DatabaseConnection databaseConfiguration) {
         this.storage = new LoginHistoryStorage();
-        Configuration configuration = databaseConfiguration.getConfiguration();
-        this.loader = new LoginHistoryLoader(configuration);
-        this.updater = new LoginHistoryUpdater(configuration);
+        this.loader = new LoginHistoryLoader(databaseConfiguration);
+        this.updater = new LoginHistoryUpdater(databaseConfiguration);
     }
 
     public Optional<LoginHistory> findLastLoginHistoryByAccountId(AccountId accountId) {
