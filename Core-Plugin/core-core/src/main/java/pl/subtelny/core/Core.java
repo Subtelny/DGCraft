@@ -6,7 +6,7 @@ import org.reflections.util.ClasspathHelper;
 import pl.subtelny.components.core.BeanServiceImpl;
 import pl.subtelny.components.core.api.BeanService;
 import pl.subtelny.core.api.plugin.DGPlugin;
-import pl.subtelny.core.dependencies.DependenciesService;
+import pl.subtelny.core.dependencies.DependenciesInitializer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +43,7 @@ public class Core extends DGPlugin {
     }
 
     private void loadDependencies() {
-        DependenciesService dependenciesService = new DependenciesService(this, beanService);
+        DependenciesInitializer dependenciesService = new DependenciesInitializer(this, beanService);
         dependenciesService.registerPluginsComponents();
     }
 }

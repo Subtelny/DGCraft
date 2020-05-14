@@ -18,8 +18,12 @@ public class CitiesInitializer implements DependencyInitialized {
 
     @Override
     public void dependencyInitialized(Plugin plugin) {
-        fileCityRepository.initializeFile(plugin);
-        fileCityRepository.loadCitiesFromFile();
+        try {
+            fileCityRepository.initializeFile(plugin);
+            fileCityRepository.loadCitiesFromFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

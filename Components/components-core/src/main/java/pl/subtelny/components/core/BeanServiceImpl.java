@@ -30,7 +30,7 @@ public class BeanServiceImpl implements BeanService {
 	}
 
 	@Override
-	public <T> T getBean(Class<?> clazz) {
+	public <T> T getBean(Class<T> clazz) {
 		return beanStorage.getBean(clazz);
 	}
 

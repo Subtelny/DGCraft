@@ -6,24 +6,23 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.api.account.Accounts;
-import pl.subtelny.core.api.city.City;
-import pl.subtelny.core.city.CityService;
+import pl.subtelny.core.city.service.CityService;
 import pl.subtelny.core.configuration.Settings;
 import pl.subtelny.utilities.log.Log;
 
 @Component
 public class PlayerService {
 
-    private final Settings settings;
-
     private final CityService cityService;
+
+    private final Settings settings;
 
     private final Accounts accounts;
 
     @Autowired
-    public PlayerService(Settings settings, CityService cityService, Accounts accounts) {
-        this.settings = settings;
+    public PlayerService(CityService cityService, Settings settings, Accounts accounts) {
         this.cityService = cityService;
+        this.settings = settings;
         this.accounts = accounts;
     }
 
@@ -44,9 +43,7 @@ public class PlayerService {
     }
 
     private void teleportToCitySpawn(Player player, Account account) {
-        City city = cityService.getCity(account.getCityType());
-        Location citySpawn = city.getSpawn();
-        player.teleport(citySpawn);
+        cityService.teleportToSpawn(player, account);
     }
 
     private void teleportToGlobalSpawn(Player player) {

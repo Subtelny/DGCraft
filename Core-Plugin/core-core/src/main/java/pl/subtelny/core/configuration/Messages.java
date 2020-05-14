@@ -5,6 +5,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import pl.subtelny.commands.api.CommandMessages;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.utilities.FileUtil;
 
@@ -15,7 +16,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Component
-public final class Messages {
+public final class Messages implements CommandMessages {
 
     private final static String MESSAGES_PATH = "messages";
 
@@ -57,6 +58,7 @@ public final class Messages {
         return config.getString(path);
     }
 
+    @Override
     public String get(String path) {
         return Optional.ofNullable(messages.get(path)).orElse(path);
     }

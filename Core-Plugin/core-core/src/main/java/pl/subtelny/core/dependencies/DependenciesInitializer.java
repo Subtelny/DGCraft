@@ -9,6 +9,7 @@ import pl.subtelny.components.core.api.BeanService;
 import pl.subtelny.components.core.api.DependencyInitialized;
 import pl.subtelny.core.api.plugin.DGPlugin;
 import pl.subtelny.commands.api.CommandsInitializer;
+import pl.subtelny.core.configuration.Messages;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public class DependenciesService {
+public class DependenciesInitializer {
 
     private static final Logger logger = Bukkit.getLogger();
 
@@ -26,7 +27,7 @@ public class DependenciesService {
 
     private final BeanService beanService;
 
-    public DependenciesService(Plugin plugin, BeanService beanService) {
+    public DependenciesInitializer(Plugin plugin, BeanService beanService) {
         this.plugin = plugin;
         this.beanService = beanService;
     }
@@ -72,7 +73,8 @@ public class DependenciesService {
 
     private void registerCommands() {
         List<BaseCommand> commands = beanService.getBeans(BaseCommand.class);
-        CommandsInitializer commandsInitializer = new CommandsInitializer(plugin, commands);
+        Messages messages = beanService.getBean(Messages.class);
+        CommandsInitializer commandsInitializer = new CommandsInitializer(plugin, commands, messages);
         commandsInitializer.registerCommands();
         logger.info(String.format("Loaded %s commands", commands.size()));
     }

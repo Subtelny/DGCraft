@@ -3,10 +3,15 @@ package pl.subtelny.utilities.config;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
 public class LocationFileParserStrategy extends AbstractFileParserStrategy<Location> {
+
+    public LocationFileParserStrategy(YamlConfiguration configuration, File file) {
+        super(configuration, file);
+    }
 
     public LocationFileParserStrategy(File file) {
         super(file);

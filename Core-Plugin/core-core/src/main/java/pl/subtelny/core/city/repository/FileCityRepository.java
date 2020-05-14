@@ -7,8 +7,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.account.CityType;
-import pl.subtelny.core.api.city.City;
-import pl.subtelny.core.api.city.CityRepository;
+import pl.subtelny.core.city.City;
 import pl.subtelny.utilities.FileUtil;
 
 import java.io.File;
@@ -26,9 +25,6 @@ public class FileCityRepository implements CityRepository {
 
     private Map<CityType, City> cities = new HashMap<>();
 
-    public FileCityRepository() {
-    }
-
     public void initializeFile(Plugin plugin) {
         file = FileUtil.copyFile(plugin, CITIES_FILE_NAME);
     }
@@ -40,7 +36,7 @@ public class FileCityRepository implements CityRepository {
             CityFileParserStrategy parser = new CityFileParserStrategy(file);
             cities = citiesSection.getKeys(false).stream()
                     .map(cityKey -> parser.load("city." + cityKey))
-                    .collect(Collectors.toMap(City::getType, city -> city));
+                    .collect(Collectors.toMap(City::getCityType, city -> city));
         }
     }
 
@@ -52,7 +48,7 @@ public class FileCityRepository implements CityRepository {
     @Override
     public void save(City city) {
         Preconditions.checkNotNull(city, "City cannot be null");
-        cities.put(city.getType(), city);
+        cities.put(city.getCityType(), city);
         new CityFileParserStrategy(file).set(getPath(city), city).save();
     }
 
@@ -62,7 +58,7 @@ public class FileCityRepository implements CityRepository {
     }
 
     private String getPath(City city) {
-        return "city." + city.getType().name();
+        return "city." + city.getCityType().name();
     }
 
 }

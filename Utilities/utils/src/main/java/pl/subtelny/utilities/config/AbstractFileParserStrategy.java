@@ -11,6 +11,11 @@ public abstract class AbstractFileParserStrategy<T> implements FileParserStrateg
 
     protected final File file;
 
+    public AbstractFileParserStrategy(YamlConfiguration configuration, File file) {
+        this.configuration = configuration;
+        this.file = file;
+    }
+
     protected AbstractFileParserStrategy(File file) {
         this.configuration = YamlConfiguration.loadConfiguration(file);
         this.file = file;

@@ -5,8 +5,6 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
-import pl.subtelny.commands.api.BaseCommand;
-import pl.subtelny.commands.api.BukkitCommandAdapter;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -17,13 +15,16 @@ public class PluginCommands {
 
     private final Plugin plugin;
 
-    public PluginCommands(Plugin plugin) {
+    private final CommandMessages commandMessages;
+
+    public PluginCommands(Plugin plugin, CommandMessages commandMessages) {
         this.plugin = plugin;
+        this.commandMessages = commandMessages;
     }
 
     public PluginCommand registerCommand(String cmd, List<String> aliases, BaseCommand baseCommand) {
         PluginCommand command = getCommand(cmd, plugin);
-        command.setExecutor(new BukkitCommandAdapter(baseCommand));
+        command.setExecutor(new BukkitCommandAdapter(commandMessages, baseCommand));
         command.setAliases(aliases);
         getCommandMap().register(plugin.getDescription().getName(), command);
         return command;

@@ -1,8 +1,14 @@
 package pl.subtelny.utilities.config;
 
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.File;
 
 public class ObjectFileParserStrategy<T> extends AbstractFileParserStrategy<T> {
+
+    public ObjectFileParserStrategy(YamlConfiguration configuration, File file) {
+        super(configuration, file);
+    }
 
     public ObjectFileParserStrategy(File file) {
         super(file);

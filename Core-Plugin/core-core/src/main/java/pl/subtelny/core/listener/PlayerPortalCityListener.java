@@ -2,14 +2,16 @@ package pl.subtelny.core.listener;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPortalEvent;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.core.api.city.CityPortal;
-import pl.subtelny.core.city.CityService;
+import pl.subtelny.core.api.account.CityType;
+import pl.subtelny.core.city.service.CityPortalTeleporter;
+import pl.subtelny.core.city.service.CityService;
 import pl.subtelny.core.configuration.Messages;
 import pl.subtelny.utilities.MessageUtil;
 
@@ -21,9 +23,7 @@ public class PlayerPortalCityListener implements Listener {
 
     private static final int PORTAL_TIME_IDLE = 5;
 
-    private static final String WAIT_TIME_IDLE_PORTAL = "wait_time_idle_portal";
-
-    private final CityService cityService;
+    private final CityPortalTeleporter cityPortalTeleporter;
 
     private final Messages messages;
 
@@ -32,8 +32,8 @@ public class PlayerPortalCityListener implements Listener {
             .build();
 
     @Autowired
-    public PlayerPortalCityListener(CityService cityService, Messages messages) {
-        this.cityService = cityService;
+    public PlayerPortalCityListener(CityPortalTeleporter cityPortalTeleporter, Messages messages) {
+        this.cityPortalTeleporter = cityPortalTeleporter;
         this.messages = messages;
     }
 
@@ -42,16 +42,18 @@ public class PlayerPortalCityListener implements Listener {
         if (e.isCancelled()) {
             return;
         }
-
         Player player = e.getPlayer();
         if (portalCache.getIfPresent(player) != null) {
-            MessageUtil.message(player, String.format(messages.get(WAIT_TIME_IDLE_PORTAL), PORTAL_TIME_IDLE));
+            MessageUtil.message(player, String.format(messages.get("wait_time_idle_portal"), PORTAL_TIME_IDLE));
             return;
         }
-        Optional<CityPortal> cityOpt = cityService.findPortalAtLocation(e.getFrom());
-        if (cityOpt.isPresent()) {
+
+        Location from = e.getFrom();
+        Optional<CityType> cityByPortalLocation = cityPortalTeleporter.findCityByPortalLocation(from);
+        if (cityByPortalLocation.isPresent()) {
             e.setCancelled(true);
-            cityService.enterCityPortal(player, cityOpt.get());
+            portalCache.put(player, true);
+            cityPortalTeleporter.enterPortal(player, cityByPortalLocation.get());
         }
     }
 

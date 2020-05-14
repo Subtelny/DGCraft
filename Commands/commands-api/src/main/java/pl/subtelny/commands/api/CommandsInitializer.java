@@ -14,8 +14,8 @@ public class CommandsInitializer {
 
     private final List<BaseCommand> commands;
 
-    public CommandsInitializer(Plugin plugin, List<BaseCommand> commands) {
-        this.pluginCommands = new PluginCommands(plugin);
+    public CommandsInitializer(Plugin plugin, List<BaseCommand> commands, CommandMessages commandMessages) {
+        this.pluginCommands = new PluginCommands(plugin, commandMessages);
         this.commands = commands;
     }
 

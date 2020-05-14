@@ -1,6 +1,7 @@
-package pl.subtelny.core.api.city;
+package pl.subtelny.core.city.repository;
 
 import pl.subtelny.core.api.account.CityType;
+import pl.subtelny.core.city.City;
 
 import java.util.Set;
 

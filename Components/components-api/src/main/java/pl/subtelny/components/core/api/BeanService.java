@@ -11,7 +11,7 @@ public interface BeanService {
 
 	<T> List<T> getBeans(Class<T> clazz);
 
-	<T> T getBean(Class<?> clazz);
+	<T> T getBean(Class<T> clazz);
 
 	Map<Class, Object> getBeans();
 
