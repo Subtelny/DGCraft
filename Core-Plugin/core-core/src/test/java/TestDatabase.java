@@ -15,14 +15,17 @@ import pl.subtelny.core.database.DatabaseConfiguration;
 import pl.subtelny.core.repository.account.AccountRepository;
 import pl.subtelny.core.repository.account.loader.AccountAnemiaLoadAction;
 import pl.subtelny.core.repository.account.loader.AccountLoadRequest;
+import pl.subtelny.core.service.account.AccountService;
 import pl.subtelny.generated.tables.tables.Accounts;
 import pl.subtelny.generated.tables.tables.records.AccountsRecord;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -66,9 +69,32 @@ public class TestDatabase {
                 return initializeConfiguration();
             }
         });
+        AccountService accountService = new AccountService(repository);
 
-        Optional<Account> account = repository.findAccount(AccountId.of(UUID.fromString("3d94a195-9053-3e7c-b228-a25dcaa25621")));
-        System.out.println(account);
+        UUID id = UUID.fromString("3d94a195-9053-3e7c-b228-a25dcaa25621");
+        CompletableFuture<Optional<Account>> account = accountService.findAccountAsync(AccountId.of(id))
+                .whenComplete((account1, throwable) -> {
+                    System.out.println("completed1 " + account1);
+                    Account account2 = account1.get();
+                    LocalDateTime now = LocalDateTime.now();
+                    System.out.println("now: " + now);
+                    account2.setLastOnline(now);
+                    accountService.saveAccount(account2);
+                });
+        CompletableFuture<Optional<Account>> account2 = accountService.findAccountAsync(AccountId.of(id))
+                .whenComplete((account1, throwable) -> {
+                    System.out.println("completed2 " + account1 + " - " + account1.get().getLastOnline());
+                });
+        CompletableFuture<Optional<Account>> account3 = accountService.findAccountAsync(AccountId.of(id))
+                .whenComplete((account1, throwable) -> {
+                    System.out.println("completed3 " + account1 + " - " + account1.get().getLastOnline());
+                });
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private Configuration initializeConfiguration() {

@@ -11,10 +11,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.core.configuration.Messages;
+import pl.subtelny.core.configuration.CoreMessages;
 import pl.subtelny.core.cuboidselector.CuboidSelectService;
 import pl.subtelny.core.cuboidselector.CuboidSelectSession;
-import pl.subtelny.utilities.MessageUtil;
 
 @Component
 public class PlayerSelectCuboidListener implements Listener {
@@ -25,10 +24,10 @@ public class PlayerSelectCuboidListener implements Listener {
 
     private final CuboidSelectService cuboidSelectService;
 
-    private final Messages messages;
+    private final CoreMessages messages;
 
     @Autowired
-    public PlayerSelectCuboidListener(CuboidSelectService cuboidSelectService, Messages messages) {
+    public PlayerSelectCuboidListener(CuboidSelectService cuboidSelectService, CoreMessages messages) {
         this.cuboidSelectService = cuboidSelectService;
         this.messages = messages;
     }
@@ -68,7 +67,6 @@ public class PlayerSelectCuboidListener implements Listener {
 
     private void informLocationIsSet(Player player, Location location, String pos) {
         String locStr = String.format("x:%s, y:%s, z:%s", location.getBlockX(), location.getBlockY(), location.getBlockZ());
-        String message = String.format(messages.get("location_" + pos + "_set"), locStr);
-        MessageUtil.message(player, message);
+        messages.sendTo(player, "location_" + pos + "_set", locStr);
     }
 }

@@ -9,7 +9,6 @@ import pl.subtelny.components.core.api.BeanService;
 import pl.subtelny.components.core.api.DependencyInitialized;
 import pl.subtelny.core.api.plugin.DGPlugin;
 import pl.subtelny.commands.api.CommandsInitializer;
-import pl.subtelny.core.configuration.Messages;
 
 import java.util.Arrays;
 import java.util.List;
@@ -73,8 +72,7 @@ public class DependenciesInitializer {
 
     private void registerCommands() {
         List<BaseCommand> commands = beanService.getBeans(BaseCommand.class);
-        Messages messages = beanService.getBean(Messages.class);
-        CommandsInitializer commandsInitializer = new CommandsInitializer(plugin, commands, messages);
+        CommandsInitializer commandsInitializer = new CommandsInitializer(plugin, commands);
         commandsInitializer.registerCommands();
         logger.info(String.format("Loaded %s commands", commands.size()));
     }

@@ -9,22 +9,22 @@ import pl.subtelny.core.api.account.Accounts;
 import pl.subtelny.core.api.account.CityType;
 import pl.subtelny.core.city.City;
 import pl.subtelny.core.city.repository.CityRepository;
-import pl.subtelny.core.configuration.Messages;
-import pl.subtelny.utilities.MessageUtil;
+import pl.subtelny.core.configuration.CoreMessages;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 @Component
 public class CityPortalTeleporter {
 
-    private final Messages messages;
+    private final CoreMessages messages;
 
     private final Accounts accounts;
 
     private final CityRepository cityRepository;
 
     @Autowired
-    public CityPortalTeleporter(Messages messages, Accounts accounts, CityRepository cityRepository) {
+    public CityPortalTeleporter(CoreMessages messages, Accounts accounts, CityRepository cityRepository) {
         this.messages = messages;
         this.accounts = accounts;
         this.cityRepository = cityRepository;
@@ -39,17 +39,20 @@ public class CityPortalTeleporter {
 
     public void enterPortal(Player player, CityType cityType) {
         accounts.findAccountAsync(player)
-                .whenComplete((account, throwable) -> account.ifPresent(value -> enterPortal(player, value, cityType)));
+                .whenComplete((account, throwable) -> enterPortal(player, account.orElse(null), cityType));
     }
 
-    public void enterPortal(Player player, Account account, CityType cityType) {
-        if (account.getCityType() == cityType) {
+    public void enterPortal(Player player, @Nullable Account account, CityType cityType) {
+        if (account == null) {
+            accounts.createAccount(player, cityType);
+        }
+        if (account == null || account.getCityType() == cityType) {
             City city = cityRepository.get(cityType);
             Location targetOpt = city.getCityPortal().getTeleportTarget();
             player.teleport(targetOpt);
             return;
         }
-        MessageUtil.message(player, messages.get("not_yours_city_portal"));
+        messages.sendTo(player, "not_yours_city_portal");
     }
 
 }

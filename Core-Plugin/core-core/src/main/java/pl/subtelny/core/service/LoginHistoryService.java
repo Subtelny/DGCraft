@@ -40,12 +40,15 @@ public class LoginHistoryService {
                 return;
             }
             loginTimeCache.remove(player);
-            accounts.findAccountAsync(player)
-                    .whenComplete((accountOpt, throwable) ->
-                            accountOpt.ifPresent(account -> repository
-                                    .createNewLoginHistory(account.getAccountId(), loginTime)));
+            saveLoginHistory(player, loginTime);
         }
     }
 
+    private void saveLoginHistory(Player player, LocalDateTime loginTime) {
+        accounts.findAccountAsync(player)
+                .whenComplete((accountOpt, throwable) ->
+                        accountOpt.ifPresent(account -> repository
+                                .createNewLoginHistory(account.getAccountId(), loginTime)));
+    }
 
 }

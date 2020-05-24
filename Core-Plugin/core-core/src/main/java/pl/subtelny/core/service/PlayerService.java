@@ -8,7 +8,7 @@ import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.api.account.Accounts;
 import pl.subtelny.core.city.service.CityService;
 import pl.subtelny.core.configuration.Settings;
-import pl.subtelny.utilities.log.Log;
+import pl.subtelny.utilities.log.LogUtil;
 
 @Component
 public class PlayerService {
@@ -28,7 +28,7 @@ public class PlayerService {
 
     public void teleportToSpawn(Player player) {
         accounts.findAccountAsync(player)
-                .thenAccept(account -> {
+                .whenComplete((account, throwable) -> {
                     if (account.isPresent()) {
                         teleportToCitySpawn(player, account.get());
                     } else {
@@ -36,17 +36,17 @@ public class PlayerService {
                     }
                 })
                 .handle((account, throwable) -> {
-                    Log.warning("Exception during teleport " + player.getName() + ": " + throwable.getMessage());
-                    teleportToGlobalSpawn(player);
+                    LogUtil.warning("Exception during teleport " + player.getName() + ": " + throwable.getMessage());
                     return account;
                 });
     }
 
-    private void teleportToCitySpawn(Player player, Account account) {
-        cityService.teleportToSpawn(player, account);
+    public void teleportToCitySpawn(Player player, Account account) {
+        Location citySpawn = cityService.getCitySpawn(account.getCityType());
+        player.teleport(citySpawn);
     }
 
-    private void teleportToGlobalSpawn(Player player) {
+    public void teleportToGlobalSpawn(Player player) {
         Location globalSpawn = settings.get("global.spawn", Location.class);
         player.teleport(globalSpawn);
     }

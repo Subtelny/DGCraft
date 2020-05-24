@@ -3,7 +3,6 @@ package pl.subtelny.core.commands.citydev;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
@@ -11,8 +10,7 @@ import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.core.api.account.Accounts;
 import pl.subtelny.core.api.account.CityType;
-import pl.subtelny.core.configuration.Messages;
-import pl.subtelny.utilities.MessageUtil;
+import pl.subtelny.core.configuration.CoreMessages;
 import pl.subtelny.utilities.exception.ValidationException;
 
 import java.util.Optional;
@@ -20,12 +18,12 @@ import java.util.Optional;
 @PluginSubCommand(command = "setcity", mainCommand = CityDevCommand.class)
 public class CityDevSetCityCommand extends BaseCommand {
 
-    private final Messages messages;
+    private final CoreMessages messages;
 
     private final Accounts accounts;
 
     @Autowired
-    public CityDevSetCityCommand(Messages messages, Accounts accounts) {
+    public CityDevSetCityCommand(CoreMessages messages, Accounts accounts) {
         this.messages = messages;
         this.accounts = accounts;
     }
@@ -47,11 +45,9 @@ public class CityDevSetCityCommand extends BaseCommand {
                 account.setCityType(cityType);
                 accounts.saveAccount(account);
             }
-            String message = messages.get("citydev.setcity.success");
-            MessageUtil.message(sender, message);
+            messages.sendTo(sender, "citydev.setcity.success");
         } else {
-            String message = messages.get("not_found_account_for_player");
-            MessageUtil.message(sender, message);
+            messages.sendTo(sender, "not_found_account_for_player");
         }
     }
 

@@ -14,8 +14,8 @@ public class CommandsInitializer {
 
     private final List<BaseCommand> commands;
 
-    public CommandsInitializer(Plugin plugin, List<BaseCommand> commands, CommandMessages commandMessages) {
-        this.pluginCommands = new PluginCommands(plugin, commandMessages);
+    public CommandsInitializer(Plugin plugin, List<BaseCommand> commands) {
+        this.pluginCommands = new PluginCommands(plugin);
         this.commands = commands;
     }
 
@@ -37,6 +37,7 @@ public class CommandsInitializer {
 
     private void registerAsMainCommand(BaseCommand baseCommand) {
         PluginCommand pluginCommand = baseCommand.getClass().getAnnotation(PluginCommand.class);
+        baseCommand.setPermission(pluginCommand.permission());
         pluginCommands.registerCommand(pluginCommand.command(), Arrays.asList(pluginCommand.aliases()), baseCommand);
     }
 
@@ -45,6 +46,7 @@ public class CommandsInitializer {
         Class mainCommand = pluginSubCommand.mainCommand();
 
         BaseCommand commandByClass = getCommandByClass(mainCommand);
+        baseCommand.setPermission(pluginSubCommand.permission());
         commandByClass.registerSubCommand(pluginSubCommand.command(), baseCommand);
     }
 

@@ -7,12 +7,9 @@ import pl.subtelny.utilities.exception.ValidationException;
 
 public final class BukkitCommandAdapter implements CommandExecutor {
 
-    private final CommandMessages commandMessages;
-
     private final BaseCommand baseCommand;
 
-    public BukkitCommandAdapter(CommandMessages commandMessages, BaseCommand baseCommand) {
-        this.commandMessages = commandMessages;
+    public BukkitCommandAdapter(BaseCommand baseCommand) {
         this.baseCommand = baseCommand;
     }
 
@@ -20,10 +17,8 @@ public final class BukkitCommandAdapter implements CommandExecutor {
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String s, String[] args) {
         try {
             baseCommand.executeCommand(sender, args);
-        } catch (CommandException e) {
-            MessageUtil.message(sender, commandMessages.get(e.getMessage()));
         } catch (ValidationException e) {
-            MessageUtil.message(sender, String.format(commandMessages.get(e.getMessage()), e.getValues()));
+            MessageUtil.message(sender, String.format(e.getMessage(), e.getValues()));
         }
         return true;
     }

@@ -1,4 +1,4 @@
-package pl.subtelny.core.listener;
+package pl.subtelny.core.login.listener;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,12 +10,12 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.service.LoginHistoryService;
 
 @Component
-public class PlayerJoinLoginHistoryListener implements Listener {
+public class PlayerLoginHistoryListener implements Listener {
 
     private final LoginHistoryService loginHistoryService;
 
     @Autowired
-    public PlayerJoinLoginHistoryListener(LoginHistoryService loginHistoryService) {
+    public PlayerLoginHistoryListener(LoginHistoryService loginHistoryService) {
         this.loginHistoryService = loginHistoryService;
     }
 

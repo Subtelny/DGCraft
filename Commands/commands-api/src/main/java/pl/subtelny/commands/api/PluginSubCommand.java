@@ -16,4 +16,6 @@ public @interface PluginSubCommand {
 
     String command();
 
+    String permission() default "";
+
 }

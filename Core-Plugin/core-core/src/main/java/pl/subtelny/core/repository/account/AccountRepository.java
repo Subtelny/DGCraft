@@ -12,6 +12,7 @@ import pl.subtelny.core.repository.account.loader.AccountLoader;
 import pl.subtelny.core.repository.account.storage.AccountStorage;
 import pl.subtelny.core.repository.account.updater.AccountUpdater;
 
+import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ public class AccountRepository {
         accountLoader = new AccountLoader(databaseConnection);
     }
 
+    @Nullable
     public Optional<Account> getAccountIfPresent(AccountId accountId) {
         return accountStorage.getCacheIfPresent(accountId);
     }

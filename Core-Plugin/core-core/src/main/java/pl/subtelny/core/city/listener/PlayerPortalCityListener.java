@@ -1,4 +1,4 @@
-package pl.subtelny.core.listener;
+package pl.subtelny.core.city.listener;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -11,9 +11,7 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.account.CityType;
 import pl.subtelny.core.city.service.CityPortalTeleporter;
-import pl.subtelny.core.city.service.CityService;
-import pl.subtelny.core.configuration.Messages;
-import pl.subtelny.utilities.MessageUtil;
+import pl.subtelny.core.configuration.CoreMessages;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -25,14 +23,14 @@ public class PlayerPortalCityListener implements Listener {
 
     private final CityPortalTeleporter cityPortalTeleporter;
 
-    private final Messages messages;
+    private final CoreMessages messages;
 
     private Cache<Player, Boolean> portalCache = Caffeine.newBuilder()
             .expireAfterWrite(PORTAL_TIME_IDLE, TimeUnit.SECONDS)
             .build();
 
     @Autowired
-    public PlayerPortalCityListener(CityPortalTeleporter cityPortalTeleporter, Messages messages) {
+    public PlayerPortalCityListener(CityPortalTeleporter cityPortalTeleporter, CoreMessages messages) {
         this.cityPortalTeleporter = cityPortalTeleporter;
         this.messages = messages;
     }
@@ -44,7 +42,7 @@ public class PlayerPortalCityListener implements Listener {
         }
         Player player = e.getPlayer();
         if (portalCache.getIfPresent(player) != null) {
-            MessageUtil.message(player, String.format(messages.get("wait_time_idle_portal"), PORTAL_TIME_IDLE));
+            messages.sendTo(player, "wait_time_idle_portal", PORTAL_TIME_IDLE);
             return;
         }
 

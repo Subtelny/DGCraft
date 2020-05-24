@@ -1,7 +1,10 @@
 package pl.subtelny.commands.api;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import pl.subtelny.utilities.exception.ValidationException;
+import pl.subtelny.utilities.log.LogUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,11 +13,14 @@ import java.util.Optional;
 
 public abstract class BaseCommand implements Command {
 
+    private String permission;
+
     private Map<String, Command> subCommands = new HashMap<>();
 
     @Override
-    public boolean executeCommand(CommandSender sender, String[] args) {
+    public void executeCommand(CommandSender sender, String[] args) {
         validatePlayerOnlyUsage(sender);
+        validatePermission(sender);
 
         Optional<Command> nextCommand = findNextCommand(args);
         if (nextCommand.isEmpty()) {
@@ -23,11 +29,14 @@ public abstract class BaseCommand implements Command {
             String[] argsWithoutCommand = Arrays.copyOfRange(args, 1, args.length);
             nextCommand.get().executeCommand(sender, argsWithoutCommand);
         }
-        return false;
     }
 
     public void registerSubCommand(String command, Command subCommand) {
         subCommands.put(command, subCommand);
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
     }
 
     public abstract void handleCommand(CommandSender sender, String[] args);
@@ -35,7 +44,16 @@ public abstract class BaseCommand implements Command {
     private void validatePlayerOnlyUsage(CommandSender sender) {
         if (isPlayerOnlyUsage()) {
             if (!(sender instanceof Player)) {
-                throw new CommandException("Komenda dostepna tylko dla graczy");
+                throw ValidationException.of("Komenda dostepna tylko dla graczy");
+            }
+        }
+    }
+
+    private void validatePermission(CommandSender sender) {
+        if (StringUtils.isNotBlank(permission)) {
+            if (!sender.hasPermission(permission)) {
+                LogUtil.warning(sender.getName() + " has no permission for command " + this.getClass().getName());
+                throw ValidationException.of("&cNie masz uprawnien do tej komendy.");
             }
         }
     }
@@ -51,5 +69,4 @@ public abstract class BaseCommand implements Command {
     private Optional<Command> getSubCommand(String command) {
         return Optional.ofNullable(subCommands.get(command));
     }
-
 }

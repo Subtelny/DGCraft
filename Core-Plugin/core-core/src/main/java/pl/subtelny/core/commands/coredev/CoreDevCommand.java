@@ -4,22 +4,21 @@ import org.bukkit.command.CommandSender;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginCommand;
 import pl.subtelny.components.core.api.Autowired;
-import pl.subtelny.core.configuration.Messages;
-import pl.subtelny.utilities.MessageUtil;
+import pl.subtelny.core.configuration.CoreMessages;
 
 @PluginCommand(command = "coredev")
 public class CoreDevCommand extends BaseCommand {
 
-    private final Messages messages;
+    private final CoreMessages messages;
 
     @Autowired
-    public CoreDevCommand(Messages messages) {
+    public CoreDevCommand(CoreMessages messages) {
         this.messages = messages;
     }
 
     @Override
     public void handleCommand(CommandSender sender, String[] args) {
-        MessageUtil.message(sender, messages.get("coredev.usage"));
+        messages.sendTo(sender, "coredev.usage");
     }
 
     @Override

@@ -11,6 +11,8 @@ public @interface PluginCommand {
 
     String command();
 
+    String permission() default "";
+
     String[] aliases() default {};
 
 }

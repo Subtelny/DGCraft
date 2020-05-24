@@ -15,16 +15,13 @@ public class PluginCommands {
 
     private final Plugin plugin;
 
-    private final CommandMessages commandMessages;
-
-    public PluginCommands(Plugin plugin, CommandMessages commandMessages) {
+    public PluginCommands(Plugin plugin) {
         this.plugin = plugin;
-        this.commandMessages = commandMessages;
     }
 
     public PluginCommand registerCommand(String cmd, List<String> aliases, BaseCommand baseCommand) {
         PluginCommand command = getCommand(cmd, plugin);
-        command.setExecutor(new BukkitCommandAdapter(commandMessages, baseCommand));
+        command.setExecutor(new BukkitCommandAdapter(baseCommand));
         command.setAliases(aliases);
         getCommandMap().register(plugin.getDescription().getName(), command);
         return command;

@@ -8,12 +8,12 @@ import pl.subtelny.components.core.api.DependencyInitialized;
 @Component
 public class ConfigurationInitializer implements DependencyInitialized {
 
-    private final Messages messages;
+    private final CoreMessages messages;
 
     private final Settings settings;
 
     @Autowired
-    public ConfigurationInitializer(Messages messages, Settings settings) {
+    public ConfigurationInitializer(CoreMessages messages, Settings settings) {
         this.messages = messages;
         this.settings = settings;
     }

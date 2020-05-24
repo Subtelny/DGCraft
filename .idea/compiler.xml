@@ -9,7 +9,6 @@
         <module name="core-core" />
         <module name="core-api" />
         <module name="islands-core" />
-        <module name="commands-core" />
         <module name="generated-tables" />
         <module name="components-api" />
         <module name="dgcore-core" />
@@ -20,6 +19,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="commands-core" target="11" />
       <module name="components-context" target="11" />
       <module name="DGCore" target="11" />
       <module name="dgcore-core" target="11" />

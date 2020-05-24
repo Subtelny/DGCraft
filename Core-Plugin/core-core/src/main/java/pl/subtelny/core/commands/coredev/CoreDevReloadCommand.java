@@ -4,23 +4,22 @@ import org.bukkit.command.CommandSender;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
-import pl.subtelny.core.configuration.Messages;
-import pl.subtelny.utilities.MessageUtil;
+import pl.subtelny.core.configuration.CoreMessages;
 
 @PluginSubCommand(command = "reload", mainCommand = CoreDevCommand.class)
 public class CoreDevReloadCommand extends BaseCommand {
 
-    private final Messages messages;
+    private final CoreMessages messages;
 
     @Autowired
-    public CoreDevReloadCommand(Messages messages) {
+    public CoreDevReloadCommand(CoreMessages messages) {
         this.messages = messages;
     }
 
     @Override
     public void handleCommand(CommandSender sender, String[] args) {
         messages.reloadMessages();
-        MessageUtil.message(sender, messages.get("config_reloaded"));
+        messages.sendTo(sender, "config_reloaded");
     }
 
     @Override
