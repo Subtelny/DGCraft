@@ -3,6 +3,7 @@ package pl.subtelny.islands.repository.islander;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.model.islander.Islander;
+import pl.subtelny.islands.model.islander.IslanderId;
 import pl.subtelny.islands.repository.islander.loader.IslanderLoadRequest;
 import pl.subtelny.islands.repository.islander.loader.IslanderLoader;
 import pl.subtelny.islands.repository.islander.storage.IslanderStorage;
@@ -30,21 +31,21 @@ public class IslanderRepository {
 		this.islanderUpdater = new IslanderUpdater(configuration);
 	}
 
-	public Optional<Islander> getIslanderIfPresent(AccountId accountId) {
-		return islanderStorage.getCacheIfPresent(accountId);
+	public Optional<Islander> getIslanderIfPresent(IslanderId islanderId) {
+		return islanderStorage.getCacheIfPresent(islanderId);
 	}
 
-	public Optional<Islander> findIslander(AccountId accountId) {
-		return islanderStorage.getCache(accountId, accountId1 -> {
+	public Optional<Islander> findIslander(IslanderId islanderId) {
+		return islanderStorage.getCache(islanderId, islanderId1 -> {
 			IslanderLoadRequest request = IslanderLoadRequest.newBuilder()
-					.where(accountId)
+					.where(islanderId1)
 					.build();
 			return islanderLoader.loadIslander(request);
 		});
 	}
 
 	public void updateIslander(Islander islander) {
-		islanderStorage.put(islander.getAccount(), Optional.of(islander));
+		islanderStorage.put(islander.getIslanderId(), Optional.of(islander));
 		islanderUpdater.performActionAsync(islander);
 	}
 

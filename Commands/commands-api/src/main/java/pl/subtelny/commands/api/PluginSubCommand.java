@@ -18,4 +18,6 @@ public @interface PluginSubCommand {
 
     String permission() default "";
 
+    String[] aliases() default {};
+
 }

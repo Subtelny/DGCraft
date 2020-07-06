@@ -6,7 +6,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.components.core.api.BeanService;
-import pl.subtelny.components.core.api.DependencyInitialized;
+import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.core.api.plugin.DGPlugin;
 import pl.subtelny.commands.api.CommandsInitializer;
 
@@ -78,10 +78,10 @@ public class DependenciesInitializer {
     }
 
     private void informBeans() {
-        List<DependencyInitialized> beans = beanService.getBeans(DependencyInitialized.class);
+        List<DependencyActivator> beans = beanService.getBeans(DependencyActivator.class);
         beans.forEach(beansInitialized -> {
             DGPlugin pluginForBean = findPluginForBean(beansInitialized);
-            beansInitialized.dependencyInitialized(pluginForBean);
+            beansInitialized.activate(pluginForBean);
         });
     }
 

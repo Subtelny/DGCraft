@@ -3,7 +3,8 @@ package pl.subtelny.islands.repository.island.anemia;
 import pl.subtelny.islands.model.guild.GuildIsland;
 import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.model.island.IslandType;
-import pl.subtelny.islands.model.island.SkyblockIsland;
+import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
+import pl.subtelny.islands.skyblockisland.repository.anemia.SkyblockIslandAnemia;
 
 public final class IslandAnemiaFactory {
 
@@ -24,7 +25,6 @@ public final class IslandAnemiaFactory {
         fillAnemiaBasicFields(island, anemia);
         anemia.setExtendLevel(island.getExtendLevel());
         anemia.setIslandCoordinates(island.getIslandCoordinates());
-        anemia.setOwner(island.getOwner());
         anemia.setPoints(island.getPoints());
         return anemia;
     }

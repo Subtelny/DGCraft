@@ -52,7 +52,7 @@ public abstract class IslandAnemiaLoadAction<ANEMIA> implements LoadAction<ANEMI
 				.where(whereConditions());
 	}
 
-	private SelectOnConditionStep<Record> addJoinIslandToQuery(SelectJoinStep<Record> from) {
+	/*private SelectOnConditionStep<Record> addJoinIslandToQuery(SelectJoinStep<Record> from) {
 		IslandType islandType = getIslandType();
 		if (islandType == IslandType.SKYBLOCK) {
 			return from
@@ -65,24 +65,16 @@ public abstract class IslandAnemiaLoadAction<ANEMIA> implements LoadAction<ANEMI
 		} else {
 			throw new IllegalArgumentException("Not found join query for island type " + islandType.name());
 		}
-	}
+	}*/
 
 	private ANEMIA fetchMapRecordIntoAnemia(Record record) {
-		validateRecordHasCorrectIslandType(record);
 		return mapRecordIntoAnemia(record);
-	}
-
-	private void validateRecordHasCorrectIslandType(Record record) {
-		IslandType recordIslandType = IslandType.valueOf(record.get(Islands.ISLANDS.TYPE).getLiteral());
-		IslandType islandTypeAction = getIslandType();
-		if (islandTypeAction != recordIslandType) {
-			throw ValidationException.of("Tried to load " + recordIslandType.name() + " island as " + islandTypeAction);
-		}
 	}
 
 	protected abstract List<Condition> whereConditions();
 
 	protected abstract ANEMIA mapRecordIntoAnemia(Record record);
 
-	protected abstract IslandType getIslandType();
+	protected abstract SelectOnConditionStep<Record> addJoinIslandToQuery(SelectJoinStep<Record> from);
+
 }

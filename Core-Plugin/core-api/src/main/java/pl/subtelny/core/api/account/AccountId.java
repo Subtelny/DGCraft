@@ -1,6 +1,6 @@
 package pl.subtelny.core.api.account;
 
-import pl.subtelny.utilities.BasicIdentity;
+import pl.subtelny.utilities.identity.BasicIdentity;
 
 import java.util.UUID;
 

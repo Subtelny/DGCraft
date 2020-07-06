@@ -19,6 +19,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.primesoft.asyncworldedit.api.IAsyncWorldEdit;
 import org.primesoft.asyncworldedit.api.blockPlacer.IBlockPlacer;
+import org.primesoft.asyncworldedit.api.blockPlacer.IBlockPlacerListener;
+import org.primesoft.asyncworldedit.api.blockPlacer.entries.IJobEntry;
 import org.primesoft.asyncworldedit.api.playerManager.IPlayerEntry;
 import org.primesoft.asyncworldedit.api.playerManager.IPlayerManager;
 import org.primesoft.asyncworldedit.api.utils.IFuncParamEx;
@@ -34,7 +36,7 @@ public final class WorldEditHelper {
 		return (IAsyncEditSessionFactory) WorldEdit.getInstance().getEditSessionFactory();
 	}
 
-	public static void pasteSchematic(Location location, File schematic) throws IOException {
+	public static void pasteSchematic(Location location, File schematic, IBlockPlacerListener iBlockPlacerListener) throws IOException {
 		IPlayerManager playerManager = aweAPI.getPlayerManager();
 		IPlayerEntry fakePlayer = playerManager.createFakePlayer("WEH-LS", UUID.randomUUID());
 
@@ -49,6 +51,7 @@ public final class WorldEditHelper {
 		PasteAction pasteAction = new PasteAction(holder, location);
 
 		IBlockPlacer blockPlacer = aweAPI.getBlockPlacer();
+		blockPlacer.addListener(iBlockPlacerListener);
 		blockPlacer.performAsAsyncJob(safeEditSession, fakePlayer, "pasteSchematic-" + schematic.getName() + "-at-" + location.toString(), pasteAction);
 	}
 

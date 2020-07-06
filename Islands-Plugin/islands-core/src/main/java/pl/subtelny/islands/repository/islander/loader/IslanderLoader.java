@@ -5,6 +5,7 @@ import org.jooq.Configuration;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandId;
+import pl.subtelny.islands.model.islander.IslanderId;
 import pl.subtelny.islands.repository.islander.anemia.IslanderAnemia;
 
 import java.util.Optional;
@@ -32,10 +33,10 @@ public class IslanderLoader {
 	}
 
 	private Islander mapAnemiaIntoDomain(IslanderAnemia anemia) {
-		AccountId accountId = anemia.getAccountId();
+		IslanderId islanderId = anemia.getIslanderId();
 		GuildId guildId = anemia.getGuildId();
 		IslandId skyblockIslandId = anemia.getSkyblockIslandId();
-		return new Islander(accountId, skyblockIslandId, guildId);
+		return new Islander(islanderId, skyblockIslandId, guildId);
 	}
 
 }

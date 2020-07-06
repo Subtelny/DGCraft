@@ -48,7 +48,7 @@ public class PlayerLoginService {
         if (player != null) {
             LogUtil.warning(String.format("Player %s kicked of data load failed reason: %s ", player.getName(), throwable.getMessage()));
             JobsProvider.runSync(Core.plugin, () -> {
-                String message = messages.get("account_data_loaded_exceptionally");
+                String message = messages.getRawMessage("account_data_loaded_exceptionally");
                 PlayerUtil.kick(player, message);
             });
         }

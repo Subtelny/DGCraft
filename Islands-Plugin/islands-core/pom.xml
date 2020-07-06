@@ -32,7 +32,16 @@
             <groupId>pl.subtelny</groupId>
             <artifactId>utils</artifactId>
             <version>1</version>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>pl.subtelny</groupId>
+            <artifactId>components-api</artifactId>
+            <version>1</version>
+        </dependency>
+        <dependency>
+            <groupId>pl.subtelny</groupId>
+            <artifactId>utils</artifactId>
+            <version>1</version>
         </dependency>
     </dependencies>
 

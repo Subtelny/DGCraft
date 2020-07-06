@@ -1,27 +1,27 @@
 package pl.subtelny.islands.repository.islander.loader;
 
-import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.islands.model.guild.GuildId;
 import pl.subtelny.islands.model.island.IslandId;
+import pl.subtelny.islands.model.islander.IslanderId;
 
 import java.util.Optional;
 
 public class IslanderLoadRequest {
 
-    private final AccountId accountId;
+    private final IslanderId islanderId;
 
     private final IslandId skyblockIslandId;
 
     private final GuildId guildId;
 
-    public IslanderLoadRequest(AccountId accountId, IslandId skyblockIslandId, GuildId guildId) {
-        this.accountId = accountId;
+    public IslanderLoadRequest(IslanderId islanderId, IslandId skyblockIslandId, GuildId guildId) {
+        this.islanderId = islanderId;
         this.skyblockIslandId = skyblockIslandId;
         this.guildId = guildId;
     }
 
-    public Optional<AccountId> getAccountId() {
-        return Optional.ofNullable(accountId);
+    public Optional<IslanderId> getIslanderId() {
+        return Optional.ofNullable(islanderId);
     }
 
     public Optional<IslandId> getSkyblockIslandId() {
@@ -38,14 +38,14 @@ public class IslanderLoadRequest {
 
     public static class Builder {
 
-        private AccountId accountId;
+        private IslanderId islanderId;
 
         private IslandId skyblockIslandId;
 
         private GuildId guildId;
 
-        public Builder where(AccountId accountId) {
-            this.accountId = accountId;
+        public Builder where(IslanderId islanderId) {
+            this.islanderId = islanderId;
             return this;
         }
 
@@ -60,7 +60,7 @@ public class IslanderLoadRequest {
         }
 
         public IslanderLoadRequest build() {
-            return new IslanderLoadRequest(accountId, skyblockIslandId, guildId);
+            return new IslanderLoadRequest(islanderId, skyblockIslandId, guildId);
         }
 
     }

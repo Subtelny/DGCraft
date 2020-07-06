@@ -7,26 +7,26 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.core.configuration.CoreMessages;
-import pl.subtelny.core.configuration.Settings;
+import pl.subtelny.core.configuration.Locations;
 
 @PluginSubCommand(command = "global", mainCommand = CoreDevSetSpawnCommand.class)
 public class SetSpawnCityCommand extends BaseCommand {
 
     private final CoreMessages messages;
 
-    private final Settings settings;
+    private final Locations locations;
 
     @Autowired
-    public SetSpawnCityCommand(CoreMessages messages, Settings settings) {
+    public SetSpawnCityCommand(CoreMessages messages, Locations locations) {
         this.messages = messages;
-        this.settings = settings;
+        this.locations = locations;
     }
 
     @Override
     public void handleCommand(CommandSender sender, String[] args) {
         Player player = (Player) sender;
         Location location = player.getLocation();
-        settings.set("global.spawn", Location.class, location);
+        locations.set("global.spawn", location);
         messages.sendTo(sender, "coredev.setspawn.global.set");
     }
 

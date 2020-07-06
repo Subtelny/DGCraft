@@ -1,11 +1,8 @@
 package pl.subtelny.islands.model.guild;
 
-import pl.subtelny.utilities.BasicIdentity;
+import pl.subtelny.utilities.identity.BasicIdentity;
 
 public class GuildId extends BasicIdentity<Integer> {
-
-	public GuildId() {
-	}
 
 	public GuildId(int identity) {
 		super(identity);

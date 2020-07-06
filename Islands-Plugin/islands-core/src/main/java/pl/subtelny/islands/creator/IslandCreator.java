@@ -2,9 +2,7 @@ package pl.subtelny.islands.creator;
 
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.repository.island.SkyblockIslandRepository;
-import pl.subtelny.islands.model.island.Island;
-import pl.subtelny.islands.model.island.IslandType;
+import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandRepository;
 
 @Component
 public class IslandCreator {
@@ -16,7 +14,7 @@ public class IslandCreator {
         this.skyblockIslandRepository = skyblockIslandRepository;
     }
 
-    public Island createIsland(IslandCreateRequest request) {
+    /*public Island createIsland(IslandCreateRequest request) {
 		IslandCreatorStrategy strategy = getIslandCreatorStrategyByRequest(request);
 		return strategy.createIsland();
     }
@@ -30,6 +28,6 @@ public class IslandCreator {
 
     private SkyblockIslandCreatorStrategy prepareSkyblockIslandCreatorStrategy(SkyblockIslandCreateRequest request) {
         return new SkyblockIslandCreatorStrategy(request, skyblockIslandRepository);
-    }
+    }*/
 
 }

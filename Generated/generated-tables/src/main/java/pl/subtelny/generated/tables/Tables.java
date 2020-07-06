@@ -11,6 +11,7 @@ import pl.subtelny.generated.tables.tables.GuildIslands;
 import pl.subtelny.generated.tables.tables.Guilds;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.Islands;
+import pl.subtelny.generated.tables.tables.IslandsMembership;
 import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.generated.tables.tables.SkyblockIslands;
 
@@ -52,6 +53,11 @@ public class Tables {
      * The table <code>public.islands</code>.
      */
     public static final Islands ISLANDS = Islands.ISLANDS;
+
+    /**
+     * The table <code>public.islands_membership</code>.
+     */
+    public static final IslandsMembership ISLANDS_MEMBERSHIP = IslandsMembership.ISLANDS_MEMBERSHIP;
 
     /**
      * The table <code>public.login_histories</code>.

@@ -7,10 +7,11 @@ import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.islands.model.island.Island;
 import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.model.island.IslandType;
-import pl.subtelny.islands.model.island.SkyblockIsland;
+import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.repository.island.loader.IslandTypeLoadAction;
 import pl.subtelny.islands.repository.island.storage.IslandStorage;
 import pl.subtelny.islands.repository.island.updater.IslandUpdater;
+import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandRepository;
 
 import java.util.Optional;
 
@@ -37,7 +38,7 @@ public class IslandRepository {
     }
 
     public void updateIsland(Island island) {
-    	islandStorage.put(island.getIslandId(), Optional.of(island));
+    	islandStorage.updateCache(island.getIslandId(), Optional.of(island));
     	islandUpdater.updateIsland(island);
     }
 

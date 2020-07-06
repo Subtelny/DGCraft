@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row3;
+import org.jooq.Row1;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import pl.subtelny.generated.tables.tables.records.IslandersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Islanders extends TableImpl<IslandersRecord> {
 
-    private static final long serialVersionUID = 1847525823;
+    private static final long serialVersionUID = -311088994;
 
     /**
      * The reference instance of <code>public.islanders</code>
@@ -61,16 +61,6 @@ public class Islanders extends TableImpl<IslandersRecord> {
      * The column <code>public.islanders.id</code>.
      */
     public final TableField<IslandersRecord, UUID> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.UUID.nullable(false), this, "");
-
-    /**
-     * The column <code>public.islanders.skyblock_island</code>.
-     */
-    public final TableField<IslandersRecord, Integer> SKYBLOCK_ISLAND = createField(DSL.name("skyblock_island"), org.jooq.impl.SQLDataType.INTEGER, this, "");
-
-    /**
-     * The column <code>public.islanders.guild</code>.
-     */
-    public final TableField<IslandersRecord, Integer> GUILD = createField(DSL.name("guild"), org.jooq.impl.SQLDataType.INTEGER, this, "");
 
     /**
      * Create a <code>public.islanders</code> table reference
@@ -127,19 +117,11 @@ public class Islanders extends TableImpl<IslandersRecord> {
 
     @Override
     public List<ForeignKey<IslandersRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<IslandersRecord, ?>>asList(Keys.ISLANDERS__ISLANDERS_ID_FKEY, Keys.ISLANDERS__ISLANDERS_SKYBLOCK_ISLAND_FKEY, Keys.ISLANDERS__ISLANDERS_GUILD_FKEY);
+        return Arrays.<ForeignKey<IslandersRecord, ?>>asList(Keys.ISLANDERS__ISLANDERS_ID_FKEY);
     }
 
     public Accounts accounts() {
         return new Accounts(this, Keys.ISLANDERS__ISLANDERS_ID_FKEY);
-    }
-
-    public Islands islands() {
-        return new Islands(this, Keys.ISLANDERS__ISLANDERS_SKYBLOCK_ISLAND_FKEY);
-    }
-
-    public Guilds guilds() {
-        return new Guilds(this, Keys.ISLANDERS__ISLANDERS_GUILD_FKEY);
     }
 
     @Override
@@ -169,11 +151,11 @@ public class Islanders extends TableImpl<IslandersRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row1 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<UUID, Integer, Integer> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row1<UUID> fieldsRow() {
+        return (Row1) super.fieldsRow();
     }
 }

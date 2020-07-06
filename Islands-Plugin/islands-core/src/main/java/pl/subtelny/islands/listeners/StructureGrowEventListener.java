@@ -10,7 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.StructureGrowEvent;
 import pl.subtelny.islands.model.island.Island;
-import pl.subtelny.islands.service.IslandService;
+import pl.subtelny.islands.service.IslandsQueryService;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.util.List;
@@ -20,10 +20,10 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class StructureGrowEventListener implements Listener {
 
-    private final IslandService islandService;
+    private final IslandsQueryService islandService;
 
     @Autowired
-    public StructureGrowEventListener(IslandService islandService) {
+    public StructureGrowEventListener(IslandsQueryService islandService) {
         this.islandService = islandService;
     }
 

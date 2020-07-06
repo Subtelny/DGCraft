@@ -48,6 +48,9 @@ public class CommandsInitializer {
         BaseCommand commandByClass = getCommandByClass(mainCommand);
         baseCommand.setPermission(pluginSubCommand.permission());
         commandByClass.registerSubCommand(pluginSubCommand.command(), baseCommand);
+        for (String alias : pluginSubCommand.aliases()) {
+            commandByClass.registerSubCommand(alias, baseCommand);
+        }
     }
 
     private BaseCommand getCommandByClass(Class mainCommand) {

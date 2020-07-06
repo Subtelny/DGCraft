@@ -1,184 +1,578 @@
 package pl.subtelny.utilities.cuboid;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
-import java.util.*;
+/**
+ * This class is a region/cuboid from one location to another. It can be used for blocks protection and things like WorldEdit.
+ * @author desht (Original code), KingFaris10 (Editor of code)
+ */
+public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializable {
+    protected final String worldName;
+    protected final int x1, y1, z1;
+    protected final int x2, y2, z2;
 
-public class Cuboid implements Cloneable, ConfigurationSerializable, Iterable<Block> {
-
-    protected int priority;
-    protected String cuboidName;
-    protected String worldName;
-    protected final Vector minimumPoint, maximumPoint;
-
-    public Cuboid(Cuboid cuboid) {
-        this(cuboid.cuboidName, cuboid.worldName, cuboid.priority, cuboid.minimumPoint.getX(), cuboid.minimumPoint.getY(), cuboid.minimumPoint.getZ(), cuboid.maximumPoint.getX(), cuboid.maximumPoint.getY(), cuboid.maximumPoint.getZ());
+    /**
+     * Construct a Cuboid given two Location objects which represent any two corners of the Cuboid.
+     * Note: The 2 locations must be on the same world.
+     *
+     * @param l1 - One of the corners
+     * @param l2 - The other corner
+     */
+    public Cuboid(Location l1, Location l2) {
+        if (!l1.getWorld().equals(l2.getWorld())) throw new IllegalArgumentException("Locations must be on the same world");
+        this.worldName = l1.getWorld().getName();
+        this.x1 = Math.min(l1.getBlockX(), l2.getBlockX());
+        this.y1 = Math.min(l1.getBlockY(), l2.getBlockY());
+        this.z1 = Math.min(l1.getBlockZ(), l2.getBlockZ());
+        this.x2 = Math.max(l1.getBlockX(), l2.getBlockX());
+        this.y2 = Math.max(l1.getBlockY(), l2.getBlockY());
+        this.z2 = Math.max(l1.getBlockZ(), l2.getBlockZ());
     }
 
-    public Cuboid(String cuboidName, Location loc) {
-        this(cuboidName, loc, loc);
+    /**
+     * Construct a one-block Cuboid at the given Location of the Cuboid.
+     *
+     * @param l1 location of the Cuboid
+     */
+    public Cuboid(Location l1) {
+        this(l1, l1);
     }
 
-    public Cuboid(String cuboidName, Location loc1, Location loc2) {
-        this(cuboidName, 0, loc1, loc2);
+    /**
+     * Copy constructor.
+     *
+     * @param other - The Cuboid to copy
+     */
+    public Cuboid(Cuboid other) {
+        this(other.getWorld().getName(), other.x1, other.y1, other.z1, other.x2, other.y2, other.z2);
     }
 
-    public Cuboid(String cuboidName, int priority, Location loc1, Location loc2) {
-        if (loc1 != null && loc2 != null) {
-            if (loc1.getWorld() != null && loc2.getWorld() != null) {
-                if (!loc1.getWorld().getUID().equals(loc2.getWorld().getUID()))
-                    throw new IllegalStateException("The 2 locations of the cuboid must be in the same world!");
-            } else {
-                throw new NullPointerException("One/both of the worlds is/are null!");
-            }
-            this.worldName = loc1.getWorld().getName();
-            this.cuboidName = cuboidName;
-            this.priority = priority;
-
-            double xPos1 = Math.min(loc1.getX(), loc2.getBlockX());
-            double yPos1 = Math.min(loc1.getY(), loc2.getBlockY());
-            double zPos1 = Math.min(loc1.getZ(), loc2.getBlockZ());
-            double xPos2 = Math.max(loc1.getX(), loc2.getBlockX());
-            double yPos2 = Math.max(loc1.getY(), loc2.getBlockY());
-            double zPos2 = Math.max(loc1.getZ(), loc2.getBlockZ());
-            this.minimumPoint = new Vector(xPos1, yPos1, zPos1);
-            this.maximumPoint = new Vector(xPos2, yPos2, zPos2);
-        } else {
-            throw new NullPointerException("One/both of the locations is/are null!");
-        }
+    /**
+     * Construct a Cuboid in the given World and xyz co-ordinates
+     *
+     * @param world - The Cuboid's world
+     * @param x1 - X co-ordinate of corner 1
+     * @param y1 - Y co-ordinate of corner 1
+     * @param z1 - Z co-ordinate of corner 1
+     * @param x2 - X co-ordinate of corner 2
+     * @param y2 - Y co-ordinate of corner 2
+     * @param z2 - Z co-ordinate of corner 2
+     */
+    public Cuboid(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
+        this.worldName = world.getName();
+        this.x1 = Math.min(x1, x2);
+        this.x2 = Math.max(x1, x2);
+        this.y1 = Math.min(y1, y2);
+        this.y2 = Math.max(y1, y2);
+        this.z1 = Math.min(z1, z2);
+        this.z2 = Math.max(z1, z2);
     }
 
-    public Cuboid(String cuboidName, String worldName, int priority, double x1, double y1, double z1, double x2, double y2, double z2) {
-        if (worldName == null || Bukkit.getServer().getWorld(worldName) == null)
-            throw new NullPointerException("One/both of the worlds is/are null!");
-
-        Bukkit.getLogger().info("x1:" + x1 + ",y1:" + y1 + ",z1" + z1 + "  " + "x2:" + x2 + ",y2:" + y2 + ",z2" + z2);
-
+    /**
+     * Construct a Cuboid in the given world name and xyz co-ordinates.
+     *
+     * @param worldName - The Cuboid's world name
+     * @param x1 - X co-ordinate of corner 1
+     * @param y1 - Y co-ordinate of corner 1
+     * @param z1 - Z co-ordinate of corner 1
+     * @param x2 - X co-ordinate of corner 2
+     * @param y2 - Y co-ordinate of corner 2
+     * @param z2 - Z co-ordinate of corner 2
+     */
+    private Cuboid(String worldName, int x1, int y1, int z1, int x2, int y2, int z2) {
         this.worldName = worldName;
-        this.cuboidName = cuboidName;
-        this.priority = priority;
-
-        double xPos1 = Math.min(x1, x2);
-        double xPos2 = Math.max(x1, x2);
-        double yPos1 = Math.min(y1, y2);
-        double yPos2 = Math.max(y1, y2);
-        double zPos1 = Math.min(z1, z2);
-        double zPos2 = Math.max(z1, z2);
-        this.minimumPoint = new Vector(xPos1, yPos1, zPos1);
-        this.maximumPoint = new Vector(xPos2, yPos2, zPos2);
+        this.x1 = Math.min(x1, x2);
+        this.x2 = Math.max(x1, x2);
+        this.y1 = Math.min(y1, y2);
+        this.y2 = Math.max(y1, y2);
+        this.z1 = Math.min(z1, z2);
+        this.z2 = Math.max(z1, z2);
     }
 
-    public boolean containsLocation(Location location) {
-        return location != null && location.getWorld().getName().equals(this.worldName) && location.toVector().isInAABB(this.minimumPoint, this.maximumPoint);
+    /**
+     * Construct a Cuboid using a map with the following keys: worldName, x1, x2, y1, y2, z1, z2
+     * @param map - The map of keys.
+     */
+    public Cuboid(Map<String, Object> map) {
+        this.worldName = (String) map.get("worldName");
+        this.x1 = (Integer) map.get("x1");
+        this.x2 = (Integer) map.get("x2");
+        this.y1 = (Integer) map.get("y1");
+        this.y2 = (Integer) map.get("y2");
+        this.z1 = (Integer) map.get("z1");
+        this.z2 = (Integer) map.get("z2");
     }
 
-    public boolean containsVector(Vector vector) {
-        return vector != null && vector.isInAABB(this.minimumPoint, this.maximumPoint);
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("worldName", this.worldName);
+        map.put("x1", this.x1);
+        map.put("y1", this.y1);
+        map.put("z1", this.z1);
+        map.put("x2", this.x2);
+        map.put("y2", this.y2);
+        map.put("z2", this.z2);
+        return map;
     }
 
-    public List<Player> getPlayersIn() {
-        List<Player> players = new ArrayList<>();
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (containsLocation(player.getLocation()))
-                players.add(player);
-        }
-        return players;
+    /**
+     * Get the Location of the lower northeast corner of the Cuboid (minimum XYZ co-ordinates).
+     *
+     * @return Location of the lower northeast corner
+     */
+    public Location getLowerNE() {
+        return new Location(this.getWorld(), this.x1, this.y1, this.z1);
     }
 
+    /**
+     * Get the Location of the upper southwest corner of the Cuboid (maximum XYZ co-ordinates).
+     *
+     * @return Location of the upper southwest corner
+     */
+    public Location getUpperSW() {
+        return new Location(this.getWorld(), this.x2, this.y2, this.z2);
+    }
+
+    /**
+     * Get the blocks in the Cuboid.
+     *
+     * @return The blocks in the Cuboid
+     */
     public List<Block> getBlocks() {
-        List<Block> blockList = new ArrayList<>();
-        World world = this.getWorld();
-        if (world != null) {
-            for (int x = this.minimumPoint.getBlockX(); x <= this.maximumPoint.getBlockX(); x++) {
-                for (int y = this.minimumPoint.getBlockY(); y <= this.maximumPoint.getBlockY() && y <= world.getMaxHeight(); y++) {
-                    for (int z = this.minimumPoint.getBlockZ(); z <= this.maximumPoint.getBlockZ(); z++) {
-                        blockList.add(world.getBlockAt(x, y, z));
-                    }
-                }
-            }
-        }
-        return blockList;
+        Iterator<Block> blockI = this.iterator();
+        List<Block> copy = new ArrayList<Block>();
+        while (blockI.hasNext())
+            copy.add(blockI.next());
+        return copy;
     }
 
-    public Location getLowerLocation() {
-        return this.minimumPoint.toLocation(this.getWorld());
-    }
-
-    public double getLowerX() {
-        return this.minimumPoint.getX();
-    }
-
-    public double getLowerY() {
-        return this.minimumPoint.getY();
-    }
-
-    public double getLowerZ() {
-        return this.minimumPoint.getZ();
-    }
-
-    public Location getUpperLocation() {
-        return this.maximumPoint.toLocation(this.getWorld());
-    }
-
-    public double getUpperX() {
-        return this.maximumPoint.getX();
-    }
-
-    public double getUpperY() {
-        return this.maximumPoint.getY();
-    }
-
-    public double getUpperZ() {
-        return this.maximumPoint.getZ();
-    }
-
-    public double getVolume() {
-        return (this.getUpperX() - this.getLowerX() + 1) * (this.getUpperY() - this.getLowerY() + 1) * (this.getUpperZ() - this.getLowerZ() + 1);
-    }
-
-    public int getPriority() {
-        return this.priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    /*public Location getCenter() {
-        double x1 = this.getUpperX() + 1;
-        double y1 = this.getUpperY() + 1;
-        double z1 = this.getUpperZ() + 1;
-        return new Location(this.getWorld(), this.getLowerX() + (x1 - this.getLowerX()) / 2.0, this.getLowerY() + (y1 - this.getLowerY()) / 2.0, this.getLowerZ() + (z1 - this.getLowerZ()) / 2.0);
-    }*/
-
+    /**
+     * Get the the centre of the Cuboid.
+     *
+     * @return Location at the centre of the Cuboid
+     */
     public Location getCenter() {
-        int x1 = (int) this.getUpperX() + 1;
-        int y1 = (int) this.getUpperY() + 1;
-        int z1 = (int) this.getUpperZ() + 1;
+        int x1 = this.getUpperX() + 1;
+        int y1 = this.getUpperY() + 1;
+        int z1 = this.getUpperZ() + 1;
         return new Location(this.getWorld(), this.getLowerX() + (x1 - this.getLowerX()) / 2.0, this.getLowerY() + (y1 - this.getLowerY()) / 2.0, this.getLowerZ() + (z1 - this.getLowerZ()) / 2.0);
     }
 
-
+    /**
+     * Get the Cuboid's world.
+     *
+     * @return The World object representing this Cuboid's world
+     * @throws IllegalStateException if the world is not loaded
+     */
     public World getWorld() {
-        World world = Bukkit.getServer().getWorld(this.worldName);
-        if (world == null) throw new NullPointerException("World '" + this.worldName + "' is not loaded.");
+        World world = Bukkit.getWorld(this.worldName);
+        if (world == null) throw new IllegalStateException("World '" + this.worldName + "' is not loaded");
         return world;
     }
 
-    public String getName() {
-        return this.cuboidName;
+    /**
+     * Get the size of this Cuboid along the X axis
+     *
+     * @return	Size of Cuboid along the X axis
+     */
+    public int getSizeX() {
+        return (this.x2 - this.x1) + 1;
     }
 
-    public void setWorld(World world) {
-        if (world != null) this.worldName = world.getName();
-        else throw new NullPointerException("The world cannot be null.");
+    /**
+     * Get the size of this Cuboid along the Y axis
+     *
+     * @return	Size of Cuboid along the Y axis
+     */
+    public int getSizeY() {
+        return (this.y2 - this.y1) + 1;
+    }
+
+    /**
+     * Get the size of this Cuboid along the Z axis
+     *
+     * @return	Size of Cuboid along the Z axis
+     */
+    public int getSizeZ() {
+        return (this.z2 - this.z1) + 1;
+    }
+
+    /**
+     * Get the minimum X co-ordinate of this Cuboid
+     *
+     * @return	the minimum X co-ordinate
+     */
+    public int getLowerX() {
+        return this.x1;
+    }
+
+    /**
+     * Get the minimum Y co-ordinate of this Cuboid
+     *
+     * @return	the minimum Y co-ordinate
+     */
+    public int getLowerY() {
+        return this.y1;
+    }
+
+    /**
+     * Get the minimum Z co-ordinate of this Cuboid
+     *
+     * @return	the minimum Z co-ordinate
+     */
+    public int getLowerZ() {
+        return this.z1;
+    }
+
+    /**
+     * Get the maximum X co-ordinate of this Cuboid
+     *
+     * @return	the maximum X co-ordinate
+     */
+    public int getUpperX() {
+        return this.x2;
+    }
+
+    /**
+     * Get the maximum Y co-ordinate of this Cuboid
+     *
+     * @return	the maximum Y co-ordinate
+     */
+    public int getUpperY() {
+        return this.y2;
+    }
+
+    /**
+     * Get the maximum Z co-ordinate of this Cuboid
+     *
+     * @return	the maximum Z co-ordinate
+     */
+    public int getUpperZ() {
+        return this.z2;
+    }
+
+    /**
+     * Get the Blocks at the eight corners of the Cuboid.
+     *
+     * @return array of Block objects representing the Cuboid corners
+     */
+    public Block[] corners() {
+        Block[] res = new Block[8];
+        World w = this.getWorld();
+        res[0] = w.getBlockAt(this.x1, this.y1, this.z1);
+        res[1] = w.getBlockAt(this.x1, this.y1, this.z2);
+        res[2] = w.getBlockAt(this.x1, this.y2, this.z1);
+        res[3] = w.getBlockAt(this.x1, this.y2, this.z2);
+        res[4] = w.getBlockAt(this.x2, this.y1, this.z1);
+        res[5] = w.getBlockAt(this.x2, this.y1, this.z2);
+        res[6] = w.getBlockAt(this.x2, this.y2, this.z1);
+        res[7] = w.getBlockAt(this.x2, this.y2, this.z2);
+        return res;
+    }
+
+    /**
+     * Expand the Cuboid in the given direction by the given amount.  Negative amounts will shrink the Cuboid in the given direction.  Shrinking a cuboid's face past the opposite face is not an error and will return a valid Cuboid.
+     *
+     * @param dir - The direction in which to expand
+     * @param amount - The number of blocks by which to expand
+     * @return A new Cuboid expanded by the given direction and amount
+     */
+    public Cuboid expand(CuboidDirection dir, int amount) {
+        switch (dir) {
+            case North:
+                return new Cuboid(this.worldName, this.x1 - amount, this.y1, this.z1, this.x2, this.y2, this.z2);
+            case South:
+                return new Cuboid(this.worldName, this.x1, this.y1, this.z1, this.x2 + amount, this.y2, this.z2);
+            case East:
+                return new Cuboid(this.worldName, this.x1, this.y1, this.z1 - amount, this.x2, this.y2, this.z2);
+            case West:
+                return new Cuboid(this.worldName, this.x1, this.y1, this.z1, this.x2, this.y2, this.z2 + amount);
+            case Down:
+                return new Cuboid(this.worldName, this.x1, this.y1 - amount, this.z1, this.x2, this.y2, this.z2);
+            case Up:
+                return new Cuboid(this.worldName, this.x1, this.y1, this.z1, this.x2, this.y2 + amount, this.z2);
+            default:
+                throw new IllegalArgumentException("Invalid direction " + dir);
+        }
+    }
+
+    /**
+     * Shift the Cuboid in the given direction by the given amount.
+     *
+     * @param dir - The direction in which to shift
+     * @param amount - The number of blocks by which to shift
+     * @return A new Cuboid shifted by the given direction and amount
+     */
+    public Cuboid shift(CuboidDirection dir, int amount) {
+        return expand(dir, amount).expand(dir.opposite(), -amount);
+    }
+
+    /**
+     * Outset (grow) the Cuboid in the given direction by the given amount.
+     *
+     * @param dir - The direction in which to outset (must be Horizontal, Vertical, or Both)
+     * @param amount - The number of blocks by which to outset
+     * @return A new Cuboid outset by the given direction and amount
+     */
+    public Cuboid outset(CuboidDirection dir, int amount) {
+        Cuboid c;
+        switch (dir) {
+            case Horizontal:
+                c = expand(CuboidDirection.North, amount).expand(CuboidDirection.South, amount).expand(CuboidDirection.East, amount).expand(CuboidDirection.West, amount);
+                break;
+            case Vertical:
+                c = expand(CuboidDirection.Down, amount).expand(CuboidDirection.Up, amount);
+                break;
+            case Both:
+                c = outset(CuboidDirection.Horizontal, amount).outset(CuboidDirection.Vertical, amount);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid direction " + dir);
+        }
+        return c;
+    }
+
+    /**
+     * Inset (shrink) the Cuboid in the given direction by the given amount.  Equivalent
+     * to calling outset() with a negative amount.
+     *
+     * @param dir - The direction in which to inset (must be Horizontal, Vertical, or Both)
+     * @param amount - The number of blocks by which to inset
+     * @return A new Cuboid inset by the given direction and amount
+     */
+    public Cuboid inset(CuboidDirection dir, int amount) {
+        return this.outset(dir, -amount);
+    }
+
+    /**
+     * Return true if the point at (x,y,z) is contained within this Cuboid.
+     *
+     * @param x	- The X co-ordinate
+     * @param y	- The Y co-ordinate
+     * @param z	- The Z co-ordinate
+     * @return true if the given point is within this Cuboid, false otherwise
+     */
+    public boolean contains(int x, int y, int z) {
+        return x >= this.x1 && x <= this.x2 && y >= this.y1 && y <= this.y2 && z >= this.z1 && z <= this.z2;
+    }
+
+    /**
+     * Check if the given Block is contained within this Cuboid.
+     *
+     * @param b	- The Block to check for
+     * @return true if the Block is within this Cuboid, false otherwise
+     */
+    public boolean contains(Block b) {
+        return this.contains(b.getLocation());
+    }
+
+    /**
+     * Check if the given Location is contained within this Cuboid.
+     *
+     * @param l	- The Location to check for
+     * @return true if the Location is within this Cuboid, false otherwise
+     */
+    public boolean contains(Location l) {
+        if (!this.worldName.equals(l.getWorld().getName())) return false;
+        return this.contains(l.getBlockX(), l.getBlockY(), l.getBlockZ());
+    }
+
+    /**
+     * Get the volume of this Cuboid.
+     *
+     * @return The Cuboid volume, in blocks
+     */
+    public int getVolume() {
+        return this.getSizeX() * this.getSizeY() * this.getSizeZ();
+    }
+
+    /**
+     * Get the average light level of all empty (air) blocks in the Cuboid.  Returns 0 if there are no empty blocks.
+     *
+     * @return The average light level of this Cuboid
+     */
+    public byte getAverageLightLevel() {
+        long total = 0;
+        int n = 0;
+        for (Block b : this) {
+            if (b.isEmpty()) {
+                total += b.getLightLevel();
+                ++n;
+            }
+        }
+        return n > 0 ? (byte) (total / n) : 0;
+    }
+
+    /**
+     * Contract the Cuboid, returning a Cuboid with any air around the edges removed, just large enough to include all non-air blocks.
+     *
+     * @return A new Cuboid with no external air blocks
+     */
+    public Cuboid contract() {
+        return this.contract(CuboidDirection.Down).contract(CuboidDirection.South).contract(CuboidDirection.East).contract(CuboidDirection.Up).contract(CuboidDirection.North).contract(CuboidDirection.West);
+    }
+
+    /**
+     * Contract the Cuboid in the given direction, returning a new Cuboid which has no exterior empty space.
+     * E.g. A direction of Down will push the top face downwards as much as possible.
+     *
+     * @param dir - The direction in which to contract
+     * @return A new Cuboid contracted in the given direction
+     */
+    public Cuboid contract(CuboidDirection dir) {
+        Cuboid face = getFace(dir.opposite());
+        switch (dir) {
+            case Down:
+                while (face.containsOnly(Material.AIR) && face.getLowerY() > this.getLowerY()) {
+                    face = face.shift(CuboidDirection.Down, 1);
+                }
+                return new Cuboid(this.worldName, this.x1, this.y1, this.z1, this.x2, face.getUpperY(), this.z2);
+            case Up:
+                while (face.containsOnly(Material.AIR) && face.getUpperY() < this.getUpperY()) {
+                    face = face.shift(CuboidDirection.Up, 1);
+                }
+                return new Cuboid(this.worldName, this.x1, face.getLowerY(), this.z1, this.x2, this.y2, this.z2);
+            case North:
+                while (face.containsOnly(Material.AIR) && face.getLowerX() > this.getLowerX()) {
+                    face = face.shift(CuboidDirection.North, 1);
+                }
+                return new Cuboid(this.worldName, this.x1, this.y1, this.z1, face.getUpperX(), this.y2, this.z2);
+            case South:
+                while (face.containsOnly(Material.AIR) && face.getUpperX() < this.getUpperX()) {
+                    face = face.shift(CuboidDirection.South, 1);
+                }
+                return new Cuboid(this.worldName, face.getLowerX(), this.y1, this.z1, this.x2, this.y2, this.z2);
+            case East:
+                while (face.containsOnly(Material.AIR) && face.getLowerZ() > this.getLowerZ()) {
+                    face = face.shift(CuboidDirection.East, 1);
+                }
+                return new Cuboid(this.worldName, this.x1, this.y1, this.z1, this.x2, this.y2, face.getUpperZ());
+            case West:
+                while (face.containsOnly(Material.AIR) && face.getUpperZ() < this.getUpperZ()) {
+                    face = face.shift(CuboidDirection.West, 1);
+                }
+                return new Cuboid(this.worldName, this.x1, this.y1, face.getLowerZ(), this.x2, this.y2, this.z2);
+            default:
+                throw new IllegalArgumentException("Invalid direction " + dir);
+        }
+    }
+
+    /**
+     * Get the Cuboid representing the face of this Cuboid.  The resulting Cuboid will be one block thick in the axis perpendicular to the requested face.
+     *
+     * @param dir - which face of the Cuboid to get
+     * @return The Cuboid representing this Cuboid's requested face
+     */
+    public Cuboid getFace(CuboidDirection dir) {
+        switch (dir) {
+            case Down:
+                return new Cuboid(this.worldName, this.x1, this.y1, this.z1, this.x2, this.y1, this.z2);
+            case Up:
+                return new Cuboid(this.worldName, this.x1, this.y2, this.z1, this.x2, this.y2, this.z2);
+            case North:
+                return new Cuboid(this.worldName, this.x1, this.y1, this.z1, this.x1, this.y2, this.z2);
+            case South:
+                return new Cuboid(this.worldName, this.x2, this.y1, this.z1, this.x2, this.y2, this.z2);
+            case East:
+                return new Cuboid(this.worldName, this.x1, this.y1, this.z1, this.x2, this.y2, this.z1);
+            case West:
+                return new Cuboid(this.worldName, this.x1, this.y1, this.z2, this.x2, this.y2, this.z2);
+            default:
+                throw new IllegalArgumentException("Invalid direction " + dir);
+        }
+    }
+
+    /**
+     * Check if the Cuboid contains only blocks of the given type
+     *
+     * @param material - The material to check for
+     * @return true if this Cuboid contains only blocks of the given type
+     */
+    public boolean containsOnly(Material material) {
+        for (Block b : this) {
+            if (b.getType() != material) return false;
+        }
+        return true;
+    }
+
+    /**
+     * Get the Cuboid big enough to hold both this Cuboid and the given one.
+     *
+     * @param other - The other cuboid.
+     * @return A new Cuboid large enough to hold this Cuboid and the given Cuboid
+     */
+    public Cuboid getBoundingCuboid(Cuboid other) {
+        if (other == null) return this;
+
+        int xMin = Math.min(this.getLowerX(), other.getLowerX());
+        int yMin = Math.min(this.getLowerY(), other.getLowerY());
+        int zMin = Math.min(this.getLowerZ(), other.getLowerZ());
+        int xMax = Math.max(this.getUpperX(), other.getUpperX());
+        int yMax = Math.max(this.getUpperY(), other.getUpperY());
+        int zMax = Math.max(this.getUpperZ(), other.getUpperZ());
+
+        return new Cuboid(this.worldName, xMin, yMin, zMin, xMax, yMax, zMax);
+    }
+
+    /**
+     * Get a block relative to the lower NE point of the Cuboid.
+     *
+     * @param x	- The X co-ordinate
+     * @param y	- The Y co-ordinate
+     * @param z	- The Z co-ordinate
+     * @return The block at the given position
+     */
+    public Block getRelativeBlock(int x, int y, int z) {
+        return this.getWorld().getBlockAt(this.x1 + x, this.y1 + y, this.z1 + z);
+    }
+
+    /**
+     * Get a block relative to the lower NE point of the Cuboid in the given World.  This
+     * version of getRelativeBlock() should be used if being called many times, to avoid
+     * excessive calls to getWorld().
+     *
+     * @param w	- The world
+     * @param x	- The X co-ordinate
+     * @param y	- The Y co-ordinate
+     * @param z	- The Z co-ordinate
+     * @return The block at the given position
+     */
+    public Block getRelativeBlock(World w, int x, int y, int z) {
+        return w.getBlockAt(this.x1 + x, y1 + y, this.z1 + z);
+    }
+
+    /**
+     * Get a list of the chunks which are fully or partially contained in this cuboid.
+     *
+     * @return A list of Chunk objects
+     */
+    public List<Chunk> getChunks() {
+        List<Chunk> res = new ArrayList<Chunk>();
+
+        World w = this.getWorld();
+        int x1 = this.getLowerX() & ~0xf;
+        int x2 = this.getUpperX() & ~0xf;
+        int z1 = this.getLowerZ() & ~0xf;
+        int z2 = this.getUpperZ() & ~0xf;
+        for (int x = x1; x <= x2; x += 16) {
+            for (int z = z1; z <= z2; z += 16) {
+                res.add(w.getChunkAt(x >> 4, z >> 4));
+            }
+        }
+        return res;
+    }
+
+    public Iterator<Block> iterator() {
+        return new CuboidIterator(this.getWorld(), this.x1, this.y1, this.z1, this.x2, this.y2, this.z2);
     }
 
     @Override
@@ -187,106 +581,44 @@ public class Cuboid implements Cloneable, ConfigurationSerializable, Iterable<Bl
     }
 
     @Override
-    public ListIterator<Block> iterator() {
-        return this.getBlocks().listIterator();
+    public String toString() {
+        return new String("Cuboid: " + this.worldName + "," + this.x1 + "," + this.y1 + "," + this.z1 + "=>" + this.x2 + "," + this.y2 + "," + this.z2);
     }
 
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> serializedCuboid = new HashMap<>();
-        serializedCuboid.put("worldName", this.worldName);
-        serializedCuboid.put("cuboidName", this.cuboidName);
-        serializedCuboid.put("x1", this.minimumPoint.getX());
-        serializedCuboid.put("x2", this.maximumPoint.getX());
-        serializedCuboid.put("y1", this.minimumPoint.getY());
-        serializedCuboid.put("y2", this.maximumPoint.getY());
-        serializedCuboid.put("z1", this.minimumPoint.getZ());
-        serializedCuboid.put("z2", this.maximumPoint.getZ());
-        return serializedCuboid;
-    }
+    public class CuboidIterator implements Iterator<Block> {
+        private World w;
+        private int baseX, baseY, baseZ;
+        private int x, y, z;
+        private int sizeX, sizeY, sizeZ;
 
-    public static Cuboid deserialize(Map<String, Object> serializedCuboid) {
-        try {
-            String worldName = (String) serializedCuboid.get("worldName");
-            String cuboidName = (String) serializedCuboid.get("cuboidName");
-            int id = (Integer) serializedCuboid.get("id");
-
-            double xPos1 = (Double) serializedCuboid.get("x1");
-            double xPos2 = (Double) serializedCuboid.get("x2");
-            double yPos1 = (Double) serializedCuboid.get("y1");
-            double yPos2 = (Double) serializedCuboid.get("y2");
-            double zPos1 = (Double) serializedCuboid.get("z1");
-            double zPos2 = (Double) serializedCuboid.get("z2");
-
-            return new Cuboid(cuboidName, worldName, 0, xPos1, yPos1, zPos1, xPos2, yPos2, zPos2);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
+        public CuboidIterator(World w, int x1, int y1, int z1, int x2, int y2, int z2) {
+            this.w = w;
+            this.baseX = x1;
+            this.baseY = y1;
+            this.baseZ = z1;
+            this.sizeX = Math.abs(x2 - x1) + 1;
+            this.sizeY = Math.abs(y2 - y1) + 1;
+            this.sizeZ = Math.abs(z2 - z1) + 1;
+            this.x = this.y = this.z = 0;
         }
-    }
 
-    public String serializeLoc1() {
-        return worldName + "," + minimumPoint.getBlockX() + "," + minimumPoint.getBlockY() + "," + minimumPoint.getBlockZ();
-    }
-
-    public String serializeLoc2() {
-        return worldName + "," + maximumPoint.getBlockX() + "," + maximumPoint.getBlockY() + "," + maximumPoint.getBlockZ();
-    }
-
-    public void shift(CuboidDirection dir, int amount) {
-        expand(dir, amount);
-        expand(dir.opposite(), -amount);
-    }
-
-    public void outset(CuboidDirection dir, int amount) {
-        switch (dir) {
-            case Horizontal:
-                expand(CuboidDirection.North, amount);
-                expand(CuboidDirection.South, amount);
-                expand(CuboidDirection.East, amount);
-                expand(CuboidDirection.West, amount);
-                break;
-            case Vertical:
-                expand(CuboidDirection.Down, amount);
-                expand(CuboidDirection.Up, amount);
-                break;
-            case Both:
-                outset(CuboidDirection.Horizontal, amount);
-                outset(CuboidDirection.Vertical, amount);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid direction " + dir);
+        public boolean hasNext() {
+            return this.x < this.sizeX && this.y < this.sizeY && this.z < this.sizeZ;
         }
-    }
 
-    public void expand(CuboidDirection dir, int amount) {
-        switch (dir) {
-            case North:
-                this.minimumPoint.setX(this.minimumPoint.getBlockX() - amount);
-                break;
-            //return new Cuboid(this.id, this.cuboidName, this.worldName, this.priority, this.flags, this.minimumPoint.getBlockX() - amount, this.minimumPoint.getBlockY(), this.minimumPoint.getBlockZ(), this.maximumPoint.getBlockX(), this.maximumPoint.getBlockY(), this.maximumPoint.getBlockZ());
-            case South:
-                this.maximumPoint.setX(this.maximumPoint.getBlockX() + amount);
-                break;
-            //return new Cuboid(this.id, this.cuboidName, this.worldName, this.priority, this.flags, this.minimumPoint.getBlockX(), this.minimumPoint.getBlockY(), this.minimumPoint.getBlockZ(), this.maximumPoint.getBlockX() + amount, this.maximumPoint.getBlockY(), this.maximumPoint.getBlockZ());
-            case East:
-                this.minimumPoint.setZ(this.minimumPoint.getBlockZ() - amount);
-                break;
-            //return new Cuboid(this.id, this.cuboidName, this.worldName, this.priority, this.flags, this.minimumPoint.getBlockX(), this.minimumPoint.getBlockY(), this.minimumPoint.getBlockZ() - amount, this.maximumPoint.getBlockX(), this.maximumPoint.getBlockY(), this.maximumPoint.getBlockZ());
-            case West:
-                this.maximumPoint.setZ(this.maximumPoint.getBlockZ() + amount);
-                break;
-            //return new Cuboid(this.id, this.cuboidName, this.worldName, this.priority, this.flags, this.minimumPoint.getBlockX(), this.minimumPoint.getBlockY(), this.minimumPoint.getBlockZ(), this.maximumPoint.getBlockX(), this.maximumPoint.getBlockY(), this.maximumPoint.getBlockZ() + amount);
-            case Down:
-                this.minimumPoint.setY(this.minimumPoint.getBlockY() - amount);
-                break;
-            //return new Cuboid(this.id, this.cuboidName, this.worldName, this.priority, this.flags, this.minimumPoint.getBlockX(), this.minimumPoint.getBlockY() - amount, this.minimumPoint.getBlockZ(), this.maximumPoint.getBlockX(), this.maximumPoint.getBlockY(), this.maximumPoint.getBlockZ());
-            case Up:
-                this.maximumPoint.setY(this.maximumPoint.getBlockY() + amount);
-                break;
-            //return new Cuboid(this.id, this.cuboidName, this.worldName, this.priority, this.flags, this.minimumPoint.getBlockX(), this.minimumPoint.getBlockY(), this.minimumPoint.getBlockZ(), this.maximumPoint.getBlockX(), this.maximumPoint.getBlockY() + amount, this.maximumPoint.getBlockZ());
-            default:
-                throw new IllegalArgumentException("Invalid direction " + dir);
+        public Block next() {
+            Block b = this.w.getBlockAt(this.baseX + this.x, this.baseY + this.y, this.baseZ + this.z);
+            if (++x >= this.sizeX) {
+                this.x = 0;
+                if (++this.y >= this.sizeY) {
+                    this.y = 0;
+                    ++this.z;
+                }
+            }
+            return b;
+        }
+
+        public void remove() {
         }
     }
 

@@ -3,6 +3,7 @@ package pl.subtelny.islands.repository.islander.loader;
 import com.google.common.collect.Lists;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.generated.tables.tables.Islanders;
+import pl.subtelny.islands.model.islander.IslanderId;
 import pl.subtelny.islands.repository.islander.anemia.IslanderAnemia;
 import org.jooq.Condition;
 import org.jooq.Configuration;
@@ -42,8 +43,8 @@ public class IslanderAnemiaLoadAction implements LoadAction<IslanderAnemia> {
 
     private List<Condition> whereConditions() {
         List<Condition> conditions = Lists.newArrayList();
-        Optional<AccountId> accountIdOpt = request.getAccountId();
-        accountIdOpt.ifPresent(accountId -> conditions.add(Islanders.ISLANDERS.ID.eq(accountId.getId())));
+        Optional<IslanderId> islanderIdOpt = request.getIslanderId();
+        islanderIdOpt.ifPresent(islanderId -> conditions.add(Islanders.ISLANDERS.ID.eq(islanderId.getId())));
 
         Optional<GuildId> guildIdOpt = request.getGuildId();
         guildIdOpt.ifPresent(guildId -> conditions.add(Islanders.ISLANDERS.GUILD.eq(guildId.getId())));

@@ -32,7 +32,7 @@ public class IslanderUpdater extends Updater<Islander> {
 
     private IslanderAnemia domainToAnemia(Islander islander) {
         IslanderAnemia islanderAnemia = new IslanderAnemia();
-        islanderAnemia.setAccountId(islander.getAccount());
+        islanderAnemia.setIslanderId(islander.getIslanderId());
 
         GuildId guildId = islander.getGuild().orElse(null);
         islanderAnemia.setGuildId(guildId);

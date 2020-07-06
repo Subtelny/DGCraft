@@ -5,6 +5,7 @@ import pl.subtelny.islands.model.island.IslandType;
 import pl.subtelny.islands.repository.island.anemia.IslandAnemia;
 import pl.subtelny.islands.repository.island.anemia.IslandAnemiaFactory;
 import org.jooq.Configuration;
+import pl.subtelny.islands.skyblockisland.repository.updater.SkyblockIslandAnemiaUpdateAction;
 import pl.subtelny.repository.Updater;
 
 import java.util.concurrent.CompletableFuture;

@@ -20,6 +20,7 @@ import pl.subtelny.generated.tables.tables.GuildIslands;
 import pl.subtelny.generated.tables.tables.Guilds;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.Islands;
+import pl.subtelny.generated.tables.tables.IslandsMembership;
 import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.generated.tables.tables.SkyblockIslands;
 
@@ -37,7 +38,7 @@ import pl.subtelny.generated.tables.tables.SkyblockIslands;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = -1790036204;
+    private static final long serialVersionUID = 1510437238;
 
     /**
      * The reference instance of <code>public</code>
@@ -68,6 +69,11 @@ public class Public extends SchemaImpl {
      * The table <code>public.islands</code>.
      */
     public final Islands ISLANDS = pl.subtelny.generated.tables.tables.Islands.ISLANDS;
+
+    /**
+     * The table <code>public.islands_membership</code>.
+     */
+    public final IslandsMembership ISLANDS_MEMBERSHIP = pl.subtelny.generated.tables.tables.IslandsMembership.ISLANDS_MEMBERSHIP;
 
     /**
      * The table <code>public.login_histories</code>.
@@ -120,6 +126,7 @@ public class Public extends SchemaImpl {
             Guilds.GUILDS,
             Islanders.ISLANDERS,
             Islands.ISLANDS,
+            IslandsMembership.ISLANDS_MEMBERSHIP,
             LoginHistories.LOGIN_HISTORIES,
             SkyblockIslands.SKYBLOCK_ISLANDS);
     }

@@ -22,13 +22,7 @@ public class IslanderAnemiaUpdateAction implements UpdateAction<IslanderAnemia> 
     @Override
     public void perform(IslanderAnemia islanderAnemia) {
         IslandersRecord islandersRecord = new IslandersRecord();
-        islandersRecord.setId(islanderAnemia.getAccountId().getId());
-
-        GuildId guildId = islanderAnemia.getGuildId();
-        islandersRecord.setGuild(guildId == null ? null : guildId.getId());
-
-        IslandId islandId = islanderAnemia.getSkyblockIslandId();
-        islandersRecord.setSkyblockIsland(guildId == null ? null : islandId.getId());
+        islandersRecord.setId(islanderAnemia.getIslanderId().getId());
 
         DSL.using(configuration)
                 .insertInto(Islanders.ISLANDERS)

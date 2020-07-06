@@ -1,6 +1,6 @@
 package pl.subtelny.islands.creator;
 
-import pl.subtelny.islands.repository.island.SkyblockIslandRepository;
+import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandRepository;
 import pl.subtelny.islands.model.island.Island;
 
 public class SkyblockIslandCreatorStrategy implements IslandCreatorStrategy {

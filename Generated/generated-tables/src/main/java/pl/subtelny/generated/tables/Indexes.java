@@ -15,6 +15,7 @@ import pl.subtelny.generated.tables.tables.GuildIslands;
 import pl.subtelny.generated.tables.tables.Guilds;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.Islands;
+import pl.subtelny.generated.tables.tables.IslandsMembership;
 import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.generated.tables.tables.SkyblockIslands;
 
@@ -41,6 +42,7 @@ public class Indexes {
     public static final Index GUILDS_PKEY = Indexes0.GUILDS_PKEY;
     public static final Index ISLANDERS_PKEY = Indexes0.ISLANDERS_PKEY;
     public static final Index ISLANDS_PKEY = Indexes0.ISLANDS_PKEY;
+    public static final Index ISLANDS_MEMBERSHIP_PKEY = Indexes0.ISLANDS_MEMBERSHIP_PKEY;
     public static final Index LOGIN_HISTORIES_PKEY = Indexes0.LOGIN_HISTORIES_PKEY;
     public static final Index SKYBLOCK_ISLANDS_OWNER_KEY = Indexes0.SKYBLOCK_ISLANDS_OWNER_KEY;
     public static final Index SKYBLOCK_ISLANDS_PKEY = Indexes0.SKYBLOCK_ISLANDS_PKEY;
@@ -56,6 +58,7 @@ public class Indexes {
         public static Index GUILDS_PKEY = Internal.createIndex("guilds_pkey", Guilds.GUILDS, new OrderField[] { Guilds.GUILDS.ID }, true);
         public static Index ISLANDERS_PKEY = Internal.createIndex("islanders_pkey", Islanders.ISLANDERS, new OrderField[] { Islanders.ISLANDERS.ID }, true);
         public static Index ISLANDS_PKEY = Internal.createIndex("islands_pkey", Islands.ISLANDS, new OrderField[] { Islands.ISLANDS.ID }, true);
+        public static Index ISLANDS_MEMBERSHIP_PKEY = Internal.createIndex("islands_membership_pkey", IslandsMembership.ISLANDS_MEMBERSHIP, new OrderField[] { IslandsMembership.ISLANDS_MEMBERSHIP.ISLANDER_ID }, true);
         public static Index LOGIN_HISTORIES_PKEY = Internal.createIndex("login_histories_pkey", LoginHistories.LOGIN_HISTORIES, new OrderField[] { LoginHistories.LOGIN_HISTORIES.ID }, true);
         public static Index SKYBLOCK_ISLANDS_OWNER_KEY = Internal.createIndex("skyblock_islands_owner_key", SkyblockIslands.SKYBLOCK_ISLANDS, new OrderField[] { SkyblockIslands.SKYBLOCK_ISLANDS.OWNER }, true);
         public static Index SKYBLOCK_ISLANDS_PKEY = Internal.createIndex("skyblock_islands_pkey", SkyblockIslands.SKYBLOCK_ISLANDS, new OrderField[] { SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID }, true);

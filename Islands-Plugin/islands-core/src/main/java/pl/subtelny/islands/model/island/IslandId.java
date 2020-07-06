@@ -1,18 +1,24 @@
 package pl.subtelny.islands.model.island;
 
-import pl.subtelny.utilities.BasicIdentity;
+import pl.subtelny.utilities.identity.CompoundIdentity;
 
-public class IslandId extends BasicIdentity<Integer> {
+public class IslandId extends CompoundIdentity {
 
-	public IslandId() {
+	private static final int ISLAND_TYPE_POSITOIN = 0;
+
+	private static final int ISLAND_ID = 0;
+
+	public IslandId(IslandType islandType, Integer id) {
+		super(values(islandType, id));
 	}
 
-	public IslandId(Integer id) {
-		super(id);
+	public int getId() {
+		return Integer.parseInt(getAtPosition(ISLAND_ID));
 	}
 
-	public static IslandId of(Integer id) {
-		return new IslandId(id);
+	public IslandType getIslandType() {
+		return IslandType.valueOf(getAtPosition(ISLAND_TYPE_POSITOIN));
 	}
+
 
 }

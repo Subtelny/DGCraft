@@ -8,8 +8,9 @@ import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.model.island.Island;
+import pl.subtelny.islands.model.islander.Islander;
 import pl.subtelny.islands.repository.island.IslandFindResult;
-import pl.subtelny.islands.service.IslandService;
+import pl.subtelny.islands.service.IslandsQueryService;
 import pl.subtelny.islands.service.IslanderService;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
@@ -28,12 +29,12 @@ public class IslandActionGuard {
 
     public static final String ENTER_BYPASS_PERMISSION = "dgcraft.islands.enter.bypass";
 
-    private final IslandService islandService;
+    private final IslandsQueryService islandService;
 
     private final IslanderService islanderService;
 
     @Autowired
-    public IslandActionGuard(IslandService islandService, IslanderService islanderService) {
+    public IslandActionGuard(IslandsQueryService islandService, IslanderService islanderService) {
         this.islandService = islandService;
         this.islanderService = islanderService;
     }
@@ -155,7 +156,8 @@ public class IslandActionGuard {
         Optional<Island> islandOpt = islandFindResult.getResult().getNow(Optional.empty());
         if (islandOpt.isPresent()) {
             Island island = islandOpt.get();
-            if (islandService.isInIsland(player, island)) {
+            Islander islander = islanderService.getIslander(player);
+            if (island.isInIsland(islander)) {
                 return island.getCuboid().containsLocation(location);
             }
         }

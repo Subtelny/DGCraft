@@ -1,6 +1,6 @@
 package pl.subtelny.core.repository.loginhistory.entity;
 
-import pl.subtelny.utilities.BasicIdentity;
+import pl.subtelny.utilities.identity.BasicIdentity;
 
 public class LoginHistoryId extends BasicIdentity<Integer> {
 

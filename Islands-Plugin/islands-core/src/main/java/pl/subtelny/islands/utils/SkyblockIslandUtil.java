@@ -8,21 +8,13 @@ import pl.subtelny.utilities.cuboid.Cuboid;
 
 public final class SkyblockIslandUtil {
 
-	public static Cuboid buildFullyExtendedCuboid(IslandCoordinates islandCoordinates) {
-		int spaceBetweenIslands = Settings.SkyblockIsland.SPACE_BETWEEN_ISLANDS;
-		return buildCuboid(islandCoordinates, Settings.SkyblockIsland.ISLAND_SIZE, spaceBetweenIslands);
+	public static Cuboid buildCuboid(IslandCoordinates islandCoordinates, World islandWorld, int totalIslandSize, int islandSize, int spaceBetweenIslands) {
+		Cuboid maxedCuboid = buildCuboid(islandCoordinates, islandWorld, totalIslandSize, spaceBetweenIslands);
+		int toOutset = totalIslandSize - islandSize;
+		return maxedCuboid.outset(Cuboid.CuboidDirection.Horizontal, toOutset);
 	}
 
-	public static Cuboid buildExtendedCuboid(IslandCoordinates islandCoordinates, int extendLevel) {
-		int totalIslandSize = Settings.SkyblockIsland.ISLAND_SIZE;
-		int islandSizeToExtendLevel = Settings.SkyblockIsland.getIslandSizeToExtendLevel(extendLevel);
-		int spaceBetweenIslands = (totalIslandSize - islandSizeToExtendLevel)
-				+ Settings.SkyblockIsland.SPACE_BETWEEN_ISLANDS;
-		return buildCuboid(islandCoordinates, islandSizeToExtendLevel, spaceBetweenIslands);
-	}
-
-	private static Cuboid buildCuboid(IslandCoordinates islandCoordinates, int islandSize, int spaceBetweenIslands) {
-		World islandWorld = Settings.SkyblockIsland.ISLAND_WORLD;
+	public static Cuboid buildCuboid(IslandCoordinates islandCoordinates, World islandWorld, int islandSize, int spaceBetweenIslands) {
 		return calculateIslandCuboid(islandWorld,
 				islandCoordinates.getX(),
 				islandCoordinates.getZ(),
@@ -38,7 +30,7 @@ public final class SkyblockIslandUtil {
 
 		Location firstCorner = new Location(world, x1, z1, 0);
 		Location secondCorner = new Location(world, x2, z2, 256);
-		return new Cuboid("IslandCuboid", firstCorner, secondCorner);
+		return new Cuboid(firstCorner, secondCorner);
 	}
 
 	public static IslandCoordinates getIslandCoordinates(Location location) {

@@ -4,18 +4,18 @@ import com.google.common.collect.Sets;
 import java.util.Set;
 
 import pl.subtelny.islands.model.islander.Islander;
-import pl.subtelny.core.api.account.AccountId;
+import pl.subtelny.islands.model.islander.IslanderId;
 
 public class Guild {
 
-	private Set<AccountId> members = Sets.newConcurrentHashSet();
+	private Set<IslanderId> members = Sets.newConcurrentHashSet();
 
 	public boolean isInGuild(Islander islander) {
-		AccountId accountId = islander.getAccount();
+		IslanderId accountId = islander.getIslanderId();
 		return members.contains(accountId);
 	}
 
-	public Set<AccountId> getMembers() {
+	public Set<IslanderId> getMembers() {
 		return Sets.newHashSet(members);
 	}
 

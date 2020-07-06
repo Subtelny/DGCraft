@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 public abstract class Island {
 
-	protected IslandId islandId;
+	private final IslandId islandId;
 
 	protected LocalDateTime createdDate;
 
@@ -20,13 +20,14 @@ public abstract class Island {
 
 	protected Cuboid cuboid;
 
-	public Island(Cuboid cuboid) {
+	public Island(IslandId islandId, Cuboid cuboid) {
+		this.islandId = islandId;
 		this.cuboid = cuboid;
 	}
 
 	public void changeSpawn(Location spawn) {
 		if (!LocationUtil.isSafeForPlayer(spawn)) {
-			throw new ValidationException("Block under spawn have to be a solid material");
+			throw ValidationException.of("island.changeSpawn.not_solid_block");
 		}
 		this.spawn = spawn;
 	}

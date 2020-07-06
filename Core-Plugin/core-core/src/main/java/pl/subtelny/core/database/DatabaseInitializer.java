@@ -3,14 +3,14 @@ package pl.subtelny.core.database;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Autowired;
-import pl.subtelny.components.core.api.DependencyInitialized;
+import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.utilities.FileUtil;
 
 import java.io.File;
 
 @Component
-public class DatabaseInitializer implements DependencyInitialized {
+public class DatabaseInitializer implements DependencyActivator {
 
     private static final String CONFIG_FILE_NAME = "database.yml";
 
@@ -22,7 +22,7 @@ public class DatabaseInitializer implements DependencyInitialized {
     }
 
     @Override
-    public void dependencyInitialized(Plugin plugin) {
+    public void activate(Plugin plugin) {
         File file = FileUtil.copyFile(plugin, CONFIG_FILE_NAME);
         DatabaseConfiguration databaseConfiguration = loadConfiguration(file);
         coreDatabaseConnection.setupDatabase(databaseConfiguration);

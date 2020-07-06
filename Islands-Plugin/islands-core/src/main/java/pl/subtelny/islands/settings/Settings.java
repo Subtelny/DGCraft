@@ -1,6 +1,7 @@
 package pl.subtelny.islands.settings;
 
 import org.bukkit.World;
+import pl.subtelny.islands.skyblockisland.extendcuboid.settings.SkyblockIslandExtendOptions;
 
 import java.io.File;
 

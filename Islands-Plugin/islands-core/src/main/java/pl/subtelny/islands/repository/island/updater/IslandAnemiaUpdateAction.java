@@ -1,8 +1,11 @@
 package pl.subtelny.islands.repository.island.updater;
 
+import org.jooq.InsertOnDuplicateSetMoreStep;
 import pl.subtelny.generated.tables.enums.Islandtype;
 import pl.subtelny.generated.tables.tables.Islands;
+import pl.subtelny.generated.tables.tables.SkyblockIslands;
 import pl.subtelny.generated.tables.tables.records.IslandsRecord;
+import pl.subtelny.generated.tables.tables.records.SkyblockIslandsRecord;
 import pl.subtelny.islands.repository.island.anemia.IslandAnemia;
 import org.jooq.Configuration;
 import org.jooq.impl.DSL;
@@ -19,15 +22,16 @@ public abstract class IslandAnemiaUpdateAction<T extends IslandAnemia> implement
         this.configuration = configuration;
     }
 
-    @Override
-    public void perform(T islandAnemia) {
-        saveIslandAnemia(islandAnemia);
-        saveBasedIslandAnemia(islandAnemia);
+    protected InsertOnDuplicateSetMoreStep<IslandsRecord> getIslandRecordStatement(IslandAnemia islandAnemia) {
+        IslandsRecord record = createIslandsRecord(islandAnemia);
+        return DSL.using(configuration)
+                .insertInto(Islands.ISLANDS)
+                .set(record)
+                .onDuplicateKeyUpdate()
+                .set(record);
     }
 
-    public abstract void saveBasedIslandAnemia(T islandAnemia);
-
-    private void saveIslandAnemia(IslandAnemia islandAnemia) {
+    private IslandsRecord createIslandsRecord(IslandAnemia islandAnemia) {
         IslandsRecord islandsRecord = DSL.using(configuration).newRecord(Islands.ISLANDS);
         Timestamp createdDate = Timestamp.valueOf(islandAnemia.getCreatedDate());
         islandsRecord.setCreatedDate(createdDate);
@@ -37,6 +41,6 @@ public abstract class IslandAnemiaUpdateAction<T extends IslandAnemia> implement
 
         Islandtype islandType = Islandtype.valueOf(islandAnemia.getIslandType().name());
         islandsRecord.setType(islandType);
-        islandsRecord.store();
+        return islandsRecord;
     }
 }

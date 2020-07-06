@@ -1,0 +1,29 @@
+basic:
+  island_world: world
+  space_between_islands: 10
+  island_size: 100
+
+extends:
+  0:
+    island_size: 110
+    conditions:
+      0:
+        condition: COST
+        money: 1000
+      1:
+        condition: COST
+        item: GRASS
+        amount: 2
+  1:
+    island_size: 120
+    conditions:
+      0:
+        condition: CONDITION
+        item: STONE
+        amount: 100
+      1:
+        condition: CONDITION
+        permission: 'skyblockIsland.extend.level.2'
+      2:
+        condition: CONDITION
+        island_points: 1000

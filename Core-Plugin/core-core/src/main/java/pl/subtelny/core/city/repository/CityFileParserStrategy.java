@@ -4,8 +4,10 @@ import org.bukkit.Location;
 import pl.subtelny.core.api.account.CityType;
 import pl.subtelny.core.city.City;
 import pl.subtelny.core.city.CityPortal;
-import pl.subtelny.utilities.config.*;
+import pl.subtelny.utilities.file.*;
 import pl.subtelny.utilities.cuboid.Cuboid;
+import pl.subtelny.utilities.cuboid.CuboidFileParserStrategy;
+import pl.subtelny.utilities.location.LocationFileParserStrategy;
 
 import java.io.File;
 
