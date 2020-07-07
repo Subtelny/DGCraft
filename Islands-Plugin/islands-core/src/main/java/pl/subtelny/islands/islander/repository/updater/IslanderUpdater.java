@@ -1,10 +1,8 @@
-package pl.subtelny.islands.repository.islander.updater;
+package pl.subtelny.islands.islander.repository.updater;
 
-import pl.subtelny.islands.model.islander.Islander;
 import org.jooq.Configuration;
-import pl.subtelny.islands.model.guild.GuildId;
-import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.repository.islander.anemia.IslanderAnemia;
+import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
+import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.repository.Updater;
 
 import java.util.concurrent.CompletableFuture;
@@ -33,12 +31,6 @@ public class IslanderUpdater extends Updater<Islander> {
     private IslanderAnemia domainToAnemia(Islander islander) {
         IslanderAnemia islanderAnemia = new IslanderAnemia();
         islanderAnemia.setIslanderId(islander.getIslanderId());
-
-        GuildId guildId = islander.getGuild().orElse(null);
-        islanderAnemia.setGuildId(guildId);
-
-        IslandId islandId = islander.getSkyblockIsland().orElse(null);
-        islanderAnemia.setSkyblockIslandId(islandId);
         return islanderAnemia;
     }
 

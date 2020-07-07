@@ -1,20 +1,11 @@
 package pl.subtelny.islands.repository.island.loader;
 
-import java.util.List;
-
-import pl.subtelny.generated.tables.tables.GuildIslands;
-import pl.subtelny.generated.tables.tables.Islands;
-import pl.subtelny.generated.tables.tables.SkyblockIslands;
-import pl.subtelny.islands.model.island.IslandType;
-import org.jooq.Condition;
-import org.jooq.Configuration;
-import org.jooq.Record;
-import org.jooq.SelectConditionStep;
-import org.jooq.SelectJoinStep;
-import org.jooq.SelectOnConditionStep;
+import org.jooq.*;
 import org.jooq.impl.DSL;
+import pl.subtelny.generated.tables.tables.Islands;
 import pl.subtelny.repository.LoadAction;
-import pl.subtelny.utilities.exception.ValidationException;
+
+import java.util.List;
 
 public abstract class IslandAnemiaLoadAction<ANEMIA> implements LoadAction<ANEMIA> {
 
@@ -51,21 +42,6 @@ public abstract class IslandAnemiaLoadAction<ANEMIA> implements LoadAction<ANEMI
 		return addJoinIslandToQuery(from)
 				.where(whereConditions());
 	}
-
-	/*private SelectOnConditionStep<Record> addJoinIslandToQuery(SelectJoinStep<Record> from) {
-		IslandType islandType = getIslandType();
-		if (islandType == IslandType.SKYBLOCK) {
-			return from
-					.leftOuterJoin(SkyblockIslands.SKYBLOCK_ISLANDS)
-					.on(Islands.ISLANDS.ID.eq(SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID));
-		} else if (islandType == IslandType.GUILD) {
-			return from
-					.leftOuterJoin(GuildIslands.GUILD_ISLANDS)
-					.on(Islands.ISLANDS.ID.eq(GuildIslands.GUILD_ISLANDS.ISLAND_ID));
-		} else {
-			throw new IllegalArgumentException("Not found join query for island type " + islandType.name());
-		}
-	}*/
 
 	private ANEMIA fetchMapRecordIntoAnemia(Record record) {
 		return mapRecordIntoAnemia(record);

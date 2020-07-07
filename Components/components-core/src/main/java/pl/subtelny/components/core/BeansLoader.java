@@ -1,10 +1,11 @@
 package pl.subtelny.components.core;
 
-import com.google.common.collect.Lists;
 import pl.subtelny.components.core.prototype.BeanPrototype;
 import pl.subtelny.components.core.prototype.BeanPrototypeConstructor;
 import pl.subtelny.components.core.reflections.ComponentReflections;
+import pl.subtelny.components.core.reflections.ComponentScanner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,11 +15,11 @@ public class BeansLoader {
 
     private final List<String> paths;
 
-    private final ClassLoader classLoader;
+    private final List<ClassLoader> classLoaders;
 
-    public BeansLoader(List<String> paths, ClassLoader classLoader) {
+    public BeansLoader(List<String> paths, List<ClassLoader> classLoaders) {
         this.paths = paths;
-        this.classLoader = classLoader;
+        this.classLoaders = classLoaders;
     }
 
     public Map<Class, Object> loadBeans() {
@@ -29,8 +30,9 @@ public class BeansLoader {
     }
 
     private ComponentReflections buildReflections() {
-        List<Object> objects = Lists.newArrayList(classLoader);
+        List<Object> objects = new ArrayList<>(classLoaders);
         objects.addAll(paths);
+        objects.add(new ComponentScanner());
         return new ComponentReflections(objects);
     }
 

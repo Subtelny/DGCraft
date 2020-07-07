@@ -1,12 +1,10 @@
-package pl.subtelny.islands.repository.islander.updater;
+package pl.subtelny.islands.islander.repository.updater;
 
 import org.jooq.Configuration;
 import org.jooq.impl.DSL;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.records.IslandersRecord;
-import pl.subtelny.islands.model.guild.GuildId;
-import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.repository.islander.anemia.IslanderAnemia;
+import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
 import pl.subtelny.repository.UpdateAction;
 
 import java.util.concurrent.CompletionStage;

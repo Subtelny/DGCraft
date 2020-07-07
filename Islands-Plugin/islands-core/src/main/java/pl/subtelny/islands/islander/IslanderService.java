@@ -1,14 +1,13 @@
-package pl.subtelny.islands.service;
+package pl.subtelny.islands.islander;
 
 import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.islands.model.islander.Islander;
-import pl.subtelny.islands.repository.islander.IslanderRepository;
+import pl.subtelny.islands.islander.model.Islander;
+import pl.subtelny.islands.islander.model.IslanderId;
+import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.jobs.JobsProvider;
-
-import java.util.NoSuchElementException;
+import pl.subtelny.utilities.exception.ValidationException;
 import java.util.Optional;
 
 @Component
@@ -28,8 +27,8 @@ public class IslanderService {
     }
 
     private void loadOrCreateIslanderIfAbsent(Player player) {
-        AccountId accountId = getAccountIdFromPlayer(player);
-        Optional<Islander> islanderOpt = islanderRepository.findIslander(accountId);
+        IslanderId islanderId = getIslanderId(player);
+        Optional<Islander> islanderOpt = islanderRepository.findIslander(islanderId);
 
         if (islanderOpt.isEmpty()) {
             createIslander(player);
@@ -37,18 +36,18 @@ public class IslanderService {
     }
 
     private void createIslander(Player player) {
-        Islander islander = new Islander(getAccountIdFromPlayer(player));
+        Islander islander = new Islander(getIslanderId(player));
         islanderRepository.updateIslander(islander);
     }
 
     public Islander getIslander(Player player) {
-        AccountId accountId = getAccountIdFromPlayer(player);
+        IslanderId islanderId = getIslanderId(player);
         return islanderRepository
-                .getIslanderIfPresent(accountId)
-                .orElseThrow(() -> new NoSuchElementException("Not found islander for player " + player.getName()));
+                .getIslanderIfPresent(islanderId)
+                .orElseThrow(() -> new ValidationException("islander.not_found" + player.getName()));
     }
 
-    private AccountId getAccountIdFromPlayer(Player player) {
-        return AccountId.of(player.getUniqueId());
+    private IslanderId getIslanderId(Player player) {
+        return IslanderId.of(player.getUniqueId());
     }
 }

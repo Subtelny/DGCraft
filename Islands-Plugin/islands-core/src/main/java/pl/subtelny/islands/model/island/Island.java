@@ -1,6 +1,6 @@
 package pl.subtelny.islands.model.island;
 
-import pl.subtelny.islands.model.islander.Islander;
+import pl.subtelny.islands.islander.model.Islander;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.bukkit.Location;

@@ -1,6 +1,7 @@
 package pl.subtelny.islands.skyblockisland.extendcuboid;
 
 import org.bukkit.World;
+import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.skyblockisland.extendcuboid.settings.SkyblockIslandSettings;
@@ -15,6 +16,7 @@ public class SkyblockIslandExtendCuboidCalculator {
 
     private final SkyblockIslandSettings skyblockIslandSettings;
 
+    @Autowired
     public SkyblockIslandExtendCuboidCalculator(SkyblockIslandSettings skyblockIslandSettings) {
         this.skyblockIslandSettings = skyblockIslandSettings;
     }
@@ -44,6 +46,6 @@ public class SkyblockIslandExtendCuboidCalculator {
         if (islandSize != maxIslandSize) {
             spaceBetweenIslands = 0;
         }
-        return SkyblockIslandUtil.buildCuboid(islandCoordinates, world, islandSize, spaceBetweenIslands);
+        return SkyblockIslandUtil.buildCuboid(islandCoordinates, world, maxIslandSize, islandSize, spaceBetweenIslands);
     }
 }

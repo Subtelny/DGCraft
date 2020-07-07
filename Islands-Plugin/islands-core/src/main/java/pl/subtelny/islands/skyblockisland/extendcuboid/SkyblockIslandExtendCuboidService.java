@@ -1,6 +1,7 @@
 package pl.subtelny.islands.skyblockisland.extendcuboid;
 
 import org.bukkit.entity.Player;
+import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
@@ -22,6 +23,7 @@ public class SkyblockIslandExtendCuboidService {
 
     private final SkyblockIslandExtendCuboidCalculator cuboidCalculator;
 
+    @Autowired
     public SkyblockIslandExtendCuboidService(SkyblockIslandRepository skyblockIslandRepository,
                                              SkyblockIslandSettings skyblockIslandSettings,
                                              SkyblockIslandExtendCuboidCalculator cuboidCalculator) {

@@ -1,8 +1,7 @@
 package pl.subtelny.islands.skyblockisland.condition;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import pl.subtelny.islands.repository.island.IslandRepository;
-import pl.subtelny.islands.repository.islander.IslanderRepository;
+import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 import pl.subtelny.utilities.file.Saveable;
 

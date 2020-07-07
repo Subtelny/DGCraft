@@ -5,10 +5,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import pl.subtelny.commands.api.BaseCommand;
+import pl.subtelny.commands.api.CommandsInitializer;
 import pl.subtelny.components.core.api.BeanService;
 import pl.subtelny.components.core.api.DependencyActivator;
+import pl.subtelny.components.core.api.DependencyActivatorPriority;
 import pl.subtelny.core.api.plugin.DGPlugin;
-import pl.subtelny.commands.api.CommandsInitializer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -79,16 +80,34 @@ public class DependenciesInitializer {
 
     private void informBeans() {
         List<DependencyActivator> beans = beanService.getBeans(DependencyActivator.class);
-        beans.forEach(beansInitialized -> {
-            DGPlugin pluginForBean = findPluginForBean(beansInitialized);
-            beansInitialized.activate(pluginForBean);
-        });
+        beans.stream()
+                .sorted((t1, t2) -> {
+                    int t1Priority = findPriority(t1).getPriority();
+                    int t2Priority = findPriority(t2).getPriority();
+                    return Integer.compare(t1Priority, t2Priority);
+                })
+                .forEach(beansInitialized -> {
+                    DGPlugin pluginForBean = findPluginForBean(beansInitialized);
+                    beansInitialized.activate(pluginForBean);
+                });
+    }
+
+    private DependencyActivatorPriority.Priority findPriority(DependencyActivator dependencyActivator) {
+        Class<? extends DependencyActivator> aClass = dependencyActivator.getClass();
+        if (aClass.isAnnotationPresent(DependencyActivatorPriority.class)) {
+            return aClass.getAnnotation(DependencyActivatorPriority.class).priority();
+        }
+        return Arrays.stream(aClass.getInterfaces())
+                .filter(aClass1 -> aClass1.isAnnotationPresent(DependencyActivatorPriority.class))
+                .map(aClass1 -> aClass1.getAnnotation(DependencyActivatorPriority.class).priority())
+                .findAny()
+                .orElse(DependencyActivatorPriority.Priority.MEDIUM);
     }
 
     private DGPlugin findPluginForBean(Object bean) {
         String packageName = bean.getClass().getPackageName();
         Optional<DGPlugin> any = getDependencyPlugins().stream()
-                .filter(plugin -> plugin.componentsPaths().stream().anyMatch(packageName::startsWith))
+                .filter(plugin -> plugin.getPluginInformation().getPaths().stream().anyMatch(packageName::startsWith))
                 .findAny();
         return any.orElse(null);
     }

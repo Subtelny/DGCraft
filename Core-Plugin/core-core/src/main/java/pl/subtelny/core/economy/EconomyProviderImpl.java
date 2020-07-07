@@ -1,25 +1,25 @@
 package pl.subtelny.core.economy;
 
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.core.api.economy.EconomyProvider;
 import pl.subtelny.utilities.exception.ValidationException;
 
 import static org.bukkit.Bukkit.getServer;
 
 @Component
-public class EconomyProviderImpl implements EconomyProvider {
+public class EconomyProviderImpl implements EconomyProvider, DependencyActivator {
 
-    private final Economy economy;
+    private Economy economy;
 
-    public EconomyProviderImpl() {
-        this.economy = setupEconomy();
-    }
+    public EconomyProviderImpl() { }
 
     @Override
-    public Economy getEconomy() {
-        return economy;
+    public void activate(Plugin plugin) {
+        this.economy = setupEconomy();
     }
 
     private Economy setupEconomy() {
@@ -31,5 +31,10 @@ public class EconomyProviderImpl implements EconomyProvider {
             throw ValidationException.of("Could not found any provider for economy");
         }
         return rsp.getProvider();
+    }
+
+    @Override
+    public Economy getEconomy() {
+        return economy;
     }
 }

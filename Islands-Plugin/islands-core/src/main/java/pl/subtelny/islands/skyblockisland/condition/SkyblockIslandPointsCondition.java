@@ -1,9 +1,9 @@
 package pl.subtelny.islands.skyblockisland.condition;
 
 import org.bukkit.entity.Player;
-import pl.subtelny.islands.model.islander.Islander;
-import pl.subtelny.islands.model.islander.IslanderId;
-import pl.subtelny.islands.repository.islander.IslanderRepository;
+import pl.subtelny.islands.islander.model.Islander;
+import pl.subtelny.islands.islander.model.IslanderId;
+import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.messages.MessageKey;
 

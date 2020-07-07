@@ -34,7 +34,7 @@ public class CuboidSelectSession {
         if (!isReady()) {
             throw ValidationException.of("Not all locations are set to create cuboid");
         }
-        Cuboid cuboid = new Cuboid(this.getClass().getName(), positionOne, positionTwo);
+        Cuboid cuboid = new Cuboid(positionOne, positionTwo);
         consumer.accept(cuboid);
     }
 }

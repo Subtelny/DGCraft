@@ -1,19 +1,18 @@
-package pl.subtelny.islands.repository.islander.loader;
+package pl.subtelny.islands.islander.repository.loader;
 
 import com.google.common.collect.Lists;
-import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.generated.tables.tables.Islanders;
-import pl.subtelny.islands.model.islander.IslanderId;
-import pl.subtelny.islands.repository.islander.anemia.IslanderAnemia;
 import org.jooq.Condition;
 import org.jooq.Configuration;
+import org.jooq.Record;
 import org.jooq.impl.DSL;
-import pl.subtelny.islands.model.guild.GuildId;
-import pl.subtelny.islands.model.island.IslandId;
+import pl.subtelny.generated.tables.tables.Islanders;
+import pl.subtelny.islands.islander.model.IslanderId;
+import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
 import pl.subtelny.repository.LoadAction;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class IslanderAnemiaLoadAction implements LoadAction<IslanderAnemia> {
 
@@ -28,28 +27,32 @@ public class IslanderAnemiaLoadAction implements LoadAction<IslanderAnemia> {
 
     @Override
     public IslanderAnemia perform() {
-        DSL.using(configuration)
+        return DSL.using(configuration)
                 .select()
                 .from(Islanders.ISLANDERS)
-                .where(whereConditions());
-
-        return null;
+                .where(whereConditions())
+                .fetchOne(this::mapIntoAnemia);
     }
 
     @Override
     public List<IslanderAnemia> performList() {
-        return null;
+        return DSL.using(configuration)
+                .select()
+                .from(Islanders.ISLANDERS)
+                .where(whereConditions())
+                .fetch(this::mapIntoAnemia);
     }
 
     private List<Condition> whereConditions() {
         List<Condition> conditions = Lists.newArrayList();
         Optional<IslanderId> islanderIdOpt = request.getIslanderId();
         islanderIdOpt.ifPresent(islanderId -> conditions.add(Islanders.ISLANDERS.ID.eq(islanderId.getId())));
-
-        Optional<GuildId> guildIdOpt = request.getGuildId();
-        guildIdOpt.ifPresent(guildId -> conditions.add(Islanders.ISLANDERS.GUILD.eq(guildId.getId())));
-
-        Optional<IslandId> skyblockIslandIdOpt = request.getSkyblockIslandId();
         return conditions;
+    }
+
+    private IslanderAnemia mapIntoAnemia(Record record) {
+        UUID uuid = record.get(Islanders.ISLANDERS.ID);
+        IslanderId islanderId = IslanderId.of(uuid);
+        return new IslanderAnemia(islanderId);
     }
 }

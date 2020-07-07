@@ -1,4 +1,4 @@
-package pl.subtelny.islands.model.islander;
+package pl.subtelny.islands.islander.model;
 
 import pl.subtelny.utilities.identity.BasicIdentity;
 

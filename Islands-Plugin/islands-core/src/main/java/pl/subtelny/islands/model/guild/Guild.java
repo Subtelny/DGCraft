@@ -3,8 +3,8 @@ package pl.subtelny.islands.model.guild;
 import com.google.common.collect.Sets;
 import java.util.Set;
 
-import pl.subtelny.islands.model.islander.Islander;
-import pl.subtelny.islands.model.islander.IslanderId;
+import pl.subtelny.islands.islander.model.Islander;
+import pl.subtelny.islands.islander.model.IslanderId;
 
 public class Guild {
 

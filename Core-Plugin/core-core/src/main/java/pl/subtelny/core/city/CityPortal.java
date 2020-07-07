@@ -17,7 +17,7 @@ public class CityPortal {
     }
 
     public boolean isInPortalCuboid(Location location) {
-        return getCuboid().containsLocation(location);
+        return getCuboid().contains(location);
     }
 
     public Cuboid getCuboid() {

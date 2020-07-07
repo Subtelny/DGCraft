@@ -1,6 +1,5 @@
 package pl.subtelny.components.core.reflections;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import org.reflections.ReflectionUtils;
@@ -15,7 +14,7 @@ public class ComponentReflections extends Reflections {
     private static final String COMPONENT_SCANNER_INDEX = ComponentScanner.class.getSimpleName();
 
     public ComponentReflections(List<Object> objects) {
-        super(Lists.asList(new ComponentScanner(), objects.toArray()));
+        super(objects);
     }
 
     public Set<Class<?>> getComponentTypes() {

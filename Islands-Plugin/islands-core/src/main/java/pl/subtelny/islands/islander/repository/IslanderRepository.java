@@ -1,15 +1,14 @@
-package pl.subtelny.islands.repository.islander;
+package pl.subtelny.islands.islander.repository;
 
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.model.islander.Islander;
-import pl.subtelny.islands.model.islander.IslanderId;
-import pl.subtelny.islands.repository.islander.loader.IslanderLoadRequest;
-import pl.subtelny.islands.repository.islander.loader.IslanderLoader;
-import pl.subtelny.islands.repository.islander.storage.IslanderStorage;
-import pl.subtelny.islands.repository.islander.updater.IslanderUpdater;
+import pl.subtelny.islands.islander.repository.loader.IslanderLoadRequest;
+import pl.subtelny.islands.islander.repository.loader.IslanderLoader;
+import pl.subtelny.islands.islander.repository.storage.IslanderStorage;
+import pl.subtelny.islands.islander.repository.updater.IslanderUpdater;
+import pl.subtelny.islands.islander.model.Islander;
+import pl.subtelny.islands.islander.model.IslanderId;
 import org.jooq.Configuration;
-import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.core.api.database.DatabaseConnection;
 
 import java.util.Optional;
@@ -24,8 +23,8 @@ public class IslanderRepository {
 	private final IslanderUpdater islanderUpdater;
 
 	@Autowired
-	public IslanderRepository(DatabaseConnection databaseConfiguration, IslanderStorage islanderStorage) {
-		this.islanderStorage = islanderStorage;
+	public IslanderRepository(DatabaseConnection databaseConfiguration) {
+		this.islanderStorage = new IslanderStorage();
 		Configuration configuration = databaseConfiguration.getConfiguration();
 		this.islanderLoader = new IslanderLoader(configuration);
 		this.islanderUpdater = new IslanderUpdater(configuration);

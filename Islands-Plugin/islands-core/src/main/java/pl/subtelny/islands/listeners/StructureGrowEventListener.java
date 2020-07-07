@@ -45,7 +45,7 @@ public class StructureGrowEventListener implements Listener {
             Island island = islandOpt.get();
             Cuboid cuboid = island.getCuboid();
             blocks.stream()
-                    .filter(blockState -> !cuboid.containsLocation(blockState.getLocation()))
+                    .filter(blockState -> !cuboid.contains(blockState.getLocation()))
                     .forEach(blockState -> blockState.setType(Material.AIR));
         }
     }

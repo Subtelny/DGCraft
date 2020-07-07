@@ -8,7 +8,7 @@ import pl.subtelny.generated.tables.tables.Islands;
 import pl.subtelny.generated.tables.tables.SkyblockIslands;
 import pl.subtelny.islands.model.island.IslandCoordinates;
 import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.model.islander.IslanderId;
+import pl.subtelny.islands.islander.model.IslanderId;
 import pl.subtelny.islands.repository.island.loader.IslandAnemiaLoadAction;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandId;
 import pl.subtelny.islands.skyblockisland.repository.anemia.SkyblockIslandAnemia;

@@ -1,6 +1,5 @@
 package pl.subtelny.islands.utils;
 
-import pl.subtelny.islands.settings.Settings;
 import org.bukkit.Location;
 import org.bukkit.World;
 import pl.subtelny.islands.model.island.IslandCoordinates;
@@ -33,12 +32,12 @@ public final class SkyblockIslandUtil {
 		return new Cuboid(firstCorner, secondCorner);
 	}
 
-	public static IslandCoordinates getIslandCoordinates(Location location) {
+	public static IslandCoordinates getIslandCoordinates(Location location, int maxIslandSize) {
 		int blockX = location.getBlockX();
 		int blockZ = location.getBlockZ();
 
-		int x = blockX / Settings.SkyblockIsland.ISLAND_SIZE;
-		int z = blockZ / Settings.SkyblockIsland.ISLAND_SIZE;
+		int x = blockX / maxIslandSize;
+		int z = blockZ / maxIslandSize;
 		return new IslandCoordinates(x, z);
 	}
 

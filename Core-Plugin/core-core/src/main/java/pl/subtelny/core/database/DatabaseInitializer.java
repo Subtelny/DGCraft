@@ -5,11 +5,13 @@ import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.components.core.api.DependencyActivatorPriority;
 import pl.subtelny.utilities.FileUtil;
 
 import java.io.File;
 
 @Component
+@DependencyActivatorPriority(priority = DependencyActivatorPriority.Priority.HIGH)
 public class DatabaseInitializer implements DependencyActivator {
 
     private static final String CONFIG_FILE_NAME = "database.yml";

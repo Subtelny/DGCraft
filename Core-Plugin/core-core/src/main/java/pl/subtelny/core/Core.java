@@ -2,9 +2,9 @@ package pl.subtelny.core;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
-import org.reflections.util.ClasspathHelper;
 import pl.subtelny.components.core.BeanServiceImpl;
 import pl.subtelny.components.core.api.BeanService;
+import pl.subtelny.components.core.api.PluginInformation;
 import pl.subtelny.core.api.plugin.DGPlugin;
 import pl.subtelny.core.dependencies.DependenciesInitializer;
 
@@ -33,13 +33,18 @@ public class Core extends DGPlugin {
 
     private void loadBeans() {
         PluginManager pluginManager = Bukkit.getPluginManager();
-        List<String> paths = Arrays.stream(pluginManager.getPlugins())
+        List<PluginInformation> pluginInformations = Arrays.stream(pluginManager.getPlugins())
                 .filter(plugin -> plugin instanceof DGPlugin)
                 .map(plugin -> (DGPlugin) plugin)
-                .flatMap(plugin -> plugin.componentsPaths().stream())
+                .map(DGPlugin::getPluginInformation)
                 .collect(Collectors.toList());
-        ClassLoader classLoader = ClasspathHelper.staticClassLoader();
-        beanService.initializeBeans(classLoader, paths);
+        List<ClassLoader> classLoaders = pluginInformations.stream()
+                .map(PluginInformation::getClassLoader)
+                .collect(Collectors.toList());
+        List<String> paths = pluginInformations.stream()
+                .flatMap(pluginInformation -> pluginInformation.getPaths().stream())
+                .collect(Collectors.toList());
+        beanService.initializeBeans(classLoaders, paths);
     }
 
     private void loadDependencies() {

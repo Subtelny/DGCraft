@@ -11,7 +11,7 @@ import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboi
 import pl.subtelny.islands.skyblockisland.repository.loader.SkyblockIslandLoadRequest;
 import pl.subtelny.islands.skyblockisland.repository.loader.SkyblockIslandLoader;
 import pl.subtelny.islands.skyblockisland.repository.storage.SkyblockIslandStorage;
-import pl.subtelny.islands.repository.islander.IslanderRepository;
+import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.islands.skyblockisland.repository.updater.SkyblockIslandUpdater;
 
 @Component

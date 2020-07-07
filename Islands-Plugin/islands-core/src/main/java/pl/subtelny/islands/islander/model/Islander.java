@@ -1,4 +1,4 @@
-package pl.subtelny.islands.model.islander;
+package pl.subtelny.islands.islander.model;
 
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.utilities.exception.ValidationException;
@@ -26,9 +26,9 @@ public class Islander {
 
     public void setSkyblockIsland(SkyblockIsland skyblockIsland) {
         if (skyblockIsland != null && !skyblockIsland.isInIsland(this)) {
-            throw ValidationException.of("islander.change_skyblock_island_not_in_new_island");
+            throw ValidationException.of("islander.setSkyblockIsland.not_member_new_island");
         } else if (this.skyblockIsland.isInIsland(this)) {
-            throw ValidationException.of("islander.change_skyblock_island_is_in_old_island");
+            throw ValidationException.of("islander.setSkyblockIsland.already_member_new_island");
         }
         this.skyblockIsland = skyblockIsland;
     }

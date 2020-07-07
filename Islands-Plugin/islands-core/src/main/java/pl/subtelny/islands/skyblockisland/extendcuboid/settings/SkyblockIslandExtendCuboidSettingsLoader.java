@@ -2,7 +2,7 @@ package pl.subtelny.islands.skyblockisland.extendcuboid.settings;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.file.YamlConfiguration;
-import pl.subtelny.islands.repository.islander.IslanderRepository;
+import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.islands.skyblockisland.condition.SkyblockIslandPointsConditionFileParserStrategy;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidLevel;
 import pl.subtelny.utilities.Validation;
@@ -78,7 +78,7 @@ public class SkyblockIslandExtendCuboidSettingsLoader {
                 .stream()
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
-        List<Integer> result = IntStream.rangeClosed(0, actualExtends.size()).boxed().collect(Collectors.toList());
+        List<Integer> result = IntStream.rangeClosed(0, actualExtends.size() - 1).boxed().collect(Collectors.toList());
         Validation.isTrue(actualExtends.equals(result), "Actual extends (" + Arrays.toString(actualExtends.toArray()) + ") levels not fit into pattern (" + Arrays.toString(result.toArray()) + ")");
         return result;
     }

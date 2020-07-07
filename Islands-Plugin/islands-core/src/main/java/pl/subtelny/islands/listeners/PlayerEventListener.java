@@ -14,7 +14,7 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.islands.guard.IslandActionGuard;
 import pl.subtelny.islands.guard.IslandActionGuardResult;
-import pl.subtelny.islands.service.IslanderService;
+import pl.subtelny.islands.islander.IslanderService;
 import pl.subtelny.utilities.MessageUtil;
 import pl.subtelny.utilities.location.LocationUtil;
 

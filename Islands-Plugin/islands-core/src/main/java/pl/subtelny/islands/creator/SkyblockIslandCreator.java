@@ -4,9 +4,8 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.message.IslandMessages;
 import pl.subtelny.islands.model.island.IslandCoordinates;
-import pl.subtelny.islands.model.island.IslandId;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
-import pl.subtelny.islands.model.islander.Islander;
+import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandRepository;
 import pl.subtelny.islands.schematic.SchematicLoader;
 import pl.subtelny.jobs.JobsProvider;
@@ -37,10 +36,7 @@ public class SkyblockIslandCreator {
         validateIslander(islander);
         IslandCoordinates nextIslandCoordinates = getNextIslandCoordinates();
 
-        SkyblockIsland island = new SkyblockIsland();
-        return JobsProvider.supplyAsync(() -> {
-            return null;
-        });
+        return null;
     }
 
     private IslandCoordinates getNextIslandCoordinates() {
@@ -51,7 +47,7 @@ public class SkyblockIslandCreator {
     }
 
     private void validateIslander(Islander islander) {
-        Optional<IslandId> skyblockIsland = islander.getSkyblockIsland();
+        Optional<SkyblockIsland> skyblockIsland = islander.getSkyblockIsland();
         if (skyblockIsland.isPresent()) {
             String rawMessage = islandMessages.getRawMessage("islands.creator.islander_already_has_skyblock_island");
             throw ValidationException.of(rawMessage);

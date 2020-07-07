@@ -13,8 +13,8 @@ public class BeanServiceImpl implements BeanService {
 	}
 
 	@Override
-	public void initializeBeans(ClassLoader classLoader, List<String> paths) {
-		BeansLoader loader = new BeansLoader(paths, classLoader);
+	public void initializeBeans(List<ClassLoader> classLoaders, List<String> paths) {
+		BeansLoader loader = new BeansLoader(paths, classLoaders);
 		Map<Class, Object> loadedBeans = loader.loadBeans();
 		beanStorage.addBeans(loadedBeans);
 	}

@@ -36,7 +36,7 @@ public class City {
     }
 
     public boolean isInCityCuboid(Location location) {
-        return getCuboid().containsLocation(location);
+        return getCuboid().contains(location);
     }
 
     public Cuboid getCuboid() {

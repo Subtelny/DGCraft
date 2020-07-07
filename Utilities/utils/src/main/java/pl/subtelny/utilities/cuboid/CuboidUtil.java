@@ -7,7 +7,7 @@ import org.bukkit.World;
 public final class CuboidUtil {
 
 	public static String serialize(Cuboid cuboid) {
-		return cuboid.serializeLoc1() + ":" + cuboid.serializeLoc2();
+		return null;
 	}
 
 	public static Cuboid deserialize(String serializedCuboid) {
@@ -18,7 +18,7 @@ public final class CuboidUtil {
 
 		Location loc1 = deserializeLocation(serializedLoc1);
 		Location loc2 = deserializeLocation(serializedLoc2);
-		return new Cuboid("Cuboid", loc1, loc2);
+		return new Cuboid(loc1, loc2);
 	}
 
 	private static Location deserializeLocation(String serializedLocation) {

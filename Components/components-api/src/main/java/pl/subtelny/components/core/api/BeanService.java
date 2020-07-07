@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface BeanService {
 
-	void initializeBeans(ClassLoader classLoader, List<String> paths);
+	void initializeBeans(List<ClassLoader> classLoaders, List<String> paths);
 
 	<T> T initializePrototypeBean(Class<T> clazz);
 

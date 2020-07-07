@@ -1,12 +1,18 @@
-package pl.subtelny.islands.repository.islander.anemia;
+package pl.subtelny.islands.islander.repository.anemia;
 
-import pl.subtelny.islands.model.islander.IslanderId;
+import pl.subtelny.islands.islander.model.IslanderId;
 
 import java.util.Objects;
 
 public class IslanderAnemia {
 
     private IslanderId islanderId;
+
+    public IslanderAnemia(IslanderId islanderId) {
+        this.islanderId = islanderId;
+    }
+
+    public IslanderAnemia() { }
 
     public IslanderId getIslanderId() {
         return islanderId;

@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.repository.islander.IslanderRepository;
+import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidLevel;
 import pl.subtelny.utilities.FileUtil;
 import pl.subtelny.utilities.file.ObjectFileParserStrategy;
@@ -28,9 +28,6 @@ public class SkyblockIslandSettings {
     private int BASIC_ISLAND_SIZE;
 
     private Map<Integer, SkyblockIslandExtendCuboidLevel> EXTEND_CUBOID_LEVELS = new HashMap<>();
-
-    public SkyblockIslandSettings() {
-    }
 
     public void initConfig(Plugin plugin, Economy economy, IslanderRepository islanderRepository) {
         File configFile = FileUtil.copyFile(plugin, CONFIG_FILE_NAME);

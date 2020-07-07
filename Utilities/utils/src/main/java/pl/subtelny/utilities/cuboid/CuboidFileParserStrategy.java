@@ -23,14 +23,14 @@ public class CuboidFileParserStrategy extends AbstractFileParserStrategy<Cuboid>
         LocationFileParserStrategy parser = new LocationFileParserStrategy(configuration, file);
         Location loc1 = parser.load(path + ".loc1");
         Location loc2 = parser.load(path + ".loc2");
-        return new Cuboid(path, loc1, loc2);
+        return new Cuboid(loc1, loc2);
     }
 
     @Override
     public Saveable set(String path, Cuboid value) {
         LocationFileParserStrategy parser = new LocationFileParserStrategy(configuration, file);
-        parser.set(path + ".loc1", value.getLowerLocation());
-        parser.set(path + ".loc2", value.getUpperLocation());
+        parser.set(path + ".loc1", value.getLowerNE());
+        parser.set(path + ".loc2", value.getUpperSW());
         return this;
     }
 }

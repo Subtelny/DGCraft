@@ -4,3 +4,6 @@ author: Subtelny
 main: pl.subtelny.core.Core
 depend:
   - AsyncWorldEdit
+  - Vault
+softdepend:
+  - Essentials

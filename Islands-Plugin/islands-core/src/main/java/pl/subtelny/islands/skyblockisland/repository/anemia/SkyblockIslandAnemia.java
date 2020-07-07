@@ -4,8 +4,7 @@ import java.time.LocalDateTime;
 import org.bukkit.Location;
 import pl.subtelny.islands.model.island.IslandType;
 import pl.subtelny.islands.model.island.IslandCoordinates;
-import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.model.islander.IslanderId;
+import pl.subtelny.islands.islander.model.IslanderId;
 import pl.subtelny.islands.repository.island.anemia.IslandAnemia;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandId;
 

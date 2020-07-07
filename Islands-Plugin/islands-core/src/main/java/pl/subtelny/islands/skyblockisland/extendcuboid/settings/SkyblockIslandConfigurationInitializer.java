@@ -2,10 +2,11 @@ package pl.subtelny.islands.skyblockisland.extendcuboid.settings;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
+import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.core.api.economy.EconomyProvider;
-import pl.subtelny.islands.repository.islander.IslanderRepository;
+import pl.subtelny.islands.islander.repository.IslanderRepository;
 
 @Component
 public class SkyblockIslandConfigurationInitializer implements DependencyActivator {
@@ -16,6 +17,7 @@ public class SkyblockIslandConfigurationInitializer implements DependencyActivat
 
     private final EconomyProvider economyProvider;
 
+    @Autowired
     public SkyblockIslandConfigurationInitializer(IslanderRepository islanderRepository, SkyblockIslandSettings skyblockIslandSettings, EconomyProvider economyProvider) {
         this.islanderRepository = islanderRepository;
         this.skyblockIslandSettings = skyblockIslandSettings;

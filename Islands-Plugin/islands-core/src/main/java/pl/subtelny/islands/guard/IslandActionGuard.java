@@ -8,10 +8,10 @@ import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.model.island.Island;
-import pl.subtelny.islands.model.islander.Islander;
+import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.repository.island.IslandFindResult;
 import pl.subtelny.islands.service.IslandsQueryService;
-import pl.subtelny.islands.service.IslanderService;
+import pl.subtelny.islands.islander.IslanderService;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.util.Iterator;
@@ -73,7 +73,7 @@ public class IslandActionGuard {
     }
 
     private IslandActionGuardResult locationMatchIsland(Location location, Island island) {
-        boolean isInIsland = island.getCuboid().containsLocation(location);
+        boolean isInIsland = island.getCuboid().contains(location);
         if (isInIsland) {
             return IslandActionGuardResult.ACTION_PERMITED;
         }
@@ -97,7 +97,7 @@ public class IslandActionGuard {
         while (iterator.hasNext()) {
             Block next = iterator.next();
             Location location = next.getLocation();
-            if (!islandCuboid.containsLocation(location)) {
+            if (!islandCuboid.contains(location)) {
                 iterator.remove();
             }
         }
@@ -158,7 +158,7 @@ public class IslandActionGuard {
             Island island = islandOpt.get();
             Islander islander = islanderService.getIslander(player);
             if (island.isInIsland(islander)) {
-                return island.getCuboid().containsLocation(location);
+                return island.getCuboid().contains(location);
             }
         }
         return false;
