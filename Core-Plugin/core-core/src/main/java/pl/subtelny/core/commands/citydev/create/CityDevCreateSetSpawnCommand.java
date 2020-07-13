@@ -10,14 +10,11 @@ import pl.subtelny.core.configuration.CoreMessages;
 @PluginSubCommand(command = "setspawn", mainCommand = CityDevCreateCommand.class)
 public class CityDevCreateSetSpawnCommand extends CityDevCreateSubCommand {
 
-    private final CoreMessages messages;
-
     private final CityCreateService cityCreateService;
 
     @Autowired
     public CityDevCreateSetSpawnCommand(CoreMessages messages, CityCreateService cityCreateService) {
-        super(cityCreateService);
-        this.messages = messages;
+        super(messages, cityCreateService);
         this.cityCreateService = cityCreateService;
     }
 
@@ -25,7 +22,7 @@ public class CityDevCreateSetSpawnCommand extends CityDevCreateSubCommand {
     public void handleCommand(Player player, String[] args) {
         CityCreateSession session = cityCreateService.getSession(player);
         session.setCitySpawn(player.getLocation());
-        messages.sendTo(player, "citydev.create.setspawn.success");
+        getMessages().sendTo(player, "citydev.create.setspawn.success");
     }
 
 }

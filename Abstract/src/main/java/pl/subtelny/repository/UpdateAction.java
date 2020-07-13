@@ -1,11 +1,11 @@
 package pl.subtelny.repository;
 
-import java.util.concurrent.CompletionStage;
+import java.util.concurrent.CompletableFuture;
 
-public interface UpdateAction<ANEMIA> {
+public interface UpdateAction<ANEMIA, ID> {
 
-    void perform(ANEMIA anemia);
+    ID perform(ANEMIA anemia);
 
-    CompletionStage<Integer> performAsync(ANEMIA anemia);
+    CompletableFuture<ID> performAsync(ANEMIA anemia);
 
 }

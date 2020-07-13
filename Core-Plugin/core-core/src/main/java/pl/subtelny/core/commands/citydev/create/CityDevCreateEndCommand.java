@@ -9,21 +9,18 @@ import pl.subtelny.core.configuration.CoreMessages;
 @PluginSubCommand(command = "end", mainCommand = CityDevCreateCommand.class)
 public class CityDevCreateEndCommand extends CityDevCreateSubCommand {
 
-    private final CoreMessages messages;
-
     private final CityCreateService cityCreateService;
 
     @Autowired
     public CityDevCreateEndCommand(CoreMessages messages, CityCreateService cityCreateService) {
-        super(cityCreateService);
-        this.messages = messages;
+        super(messages, cityCreateService);
         this.cityCreateService = cityCreateService;
     }
 
     @Override
     public void handleCommand(Player player, String[] args) {
         cityCreateService.completeSession(player);
-        messages.sendTo(player, "citydev.create.end.success");
+        getMessages().sendTo(player, "command.citydev.create.end.success");
     }
 
 }

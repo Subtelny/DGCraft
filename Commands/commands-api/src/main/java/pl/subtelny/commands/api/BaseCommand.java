@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.log.LogUtil;
+import pl.subtelny.utilities.messages.Messages;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,6 +17,12 @@ public abstract class BaseCommand implements Command {
     private String permission;
 
     private Map<String, Command> subCommands = new HashMap<>();
+
+    private final Messages messages;
+
+    protected BaseCommand(Messages messages) {
+        this.messages = messages;
+    }
 
     @Override
     public void executeCommand(CommandSender sender, String[] args) {
@@ -39,12 +46,16 @@ public abstract class BaseCommand implements Command {
         this.permission = permission;
     }
 
+    public Messages getMessages() {
+        return messages;
+    }
+
     public abstract void handleCommand(CommandSender sender, String[] args);
 
     private void validatePlayerOnlyUsage(CommandSender sender) {
         if (isPlayerOnlyUsage()) {
             if (!(sender instanceof Player)) {
-                throw ValidationException.of("Komenda dostepna tylko dla graczy");
+                throw ValidationException.of("command.only_for_players");
             }
         }
     }
@@ -53,7 +64,7 @@ public abstract class BaseCommand implements Command {
         if (StringUtils.isNotBlank(permission)) {
             if (!sender.hasPermission(permission)) {
                 LogUtil.warning(sender.getName() + " has no permission for command " + this.getClass().getName());
-                throw ValidationException.of("&cNie masz uprawnien do tej komendy.");
+                throw ValidationException.of("command.no_permission_for_command");
             }
         }
     }

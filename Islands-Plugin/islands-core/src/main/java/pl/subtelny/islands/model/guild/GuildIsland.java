@@ -1,10 +1,10 @@
 package pl.subtelny.islands.model.guild;
 
 import com.google.common.base.Preconditions;
-import pl.subtelny.islands.model.island.Island;
-import pl.subtelny.islands.model.island.IslandType;
+import pl.subtelny.islands.islander.model.Island;
+import pl.subtelny.islands.islander.model.IslandType;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.repository.island.anemia.IslandAnemia;
+import pl.subtelny.islands.island.repository.anemia.IslandAnemia;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.util.Optional;
@@ -22,6 +22,16 @@ public class GuildIsland extends Island {
 	@Override
 	public boolean isInIsland(Islander islander) {
 		return false;
+	}
+
+	@Override
+	public void addMember(Islander islander) {
+
+	}
+
+	@Override
+	public void removeMember(Islander islander) {
+
 	}
 
 	@Override

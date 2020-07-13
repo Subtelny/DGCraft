@@ -11,7 +11,7 @@ import pl.subtelny.utilities.FileUtil;
 import java.io.File;
 
 @Component
-@DependencyActivatorPriority(priority = DependencyActivatorPriority.Priority.HIGH)
+@DependencyActivatorPriority(priority = DependencyActivatorPriority.Priority.SYSTEM)
 public class DatabaseInitializer implements DependencyActivator {
 
     private static final String CONFIG_FILE_NAME = "database.yml";

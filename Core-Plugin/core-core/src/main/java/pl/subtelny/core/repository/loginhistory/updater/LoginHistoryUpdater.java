@@ -2,11 +2,12 @@ package pl.subtelny.core.repository.loginhistory.updater;
 
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.repository.loginhistory.LoginHistoryAnemia;
+import pl.subtelny.core.repository.loginhistory.entity.LoginHistoryId;
 import pl.subtelny.repository.Updater;
 
 import java.util.concurrent.CompletableFuture;
 
-public class LoginHistoryUpdater extends Updater<LoginHistoryAnemia> {
+public class LoginHistoryUpdater extends Updater<LoginHistoryAnemia, LoginHistoryId> {
 
     private final DatabaseConnection databaseConnection;
 
@@ -18,18 +19,18 @@ public class LoginHistoryUpdater extends Updater<LoginHistoryAnemia> {
         performAction(anemia);
     }
 
-    public CompletableFuture<Integer> updateLoginHistoryAsync(LoginHistoryAnemia anemia) {
+    public CompletableFuture<LoginHistoryId> updateLoginHistoryAsync(LoginHistoryAnemia anemia) {
         return performActionAsync(anemia);
     }
 
     @Override
-    protected void performAction(LoginHistoryAnemia anemia) {
+    protected LoginHistoryId performAction(LoginHistoryAnemia anemia) {
         LoginHistoryAnemiaUpdateAction action = new LoginHistoryAnemiaUpdateAction(databaseConnection.getConfiguration());
-        action.perform(anemia);
+        return action.perform(anemia);
     }
 
     @Override
-    protected CompletableFuture<Integer> performActionAsync(LoginHistoryAnemia anemia) {
+    protected CompletableFuture<LoginHistoryId> performActionAsync(LoginHistoryAnemia anemia) {
         LoginHistoryAnemiaUpdateAction action = new LoginHistoryAnemiaUpdateAction(databaseConnection.getConfiguration());
         return action.performAsync(anemia).toCompletableFuture();
     }

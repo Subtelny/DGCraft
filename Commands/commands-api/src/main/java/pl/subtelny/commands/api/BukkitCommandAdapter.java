@@ -18,7 +18,7 @@ public final class BukkitCommandAdapter implements CommandExecutor {
         try {
             baseCommand.executeCommand(sender, args);
         } catch (ValidationException e) {
-            MessageUtil.message(sender, String.format(e.getMessage(), e.getValues()));
+            baseCommand.getMessages().sendTo(sender, e.getMessage(), e.getValues());
         }
         return true;
     }

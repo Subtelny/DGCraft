@@ -25,9 +25,8 @@ public class IslanderRepository {
 	@Autowired
 	public IslanderRepository(DatabaseConnection databaseConfiguration) {
 		this.islanderStorage = new IslanderStorage();
-		Configuration configuration = databaseConfiguration.getConfiguration();
-		this.islanderLoader = new IslanderLoader(configuration);
-		this.islanderUpdater = new IslanderUpdater(configuration);
+		this.islanderLoader = new IslanderLoader(databaseConfiguration);
+		this.islanderUpdater = new IslanderUpdater(databaseConfiguration);
 	}
 
 	public Optional<Islander> getIslanderIfPresent(IslanderId islanderId) {

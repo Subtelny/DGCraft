@@ -18,6 +18,15 @@ public final class FileUtil {
         return configFile;
     }
 
+    public static File copyFile(File dataFolder, InputStream resource, String file) {
+        File configFile = new File(dataFolder, file);
+        if (!configFile.exists()) {
+            configFile.getParentFile().mkdirs();
+            FileUtil.copy(resource, configFile);
+        }
+        return configFile;
+    }
+
     private static void copy(InputStream in, File file) {
         if (in == null)
             return;

@@ -2,10 +2,10 @@ package pl.subtelny.islands.skyblockisland.repository.anemia;
 
 import java.time.LocalDateTime;
 import org.bukkit.Location;
-import pl.subtelny.islands.model.island.IslandType;
-import pl.subtelny.islands.model.island.IslandCoordinates;
+import pl.subtelny.islands.islander.model.IslandType;
+import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.islander.model.IslanderId;
-import pl.subtelny.islands.repository.island.anemia.IslandAnemia;
+import pl.subtelny.islands.island.repository.anemia.IslandAnemia;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandId;
 
 public class SkyblockIslandAnemia extends IslandAnemia {

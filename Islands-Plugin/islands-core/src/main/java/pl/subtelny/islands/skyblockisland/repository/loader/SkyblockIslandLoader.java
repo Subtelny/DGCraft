@@ -1,20 +1,22 @@
 package pl.subtelny.islands.skyblockisland.repository.loader;
 
 import org.jooq.Configuration;
-import org.jooq.impl.DSL;
-import pl.subtelny.generated.tables.tables.IslandsMembership;
-import pl.subtelny.islands.model.island.IslandCoordinates;
+import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.islander.model.IslanderId;
-import pl.subtelny.islands.repository.island.loader.IslandLoader;
 import pl.subtelny.islands.islander.repository.IslanderRepository;
+import pl.subtelny.islands.islander.model.IslandCoordinates;
+import pl.subtelny.islands.island.repository.loader.IslandLoader;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidCalculator;
+import pl.subtelny.islands.skyblockisland.islandmembership.IslandMembershipRepository;
+import pl.subtelny.islands.skyblockisland.islandmembership.model.IslandMembership;
 import pl.subtelny.islands.skyblockisland.model.MembershipType;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandId;
 import pl.subtelny.islands.skyblockisland.repository.anemia.SkyblockIslandAnemia;
-import pl.subtelny.utilities.Pair;
 import pl.subtelny.utilities.cuboid.Cuboid;
+
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,17 +25,26 @@ public class SkyblockIslandLoader extends IslandLoader<SkyblockIslandAnemia, Sky
 
     private final IslanderRepository islanderRepository;
 
+    private final IslandMembershipRepository islandMembershipRepository;
+
     private final SkyblockIslandExtendCuboidCalculator extendCuboidCalculator;
 
-    public SkyblockIslandLoader(Configuration configuration,
+    public SkyblockIslandLoader(DatabaseConnection databaseConfiguration,
                                 IslanderRepository islanderRepository,
+                                IslandMembershipRepository islandMembershipRepository,
                                 SkyblockIslandExtendCuboidCalculator extendCuboidCalculator) {
-        super(configuration);
+        super(databaseConfiguration);
+        this.islandMembershipRepository = islandMembershipRepository;
         this.islanderRepository = islanderRepository;
         this.extendCuboidCalculator = extendCuboidCalculator;
     }
 
-    public Optional<SkyblockIsland> loadIsland(SkyblockIslandLoadRequest request) {
+    public Optional<SkyblockIsland> loadIsland(SkyblockIslandId skyblockIslandId) {
+        SkyblockIslandLoadRequest request = SkyblockIslandLoadRequest.newBuilder()
+                .where(skyblockIslandId)
+                .build();
+
+        Configuration configuration = databaseConfiguration.getConfiguration();
         SkyblockIslandAnemiaLoadAction loader = new SkyblockIslandAnemiaLoadAction(configuration, request);
         return loadIsland(loader);
     }
@@ -49,21 +60,17 @@ public class SkyblockIslandLoader extends IslandLoader<SkyblockIslandAnemia, Sky
     }
 
     protected Map<Islander, MembershipType> loadIslandMembers(SkyblockIslandId islandId) {
-        Map<IslanderId, MembershipType> membership = DSL.using(configuration)
-                .select(IslandsMembership.ISLANDS_MEMBERSHIP.ISLANDER_ID, IslandsMembership.ISLANDS_MEMBERSHIP.MEMBERSHIP_TYPE)
-                .from(IslandsMembership.ISLANDS_MEMBERSHIP)
-                .where(IslandsMembership.ISLANDS_MEMBERSHIP.ISLAND_ID.eq(islandId.getId()))
-                .fetch(uuidRecord1 -> new Pair<>(IslanderId.of(uuidRecord1.component1()), MembershipType.valueOf(uuidRecord1.component2().name())))
-                .stream()
-                .collect(Collectors.toMap(Pair::getLeft, Pair::getRight));
-
-        Map<IslanderId, Islander> islanders = membership.keySet().stream()
-                .map(islanderRepository::findIslander)
+        List<IslandMembership> islandMembership = islandMembershipRepository.findIslandMembership(islandId);
+        List<Islander> islanders = islandMembership.stream()
+                .map(membership -> islanderRepository.findIslander(membership.getIslanderId()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.toMap(Islander::getIslanderId, islander -> islander));
+                .collect(Collectors.toList());
 
-        return islanders.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getValue, entry -> membership.get(entry.getKey())));
+        Map<IslanderId, MembershipType> memberships = islandMembership.stream()
+                .collect(Collectors.toMap(IslandMembership::getIslanderId, IslandMembership::getMembershipType));
+        return islanders.stream()
+                .filter(islander -> memberships.containsKey(islander.getIslanderId()))
+                .collect(Collectors.toMap(islander -> islander, islander -> memberships.get(islander.getIslanderId())));
     }
 }

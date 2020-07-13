@@ -12,13 +12,11 @@ import pl.subtelny.core.configuration.Locations;
 @PluginSubCommand(command = "global", mainCommand = CoreDevSetSpawnCommand.class)
 public class SetSpawnCityCommand extends BaseCommand {
 
-    private final CoreMessages messages;
-
     private final Locations locations;
 
     @Autowired
     public SetSpawnCityCommand(CoreMessages messages, Locations locations) {
-        this.messages = messages;
+        super(messages);
         this.locations = locations;
     }
 
@@ -27,7 +25,7 @@ public class SetSpawnCityCommand extends BaseCommand {
         Player player = (Player) sender;
         Location location = player.getLocation();
         locations.set("global.spawn", location);
-        messages.sendTo(sender, "coredev.setspawn.global.set");
+        getMessages().sendTo(sender, "command.coredev.setspawn.location_changed");
     }
 
     @Override

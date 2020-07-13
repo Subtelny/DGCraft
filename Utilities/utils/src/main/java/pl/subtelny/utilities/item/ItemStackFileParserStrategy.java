@@ -26,7 +26,7 @@ public class ItemStackFileParserStrategy extends AbstractFileParserStrategy<Item
         super(configuration, file);
     }
 
-    protected ItemStackFileParserStrategy(File file) {
+    public ItemStackFileParserStrategy(File file) {
         super(file);
     }
 

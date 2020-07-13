@@ -10,14 +10,11 @@ import pl.subtelny.core.configuration.CoreMessages;
 @PluginSubCommand(command = "setportaltarget", mainCommand = CityDevCreateCommand.class)
 public class CityDevCreateSetPortalTargetCommand extends CityDevCreateSubCommand {
 
-    private final CoreMessages messages;
-
     private final CityCreateService cityCreateService;
 
     @Autowired
     public CityDevCreateSetPortalTargetCommand(CoreMessages messages, CityCreateService cityCreateService) {
-        super(cityCreateService);
-        this.messages = messages;
+        super(messages, cityCreateService);
         this.cityCreateService = cityCreateService;
     }
 
@@ -25,7 +22,7 @@ public class CityDevCreateSetPortalTargetCommand extends CityDevCreateSubCommand
     public void handleCommand(Player player, String[] args) {
         CityCreateSession session = cityCreateService.getSession(player);
         session.setTeleportTarget(player.getLocation());
-        messages.sendTo(player, "citydev.create.setportaltarget.success");
+        getMessages().sendTo(player, "citydev.create.setportaltarget.success");
     }
 
 }

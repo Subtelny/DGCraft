@@ -33,7 +33,11 @@ public class PlayerLoginService {
 
     public CompletableFuture<Optional<Account>> loginInPlayer(Player player) {
         loggingInPlayers.add(player);
-        return accounts.findAccountAsync(player);
+        return accounts.findAccountAsync(player)
+                .thenApply(account -> {
+                    loginInCompleted(player);
+                    return account;
+                });
     }
 
     public boolean isPlayerLoggingIn(Player player) {

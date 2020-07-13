@@ -3,8 +3,9 @@ package pl.subtelny.islands.skyblockisland.extendcuboid;
 import org.bukkit.World;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.model.island.IslandCoordinates;
-import pl.subtelny.islands.skyblockisland.extendcuboid.settings.SkyblockIslandSettings;
+import pl.subtelny.islands.islander.model.IslandCoordinates;
+import pl.subtelny.islands.skyblockisland.extendcuboid.settings.SkyblockIslandExtendCuboidOption;
+import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
 import pl.subtelny.islands.utils.SkyblockIslandUtil;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.cuboid.Cuboid;
@@ -22,7 +23,7 @@ public class SkyblockIslandExtendCuboidCalculator {
     }
 
     public Cuboid calculateCuboid(IslandCoordinates islandCoordinates, int extendLevel) {
-        Optional<SkyblockIslandExtendCuboidLevel> level = skyblockIslandSettings.getExtendCuboidLevel(extendLevel - 1);
+        Optional<SkyblockIslandExtendCuboidOption> level = skyblockIslandSettings.getExtendCuboidLevel(extendLevel - 1);
         return level.map(level1 -> calculateCuboid(islandCoordinates, level1))
                 .orElse(calculateCuboid(islandCoordinates));
     }
@@ -31,7 +32,7 @@ public class SkyblockIslandExtendCuboidCalculator {
         return buildCuboid(islandCoordinates, skyblockIslandSettings.getIslandSize());
     }
 
-    public Cuboid calculateCuboid(IslandCoordinates islandCoordinates, SkyblockIslandExtendCuboidLevel level) {
+    public Cuboid calculateCuboid(IslandCoordinates islandCoordinates, SkyblockIslandExtendCuboidOption level) {
         return buildCuboid(islandCoordinates, level.getIslandSize());
     }
 

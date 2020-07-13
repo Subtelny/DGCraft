@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginCommand;
 import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.core.configuration.CoreMessages;
 import pl.subtelny.core.service.PlayerService;
 
 @PluginCommand(command = "spawn")
@@ -13,7 +14,8 @@ public class SpawnCommand extends BaseCommand {
     private final PlayerService playerService;
 
     @Autowired
-    public SpawnCommand(PlayerService playerService) {
+    public SpawnCommand(CoreMessages messages, PlayerService playerService) {
+        super(messages);
         this.playerService = playerService;
     }
 

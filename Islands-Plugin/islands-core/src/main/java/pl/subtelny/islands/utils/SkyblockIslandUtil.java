@@ -2,7 +2,7 @@ package pl.subtelny.islands.utils;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import pl.subtelny.islands.model.island.IslandCoordinates;
+import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 public final class SkyblockIslandUtil {

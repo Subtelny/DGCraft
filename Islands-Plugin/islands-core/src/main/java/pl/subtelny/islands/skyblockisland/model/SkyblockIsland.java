@@ -1,11 +1,9 @@
 package pl.subtelny.islands.skyblockisland.model;
 
-import com.google.common.collect.Sets;
 import org.bukkit.Location;
-import pl.subtelny.islands.model.island.Island;
-import pl.subtelny.islands.model.island.IslandCoordinates;
-import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.model.island.IslandType;
+import pl.subtelny.islands.islander.model.Island;
+import pl.subtelny.islands.islander.model.IslandCoordinates;
+import pl.subtelny.islands.islander.model.IslandType;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.islander.model.IslanderId;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandId;
@@ -13,14 +11,10 @@ import pl.subtelny.utilities.cuboid.Cuboid;
 import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.location.LocationUtil;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 public class SkyblockIsland extends Island {
-
-    private Map<Islander, MembershipType> members = new HashMap<>();
 
     private IslandCoordinates islandCoordinates;
 
@@ -36,13 +30,9 @@ public class SkyblockIsland extends Island {
         this.points = points;
     }
 
-    public SkyblockIsland(IslandId islandId, Cuboid cuboid) {
+    public SkyblockIsland(SkyblockIslandId islandId, IslandCoordinates islandCoordinates, Cuboid cuboid) {
         super(islandId, cuboid);
-    }
-
-    @Override
-    public boolean isInIsland(Islander islander) {
-        return members.containsKey(islander);
+        this.islandCoordinates = islandCoordinates;
     }
 
     @Override
@@ -114,10 +104,6 @@ public class SkyblockIsland extends Island {
                 .map(Map.Entry::getKey)
                 .findAny()
                 .orElseThrow(() -> ValidationException.of("Could not find owner for skyblock island " + getIslandId()));
-    }
-
-    public Set<Islander> getMembers() {
-        return Sets.newHashSet(members.keySet());
     }
 
     public int getExtendLevel() {

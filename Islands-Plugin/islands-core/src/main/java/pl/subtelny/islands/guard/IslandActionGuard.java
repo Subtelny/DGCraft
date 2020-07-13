@@ -7,10 +7,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.model.island.Island;
+import pl.subtelny.islands.islander.model.Island;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.repository.island.IslandFindResult;
-import pl.subtelny.islands.service.IslandsQueryService;
+import pl.subtelny.islands.island.repository.IslandFindResult;
+import pl.subtelny.islands.island.IslandsQueryService;
 import pl.subtelny.islands.islander.IslanderService;
 import pl.subtelny.utilities.cuboid.Cuboid;
 

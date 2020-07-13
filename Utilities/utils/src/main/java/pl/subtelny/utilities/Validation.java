@@ -10,4 +10,10 @@ public final class Validation {
         }
     }
 
+    public static void isTrue(boolean condition, String message, Object... objects) {
+        if (!condition) {
+            throw ValidationException.of(message, objects);
+        }
+    }
+
 }

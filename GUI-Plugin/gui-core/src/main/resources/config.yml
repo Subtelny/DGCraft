@@ -1,0 +1,10 @@
+not-satisfied:
+  item:
+    item: BARRIER
+    amount: 1
+    name: ' '
+    lore:
+      - ''
+      - '  Nie spelniasz wymagan:'
+      - '      - {CONDITION}'
+      - ''

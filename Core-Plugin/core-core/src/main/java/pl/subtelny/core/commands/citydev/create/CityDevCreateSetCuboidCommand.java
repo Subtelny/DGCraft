@@ -7,11 +7,10 @@ import pl.subtelny.core.city.create.CityCreateService;
 import pl.subtelny.core.city.create.CityCreateSession;
 import pl.subtelny.core.configuration.CoreMessages;
 import pl.subtelny.core.cuboidselector.CuboidSelectService;
+import pl.subtelny.utilities.messages.Messages;
 
 @PluginSubCommand(command = "setcuboid", mainCommand = CityDevCreateCommand.class)
 public class CityDevCreateSetCuboidCommand extends CityDevCreateSubCommand {
-
-    private final CoreMessages messages;
 
     private final CityCreateService cityCreateService;
 
@@ -21,8 +20,7 @@ public class CityDevCreateSetCuboidCommand extends CityDevCreateSubCommand {
     public CityDevCreateSetCuboidCommand(CoreMessages messages,
                                          CityCreateService cityCreateService,
                                          CuboidSelectService cuboidSelectService) {
-        super(cityCreateService);
-        this.messages = messages;
+        super(messages, cityCreateService);
         this.cityCreateService = cityCreateService;
         this.cuboidSelectService = cuboidSelectService;
     }
@@ -30,10 +28,11 @@ public class CityDevCreateSetCuboidCommand extends CityDevCreateSubCommand {
     @Override
     public void handleCommand(Player player, String[] args) {
         final CityCreateSession session = cityCreateService.getSession(player);
-        messages.sendTo(player, "citydev.create.setcuboid.usage");
+        Messages messages = getMessages();
+        messages.sendTo(player, "command.citydev.create.setcuboid.usage");
         cuboidSelectService.createSession(player, cuboid -> {
             session.setCityCuboid(cuboid);
-            messages.sendTo(player, "citydev.create.setcuboid.success");
+            messages.sendTo(player, "command.citydev.create.setcuboid.success");
         });
     }
 }

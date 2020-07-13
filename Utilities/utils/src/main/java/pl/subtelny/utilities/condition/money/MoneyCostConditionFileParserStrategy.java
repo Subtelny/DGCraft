@@ -23,7 +23,7 @@ public class MoneyCostConditionFileParserStrategy extends AbstractFileParserStra
 
     @Override
     public MoneyCostCondition load(String path) {
-        MoneyCostCondition moneyCondition = new MoneyCostConditionFileParserStrategy(configuration, file, economy).load(path);
+        MoneyCondition moneyCondition = new MoneyConditionFileParserStrategy(configuration, file, economy).load(path);
         return new MoneyCostCondition(moneyCondition);
     }
 

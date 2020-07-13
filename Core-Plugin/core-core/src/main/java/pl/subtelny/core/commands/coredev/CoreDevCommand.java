@@ -13,12 +13,13 @@ public class CoreDevCommand extends BaseCommand {
 
     @Autowired
     public CoreDevCommand(CoreMessages messages) {
+        super(messages);
         this.messages = messages;
     }
 
     @Override
     public void handleCommand(CommandSender sender, String[] args) {
-        messages.sendTo(sender, "coredev.usage");
+        messages.sendTo(sender, "command.coredev.usage");
     }
 
     @Override

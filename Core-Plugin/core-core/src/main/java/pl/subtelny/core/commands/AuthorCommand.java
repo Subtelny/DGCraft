@@ -4,13 +4,8 @@ import org.bukkit.command.CommandSender;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginCommand;
 import pl.subtelny.components.core.api.Autowired;
-import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.core.repository.account.AccountRepository;
-import pl.subtelny.core.repository.loginhistory.LoginHistoryRepository;
+import pl.subtelny.core.configuration.CoreMessages;
 import pl.subtelny.utilities.MessageUtil;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @PluginCommand(
         command = "author",
@@ -20,6 +15,11 @@ import java.util.UUID;
         }
 )
 public class AuthorCommand extends BaseCommand {
+
+    @Autowired
+    public AuthorCommand(CoreMessages messages) {
+        super(messages);
+    }
 
     @Override
     public void handleCommand(CommandSender sender, String[] args) {

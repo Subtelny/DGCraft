@@ -2,6 +2,7 @@ package pl.subtelny.jobs;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -11,8 +12,12 @@ public final class JobsProvider {
 
 	private final static Executor executors = Executors.newCachedThreadPool();
 
-	public static void runSync(Plugin plugin, Runnable runnable) {
-		Bukkit.getScheduler().runTask(plugin, runnable);
+	public static BukkitTask runSync(Plugin plugin, Runnable runnable) {
+		return Bukkit.getScheduler().runTask(plugin, runnable);
+	}
+
+	public static BukkitTask runSyncLater(Plugin plugin, Runnable runnable, long time) {
+		return Bukkit.getScheduler().runTaskLater(plugin, runnable, time);
 	}
 
 	public static <T> CompletableFuture<T> supplyAsync(JobApply<T> job) {

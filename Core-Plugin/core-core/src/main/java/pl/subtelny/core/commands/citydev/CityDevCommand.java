@@ -9,16 +9,14 @@ import pl.subtelny.core.configuration.CoreMessages;
 @PluginCommand(command = "citydev", permission = "lol")
 public class CityDevCommand extends BaseCommand {
 
-    private final CoreMessages messages;
-
     @Autowired
     public CityDevCommand(CoreMessages messages) {
-        this.messages = messages;
+        super(messages);
     }
 
     @Override
     public void handleCommand(CommandSender sender, String[] args) {
-        messages.sendTo(sender, "citydev.usage");
+        getMessages().sendTo(sender, "command.citydev.usage");
     }
 
     @Override

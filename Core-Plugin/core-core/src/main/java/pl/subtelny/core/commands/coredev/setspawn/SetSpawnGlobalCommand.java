@@ -19,6 +19,7 @@ public class SetSpawnGlobalCommand extends BaseCommand {
 
     @Autowired
     public SetSpawnGlobalCommand(CoreMessages messages, Locations locations) {
+        super(messages);
         this.messages = messages;
         this.locations = locations;
     }
@@ -26,18 +27,18 @@ public class SetSpawnGlobalCommand extends BaseCommand {
     @Override
     public void handleCommand(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            messages.sendTo(sender, "coredev.setspawn.city.usage");
+            messages.sendTo(sender, "command.coredev.setspawn.city.usage");
             return;
         }
         String rawCityType = args[0].toUpperCase();
         if (!CityType.isCityType(rawCityType)) {
-            messages.sendTo(sender, "coredev.setspawn.city.notcity", rawCityType);
+            messages.sendTo(sender, "command.coredev.setspawn.city.notcity", rawCityType);
             return;
         }
         Player player = (Player) sender;
         Location location = player.getLocation();
         locations.set("city." + rawCityType.toLowerCase() + ".spawn", location);
-        messages.sendTo(sender, "coredev.setspawn.city.set");
+        messages.sendTo(sender, "command.coredev.setspawn.city.set");
     }
 
     @Override

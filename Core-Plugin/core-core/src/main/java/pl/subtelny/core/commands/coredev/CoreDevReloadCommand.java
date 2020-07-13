@@ -5,21 +5,21 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.core.configuration.CoreMessages;
+import pl.subtelny.utilities.messages.Messages;
 
 @PluginSubCommand(command = "reload", mainCommand = CoreDevCommand.class)
 public class CoreDevReloadCommand extends BaseCommand {
 
-    private final CoreMessages messages;
-
     @Autowired
     public CoreDevReloadCommand(CoreMessages messages) {
-        this.messages = messages;
+        super(messages);
     }
 
     @Override
     public void handleCommand(CommandSender sender, String[] args) {
+        Messages messages = getMessages();
         messages.reloadMessages();
-        messages.sendTo(sender, "config_reloaded");
+        messages.sendTo(sender, "command.citydev.config_reloaded");
     }
 
     @Override

@@ -4,13 +4,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.core.city.create.CityCreateService;
+import pl.subtelny.core.configuration.CoreMessages;
 import pl.subtelny.utilities.exception.ValidationException;
 
 public abstract class CityDevCreateSubCommand extends BaseCommand {
 
     private final CityCreateService cityCreateService;
 
-    public CityDevCreateSubCommand(CityCreateService cityCreateService) {
+    public CityDevCreateSubCommand(CoreMessages messages, CityCreateService cityCreateService) {
+        super(messages);
         this.cityCreateService = cityCreateService;
     }
 

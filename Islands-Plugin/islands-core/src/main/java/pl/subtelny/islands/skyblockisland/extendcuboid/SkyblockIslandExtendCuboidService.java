@@ -3,9 +3,10 @@ package pl.subtelny.islands.skyblockisland.extendcuboid;
 import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.model.island.IslandCoordinates;
+import pl.subtelny.islands.islander.model.IslandCoordinates;
+import pl.subtelny.islands.skyblockisland.extendcuboid.settings.SkyblockIslandExtendCuboidOption;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
-import pl.subtelny.islands.skyblockisland.extendcuboid.settings.SkyblockIslandSettings;
+import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandRepository;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.cuboid.Cuboid;
@@ -50,7 +51,7 @@ public class SkyblockIslandExtendCuboidService {
         SkyblockIsland skyblockIsland = request.getSkyblockIsland();
         IslandCoordinates islandCoordinates = skyblockIsland.getIslandCoordinates();
 
-        SkyblockIslandExtendCuboidLevel extendConfig = getExtendConfig(extendLevel);
+        SkyblockIslandExtendCuboidOption extendConfig = getExtendConfig(extendLevel);
         request.getPlayer().ifPresent(player -> {
             if (!request.isSkipConditions()) {
                 validateConditions(player, extendConfig);
@@ -66,7 +67,7 @@ public class SkyblockIslandExtendCuboidService {
         skyblockIsland.changeCuboid(0, cuboid);
     }
 
-    private void validateConditions(Player player, SkyblockIslandExtendCuboidLevel extendLevel) {
+    private void validateConditions(Player player, SkyblockIslandExtendCuboidOption extendLevel) {
         Stream.concat(extendLevel.getConditions().stream(), extendLevel.getCostConditions().stream())
                 .filter(condition -> !condition.satisfiesCondition(player))
                 .findFirst()
@@ -78,11 +79,11 @@ public class SkyblockIslandExtendCuboidService {
         throw ValidationException.of(messageKey.getKey(), messageKey.getObjects());
     }
 
-    private void satisfyConditions(Player player, SkyblockIslandExtendCuboidLevel extendLevel) {
+    private void satisfyConditions(Player player, SkyblockIslandExtendCuboidOption extendLevel) {
         extendLevel.getCostConditions().forEach(costCondition -> costCondition.satisfyCondition(player));
     }
 
-    private SkyblockIslandExtendCuboidLevel getExtendConfig(int extendLevel) {
+    private SkyblockIslandExtendCuboidOption getExtendConfig(int extendLevel) {
         return skyblockIslandSettings.getExtendCuboidLevel(extendLevel - 1)
                 .orElseThrow(() -> ValidationException.of("extendSkyblockIslandCuboid.extendCuboid.extend_level_not_found", extendLevel));
     }

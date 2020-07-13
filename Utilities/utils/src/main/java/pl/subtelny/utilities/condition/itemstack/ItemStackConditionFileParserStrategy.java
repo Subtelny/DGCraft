@@ -14,10 +14,6 @@ public class ItemStackConditionFileParserStrategy extends AbstractFileParserStra
         super(configuration, file);
     }
 
-    protected ItemStackConditionFileParserStrategy(File file) {
-        super(file);
-    }
-
     @Override
     public ItemStackCondition load(String path) {
         ItemStack itemStack = new ItemStackFileParserStrategy(configuration, file).load(path);

@@ -1,8 +1,11 @@
 package pl.subtelny.repository;
 
 import com.github.benmanes.caffeine.cache.Cache;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 
 public abstract class Storage<KEY, VALUE> {
@@ -19,6 +22,10 @@ public abstract class Storage<KEY, VALUE> {
 
 	public Map<KEY, VALUE> getAllCache(List<KEY> keys, Function<Iterable<? extends KEY>, Map<KEY, VALUE>> function) {
 		return cache.getAll(keys, function);
+	}
+
+	public ConcurrentMap<KEY, VALUE> getAllCache() {
+		return cache.asMap();
 	}
 
 	public VALUE getCacheIfPresent(KEY key) {

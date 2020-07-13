@@ -2,41 +2,47 @@ package pl.subtelny.islands.skyblockisland.repository.storage;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import pl.subtelny.islands.model.island.IslandCoordinates;
-import pl.subtelny.islands.model.island.IslandId;
+import pl.subtelny.islands.islander.model.IslandCoordinates;
+import pl.subtelny.islands.skyblockisland.freeislands.SimpleSeriesFreeIslandCoordinatesCalculator;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandId;
 import pl.subtelny.repository.Storage;
 
-public class SkyblockIslandStorage extends Storage<IslandId, SkyblockIsland> {
+import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.Queue;
 
-	private Queue<IslandCoordinates> freeIslands = new ConcurrentLinkedQueue<>();
+public class SkyblockIslandStorage extends Storage<SkyblockIslandId, SkyblockIsland> {
 
-	private Cache<IslandCoordinates, SkyblockIslandId> islandCoordinatesCache;
+    private Queue<IslandCoordinates> freeIslands;
 
-	public SkyblockIslandStorage() {
-		super(Caffeine.newBuilder().build());
-		islandCoordinatesCache = Caffeine.newBuilder().build();
-	}
+    private Cache<IslandCoordinates, SkyblockIslandId> islandCoordinatesCache;
 
-	public Optional<SkyblockIslandId> getCache(IslandCoordinates islandCoordinates) {
-		return Optional.ofNullable(islandCoordinatesCache.getIfPresent(islandCoordinates));
-	}
+    public SkyblockIslandStorage() {
+        super(Caffeine.newBuilder().build());
+        freeIslands = new SimpleSeriesFreeIslandCoordinatesCalculator().generateIslandCoordinates();
+        islandCoordinatesCache = Caffeine.newBuilder().build();
+    }
 
-	public void updateIslandCoordinates(SkyblockIsland skyblockIsland) {
-		islandCoordinatesCache.put(skyblockIsland.getIslandCoordinates(), skyblockIsland.getIslandId());
-	}
+    public Optional<SkyblockIslandId> getCache(IslandCoordinates islandCoordinates) {
+        return Optional.ofNullable(islandCoordinatesCache.getIfPresent(islandCoordinates));
+    }
 
-	public Optional<IslandCoordinates> nextFreeIslandCoordinates() {
-		return Optional.ofNullable(freeIslands.poll());
-	}
+    public void updateIslandCoordinates(@Nullable SkyblockIsland skyblockIsland) {
+        if (skyblockIsland != null) {
+            islandCoordinatesCache.put(skyblockIsland.getIslandCoordinates(), skyblockIsland.getIslandId());
+        }
+    }
 
-	public boolean isIslandCoordinatesFree(IslandCoordinates islandCoordinates) {
-		return freeIslands.contains(islandCoordinates);
-	}
+    public Optional<IslandCoordinates> nextFreeIslandCoordinates() {
+        return Optional.ofNullable(freeIslands.poll());
+    }
 
+    public boolean isIslandCoordinatesFree(IslandCoordinates islandCoordinates) {
+        return freeIslands.contains(islandCoordinates);
+    }
+
+    public void removeFreeIslandCoordinates(IslandCoordinates islandCoordinates) {
+        freeIslands.remove(islandCoordinates);
+    }
 }

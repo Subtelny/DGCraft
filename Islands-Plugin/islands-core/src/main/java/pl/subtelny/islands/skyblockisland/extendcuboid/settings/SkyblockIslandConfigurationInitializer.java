@@ -7,6 +7,7 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.core.api.economy.EconomyProvider;
 import pl.subtelny.islands.islander.repository.IslanderRepository;
+import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
 
 @Component
 public class SkyblockIslandConfigurationInitializer implements DependencyActivator {

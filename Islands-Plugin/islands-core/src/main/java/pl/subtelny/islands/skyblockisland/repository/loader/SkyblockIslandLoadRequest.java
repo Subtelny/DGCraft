@@ -2,11 +2,10 @@ package pl.subtelny.islands.skyblockisland.repository.loader;
 
 import java.util.Optional;
 
-import pl.subtelny.islands.model.island.IslandCoordinates;
-import pl.subtelny.islands.model.island.IslandId;
+import pl.subtelny.islands.islander.model.IslandCoordinates;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import pl.subtelny.islands.repository.island.loader.IslandLoadRequest;
+import pl.subtelny.islands.island.repository.loader.IslandLoadRequest;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandId;
 
 public class SkyblockIslandLoadRequest extends IslandLoadRequest {

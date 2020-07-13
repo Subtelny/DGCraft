@@ -3,17 +3,19 @@ package pl.subtelny.core.repository.loginhistory.updater;
 import org.jooq.Configuration;
 import org.jooq.InsertReturningStep;
 import org.jooq.InsertSetMoreStep;
+import org.jooq.Record1;
 import org.jooq.impl.DSL;
 import pl.subtelny.core.repository.loginhistory.LoginHistoryAnemia;
 import pl.subtelny.core.repository.loginhistory.entity.LoginHistoryId;
 import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.generated.tables.tables.records.LoginHistoriesRecord;
+import pl.subtelny.jobs.JobsProvider;
 import pl.subtelny.repository.UpdateAction;
 
 import java.sql.Timestamp;
-import java.util.concurrent.CompletionStage;
+import java.util.concurrent.CompletableFuture;
 
-public class LoginHistoryAnemiaUpdateAction implements UpdateAction<LoginHistoryAnemia> {
+public class LoginHistoryAnemiaUpdateAction implements UpdateAction<LoginHistoryAnemia, LoginHistoryId> {
 
     private final Configuration configuration;
 
@@ -22,13 +24,29 @@ public class LoginHistoryAnemiaUpdateAction implements UpdateAction<LoginHistory
     }
 
     @Override
-    public void perform(LoginHistoryAnemia anemia) {
+    public LoginHistoryId perform(LoginHistoryAnemia anemia) {
+        LoginHistoryId id = anemia.getId();
+        if (id.getId() == null) {
+            return executeMissingId(anemia);
+        }
         prepareExecute(anemia).execute();
+        return id;
     }
 
     @Override
-    public CompletionStage<Integer> performAsync(LoginHistoryAnemia anemia) {
-        return prepareExecute(anemia).executeAsync();
+    public CompletableFuture<LoginHistoryId> performAsync(LoginHistoryAnemia anemia) {
+        LoginHistoryId id = anemia.getId();
+        if (id.getId() == null) {
+            JobsProvider.supplyAsync(() -> executeMissingId(anemia));
+        }
+        return prepareExecute(anemia).executeAsync()
+                .toCompletableFuture()
+                .thenApply(integer -> id);
+    }
+
+    public LoginHistoryId executeMissingId(LoginHistoryAnemia anemia) {
+        Record1<Integer> record = prepareExecute(anemia).returningResult(LoginHistories.LOGIN_HISTORIES.ID).fetchOne();
+        return LoginHistoryId.of(record.component1());
     }
 
     private InsertReturningStep<LoginHistoriesRecord> prepareExecute(LoginHistoryAnemia anemia) {

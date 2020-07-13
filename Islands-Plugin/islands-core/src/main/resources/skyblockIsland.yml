@@ -3,6 +3,21 @@ basic:
   space_between_islands: 10
   island_size: 100
 
+schematics:
+  basic:
+    default: true
+    name: 'Podstawowy'
+    lore:
+      - 'Opis'
+  vip:
+    name: 'VIP'
+    lore:
+      - 'Opis VIP'
+    conditions:
+      0:
+        condition: CONDITION
+        permission: 'skyblockIsland.schematic.vip'
+
 extends:
   0:
     island_size: 110

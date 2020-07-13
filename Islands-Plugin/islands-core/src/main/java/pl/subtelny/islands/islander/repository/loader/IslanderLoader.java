@@ -1,6 +1,7 @@
 package pl.subtelny.islands.islander.repository.loader;
 
 import org.jooq.Configuration;
+import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.islander.model.IslanderId;
@@ -9,10 +10,10 @@ import java.util.Optional;
 
 public class IslanderLoader {
 
-	private final Configuration configuration;
+	private final DatabaseConnection databaseConfiguration;
 
-	public IslanderLoader(Configuration configuration) {
-		this.configuration = configuration;
+	public IslanderLoader(DatabaseConnection databaseConfiguration) {
+		this.databaseConfiguration = databaseConfiguration;
 	}
 
 	public Optional<Islander> loadIslander(IslanderLoadRequest request) {
@@ -25,6 +26,7 @@ public class IslanderLoader {
 	}
 
 	private Optional<IslanderAnemia> performAction(IslanderLoadRequest request) {
+		Configuration configuration = databaseConfiguration.getConfiguration();
 		IslanderAnemiaLoadAction action = new IslanderAnemiaLoadAction(configuration, request);
 		return Optional.ofNullable(action.perform());
 	}

@@ -14,9 +14,11 @@ public @interface DependencyActivatorPriority {
 
     enum Priority {
 
-        HIGH(0),
-        MEDIUM(1),
-        LOW(2);
+        HIGH(4),
+        MEDIUM(3),
+        LOW(2),
+        LOWEST(1),
+        SYSTEM(0);
 
         private int priority;
 

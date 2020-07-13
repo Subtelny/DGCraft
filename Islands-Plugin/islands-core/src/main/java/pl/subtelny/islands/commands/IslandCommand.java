@@ -9,16 +9,14 @@ import pl.subtelny.islands.message.IslandMessages;
 @PluginCommand(command = "island", aliases = {"wyspa", "w", "is"})
 public class IslandCommand extends BaseCommand {
 
-    private final IslandMessages islandMessages;
-
     @Autowired
-    public IslandCommand(IslandMessages islandMessages) {
-        this.islandMessages = islandMessages;
+    public IslandCommand(IslandMessages messages) {
+        super(messages);
     }
 
     @Override
     public void handleCommand(CommandSender sender, String[] args) {
-        islandMessages.sendTo(sender, "island.usage");
+        getMessages().sendTo(sender, "command.island.usage");
     }
 
     @Override

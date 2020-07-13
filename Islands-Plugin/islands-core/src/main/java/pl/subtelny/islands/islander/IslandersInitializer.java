@@ -24,17 +24,16 @@ public class IslandersInitializer implements DependencyActivator {
 
     private final IslanderRepository islanderRepository;
 
-    private final Configuration configuration;
+    private final DatabaseConnection databaseConnection;
 
     @Autowired
     public IslandersInitializer(DatabaseConnection databaseConnection, IslanderRepository islanderRepository) {
         this.islanderRepository = islanderRepository;
-        this.configuration = databaseConnection.getConfiguration();
+        this.databaseConnection = databaseConnection;
     }
 
     @Override
     public void activate(Plugin plugin) {
-        System.out.println("heheh");
         initializeAllIslanders();
     }
 
@@ -54,16 +53,19 @@ public class IslandersInitializer implements DependencyActivator {
 
     private List<IslanderId> loadIslanderIds() {
         IslanderLoadRequest request = IslanderLoadRequest.newBuilder().build();
+        Configuration configuration = databaseConnection.getConfiguration();
         IslanderAnemiaLoadAction action = new IslanderAnemiaLoadAction(configuration, request);
         return action.performList().stream().map(IslanderAnemia::getIslanderId).collect(Collectors.toList());
     }
 
     private void printStarting() {
-        LogUtil.info("============ LOADING ISLANDERS ============");
+        LogUtil.info("==========  LOADING ISLANDERS ===============");
+        LogUtil.info(" ");
     }
 
     private void printSummation(long loaderIslanders) {
         LogUtil.info("  Loaded islanders: " + loaderIslanders);
-        LogUtil.info("===========================================");
+        LogUtil.info(" ");
+        LogUtil.info("-============================================");
     }
 }

@@ -1,7 +1,7 @@
 package pl.subtelny.islands.skyblockisland.repository;
 
-import pl.subtelny.islands.model.island.IslandId;
-import pl.subtelny.islands.model.island.IslandType;
+import pl.subtelny.islands.islander.model.IslandId;
+import pl.subtelny.islands.islander.model.IslandType;
 
 public class SkyblockIslandId extends IslandId {
 
@@ -9,5 +9,9 @@ public class SkyblockIslandId extends IslandId {
 
     public SkyblockIslandId(Integer islandId) {
         super(type, islandId);
+    }
+
+    public static SkyblockIslandId of(Integer islandId) {
+        return new SkyblockIslandId(islandId);
     }
 }

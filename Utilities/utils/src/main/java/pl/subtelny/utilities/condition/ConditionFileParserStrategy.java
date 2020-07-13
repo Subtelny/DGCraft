@@ -17,12 +17,6 @@ public class ConditionFileParserStrategy extends AbstractFileParserStrategy<Cond
         this.conditionParsers = conditionParsers;
     }
 
-    protected ConditionFileParserStrategy(File file, Map<String,
-            AbstractFileParserStrategy<? extends Condition>> conditionParsers) {
-        super(file);
-        this.conditionParsers = conditionParsers;
-    }
-
     @Override
     public Condition load(String path) {
         return conditionParsers.entrySet().stream()
