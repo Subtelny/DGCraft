@@ -5,12 +5,10 @@ import org.jooq.Record;
 import org.jooq.SelectConditionStep;
 import org.jooq.impl.DSL;
 import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.core.api.account.CityType;
+import pl.subtelny.core.api.city.CityId;
 import pl.subtelny.core.repository.account.AccountAnemia;
-import pl.subtelny.generated.tables.enums.Citytype;
 import pl.subtelny.generated.tables.tables.Accounts;
 import pl.subtelny.repository.LoadAction;
-
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -58,12 +56,12 @@ public class AccountAnemiaLoadAction implements LoadAction<AccountAnemia> {
         UUID uuid = record.get(Accounts.ACCOUNTS.ID);
         String name = record.get(Accounts.ACCOUNTS.NAME);
         String displayName = record.get(Accounts.ACCOUNTS.DISPLAY_NAME);
-        Citytype city = record.get(Accounts.ACCOUNTS.CITY);
+        String rawCity = record.get(Accounts.ACCOUNTS.CITY);
         Timestamp lastOnlineRaw = record.get(Accounts.ACCOUNTS.LAST_ONLINE);
 
         AccountId accountId = AccountId.of(uuid);
         LocalDateTime lastOnline = lastOnlineRaw.toLocalDateTime();
-        CityType cityType = CityType.of(city.getLiteral());
+        CityId cityType = CityId.of(rawCity);
         return new AccountAnemia(accountId, name, displayName, lastOnline, cityType);
     }
 

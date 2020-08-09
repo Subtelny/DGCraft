@@ -1,7 +1,6 @@
 package pl.subtelny.core.city.create;
 
 import org.bukkit.Location;
-import pl.subtelny.core.api.account.CityType;
 import pl.subtelny.core.api.city.CityId;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
