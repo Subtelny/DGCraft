@@ -5,3 +5,4 @@
 /target/
 /Abstract/target/
 /.idea/libraries/
+.gitignore
