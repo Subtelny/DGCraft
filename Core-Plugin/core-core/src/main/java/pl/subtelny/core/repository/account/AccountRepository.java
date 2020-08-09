@@ -47,15 +47,15 @@ public class AccountRepository {
         });
     }
 
-    public void createAccount(CreateAccountRequest request) {
+    public Account createAccount(CreateAccountRequest request) {
         AccountEntity account = new AccountEntity(
                 request.getAccountId(),
                 request.getName(),
                 request.getDisplayName(),
-                LocalDateTime.now(),
-                request.getCityId()
+                LocalDateTime.now()
         );
         saveAccount(account);
+        return account;
     }
 
     public void saveAccount(Account account) {

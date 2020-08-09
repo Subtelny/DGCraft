@@ -19,7 +19,7 @@ public interface Accounts {
 
     CompletableFuture<Optional<Account>> findAccountAsync(AccountId accountId);
 
-    void createAccount(Player player);
+    Account createAccount(Player player);
 
     void saveAccount(Account account);
 

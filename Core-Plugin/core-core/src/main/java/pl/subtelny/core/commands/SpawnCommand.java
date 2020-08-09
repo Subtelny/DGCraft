@@ -6,23 +6,25 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginCommand;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.core.configuration.CoreMessages;
-import pl.subtelny.core.service.PlayerService;
+import pl.subtelny.core.player.CorePlayer;
+import pl.subtelny.core.player.CorePlayerService;
 
 @PluginCommand(command = "spawn")
 public class SpawnCommand extends BaseCommand {
 
-    private final PlayerService playerService;
+    private final CorePlayerService corePlayerService;
 
     @Autowired
-    public SpawnCommand(CoreMessages messages, PlayerService playerService) {
+    public SpawnCommand(CoreMessages messages, CorePlayerService corePlayerService) {
         super(messages);
-        this.playerService = playerService;
+        this.corePlayerService = corePlayerService;
     }
 
     @Override
     public void handleCommand(CommandSender sender, String[] args) {
         Player player = (Player) sender;
-        playerService.teleportToSpawn(player);
+        CorePlayer corePlayer = corePlayerService.getCorePlayer(player);
+        corePlayer.respawn();
     }
 
     @Override

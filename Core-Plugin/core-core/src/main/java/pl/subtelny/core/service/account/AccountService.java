@@ -31,12 +31,12 @@ public class AccountService implements Accounts {
     }
 
     @Override
-    public void createAccount(Player player) {
+    public Account createAccount(Player player) {
         AccountId accountId = AccountId.of(player.getUniqueId());
         String name = player.getName();
         String displayName = player.getDisplayName();
         CreateAccountRequest request = CreateAccountRequest.of(accountId, name, displayName);
-        accountRepository.createAccount(request);
+        return accountRepository.createAccount(request);
     }
 
     @Override

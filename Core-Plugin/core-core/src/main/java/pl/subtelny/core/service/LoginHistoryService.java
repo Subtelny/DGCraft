@@ -45,10 +45,7 @@ public class LoginHistoryService {
     }
 
     private void saveLoginHistory(Player player, LocalDateTime loginTime) {
-        accounts.findAccountAsync(player)
-                .whenComplete((accountOpt, throwable) ->
-                        accountOpt.ifPresent(account -> repository
-                                .createNewLoginHistory(account.getAccountId(), loginTime)));
+        accounts.findAccount(player).ifPresent(account -> repository.createNewLoginHistory(account.getAccountId(), loginTime));
     }
 
 }

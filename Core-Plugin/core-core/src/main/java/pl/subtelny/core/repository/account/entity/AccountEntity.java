@@ -24,13 +24,11 @@ public class AccountEntity implements Account {
     public AccountEntity(AccountId accountId,
                          String name,
                          String displayName,
-                         LocalDateTime lastOnline,
-                         CityId cityId) {
+                         LocalDateTime lastOnline) {
         this.accountId = accountId;
         this.name = name;
         this.displayName = displayName;
         this.lastOnline = lastOnline;
-        this.cityId = cityId;
     }
 
     @Override
@@ -55,7 +53,6 @@ public class AccountEntity implements Account {
 
     @Override
     public void setCityId(CityId cityId) {
-        Validate.notNull(cityId, "City cannot be null");
         this.cityId = cityId;
     }
 
