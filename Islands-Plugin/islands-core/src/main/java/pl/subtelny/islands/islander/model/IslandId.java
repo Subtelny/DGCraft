@@ -6,7 +6,7 @@ public class IslandId extends CompoundIdentity {
 
 	private static final int ISLAND_TYPE_POSITOIN = 0;
 
-	private static final int ISLAND_ID = 0;
+	private static final int ISLAND_ID_POSITION = 1;
 
 	public IslandId(IslandType islandType, Integer id) {
 		super(values(islandType, id));
@@ -17,12 +17,11 @@ public class IslandId extends CompoundIdentity {
 	}
 
 	public Integer getId() {
-		return Integer.parseInt(getAtPosition(ISLAND_ID));
+		return Integer.parseInt(getAtPosition(ISLAND_ID_POSITION));
 	}
 
 	public IslandType getIslandType() {
 		return IslandType.valueOf(getAtPosition(ISLAND_TYPE_POSITOIN));
 	}
-
 
 }

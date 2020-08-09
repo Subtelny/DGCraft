@@ -2,6 +2,7 @@ package pl.subtelny.gui.crate.repository;
 
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.gui.GUI;
 import pl.subtelny.gui.api.crate.inventory.CrateInventory;
 import pl.subtelny.gui.api.crate.model.Crate;
 import pl.subtelny.gui.api.crate.model.CrateId;
@@ -18,6 +19,11 @@ public class CrateRepositoryImpl implements CrateRepository {
     private Map<CrateId, Crate> crates = new HashMap<>();
 
     private Map<CrateId, CrateInventory> globalInventories = new HashMap<>();
+
+    @Override
+    public Optional<Crate> findInternalCrate(String crateIdentity) {
+        return findCrate(CrateId.of(GUI.plugin, crateIdentity));
+    }
 
     @Override
     public Optional<Crate> findCrate(CrateId crateId) {

@@ -9,7 +9,7 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.gui.api.crate.model.Crate;
 import pl.subtelny.gui.api.crate.repository.CrateRepository;
 import pl.subtelny.gui.events.CrateInventoryChangeEvent;
-import pl.subtelny.gui.session.PlayerCrateSessionService;
+import pl.subtelny.gui.api.crate.session.PlayerCrateSessionService;
 
 import java.util.Optional;
 

@@ -31,16 +31,11 @@ public class AccountService implements Accounts {
     }
 
     @Override
-    public boolean isAccountLoaded(AccountId accountId) {
-        return accountRepository.getAccountIfPresent(accountId) != null;
-    }
-
-    @Override
-    public void createAccount(Player player, CityType cityType) {
+    public void createAccount(Player player) {
         AccountId accountId = AccountId.of(player.getUniqueId());
         String name = player.getName();
         String displayName = player.getDisplayName();
-        CreateAccountRequest request = CreateAccountRequest.of(accountId, name, displayName, cityType);
+        CreateAccountRequest request = CreateAccountRequest.of(accountId, name, displayName);
         accountRepository.createAccount(request);
     }
 

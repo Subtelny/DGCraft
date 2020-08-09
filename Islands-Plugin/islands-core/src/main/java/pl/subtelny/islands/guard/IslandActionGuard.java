@@ -7,11 +7,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.islands.island.IslandsQueryService;
+import pl.subtelny.islands.island.repository.IslandFindResult;
+import pl.subtelny.islands.islander.IslanderService;
 import pl.subtelny.islands.islander.model.Island;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.island.repository.IslandFindResult;
-import pl.subtelny.islands.island.IslandsQueryService;
-import pl.subtelny.islands.islander.IslanderService;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.util.Iterator;
@@ -146,20 +146,18 @@ public class IslandActionGuard {
         if (islandFindResult.isLoading()) {
             return IslandActionGuardResult.ISLAND_LOADING;
         }
-        if (playerHasAccessToBuildOnIsland(player, location, islandFindResult)) {
+        Optional<Island> islandOpt = islandFindResult.getResult().getNow(Optional.empty());
+        Boolean hasAccess = islandOpt.map(island -> playerHasAccessToBuildOnIsland(player, location, island)).orElse(false);
+        if (hasAccess) {
             return IslandActionGuardResult.ACTION_PERMITED;
         }
         return IslandActionGuardResult.ACTION_PROHIBITED;
     }
 
-    private boolean playerHasAccessToBuildOnIsland(Player player, Location location, IslandFindResult islandFindResult) {
-        Optional<Island> islandOpt = islandFindResult.getResult().getNow(Optional.empty());
-        if (islandOpt.isPresent()) {
-            Island island = islandOpt.get();
-            Islander islander = islanderService.getIslander(player);
-            if (island.isInIsland(islander)) {
-                return island.getCuboid().contains(location);
-            }
+    private boolean playerHasAccessToBuildOnIsland(Player player, Location location, Island island) {
+        Islander islander = islanderService.getIslander(player);
+        if (island.isInIsland(islander)) {
+            return island.getCuboid().contains(location);
         }
         return false;
     }

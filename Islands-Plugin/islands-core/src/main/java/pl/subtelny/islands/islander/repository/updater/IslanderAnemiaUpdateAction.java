@@ -25,7 +25,7 @@ public class IslanderAnemiaUpdateAction implements UpdateAction<IslanderAnemia, 
     @Override
     public IslanderId perform(IslanderAnemia islanderAnemia) {
         IslanderId islanderId = islanderAnemia.getIslanderId();
-        if (islanderId.getId() == null) {
+        if (islanderId.getInternal() == null) {
             return executeMissingId(islanderAnemia);
         }
         createIslanderStatement(islanderAnemia).execute();
@@ -35,7 +35,7 @@ public class IslanderAnemiaUpdateAction implements UpdateAction<IslanderAnemia, 
     @Override
     public CompletableFuture<IslanderId> performAsync(IslanderAnemia islanderAnemia) {
         IslanderId islanderId = islanderAnemia.getIslanderId();
-        if (islanderId.getId() == null) {
+        if (islanderId.getInternal() == null) {
             return JobsProvider.supplyAsync(() -> executeMissingId(islanderAnemia));
         }
         return createIslanderStatement(islanderAnemia).executeAsync()
@@ -59,7 +59,7 @@ public class IslanderAnemiaUpdateAction implements UpdateAction<IslanderAnemia, 
 
     private IslandersRecord createIslanderRecord(IslanderAnemia islanderAnemia) {
         IslandersRecord islandersRecord = new IslandersRecord();
-        islandersRecord.setId(islanderAnemia.getIslanderId().getId());
+        islandersRecord.setId(islanderAnemia.getIslanderId().getInternal());
         return islandersRecord;
     }
 }

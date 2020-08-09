@@ -15,17 +15,11 @@ public interface Accounts {
         return findAccount(AccountId.of(player.getUniqueId()));
     }
 
-    default boolean isAccountLoaded(Player player) {
-        return isAccountLoaded(AccountId.of(player.getUniqueId()));
-    }
-
     Optional<Account> findAccount(AccountId accountId);
 
     CompletableFuture<Optional<Account>> findAccountAsync(AccountId accountId);
 
-    boolean isAccountLoaded(AccountId accountId);
-
-    void createAccount(Player player, CityType cityType);
+    void createAccount(Player player);
 
     void saveAccount(Account account);
 

@@ -26,7 +26,7 @@ public class LoginHistoryAnemiaUpdateAction implements UpdateAction<LoginHistory
     @Override
     public LoginHistoryId perform(LoginHistoryAnemia anemia) {
         LoginHistoryId id = anemia.getId();
-        if (id.getId() == null) {
+        if (id.getInternal() == null) {
             return executeMissingId(anemia);
         }
         prepareExecute(anemia).execute();
@@ -36,7 +36,7 @@ public class LoginHistoryAnemiaUpdateAction implements UpdateAction<LoginHistory
     @Override
     public CompletableFuture<LoginHistoryId> performAsync(LoginHistoryAnemia anemia) {
         LoginHistoryId id = anemia.getId();
-        if (id.getId() == null) {
+        if (id.getInternal() == null) {
             JobsProvider.supplyAsync(() -> executeMissingId(anemia));
         }
         return prepareExecute(anemia).executeAsync()
@@ -65,9 +65,9 @@ public class LoginHistoryAnemiaUpdateAction implements UpdateAction<LoginHistory
     public LoginHistoriesRecord toRecord(LoginHistoryAnemia anemia) {
         LoginHistoriesRecord record = DSL.using(configuration).newRecord(LoginHistories.LOGIN_HISTORIES);
         if (!anemia.getId().equals(LoginHistoryId.empty())) {
-            record.setId(anemia.getId().getId());
+            record.setId(anemia.getId().getInternal());
         }
-        record.setAccount(anemia.getAccountId().getId());
+        record.setAccount(anemia.getAccountId().getInternal());
         record.setLoginTime(Timestamp.valueOf(anemia.getLoginTime()));
         record.setLogoutTime(Timestamp.valueOf(anemia.getLogoutTime()));
         return record;

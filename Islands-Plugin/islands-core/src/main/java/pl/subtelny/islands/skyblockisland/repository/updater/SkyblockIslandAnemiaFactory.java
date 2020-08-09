@@ -12,7 +12,6 @@ public class SkyblockIslandAnemiaFactory {
         anemia.setSpawn(island.getSpawn());
         anemia.setExtendLevel(island.getExtendLevel());
         anemia.setIslandCoordinates(island.getIslandCoordinates());
-        anemia.setOwner(island.getOwner().getIslanderId());
         anemia.setPoints(island.getPoints());
         return anemia;
     }

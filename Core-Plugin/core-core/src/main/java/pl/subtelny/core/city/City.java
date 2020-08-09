@@ -2,13 +2,14 @@ package pl.subtelny.core.city;
 
 import org.bukkit.Location;
 import pl.subtelny.core.api.account.CityType;
+import pl.subtelny.core.api.city.CityId;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.util.Objects;
 
 public class City {
 
-    private final CityType cityType;
+    private final CityId cityId;
 
     private Location spawn;
 
@@ -16,15 +17,15 @@ public class City {
 
     private Cuboid cuboid;
 
-    public City(CityType cityType, Location spawn, Cuboid cuboid, CityPortal cityPortal) {
-        this.cityType = cityType;
+    public City(CityId cityId, Location spawn, Cuboid cuboid, CityPortal cityPortal) {
+        this.cityId = cityId;
         this.spawn = spawn;
         this.cuboid = cuboid;
         this.cityPortal = cityPortal;
     }
 
-    public CityType getCityType() {
-        return cityType;
+    public CityId getCityId() {
+        return cityId;
     }
 
     public Location getSpawn() {
@@ -43,12 +44,16 @@ public class City {
         return cuboid;
     }
 
+    public void changeSpawn(Location spawn) {
+        this.spawn = spawn;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         City city = (City) o;
-        return cityType == city.cityType &&
+        return Objects.equals(cityId, city.cityId) &&
                 Objects.equals(spawn, city.spawn) &&
                 Objects.equals(cityPortal, city.cityPortal) &&
                 Objects.equals(cuboid, city.cuboid);
@@ -56,6 +61,6 @@ public class City {
 
     @Override
     public int hashCode() {
-        return Objects.hash(cityType, spawn, cityPortal, cuboid);
+        return Objects.hash(cityId, spawn, cityPortal, cuboid);
     }
 }

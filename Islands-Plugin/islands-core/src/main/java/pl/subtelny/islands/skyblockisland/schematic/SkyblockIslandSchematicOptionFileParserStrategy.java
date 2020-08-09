@@ -28,7 +28,7 @@ public class SkyblockIslandSchematicOptionFileParserStrategy extends AbstractFil
     public SkyblockIslandSchematicOption load(String path) {
         String[] split = path.split("\\.");
         String schematicFileName = split[split.length - 1];
-        String schematicFilePath = file.getPath() + "/schematics/" + schematicFileName + ".schematic";
+        String schematicFilePath = file.getParentFile() + "/schematics/" + schematicFileName + ".schem";
         String name = configuration.getString(path + ".name");
         List<String> lore = configuration.getStringList(path + ".lore");
         boolean defaultSchematic = configuration.getBoolean(path + ".default");

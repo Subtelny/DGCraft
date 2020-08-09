@@ -52,13 +52,13 @@ public class PlayerLoginListener implements Listener {
         }
         Location from = e.getFrom();
         Location to = e.getTo();
-        if (LocationUtil.isSameLocationPrecisionToBlock(from, to)) {
+        if (to != null && LocationUtil.isSameLocationPrecisionToBlock(from, to)) {
             return;
         }
         Player player = e.getPlayer();
         if (playerLoginService.isPlayerLoggingIn(player)) {
             e.setCancelled(true);
-            messages.sendTo(player, "player_data_is_loading");
+            messages.sendTo(player, "player.login.loading");
         }
     }
 

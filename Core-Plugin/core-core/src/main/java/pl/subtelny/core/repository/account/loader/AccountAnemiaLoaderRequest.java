@@ -46,7 +46,7 @@ public class AccountAnemiaLoaderRequest {
         private List<Condition> where = Lists.newArrayList();
 
         public Builder where(AccountId accountId) {
-            Condition conditionId = Accounts.ACCOUNTS.ID.eq(accountId.getId());
+            Condition conditionId = Accounts.ACCOUNTS.ID.eq(accountId.getInternal());
             where.add(conditionId);
             return this;
         }

@@ -21,9 +21,7 @@ public class IslanderService {
     }
 
     public void loadIslander(Player player) {
-        JobsProvider.runAsync(() -> {
-            loadOrCreateIslanderIfAbsent(player);
-        });
+        JobsProvider.runAsync(() -> loadOrCreateIslanderIfAbsent(player));
     }
 
     private void loadOrCreateIslanderIfAbsent(Player player) {

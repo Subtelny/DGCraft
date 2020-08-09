@@ -6,13 +6,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.core.api.account.CityType;
+import pl.subtelny.core.api.city.CityId;
 import pl.subtelny.core.city.City;
 import pl.subtelny.utilities.FileUtil;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class FileCityRepository implements CityRepository {
 
     private File file;
 
-    private Map<CityType, City> cities = new HashMap<>();
+    private Map<CityId, City> cities = new HashMap<>();
 
     public void initializeFile(Plugin plugin) {
         file = FileUtil.copyFile(plugin, CITIES_FILE_NAME);
@@ -36,19 +37,19 @@ public class FileCityRepository implements CityRepository {
             CityFileParserStrategy parser = new CityFileParserStrategy(file);
             cities = citiesSection.getKeys(false).stream()
                     .map(cityKey -> parser.load("city." + cityKey))
-                    .collect(Collectors.toMap(City::getCityType, city -> city));
+                    .collect(Collectors.toMap(City::getCityId, city -> city));
         }
     }
 
     @Override
-    public City get(CityType cityType) {
-        return cities.get(cityType);
+    public Optional<City> find(CityId cityId) {
+        return Optional.ofNullable(cities.get(cityId));
     }
 
     @Override
     public void save(City city) {
         Preconditions.checkNotNull(city, "City cannot be null");
-        cities.put(city.getCityType(), city);
+        cities.put(city.getCityId(), city);
         new CityFileParserStrategy(file).set(getPath(city), city).save();
     }
 
@@ -58,7 +59,7 @@ public class FileCityRepository implements CityRepository {
     }
 
     private String getPath(City city) {
-        return "city." + city.getCityType().name();
+        return "city." + city.getCityId().getInternal();
     }
 
 }

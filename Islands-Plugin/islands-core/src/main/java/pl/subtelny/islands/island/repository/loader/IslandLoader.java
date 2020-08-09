@@ -1,6 +1,8 @@
 package pl.subtelny.islands.island.repository.loader;
 
+import org.jooq.Configuration;
 import pl.subtelny.core.api.database.DatabaseConnection;
+import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.islands.islander.model.Island;
 import pl.subtelny.islands.island.repository.anemia.IslandAnemia;
 
@@ -8,10 +10,13 @@ import java.util.Optional;
 
 public abstract class IslandLoader<ANEMIA extends IslandAnemia, DOMAIN extends Island> {
 
-	protected final DatabaseConnection databaseConfiguration;
+	private final DatabaseConnection databaseConfiguration;
 
-	protected IslandLoader(DatabaseConnection databaseConfiguration) {
+	private final TransactionProvider transactionProvider;
+
+	protected IslandLoader(DatabaseConnection databaseConfiguration, TransactionProvider transactionProvider) {
 		this.databaseConfiguration = databaseConfiguration;
+		this.transactionProvider = transactionProvider;
 	}
 
 	public Optional<DOMAIN> loadIsland(IslandAnemiaLoadAction<ANEMIA> loadAction) {
@@ -24,10 +29,13 @@ public abstract class IslandLoader<ANEMIA extends IslandAnemia, DOMAIN extends I
 		return Optional.empty();
 	}
 
-
 	private Optional<ANEMIA> performAction(IslandAnemiaLoadAction<ANEMIA> loadAction) {
 		ANEMIA loadedData = loadAction.perform();
 		return Optional.ofNullable(loadedData);
+	}
+
+	protected Configuration getConfiguration() {
+		return transactionProvider.getCurrentTransaction().orElse(databaseConfiguration.getConfiguration());
 	}
 
 	protected abstract DOMAIN mapAnemiaToDomain(ANEMIA anemia);

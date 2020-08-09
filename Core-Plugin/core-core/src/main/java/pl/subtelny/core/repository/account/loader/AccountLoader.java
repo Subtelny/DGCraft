@@ -34,7 +34,7 @@ public class AccountLoader {
 					accountAnemia.getName(),
 					accountAnemia.getDisplayName(),
 					accountAnemia.getLastOnline(),
-                    accountAnemia.getCityType()
+                    accountAnemia.getCityId()
 			);
         }
 

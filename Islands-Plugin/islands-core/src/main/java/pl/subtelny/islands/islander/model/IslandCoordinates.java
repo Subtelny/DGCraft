@@ -1,5 +1,7 @@
 package pl.subtelny.islands.islander.model;
 
+import java.util.Objects;
+
 public class IslandCoordinates {
 
 	private final int x;
@@ -17,5 +19,19 @@ public class IslandCoordinates {
 
 	public int getZ() {
 		return z;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		IslandCoordinates that = (IslandCoordinates) o;
+		return x == that.x &&
+				z == that.z;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(x, z);
 	}
 }

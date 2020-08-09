@@ -53,7 +53,7 @@ public class IslandMembershipAnemiaLoadAction implements LoadAction<IslandMember
     private List<Condition> getWhereConditions() {
         List<Condition> conditions = new ArrayList<>();
         Optional<IslanderId> islanderIdOpt = request.getIslanderId();
-        islanderIdOpt.ifPresent(islanderId -> conditions.add(IslandsMembership.ISLANDS_MEMBERSHIP.ISLANDER_ID.eq(islanderId.getId())));
+        islanderIdOpt.ifPresent(islanderId -> conditions.add(IslandsMembership.ISLANDS_MEMBERSHIP.ISLANDER_ID.eq(islanderId.getInternal())));
 
         Optional<IslandId> islandIdOpt = request.getIslandId();
         islandIdOpt.ifPresent(islandId -> conditions.add(IslandsMembership.ISLANDS_MEMBERSHIP.ISLAND_ID.eq(islandId.getId())));

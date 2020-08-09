@@ -27,7 +27,6 @@ import org.jooq.impl.TableImpl;
 import pl.subtelny.generated.tables.Indexes;
 import pl.subtelny.generated.tables.Keys;
 import pl.subtelny.generated.tables.Public;
-import pl.subtelny.generated.tables.enums.Citytype;
 import pl.subtelny.generated.tables.tables.records.AccountsRecord;
 
 
@@ -44,7 +43,7 @@ import pl.subtelny.generated.tables.tables.records.AccountsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Accounts extends TableImpl<AccountsRecord> {
 
-    private static final long serialVersionUID = 751481629;
+    private static final long serialVersionUID = -421278899;
 
     /**
      * The reference instance of <code>public.accounts</code>
@@ -77,7 +76,7 @@ public class Accounts extends TableImpl<AccountsRecord> {
     /**
      * The column <code>public.accounts.city</code>.
      */
-    public final TableField<AccountsRecord, Citytype> CITY = createField(DSL.name("city"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false).asEnumDataType(pl.subtelny.generated.tables.enums.Citytype.class), this, "");
+    public final TableField<AccountsRecord, String> CITY = createField(DSL.name("city"), org.jooq.impl.SQLDataType.VARCHAR(16).nullable(false), this, "");
 
     /**
      * The column <code>public.accounts.last_online</code>.
@@ -168,7 +167,7 @@ public class Accounts extends TableImpl<AccountsRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<UUID, String, String, Citytype, Timestamp> fieldsRow() {
+    public Row5<UUID, String, String, String, Timestamp> fieldsRow() {
         return (Row5) super.fieldsRow();
     }
 }

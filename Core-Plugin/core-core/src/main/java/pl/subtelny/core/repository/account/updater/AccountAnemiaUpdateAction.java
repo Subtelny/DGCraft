@@ -27,7 +27,7 @@ public class AccountAnemiaUpdateAction implements UpdateAction<AccountAnemia, Ac
     @Override
     public AccountId perform(AccountAnemia accountAnemia) {
         AccountId accountId = accountAnemia.getAccountId();
-        if (accountId.getId() == null) {
+        if (accountId.getInternal() == null) {
             return executeMissingId(accountAnemia);
         }
         prepareExecute(accountAnemia).execute();
@@ -37,7 +37,7 @@ public class AccountAnemiaUpdateAction implements UpdateAction<AccountAnemia, Ac
     @Override
     public CompletableFuture<AccountId> performAsync(AccountAnemia accountAnemia) {
         AccountId accountId = accountAnemia.getAccountId();
-        if (accountId.getId() == null) {
+        if (accountId.getInternal() == null) {
             return JobsProvider.supplyAsync(() -> executeMissingId(accountAnemia));
         }
         return prepareExecute(accountAnemia).executeAsync()
@@ -61,7 +61,7 @@ public class AccountAnemiaUpdateAction implements UpdateAction<AccountAnemia, Ac
 
     private AccountsRecord toRecord(AccountAnemia accountAnemia) {
         AccountsRecord record = DSL.using(configuration).newRecord(Accounts.ACCOUNTS);
-        record.setId(accountAnemia.getAccountId().getId());
+        record.setId(accountAnemia.getAccountId().getInternal());
         record.setName(accountAnemia.getName());
         record.setDisplayName(accountAnemia.getDisplayName());
         record.setLastOnline(Timestamp.valueOf(accountAnemia.getLastOnline()));

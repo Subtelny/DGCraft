@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface CrateRepository {
 
+    Optional<Crate> findInternalCrate(String crateIdentity);
+
     Optional<Crate> findCrate(CrateId crateId);
 
     void registerCrate(Crate crate);

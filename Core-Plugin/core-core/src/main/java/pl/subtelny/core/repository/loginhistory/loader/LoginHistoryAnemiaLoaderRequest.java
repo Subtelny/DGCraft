@@ -103,7 +103,7 @@ public class LoginHistoryAnemiaLoaderRequest {
         }
 
         public LoginHistoryAnemiaLoaderRequest.Builder where(AccountId accountId) {
-            Condition conditionId = LoginHistories.LOGIN_HISTORIES.ACCOUNT.eq(accountId.getId());
+            Condition conditionId = LoginHistories.LOGIN_HISTORIES.ACCOUNT.eq(accountId.getInternal());
             where.add(conditionId);
             return this;
         }

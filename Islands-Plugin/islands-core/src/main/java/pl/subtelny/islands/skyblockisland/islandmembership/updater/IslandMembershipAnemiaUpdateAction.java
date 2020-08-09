@@ -44,7 +44,7 @@ public class IslandMembershipAnemiaUpdateAction implements UpdateAction<IslandMe
 
     private IslandsMembershipRecord createRecord(IslandMembershipAnemia anemia) {
         IslandsMembershipRecord record = DSL.using(configuration).newRecord(IslandsMembership.ISLANDS_MEMBERSHIP);
-        record.setIslanderId(anemia.getIslanderId().getId());
+        record.setIslanderId(anemia.getIslanderId().getInternal());
         record.setIslandId(anemia.getIslandId().getId());
         record.setMembershipType(Membershiptype.valueOf(anemia.getMembershipType().name()));
         return record;

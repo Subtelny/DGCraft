@@ -3,6 +3,10 @@ basic:
   space_between_islands: 10
   island_size: 100
 
+command:
+  create:
+    gui: skyblock_creator
+
 schematics:
   basic:
     default: true

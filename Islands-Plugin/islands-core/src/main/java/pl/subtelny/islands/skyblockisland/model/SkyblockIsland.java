@@ -1,16 +1,13 @@
 package pl.subtelny.islands.skyblockisland.model;
 
 import org.bukkit.Location;
-import pl.subtelny.islands.islander.model.Island;
-import pl.subtelny.islands.islander.model.IslandCoordinates;
-import pl.subtelny.islands.islander.model.IslandType;
-import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.islander.model.IslanderId;
+import pl.subtelny.islands.islander.model.*;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandId;
 import pl.subtelny.utilities.cuboid.Cuboid;
 import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.location.LocationUtil;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,21 +19,28 @@ public class SkyblockIsland extends Island {
 
     private int points;
 
-    public SkyblockIsland(SkyblockIslandId islandId, Cuboid cuboid, Map<Islander, MembershipType> members, IslandCoordinates islandCoordinates, int extendLevel, int points) {
-        super(islandId, cuboid);
+    public SkyblockIsland(SkyblockIslandId islandId,
+                          Location spawn,
+                          Cuboid cuboid,
+                          LocalDateTime createdDate,
+                          Map<Islander, MembershipType> members,
+                          IslandCoordinates islandCoordinates,
+                          int extendLevel,
+                          int points) {
+        super(islandId, spawn, createdDate, cuboid);
+        this.spawn = cuboid.getCenter();
         this.members = members;
         this.islandCoordinates = islandCoordinates;
         this.extendLevel = extendLevel;
         this.points = points;
     }
 
-    public SkyblockIsland(SkyblockIslandId islandId, IslandCoordinates islandCoordinates, Cuboid cuboid) {
-        super(islandId, cuboid);
-        this.islandCoordinates = islandCoordinates;
+    public SkyblockIsland(SkyblockIslandId islandId, Location spawn, Cuboid cuboid, Islander owner, IslandCoordinates islandCoordinates) {
+        this(islandId, spawn, cuboid, LocalDateTime.now(), Map.of(owner, MembershipType.OWNER), islandCoordinates, 0, 0);
     }
 
     @Override
-    public void recalculateSpawn() {
+    public Location recalculateSpawn() {
         Location center = getCuboid().getCenter();
 
         int maxY = getCuboid().getUpperY();
@@ -47,7 +51,7 @@ public class SkyblockIsland extends Island {
         int minZ = getCuboid().getLowerZ();
 
         Optional<Location> safe = LocationUtil.findSafeLocationSpirally(center, maxX, maxY, maxZ, minX, minY, minZ);
-        safe.ifPresent(this::changeSpawn);
+        return safe.orElse(center);
     }
 
     public void changeCuboid(int extendLevel, Cuboid cuboid) {
@@ -103,7 +107,7 @@ public class SkyblockIsland extends Island {
                 .filter(entry -> entry.getValue() == MembershipType.OWNER)
                 .map(Map.Entry::getKey)
                 .findAny()
-                .orElseThrow(() -> ValidationException.of("Could not find owner for skyblock island " + getIslandId()));
+                .orElseThrow(() -> ValidationException.of("skyblockIsland.getOwner.owner_not_found" + getIslandId()));
     }
 
     public int getExtendLevel() {

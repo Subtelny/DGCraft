@@ -1,12 +1,14 @@
 package pl.subtelny.core.city.repository;
 
 import org.bukkit.Location;
-import pl.subtelny.core.api.account.CityType;
+import pl.subtelny.core.api.city.CityId;
 import pl.subtelny.core.city.City;
 import pl.subtelny.core.city.CityPortal;
-import pl.subtelny.utilities.file.*;
 import pl.subtelny.utilities.cuboid.Cuboid;
 import pl.subtelny.utilities.cuboid.CuboidFileParserStrategy;
+import pl.subtelny.utilities.file.AbstractFileParserStrategy;
+import pl.subtelny.utilities.file.ObjectFileParserStrategy;
+import pl.subtelny.utilities.file.Saveable;
 import pl.subtelny.utilities.location.LocationFileParserStrategy;
 
 import java.io.File;
@@ -24,7 +26,7 @@ public class CityFileParserStrategy extends AbstractFileParserStrategy<City> {
 
     @Override
     public Saveable set(String path, City value) {
-        new ObjectFileParserStrategy<String>(configuration, file).set(path + ".type", value.getCityType().name());
+        new ObjectFileParserStrategy<String>(configuration, file).set(path + ".type", value.getCityId().getInternal());
         new LocationFileParserStrategy(configuration, file).set(path + ".spawn", value.getSpawn());
         new CuboidFileParserStrategy(configuration, file).set(path + ".cuboid", value.getCuboid());
         CityPortal cityPortal = value.getCityPortal();
@@ -37,9 +39,9 @@ public class CityFileParserStrategy extends AbstractFileParserStrategy<City> {
         CityPortal cityPortal = loadCityPortal(path);
         Location spawn = new LocationFileParserStrategy(configuration, file).load(path + ".spawn");
         String rawCityType = new ObjectFileParserStrategy<String>(configuration, file).load(path + ".type");
-        CityType cityType = CityType.of(rawCityType);
+        CityId cityId = CityId.of(rawCityType);
         Cuboid cuboid = loadCityCuboid(path);
-        return new City(cityType, spawn, cuboid, cityPortal);
+        return new City(cityId, spawn, cuboid, cityPortal);
     }
 
     private CityPortal loadCityPortal(String path) {

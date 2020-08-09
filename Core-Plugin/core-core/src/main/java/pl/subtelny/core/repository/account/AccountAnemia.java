@@ -1,7 +1,7 @@
 package pl.subtelny.core.repository.account;
 
 import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.core.api.account.CityType;
+import pl.subtelny.core.api.city.CityId;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -16,7 +16,7 @@ public class AccountAnemia {
 
     private LocalDateTime lastOnline;
 
-    private CityType cityType;
+    private CityId cityId;
 
     public AccountAnemia() {
         accountId = new AccountId();
@@ -26,20 +26,20 @@ public class AccountAnemia {
         this.accountId = accountId;
     }
 
-    public AccountAnemia(AccountId accountId, String name, String displayName, LocalDateTime lastOnline, CityType cityType) {
+    public AccountAnemia(AccountId accountId, String name, String displayName, LocalDateTime lastOnline, CityId cityId) {
         this.accountId = accountId;
         this.name = name;
         this.displayName = displayName;
         this.lastOnline = lastOnline;
-        this.cityType = cityType;
+        this.cityId = cityId;
     }
 
-    public CityType getCityType() {
-        return cityType;
+    public CityId getCityId() {
+        return cityId;
     }
 
-    public void setCityType(CityType cityType) {
-        this.cityType = cityType;
+    public void setCityId(CityId cityId) {
+        this.cityId = cityId;
     }
 
     public AccountId getAccountId() {
@@ -79,11 +79,11 @@ public class AccountAnemia {
                 Objects.equals(name, anemia.name) &&
                 Objects.equals(displayName, anemia.displayName) &&
                 Objects.equals(lastOnline, anemia.lastOnline) &&
-                cityType == anemia.cityType;
+                cityId == anemia.cityId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountId, name, displayName, lastOnline, cityType);
+        return Objects.hash(accountId, name, displayName, lastOnline, cityId);
     }
 }

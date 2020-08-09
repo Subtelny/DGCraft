@@ -24,7 +24,9 @@ public class LocationFileParserStrategy extends AbstractFileParserStrategy<Locat
         double x = configuration.getDouble(path + ".x");
         double y = configuration.getDouble(path + ".y");
         double z = configuration.getDouble(path + ".z");
-
+        if (rawWorld == null) {
+            return null;
+        }
         World world = Bukkit.getWorld(rawWorld);
         if (configuration.contains(".yaw") || configuration.contains(".pitch")) {
             float yaw = (float) configuration.getDouble(path + ".yaw");

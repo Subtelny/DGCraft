@@ -25,7 +25,7 @@ public class SkyblockIslandAnemiaUpdateAction extends IslandAnemiaUpdateAction<S
     @Override
     public SkyblockIslandId perform(SkyblockIslandAnemia islandAnemia) {
         SkyblockIslandId islandId = islandAnemia.getIslandId();
-        if (islandId.getId() == null) {
+        if (islandId == null) {
             return executeMissingId(islandAnemia);
         }
         DSL.using(configuration).batch(
@@ -37,7 +37,7 @@ public class SkyblockIslandAnemiaUpdateAction extends IslandAnemiaUpdateAction<S
 
     @Override
     public CompletableFuture<SkyblockIslandId> performAsync(SkyblockIslandAnemia skyblockIslandAnemia) {
-        if (skyblockIslandAnemia.getIslandId().getId() == null) {
+        if (skyblockIslandAnemia.getIslandId() == null) {
             return JobsProvider.supplyAsync(() -> executeMissingId(skyblockIslandAnemia));
         }
         CompletionStage<Integer> island = getIslandRecordStatement(skyblockIslandAnemia).executeAsync();
@@ -53,6 +53,7 @@ public class SkyblockIslandAnemiaUpdateAction extends IslandAnemiaUpdateAction<S
         SkyblockIslandId id = SkyblockIslandId.of(record.component1());
         islandAnemia.setIslandId(id);
         getSkyblockIslandRecordStatement(islandAnemia).execute();
+
         return id;
     }
 
@@ -69,7 +70,6 @@ public class SkyblockIslandAnemiaUpdateAction extends IslandAnemiaUpdateAction<S
         SkyblockIslandsRecord record = DSL.using(configuration).newRecord(SkyblockIslands.SKYBLOCK_ISLANDS);
         record.setIslandId(islandAnemia.getIslandId().getId());
         record.setExtendLevel(islandAnemia.getExtendLevel());
-        record.setOwner(islandAnemia.getOwner().getId());
         record.setPoints(islandAnemia.getPoints());
 
         IslandCoordinates islandCoordinates = islandAnemia.getIslandCoordinates();

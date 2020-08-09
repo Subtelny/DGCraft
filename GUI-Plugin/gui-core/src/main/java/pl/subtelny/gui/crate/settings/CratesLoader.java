@@ -14,6 +14,7 @@ import pl.subtelny.utilities.condition.money.MoneyCostConditionFileParserStrateg
 import pl.subtelny.utilities.condition.permission.PermissionConditionFileParserStrategy;
 import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 import pl.subtelny.utilities.reward.Reward;
+import pl.subtelny.utilities.reward.command.CommandRewardFileParserStrategy;
 import pl.subtelny.utilities.reward.itemstack.ItemStackRewardFileParserStrategy;
 import pl.subtelny.utilities.reward.money.MoneyRewardFileParserStrategy;
 import java.io.File;
@@ -65,7 +66,8 @@ public class CratesLoader {
     private Map<String, AbstractFileParserStrategy<? extends Reward>> getRewardParsers(File file, YamlConfiguration configuration) {
         return Map.of(
                 "item", new ItemStackRewardFileParserStrategy(configuration, file),
-                "money", new MoneyRewardFileParserStrategy(configuration, file, economyProvider.getEconomy())
+                "money", new MoneyRewardFileParserStrategy(configuration, file, economyProvider.getEconomy()),
+                "command", new CommandRewardFileParserStrategy(configuration, file)
         );
     }
 

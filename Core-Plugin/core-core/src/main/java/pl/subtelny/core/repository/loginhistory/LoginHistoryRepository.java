@@ -4,6 +4,7 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.core.api.database.DatabaseConnection;
+import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.core.api.loginhistory.LoginHistory;
 import pl.subtelny.core.repository.loginhistory.entity.LoginHistoryEntity;
 import pl.subtelny.core.repository.loginhistory.entity.LoginHistoryId;
@@ -28,10 +29,10 @@ public class LoginHistoryRepository {
     private final LoginHistoryUpdater updater;
 
     @Autowired
-    public LoginHistoryRepository(DatabaseConnection databaseConfiguration) {
+    public LoginHistoryRepository(DatabaseConnection databaseConfiguration, TransactionProvider transactionProvider) {
         this.storage = new LoginHistoryStorage();
         this.loader = new LoginHistoryLoader(databaseConfiguration);
-        this.updater = new LoginHistoryUpdater(databaseConfiguration);
+        this.updater = new LoginHistoryUpdater(databaseConfiguration, transactionProvider);
     }
 
     public Optional<LoginHistory> findLastLoginHistoryByAccountId(AccountId accountId) {
@@ -61,7 +62,7 @@ public class LoginHistoryRepository {
     }
 
     private LoginHistoryAnemia toAnemia(LoginHistoryEntity entity) {
-        return new LoginHistoryAnemia(entity.getId(), entity.getAccountId(), entity.getLoginTime(), entity.getLogoutTime());
+        return new LoginHistoryAnemia(entity.getInternal(), entity.getAccountId(), entity.getLoginTime(), entity.getLogoutTime());
     }
 
 

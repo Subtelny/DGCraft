@@ -6,8 +6,8 @@ import org.jooq.DeleteConditionStep;
 import org.jooq.impl.DSL;
 import pl.subtelny.generated.tables.tables.IslandsMembership;
 import pl.subtelny.generated.tables.tables.records.IslandsMembershipRecord;
-import pl.subtelny.islands.islander.model.IslanderId;
 import pl.subtelny.islands.islander.model.IslandId;
+import pl.subtelny.islands.islander.model.IslanderId;
 import pl.subtelny.islands.skyblockisland.model.MembershipType;
 import pl.subtelny.repository.RemoverAction;
 
@@ -56,6 +56,10 @@ public class IslandMembershipRemoveAction implements RemoverAction<IslandMembers
         List<MembershipType> membershipTypes = request.getMembershipTypes();
         if (!membershipTypes.isEmpty()) {
             conditions.add(IslandsMembership.ISLANDS_MEMBERSHIP.MEMBERSHIP_TYPE.in(membershipTypes));
+        }
+        List<IslanderId> notInIslanderIds = request.getNotInIslanderIds();
+        if (!notInIslanderIds.isEmpty()) {
+            conditions.add(IslandsMembership.ISLANDS_MEMBERSHIP.ISLANDER_ID.notIn(notInIslanderIds));
         }
         return conditions;
     }

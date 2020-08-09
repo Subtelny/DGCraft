@@ -8,20 +8,18 @@ import pl.subtelny.gui.api.crate.inventory.CrateInventory;
 import pl.subtelny.gui.api.crate.model.Crate;
 import pl.subtelny.gui.api.crate.model.CrateId;
 import pl.subtelny.gui.api.crate.model.ItemCrate;
-import pl.subtelny.gui.crate.CrateService;
-import pl.subtelny.gui.crate.inventory.CraftCrateInventory;
+import pl.subtelny.gui.api.crate.session.PlayerCrateSession;
+import pl.subtelny.gui.crate.CrateConditionsService;
 import pl.subtelny.gui.events.CrateInventoryChangeEvent;
-import pl.subtelny.gui.messages.CrateMessages;
 import pl.subtelny.jobs.JobsProvider;
 import pl.subtelny.utilities.condition.Condition;
-import pl.subtelny.utilities.messages.MessageKey;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class PlayerCrateSession {
+public class PlayerCrateSessionImpl implements PlayerCrateSession {
 
     private final Player player;
 
@@ -29,37 +27,39 @@ public class PlayerCrateSession {
 
     private final CrateInventory inventory;
 
-    private final CrateService crateService;
-
-    private final CrateMessages crateMessages;
+    private final CrateConditionsService conditionsService;
 
     private Map<Integer, BukkitTask> tasks = new HashMap<>();
 
-    public PlayerCrateSession(Player player, Crate crate, CrateInventory inventory, CrateService crateService, CrateMessages crateMessages) {
+    public PlayerCrateSessionImpl(Player player, Crate crate, CrateInventory inventory, CrateConditionsService conditionsService) {
         this.player = player;
         this.crate = crate;
         this.inventory = inventory;
-        this.crateService = crateService;
-        this.crateMessages = crateMessages;
+        this.conditionsService = conditionsService;
     }
 
-    public boolean isSameInventory(CraftCrateInventory crateInventory) {
+    @Override
+    public boolean isSameInventory(CrateInventory crateInventory) {
         return crateInventory.getCrateId().equals(crate.getId());
     }
 
+    @Override
     public void openCrateInventory() {
         player.openInventory(inventory);
     }
 
+    @Override
     public void closeCrateInventory() {
         player.closeInventory();
         stopAllTasks();
     }
 
+    @Override
     public Crate getCrate() {
         return crate;
     }
 
+    @Override
     public void click(int slot) {
         if (!tasks.containsKey(slot)) {
             Optional<ItemCrate> itemCrateOpt = crate.getItemAt(slot);
@@ -75,13 +75,14 @@ public class PlayerCrateSession {
             itemCrate.getCrateToOpen().ifPresent(this::changeCrateInventory);
         } else {
             if (crate.isGlobal()) {
-                sendNotSatisfiedConditionMessages(notStatisfiedConditions);
+                conditionsService.informAboutNotSatisfiedConditions(player, notStatisfiedConditions);
             } else {
                 setNotSatisfiedConditionItem(slot, notStatisfiedConditions);
             }
         }
     }
 
+    @Override
     public void refreshSlot(int slot) {
         if (tasks.containsKey(slot)) {
             tasks.get(slot).cancel();
@@ -89,18 +90,11 @@ public class PlayerCrateSession {
         }
         Optional<ItemCrate> itemAt = crate.getItemAt(slot);
         itemAt.ifPresentOrElse(itemCrate -> inventory.setItem(slot, itemCrate.getOriginalItemStack()),
-                () -> inventory.setItem(slot, null));
-    }
-
-    private void sendNotSatisfiedConditionMessages(List<Condition> notSatisfiedConditions) {
-        notSatisfiedConditions.forEach(condition -> {
-            MessageKey messageKey = condition.getMessageKey();
-            crateMessages.sendTo(player, messageKey.getKey(), messageKey.getObjects());
-        });
+                () -> inventory.clear(slot));
     }
 
     private void setNotSatisfiedConditionItem(int slot, List<Condition> notStatisfiedConditions) {
-        crateService.getNotSatisfiedItemStack(notStatisfiedConditions).ifPresent(itemStack -> {
+        conditionsService.computeNotSatisfiedItemStack(notStatisfiedConditions).ifPresent(itemStack -> {
             inventory.setItem(slot, itemStack);
             BukkitTask task = JobsProvider.runSyncLater(GUI.plugin, () -> refreshSlot(slot), 20 * 5L);
             tasks.put(slot, task);

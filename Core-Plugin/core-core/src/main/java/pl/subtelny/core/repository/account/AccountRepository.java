@@ -6,6 +6,7 @@ import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.core.api.account.CreateAccountRequest;
 import pl.subtelny.core.api.database.DatabaseConnection;
+import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.core.repository.account.entity.AccountEntity;
 import pl.subtelny.core.repository.account.loader.AccountLoadRequest;
 import pl.subtelny.core.repository.account.loader.AccountLoader;
@@ -26,9 +27,9 @@ public class AccountRepository {
     private final AccountLoader accountLoader;
 
     @Autowired
-    public AccountRepository(DatabaseConnection databaseConnection) {
+    public AccountRepository(DatabaseConnection databaseConnection, TransactionProvider transactionProvider) {
         accountStorage = new AccountStorage();
-        accountUpdater = new AccountUpdater(databaseConnection);
+        accountUpdater = new AccountUpdater(databaseConnection, transactionProvider);
         accountLoader = new AccountLoader(databaseConnection);
     }
 
@@ -52,7 +53,7 @@ public class AccountRepository {
                 request.getName(),
                 request.getDisplayName(),
                 LocalDateTime.now(),
-                request.getCityType()
+                request.getCityId()
         );
         saveAccount(account);
     }

@@ -46,7 +46,7 @@ public class IslanderAnemiaLoadAction implements LoadAction<IslanderAnemia> {
     private List<Condition> whereConditions() {
         List<Condition> conditions = Lists.newArrayList();
         Optional<IslanderId> islanderIdOpt = request.getIslanderId();
-        islanderIdOpt.ifPresent(islanderId -> conditions.add(Islanders.ISLANDERS.ID.eq(islanderId.getId())));
+        islanderIdOpt.ifPresent(islanderId -> conditions.add(Islanders.ISLANDERS.ID.eq(islanderId.getInternal())));
         return conditions;
     }
 

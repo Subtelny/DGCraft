@@ -43,7 +43,7 @@ public class SkyblockIslandExtendCuboidService {
         } else {
             extendCuboidToBasic(skyblockIsland, islandCoordinates);
         }
-        skyblockIslandRepository.saveIslandAsync(skyblockIsland);
+        skyblockIslandRepository.saveIsland(skyblockIsland);
     }
 
     private void extendCuboidToLevel(SkyblockIslandExtendCuboidRequest request) {

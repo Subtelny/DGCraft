@@ -1,21 +1,26 @@
 package pl.subtelny.islands.skyblockisland.repository;
 
+import org.bukkit.Location;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.DatabaseConnection;
-import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.islander.repository.IslanderRepository;
+import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
+import pl.subtelny.islands.islander.model.Islander;
+import pl.subtelny.islands.islander.model.IslanderId;
+import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidCalculator;
 import pl.subtelny.islands.skyblockisland.islandmembership.IslandMembershipRepository;
+import pl.subtelny.islands.skyblockisland.model.MembershipType;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.repository.loader.SkyblockIslandLoader;
 import pl.subtelny.islands.skyblockisland.repository.storage.SkyblockIslandStorage;
 import pl.subtelny.islands.skyblockisland.repository.updater.SkyblockIslandUpdater;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
+import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Component
 public class SkyblockIslandRepository {
@@ -32,27 +37,26 @@ public class SkyblockIslandRepository {
     public SkyblockIslandRepository(IslandMembershipRepository islandMembershipRepository,
                                     DatabaseConnection databaseConfiguration,
                                     IslanderRepository islanderRepository,
-                                    SkyblockIslandExtendCuboidCalculator extendCuboidCalculator) {
+                                    SkyblockIslandExtendCuboidCalculator extendCuboidCalculator,
+                                    TransactionProvider transactionProvider) {
         this.islandMembershipRepository = islandMembershipRepository;
         this.storage = new SkyblockIslandStorage();
-        this.loader = new SkyblockIslandLoader(databaseConfiguration, islanderRepository, islandMembershipRepository, extendCuboidCalculator);
-        this.updater = new SkyblockIslandUpdater(databaseConfiguration);
+        this.loader = new SkyblockIslandLoader(databaseConfiguration, islanderRepository, islandMembershipRepository, extendCuboidCalculator, transactionProvider);
+        this.updater = new SkyblockIslandUpdater(databaseConfiguration, transactionProvider);
     }
 
-    public CompletableFuture<SkyblockIsland> createIsland(IslandCoordinates islandCoordinates, Cuboid cuboid, Islander owner) {
-        SkyblockIsland island = new SkyblockIsland(SkyblockIslandId.of(null), islandCoordinates, cuboid);
-        island.changeOwner(owner);
-        return updater.updateAsync(island)
-                .thenCompose(skyblockIslandId -> CompletableFuture.supplyAsync(() -> findSkyblockIsland(skyblockIslandId).orElseThrow()))
-                .thenCompose(skyblockIsland -> CompletableFuture.supplyAsync(() -> {
-                    islandMembershipRepository.updateIslandMembership(skyblockIsland);
-                    return skyblockIsland;
-                }));
+    public SkyblockIsland createIsland(IslandCoordinates islandCoordinates, Location spawn, Cuboid cuboid, Islander owner) {
+        SkyblockIsland island = new SkyblockIsland(null, spawn, cuboid, owner, islandCoordinates);
+        SkyblockIslandId islandId = updater.update(island);
+        Map<IslanderId, MembershipType> membership = island.getMembers().entrySet().stream()
+                .collect(Collectors.toMap(entry -> entry.getKey().getIslanderId(), Map.Entry::getValue));
+        islandMembershipRepository.updateIslandMembership(islandId, membership);
+        return findSkyblockIsland(islandId).orElseThrow();
     }
 
-    public void saveIslandAsync(SkyblockIsland skyblockIsland) {
+    public void saveIsland(SkyblockIsland skyblockIsland) {
         storage.updateIslandCoordinates(skyblockIsland);
-        updater.updateAsync(skyblockIsland);
+        updater.update(skyblockIsland);
     }
 
     public Optional<SkyblockIsland> findSkyblockIsland(IslandCoordinates islandCoordinates) {

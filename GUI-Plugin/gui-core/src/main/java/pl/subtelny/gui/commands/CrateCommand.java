@@ -10,7 +10,7 @@ import pl.subtelny.gui.api.crate.model.Crate;
 import pl.subtelny.gui.api.crate.model.CrateId;
 import pl.subtelny.gui.api.crate.repository.CrateRepository;
 import pl.subtelny.gui.messages.CrateMessages;
-import pl.subtelny.gui.session.PlayerCrateSessionService;
+import pl.subtelny.gui.api.crate.session.PlayerCrateSessionService;
 import pl.subtelny.utilities.Validation;
 
 import java.util.Optional;

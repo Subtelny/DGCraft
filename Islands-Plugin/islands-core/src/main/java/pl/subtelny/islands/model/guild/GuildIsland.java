@@ -1,12 +1,14 @@
 package pl.subtelny.islands.model.guild;
 
 import com.google.common.base.Preconditions;
+import org.bukkit.Location;
 import pl.subtelny.islands.islander.model.Island;
 import pl.subtelny.islands.islander.model.IslandType;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.island.repository.anemia.IslandAnemia;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class GuildIsland extends Island {
@@ -14,7 +16,7 @@ public class GuildIsland extends Island {
 	private GuildId owner;
 
 	public GuildIsland(IslandAnemia islandAnemia, Cuboid cuboid) {
-		super(islandAnemia.getIslandId(), cuboid);
+		super(islandAnemia.getIslandId(), cuboid.getCenter(), LocalDateTime.now(), cuboid);
 		Preconditions.checkArgument(islandAnemia.getIslandType() == IslandType.GUILD,
 				String.format("This IslandAnemia {%s} cannot be add to GuildIsland", islandAnemia));
 	}
@@ -35,8 +37,9 @@ public class GuildIsland extends Island {
 	}
 
 	@Override
-	public void recalculateSpawn() {
+	public Location recalculateSpawn() {
 		//TODO
+		return null;
 	}
 
 	public Optional<GuildId> getOwner() {

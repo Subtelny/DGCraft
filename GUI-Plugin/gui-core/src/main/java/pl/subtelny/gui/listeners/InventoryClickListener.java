@@ -13,8 +13,8 @@ import org.bukkit.inventory.Inventory;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.gui.crate.inventory.CraftCrateInventory;
-import pl.subtelny.gui.session.PlayerCrateSession;
-import pl.subtelny.gui.session.PlayerCrateSessionService;
+import pl.subtelny.gui.api.crate.session.PlayerCrateSession;
+import pl.subtelny.gui.api.crate.session.PlayerCrateSessionService;
 import pl.subtelny.gui.util.CrateUtil;
 
 import java.util.Optional;

@@ -41,7 +41,7 @@ public class IslanderMembershipsInitializer implements DependencyActivator {
     private long loadIslandMemberships() {
         Set<IslandId> islandIds = loadIslandIds();
         return islandIds.stream()
-                .mapToLong(islandId -> repository.findIslandMembership(islandId).size())
+                .mapToLong(islandId -> repository.findIslandMemberships(islandId).size())
                 .sum();
     }
 

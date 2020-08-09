@@ -60,8 +60,6 @@ public class SkyblockIslandAnemiaLoadAction extends IslandAnemiaLoadAction<Skybl
         LocalDateTime createdDate = record.get(Islands.ISLANDS.CREATED_DATE).toLocalDateTime();
         Location spawn = LocationSerializer.deserializeMinimalistic(record.get(Islands.ISLANDS.SPAWN));
         SkyblockIslandId islandId = new SkyblockIslandId(record.get(Islands.ISLANDS.ID));
-        UUID owner = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.OWNER);
-        IslanderId ownerId = IslanderId.of(owner);
         int x = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.X);
         int z = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.Z);
         IslandCoordinates islandCoordinates = new IslandCoordinates(x, z);
@@ -72,7 +70,6 @@ public class SkyblockIslandAnemiaLoadAction extends IslandAnemiaLoadAction<Skybl
                 createdDate,
                 spawn,
                 islandCoordinates,
-                ownerId,
                 extendLevel,
                 points);
     }

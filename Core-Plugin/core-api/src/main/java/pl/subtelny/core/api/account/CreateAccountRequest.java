@@ -12,13 +12,10 @@ public class CreateAccountRequest {
 
     private final String displayName;
 
-    private final CityType cityType;
-
-    private CreateAccountRequest(AccountId accountId, String name, String displayName, CityType cityType) {
+    private CreateAccountRequest(AccountId accountId, String name, String displayName) {
         this.accountId = Preconditions.checkNotNull(accountId, "AccountId cannot be null");
         this.name = Preconditions.checkNotNull(name, "Name cannot be null");
         this.displayName = Preconditions.checkNotNull(displayName, "Display name cannot be null");
-        this.cityType = Preconditions.checkNotNull(cityType, "CityType cannot be null");
     }
 
     public AccountId getAccountId() {
@@ -33,12 +30,8 @@ public class CreateAccountRequest {
         return displayName;
     }
 
-    public CityType getCityType() {
-        return cityType;
-    }
-
-    public static CreateAccountRequest of(AccountId accountId, String name, String displayName, CityType cityType) {
-        return new CreateAccountRequest(accountId, name, displayName, cityType);
+    public static CreateAccountRequest of(AccountId accountId, String name, String displayName) {
+        return new CreateAccountRequest(accountId, name, displayName);
     }
 
     @Override
@@ -48,12 +41,11 @@ public class CreateAccountRequest {
         CreateAccountRequest that = (CreateAccountRequest) o;
         return Objects.equals(accountId, that.accountId) &&
                 Objects.equals(name, that.name) &&
-                Objects.equals(displayName, that.displayName) &&
-                cityType == that.cityType;
+                Objects.equals(displayName, that.displayName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountId, name, displayName, cityType);
+        return Objects.hash(accountId, name, displayName);
     }
 }

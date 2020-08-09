@@ -2,6 +2,7 @@ package pl.subtelny.islands.islander.repository;
 
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.islands.islander.repository.loader.IslanderLoadRequest;
 import pl.subtelny.islands.islander.repository.loader.IslanderLoader;
 import pl.subtelny.islands.islander.repository.storage.IslanderStorage;
@@ -23,10 +24,10 @@ public class IslanderRepository {
 	private final IslanderUpdater islanderUpdater;
 
 	@Autowired
-	public IslanderRepository(DatabaseConnection databaseConfiguration) {
+	public IslanderRepository(DatabaseConnection databaseConfiguration, TransactionProvider transactionProvider) {
 		this.islanderStorage = new IslanderStorage();
 		this.islanderLoader = new IslanderLoader(databaseConfiguration);
-		this.islanderUpdater = new IslanderUpdater(databaseConfiguration);
+		this.islanderUpdater = new IslanderUpdater(databaseConfiguration, transactionProvider);
 	}
 
 	public Optional<Islander> getIslanderIfPresent(IslanderId islanderId) {

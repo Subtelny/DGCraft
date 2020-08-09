@@ -16,7 +16,7 @@ public abstract class BasicIdentity<T> implements Serializable {
 		this.id = id;
 	}
 
-	public T getId() {
+	public T getInternal() {
 		return id;
 	}
 

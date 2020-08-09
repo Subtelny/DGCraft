@@ -1,4 +1,4 @@
-package pl.subtelny.islands.skyblockisland.islandmembership.model;
+package pl.subtelny.islands.skyblockisland.islandmembership.dto;
 
 import pl.subtelny.islands.islander.model.IslanderId;
 import pl.subtelny.islands.islander.model.IslandId;
@@ -6,7 +6,7 @@ import pl.subtelny.islands.skyblockisland.model.MembershipType;
 
 import java.util.Objects;
 
-public class IslandMembership {
+public class IslandMembershipDTO {
 
     private final IslanderId islanderId;
 
@@ -14,7 +14,7 @@ public class IslandMembership {
 
     private final MembershipType membershipType;
 
-    public IslandMembership(IslanderId islanderId, IslandId islandId, MembershipType membershipType) {
+    public IslandMembershipDTO(IslanderId islanderId, IslandId islandId, MembershipType membershipType) {
         this.islanderId = islanderId;
         this.islandId = islandId;
         this.membershipType = membershipType;
@@ -36,7 +36,7 @@ public class IslandMembership {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IslandMembership that = (IslandMembership) o;
+        IslandMembershipDTO that = (IslandMembershipDTO) o;
         return Objects.equals(islanderId, that.islanderId) &&
                 Objects.equals(islandId, that.islandId) &&
                 membershipType == that.membershipType;

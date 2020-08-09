@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row4;
+import org.jooq.Row3;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import pl.subtelny.generated.tables.tables.records.GuildIslandsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class GuildIslands extends TableImpl<GuildIslandsRecord> {
 
-    private static final long serialVersionUID = 2101752789;
+    private static final long serialVersionUID = 526367706;
 
     /**
      * The reference instance of <code>public.guild_islands</code>
@@ -61,11 +61,6 @@ public class GuildIslands extends TableImpl<GuildIslandsRecord> {
      * The column <code>public.guild_islands.island_id</code>.
      */
     public final TableField<GuildIslandsRecord, Integer> ISLAND_ID = createField(DSL.name("island_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
-     * The column <code>public.guild_islands.owner</code>.
-     */
-    public final TableField<GuildIslandsRecord, Integer> OWNER = createField(DSL.name("owner"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>public.guild_islands.protection</code>.
@@ -132,15 +127,11 @@ public class GuildIslands extends TableImpl<GuildIslandsRecord> {
 
     @Override
     public List<ForeignKey<GuildIslandsRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<GuildIslandsRecord, ?>>asList(Keys.GUILD_ISLANDS__GUILD_ISLANDS_ISLAND_ID_FKEY, Keys.GUILD_ISLANDS__GUILD_ISLANDS_OWNER_FKEY);
+        return Arrays.<ForeignKey<GuildIslandsRecord, ?>>asList(Keys.GUILD_ISLANDS__GUILD_ISLANDS_ISLAND_ID_FKEY);
     }
 
     public Islands islands() {
         return new Islands(this, Keys.GUILD_ISLANDS__GUILD_ISLANDS_ISLAND_ID_FKEY);
-    }
-
-    public Guilds guilds() {
-        return new Guilds(this, Keys.GUILD_ISLANDS__GUILD_ISLANDS_OWNER_FKEY);
     }
 
     @Override
@@ -170,11 +161,11 @@ public class GuildIslands extends TableImpl<GuildIslandsRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row4 type methods
+    // Row3 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<Integer, Integer, Timestamp, String> fieldsRow() {
-        return (Row4) super.fieldsRow();
+    public Row3<Integer, Timestamp, String> fieldsRow() {
+        return (Row3) super.fieldsRow();
     }
 }

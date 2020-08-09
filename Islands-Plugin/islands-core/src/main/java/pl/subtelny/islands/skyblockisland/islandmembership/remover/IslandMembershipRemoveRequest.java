@@ -18,10 +18,17 @@ public class IslandMembershipRemoveRequest {
 
     private final List<MembershipType> membershipTypes;
 
-    public IslandMembershipRemoveRequest(List<IslanderId> islanderIds, List<IslandId> islandIds, List<MembershipType> membershipTypes) {
+    private final List<IslanderId> notInIslanderIds;
+
+    public IslandMembershipRemoveRequest(List<IslanderId> islanderIds, List<IslandId> islandIds, List<MembershipType> membershipTypes, List<IslanderId> notInIslanderIds) {
         this.islanderIds = islanderIds;
         this.islandIds = islandIds;
         this.membershipTypes = membershipTypes;
+        this.notInIslanderIds = notInIslanderIds;
+    }
+
+    public List<IslanderId> getNotInIslanderIds() {
+        return notInIslanderIds;
     }
 
     public List<IslanderId> getIslanderIds() {
@@ -48,6 +55,8 @@ public class IslandMembershipRemoveRequest {
 
         private List<MembershipType> membershipTypes = new ArrayList<>();
 
+        private List<IslanderId> notInIslanderIds = new ArrayList<>();
+
         public Builder where(IslanderId... islanderIds) {
             this.islanderIds = Arrays.stream(islanderIds).collect(Collectors.toList());
             return this;
@@ -63,8 +72,13 @@ public class IslandMembershipRemoveRequest {
             return this;
         }
 
+        public Builder notIn(IslanderId... islanderIds) {
+            this.notInIslanderIds = Arrays.stream(islanderIds).collect(Collectors.toList());
+            return this;
+        }
+
         public IslandMembershipRemoveRequest build() {
-            return new IslandMembershipRemoveRequest(islanderIds, islandIds, membershipTypes);
+            return new IslandMembershipRemoveRequest(islanderIds, islandIds, membershipTypes, notInIslanderIds);
         }
 
     }
@@ -76,11 +90,12 @@ public class IslandMembershipRemoveRequest {
         IslandMembershipRemoveRequest that = (IslandMembershipRemoveRequest) o;
         return Objects.equals(islanderIds, that.islanderIds) &&
                 Objects.equals(islandIds, that.islandIds) &&
-                Objects.equals(membershipTypes, that.membershipTypes);
+                Objects.equals(membershipTypes, that.membershipTypes) &&
+                Objects.equals(notInIslanderIds, that.notInIslanderIds);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(islanderIds, islandIds, membershipTypes);
+        return Objects.hash(islanderIds, islandIds, membershipTypes, notInIslanderIds);
     }
 }

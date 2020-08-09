@@ -6,40 +6,46 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.gui.api.crate.inventory.CrateInventory;
 import pl.subtelny.gui.api.crate.model.Crate;
+import pl.subtelny.gui.api.crate.session.PlayerCrateSession;
+import pl.subtelny.gui.api.crate.session.PlayerCrateSessionService;
+import pl.subtelny.gui.crate.CrateConditionsService;
 import pl.subtelny.gui.crate.CrateService;
-import pl.subtelny.gui.messages.CrateMessages;
 
 import java.util.Optional;
 
 @Component
-public class PlayerCrateSessionService {
+public class PlayerCrateSessionServiceImpl implements PlayerCrateSessionService {
 
     private final CrateService crateService;
 
-    private final CrateSessionStorage sessionStorage;
+    private final CrateConditionsService conditionsService;
 
-    private final CrateMessages messages;
+    private final PlayerCrateSessionStorage sessionStorage;
 
     @Autowired
-    public PlayerCrateSessionService(CrateService crateService, CrateMessages messages) {
+    public PlayerCrateSessionServiceImpl(CrateService crateService, CrateConditionsService conditionsService) {
         this.crateService = crateService;
-        this.messages = messages;
-        this.sessionStorage = new CrateSessionStorage();
+        this.conditionsService = conditionsService;
+        this.sessionStorage = new PlayerCrateSessionStorage();
     }
 
+    @Override
     public Optional<PlayerCrateSession> getSession(Player player) {
         return Optional.ofNullable(sessionStorage.getCacheIfPresent(player));
     }
 
+    @Override
     public boolean hasSession(Player player) {
         return getSession(player).isPresent();
     }
 
+    @Override
     public void closeSession(Player player) {
         Optional<PlayerCrateSession> sessionOpt = getSession(player);
         sessionOpt.ifPresent(session -> sessionStorage.invalidate(player));
     }
 
+    @Override
     public void closeInventory(Player player) {
         Optional<PlayerCrateSession> sessionOpt = getSession(player);
         sessionOpt.ifPresent(session -> {
@@ -48,14 +54,16 @@ public class PlayerCrateSessionService {
         });
     }
 
+    @Override
     public void openSession(Player player, Crate crate) {
         closeInventory(player);
         CrateInventory inventoryForCrate = crateService.getInventoryForCrate(player, crate);
-        PlayerCrateSession session = new PlayerCrateSession(player, crate, inventoryForCrate, crateService, messages);
+        PlayerCrateSession session = new PlayerCrateSessionImpl(player, crate, inventoryForCrate, conditionsService);
         sessionStorage.put(player, session);
         session.openCrateInventory();
     }
 
+    @Override
     public void closeAllSessions(Plugin plugin) {
         sessionStorage.getAllCache().entrySet().stream()
                 .filter(entry -> entry.getValue().getCrate().getId().getPluginName().equals(plugin.getName()))

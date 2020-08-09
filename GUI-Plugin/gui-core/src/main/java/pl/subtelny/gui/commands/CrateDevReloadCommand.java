@@ -8,7 +8,7 @@ import pl.subtelny.gui.GUI;
 import pl.subtelny.gui.api.crate.repository.CrateRepository;
 import pl.subtelny.gui.crate.settings.CratesLoader;
 import pl.subtelny.gui.messages.CrateMessages;
-import pl.subtelny.gui.session.PlayerCrateSessionService;
+import pl.subtelny.gui.api.crate.session.PlayerCrateSessionService;
 
 import java.io.File;
 

@@ -4,6 +4,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.bukkit.Location;
 import pl.subtelny.islands.skyblockisland.model.MembershipType;
+import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.cuboid.Cuboid;
 import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.location.LocationUtil;
@@ -16,23 +17,23 @@ public abstract class Island {
 
     private final IslandId islandId;
 
-    protected Map<Islander, MembershipType> members = new HashMap<>();
-
-    protected LocalDateTime createdDate;
-
-    protected Location spawn;
+    private final LocalDateTime createdDate;
 
     protected Cuboid cuboid;
 
-    public Island(IslandId islandId, Cuboid cuboid) {
+    protected Map<Islander, MembershipType> members = new HashMap<>();
+
+    protected Location spawn;
+
+    public Island(IslandId islandId, Location spawn, LocalDateTime createdDate, Cuboid cuboid) {
         this.islandId = islandId;
+        this.spawn = spawn;
+        this.createdDate = createdDate;
         this.cuboid = cuboid;
     }
 
     public void changeSpawn(Location spawn) {
-        if (!LocationUtil.isSafeForPlayer(spawn)) {
-            throw ValidationException.of("island.changeSpawn.not_solid_block");
-        }
+        Validation.isTrue(LocationUtil.isSafeForPlayer(spawn), "island.changeSpawn.not_solid_block");
         this.spawn = spawn;
     }
 
@@ -64,7 +65,7 @@ public abstract class Island {
 
     public abstract void removeMember(Islander islander);
 
-    public abstract void recalculateSpawn();
+    public abstract Location recalculateSpawn();
 
     public abstract IslandType getIslandType();
 

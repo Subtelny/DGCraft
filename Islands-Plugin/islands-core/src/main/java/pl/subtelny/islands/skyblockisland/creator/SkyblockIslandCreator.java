@@ -1,18 +1,24 @@
 package pl.subtelny.islands.skyblockisland.creator;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.core.api.schematic.SchematicLoader;
-import pl.subtelny.islands.islander.model.Islander;
+import pl.subtelny.islands.Islands;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
+import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidCalculator;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandRepository;
 import pl.subtelny.islands.skyblockisland.schematic.SkyblockIslandSchematicOption;
 import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
+import pl.subtelny.jobs.JobsProvider;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.cuboid.Cuboid;
+import pl.subtelny.utilities.cuboid.CuboidUtil;
 import pl.subtelny.utilities.exception.ValidationException;
 
 import javax.annotation.Nullable;
@@ -25,6 +31,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class SkyblockIslandCreator {
 
+    private final TransactionProvider transactionProvider;
+
     private final SkyblockIslandRepository repository;
 
     private final SchematicLoader schematicLoader;
@@ -34,7 +42,8 @@ public class SkyblockIslandCreator {
     private final SkyblockIslandSettings settings;
 
     @Autowired
-    public SkyblockIslandCreator(SkyblockIslandRepository repository, SchematicLoader schematicLoader, SkyblockIslandExtendCuboidCalculator cuboidCalculator, SkyblockIslandSettings settings) {
+    public SkyblockIslandCreator(TransactionProvider transactionProvider, SkyblockIslandRepository repository, SchematicLoader schematicLoader, SkyblockIslandExtendCuboidCalculator cuboidCalculator, SkyblockIslandSettings settings) {
+        this.transactionProvider = transactionProvider;
         this.repository = repository;
         this.schematicLoader = schematicLoader;
         this.cuboidCalculator = cuboidCalculator;
@@ -52,27 +61,22 @@ public class SkyblockIslandCreator {
         return createIsland(islander, null, schematic);
     }
 
-    public CompletableFuture<SkyblockIsland> createIsland(Islander islander) {
-        return createIsland(islander, null, null);
-    }
-
     private CompletableFuture<SkyblockIsland> createSkyblockIsland(Islander islander, IslandCoordinates coordinates, SkyblockIslandSchematicOption schematic) {
         validateIslander(islander);
         validateIslandCoordinates(coordinates);
-
         Cuboid cuboid = cuboidCalculator.calculateCuboid(coordinates);
-        return repository.createIsland(coordinates, cuboid, islander)
-                .thenCompose(skyblockIsland -> CompletableFuture.supplyAsync(() -> {
-                    pasteIslandSchematic(schematic, skyblockIsland);
-                    return skyblockIsland;
-                }));
+        return transactionProvider.transactionResultAsync(() -> {
+            pasteSchematic(schematic, cuboid.getCenter());
+            Location spawn = new SkyblockIslandSpawnCalculator(cuboid).calculate();
+            return repository.createIsland(coordinates, spawn, cuboid, islander);
+        }).toCompletableFuture();
     }
 
-    private void pasteIslandSchematic(SkyblockIslandSchematicOption schematic, SkyblockIsland skyblockIsland) {
+    private void pasteSchematic(SkyblockIslandSchematicOption schematic, Location center) {
         try {
             CountDownLatch latch = new CountDownLatch(1);
-            Location center = skyblockIsland.getCuboid().getCenter();
             File schematicFile = new File(schematic.getSchematicFilePath());
+            Validation.isTrue(schematicFile.exists(), "creator.skyblockIsland.schema_file_not_found", schematic.getSchematicFilePath());
             schematicLoader.pasteSchematic(center, schematicFile, aBoolean -> latch.countDown());
             latch.await(1, TimeUnit.MINUTES);
         } catch (InterruptedException e) {

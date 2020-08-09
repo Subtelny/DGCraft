@@ -1,6 +1,9 @@
 package pl.subtelny.core.api.account;
 
+import pl.subtelny.core.api.city.CityId;
+
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public interface Account {
 
@@ -10,9 +13,9 @@ public interface Account {
 
     void setLastOnline(LocalDateTime lastOnline);
 
-    void setCityType(CityType cityType);
+    void setCityId(CityId cityId);
 
-    CityType getCityType();
+    Optional<CityId> getCityId();
 
     AccountId getAccountId();
 

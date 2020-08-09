@@ -28,17 +28,21 @@ public class SkyblockIslandSettings {
 
     private int BASIC_ISLAND_SIZE;
 
+    private String CREATOR_GUI;
+
     private Map<Integer, SkyblockIslandExtendCuboidOption> EXTEND_CUBOID_LEVELS = new HashMap<>();
 
     private Map<String, SkyblockIslandSchematicOption> SCHEMATIC_OPTIONS = new HashMap<>();
 
     public void initConfig(Plugin plugin, Economy economy, IslanderRepository islanderRepository) {
         File configFile = FileUtil.copyFile(plugin, CONFIG_FILE_NAME);
+        new File(plugin.getDataFolder(), "schematics").mkdirs();
         BASIC_ISLAND_WORLD = Bukkit.getWorld(new ObjectFileParserStrategy<String>(configFile).load("basic.island_world"));
         BASIC_SPACE_BETWEEN_ISLANDS = new ObjectFileParserStrategy<Integer>(configFile).load("basic.space_between_islands");
         BASIC_ISLAND_SIZE = new ObjectFileParserStrategy<Integer>(configFile).load("basic.island_size");
         EXTEND_CUBOID_LEVELS = new SkyblockIslandExtendCuboidOptionsLoader(configFile, economy, islanderRepository).loadExtendLevels();
         SCHEMATIC_OPTIONS = new SkyblockIslandSchematicOptionLoader(configFile, economy).loadOptions();
+        CREATOR_GUI = new ObjectFileParserStrategy<String>(configFile).load("command.create.gui");
     }
 
     public World getWorld() {
@@ -51,6 +55,10 @@ public class SkyblockIslandSettings {
 
     public int getIslandSize() {
         return BASIC_ISLAND_SIZE;
+    }
+
+    public String getCreatorGui() {
+        return CREATOR_GUI;
     }
 
     public int getMaxIslandSize() {

@@ -9,8 +9,9 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.core.api.account.Accounts;
-import pl.subtelny.core.api.account.CityType;
+import pl.subtelny.core.api.city.CityId;
 import pl.subtelny.core.configuration.CoreMessages;
+import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.exception.ValidationException;
 
 @PluginSubCommand(command = "setcity", mainCommand = CityDevCommand.class)
@@ -29,33 +30,26 @@ public class CityDevSetCityCommand extends BaseCommand {
         validateArguments(args);
         String playerRaw = args[0];
         OfflinePlayer player = Bukkit.getOfflinePlayer(playerRaw);
-        CityType cityType = CityType.of(args[1].toUpperCase());
-        accounts.findAccountAsync(AccountId.of(player.getUniqueId()))
-                .whenComplete((accountOpt, throwable) -> {
-                    if (accountOpt.isPresent()) {
-                        changeAccountCity(sender, cityType, accountOpt.get());
-                    } else {
-                        getMessages().sendTo(sender, "command.citydev.setcity.not_found_account_for_player");
-                    }
-                });
+        CityId cityId = CityId.of(args[1].toUpperCase());
+
+        AccountId accountId = AccountId.of(player.getUniqueId());
+        changeAccountCity(accountId, cityId);
+
+        getMessages().sendTo(sender, "command.citydev.setcity.success", player.getName());
+        if (player.isOnline()) {
+            getMessages().sendTo(player.getPlayer(), "command.citydev.setcity.success_player", sender.getName());
+        }
     }
 
-    public void changeAccountCity(CommandSender sender, CityType cityType, Account account) {
-        if (account.getCityType() != cityType) {
-            account.setCityType(cityType);
-            accounts.saveAccount(account);
-        }
-        getMessages().sendTo(sender, "command.citydev.setcity.success");
+    private void changeAccountCity(AccountId accountId, CityId cityId) {
+        Account account = accounts.findAccount(accountId)
+                .orElseThrow(() -> ValidationException.of("account.not_found", accountId.getInternal()));
+        account.setCityId(cityId);
+        accounts.saveAccount(account);
     }
 
     private void validateArguments(String[] args) {
-        if (args.length < 2) {
-            throw ValidationException.of("command.citydev.setcity.usage");
-        }
-        String cityType = args[1].toUpperCase();
-        if (!CityType.isCityType(cityType)) {
-            throw ValidationException.of("command.citydev.setcity.not_valid_city_type", cityType);
-        }
+        Validation.isTrue(args.length >= 2, "command.citydev.setcity.usage");
     }
 
     @Override

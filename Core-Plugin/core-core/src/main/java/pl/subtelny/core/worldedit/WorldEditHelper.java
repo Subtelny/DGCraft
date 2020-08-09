@@ -44,7 +44,7 @@ public final class WorldEditHelper {
 		World world = new BukkitWorld(location.getWorld());
 		IThreadSafeEditSession safeEditSession = editSessionFactory.getThreadSafeEditSession(world, -1, null, fakePlayer);
 
-		ClipboardReader reader = BuiltInClipboardFormat.MCEDIT_SCHEMATIC.getReader(new FileInputStream(schematic));
+		ClipboardReader reader = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getReader(new FileInputStream(schematic));
 		Clipboard clipboard = reader.read();
 		ClipboardHolder holder = new ClipboardHolder(clipboard);
 

@@ -2,13 +2,14 @@ package pl.subtelny.core.city.create;
 
 import org.bukkit.Location;
 import pl.subtelny.core.api.account.CityType;
+import pl.subtelny.core.api.city.CityId;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.util.Objects;
 
 public class CityCreateSession {
 
-    private final CityType cityType;
+    private final CityId cityId;
 
     private Location citySpawn;
 
@@ -18,24 +19,24 @@ public class CityCreateSession {
 
     private Cuboid teleportCubiod;
 
-    public CityCreateSession(CityType cityType,
+    public CityCreateSession(CityId cityId,
                              Location citySpawn,
                              Cuboid cityCuboid,
                              Location teleportTarget,
                              Cuboid teleportCubiod) {
-        this.cityType = cityType;
+        this.cityId = cityId;
         this.citySpawn = citySpawn;
         this.cityCuboid = cityCuboid;
         this.teleportTarget = teleportTarget;
         this.teleportCubiod = teleportCubiod;
     }
 
-    public CityCreateSession(CityType cityType) {
-        this.cityType = cityType;
+    public CityCreateSession(CityId cityId) {
+        this.cityId = cityId;
     }
 
-    public CityType getCityType() {
-        return cityType;
+    public CityId getCityId() {
+        return cityId;
     }
 
     public Location getCitySpawn() {
@@ -82,7 +83,7 @@ public class CityCreateSession {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CityCreateSession that = (CityCreateSession) o;
-        return cityType == that.cityType &&
+        return Objects.equals(cityId, that.cityId) &&
                 Objects.equals(citySpawn, that.citySpawn) &&
                 Objects.equals(cityCuboid, that.cityCuboid) &&
                 Objects.equals(teleportTarget, that.teleportTarget) &&
@@ -91,6 +92,6 @@ public class CityCreateSession {
 
     @Override
     public int hashCode() {
-        return Objects.hash(cityType, citySpawn, cityCuboid, teleportTarget, teleportCubiod);
+        return Objects.hash(cityId, citySpawn, cityCuboid, teleportTarget, teleportCubiod);
     }
 }

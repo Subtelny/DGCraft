@@ -3,10 +3,11 @@ package pl.subtelny.core.repository.account.entity;
 import org.apache.commons.lang.Validate;
 import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.core.api.account.CityType;
+import pl.subtelny.core.api.city.CityId;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 public class AccountEntity implements Account {
 
@@ -18,18 +19,18 @@ public class AccountEntity implements Account {
 
     private LocalDateTime lastOnline;
 
-    private CityType cityType;
+    private CityId cityId;
 
     public AccountEntity(AccountId accountId,
                          String name,
                          String displayName,
                          LocalDateTime lastOnline,
-                         CityType cityType) {
+                         CityId cityId) {
         this.accountId = accountId;
         this.name = name;
         this.displayName = displayName;
         this.lastOnline = lastOnline;
-        this.cityType = cityType;
+        this.cityId = cityId;
     }
 
     @Override
@@ -53,14 +54,14 @@ public class AccountEntity implements Account {
     }
 
     @Override
-    public void setCityType(CityType cityType) {
-        Validate.notNull(cityType, "City cannot be null");
-        this.cityType = cityType;
+    public void setCityId(CityId cityId) {
+        Validate.notNull(cityId, "City cannot be null");
+        this.cityId = cityId;
     }
 
     @Override
-    public CityType getCityType() {
-        return cityType;
+    public Optional<CityId> getCityId() {
+        return Optional.ofNullable(cityId);
     }
 
     @Override
@@ -92,11 +93,11 @@ public class AccountEntity implements Account {
                 Objects.equals(name, that.name) &&
                 Objects.equals(displayName, that.displayName) &&
                 Objects.equals(lastOnline, that.lastOnline) &&
-                cityType == that.cityType;
+                Objects.equals(cityId, that.cityId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountId, name, displayName, lastOnline, cityType);
+        return Objects.hash(accountId, name, displayName, lastOnline, cityId);
     }
 }
