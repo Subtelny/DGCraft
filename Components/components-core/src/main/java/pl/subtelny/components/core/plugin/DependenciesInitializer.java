@@ -1,4 +1,4 @@
-package pl.subtelny.core.dependencies;
+package pl.subtelny.components.core.plugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -6,10 +6,11 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.CommandsInitializer;
-import pl.subtelny.components.core.api.BeanService;
+import pl.subtelny.components.core.BeanStorage;
+import pl.subtelny.components.core.ComponentsContext;
 import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.components.core.api.DependencyActivatorPriority;
-import pl.subtelny.core.api.plugin.DGPlugin;
+import pl.subtelny.components.core.api.plugin.DGPlugin;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,11 +26,8 @@ public class DependenciesInitializer {
 
     private final Plugin plugin;
 
-    private final BeanService beanService;
-
-    public DependenciesInitializer(Plugin plugin, BeanService beanService) {
+    public DependenciesInitializer(Plugin plugin) {
         this.plugin = plugin;
-        this.beanService = beanService;
     }
 
     public void registerPluginsComponents() {
@@ -62,7 +60,7 @@ public class DependenciesInitializer {
     }
 
     private void registerListeners() {
-        List<Listener> listeners = beanService.getBeans(Listener.class);
+        List<Listener> listeners = ComponentsContext.getBeans(Listener.class);
         PluginManager pluginManager = Bukkit.getPluginManager();
         listeners.forEach(listener -> {
             DGPlugin pluginForBean = findPluginForBean(listener);
@@ -72,14 +70,14 @@ public class DependenciesInitializer {
     }
 
     private void registerCommands() {
-        List<BaseCommand> commands = beanService.getBeans(BaseCommand.class);
+        List<BaseCommand> commands = ComponentsContext.getBeans(BaseCommand.class);
         CommandsInitializer commandsInitializer = new CommandsInitializer(plugin, commands);
         commandsInitializer.registerCommands();
         logger.info(String.format("Loaded %s commands", commands.size()));
     }
 
     private void informBeans() {
-        List<DependencyActivator> beans = beanService.getBeans(DependencyActivator.class);
+        List<DependencyActivator> beans = ComponentsContext.getBeans(DependencyActivator.class);
         beans.stream()
                 .sorted((t1, t2) -> {
                     int t1Priority = findPriority(t1).getPriority();

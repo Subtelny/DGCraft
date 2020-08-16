@@ -50,7 +50,7 @@ public class IslandActionGuard {
         IslandFindResult islandSourceResult = islandService.findIslandAtLocation(source);
         IslandActionGuardResult sourceResult = locationInIsland(source, islandSourceResult);
         if (sourceResult.isActionPermited()) {
-            Optional<Island> sourceIslandOpt = islandSourceResult.getResult().getNow(Optional.empty());
+            Optional<Island> sourceIslandOpt = islandSourceResult.getResult();
             if (sourceIslandOpt.isPresent()) {
                 return locationMatchIsland(target, sourceIslandOpt.get());
             }
@@ -62,10 +62,7 @@ public class IslandActionGuard {
         if (result.isNotIslandWorld()) {
             return IslandActionGuardResult.NOT_ISLAND_WORLD;
         }
-        if (result.isLoading()) {
-            return IslandActionGuardResult.ISLAND_LOADING;
-        }
-        Optional<Island> islandOpt = result.getResult().getNow(Optional.empty());
+        Optional<Island> islandOpt = result.getResult();
         if (islandOpt.isEmpty()) {
             return IslandActionGuardResult.ACTION_PROHIBITED;
         }
@@ -85,7 +82,6 @@ public class IslandActionGuard {
         IslandActionGuardResult result = locationInIsland(source, islandAtLocation);
         if (result.isActionPermited()) {
             islandAtLocation.getResult()
-                    .getNow(Optional.empty())
                     .ifPresent(island -> removeNonMatchingBlocksIntoIsland(island, blocks));
         }
         return result;
@@ -143,10 +139,7 @@ public class IslandActionGuard {
         if (islandFindResult.isNotIslandWorld()) {
             return IslandActionGuardResult.ACTION_PERMITED;
         }
-        if (islandFindResult.isLoading()) {
-            return IslandActionGuardResult.ISLAND_LOADING;
-        }
-        Optional<Island> islandOpt = islandFindResult.getResult().getNow(Optional.empty());
+        Optional<Island> islandOpt = islandFindResult.getResult();
         Boolean hasAccess = islandOpt.map(island -> playerHasAccessToBuildOnIsland(player, location, island)).orElse(false);
         if (hasAccess) {
             return IslandActionGuardResult.ACTION_PERMITED;

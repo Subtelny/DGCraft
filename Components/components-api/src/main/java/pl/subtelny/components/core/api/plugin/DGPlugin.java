@@ -1,4 +1,4 @@
-package pl.subtelny.core.api.plugin;
+package pl.subtelny.components.core.api.plugin;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.subtelny.components.core.api.PluginData;

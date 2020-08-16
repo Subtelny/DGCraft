@@ -1,4 +1,4 @@
-package pl.subtelny.core.login.listener;
+package pl.subtelny.core.listener;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,12 +19,12 @@ public class PlayerLoginHistoryListener implements Listener {
         this.loginHistoryService = loginHistoryService;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         loginHistoryService.playerLogin(e.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         loginHistoryService.playerLogout(e.getPlayer());
     }

@@ -1,7 +1,7 @@
 package pl.subtelny.gui;
 
 import org.bukkit.plugin.Plugin;
-import pl.subtelny.core.api.plugin.DGPlugin;
+import pl.subtelny.components.core.api.plugin.DGPlugin;
 
 public class GUI extends DGPlugin {
 

@@ -3,7 +3,6 @@ package pl.subtelny.core.login;
 import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.api.account.Accounts;
 
 @Component
@@ -16,8 +15,10 @@ public class PlayerLoginService {
         this.accounts = accounts;
     }
 
-    public Account loginInPlayer(Player player) {
-        return accounts.findAccount(player).orElse(accounts.createAccount(player));
+    public void loginInPlayer(Player player) {
+        if (accounts.findAccount(player).isEmpty()) {
+            accounts.createAccount(player);
+        }
     }
 
 }

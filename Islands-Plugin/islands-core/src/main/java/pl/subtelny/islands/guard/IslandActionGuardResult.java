@@ -4,7 +4,6 @@ public enum IslandActionGuardResult {
 
     ACTION_PERMITED,
     ACTION_PROHIBITED,
-    ISLAND_LOADING,
     NOT_ISLAND_WORLD;
 
     public boolean isActionPermited() {
@@ -13,10 +12,6 @@ public enum IslandActionGuardResult {
 
     public boolean isActionProhibited() {
         return ACTION_PROHIBITED == this;
-    }
-
-    public boolean isIslandLoading() {
-        return ISLAND_LOADING == this;
     }
 
     public boolean isNotIslandWorld() {

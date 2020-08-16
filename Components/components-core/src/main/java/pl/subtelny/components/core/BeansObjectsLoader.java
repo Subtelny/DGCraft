@@ -11,13 +11,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class BeansLoader {
+public class BeansObjectsLoader {
 
     private final List<String> paths;
 
     private final List<ClassLoader> classLoaders;
 
-    public BeansLoader(List<String> paths, List<ClassLoader> classLoaders) {
+    public BeansObjectsLoader(List<String> paths, List<ClassLoader> classLoaders) {
         this.paths = paths;
         this.classLoaders = classLoaders;
     }

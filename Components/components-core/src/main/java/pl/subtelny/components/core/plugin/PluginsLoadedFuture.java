@@ -1,4 +1,4 @@
-package pl.subtelny.core.dependencies;
+package pl.subtelny.components.core.plugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;

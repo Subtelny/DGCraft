@@ -31,7 +31,7 @@ public class IslandsQueryService {
 
     public IslandFindResult findIslandAtLocation(Location location) {
         World world = location.getWorld();
-        if (skyblockIslandSettings.getWorld().equals(world)) {
+        if (world.equals(skyblockIslandSettings.getWorld())) {
             return findSkyblockIsland(location);
         }
         return IslandFindResult.NOT_ISLAND_WORLD;
@@ -39,9 +39,8 @@ public class IslandsQueryService {
 
     private IslandFindResult findSkyblockIsland(Location location) {
         IslandCoordinates islandCoordinates = SkyblockIslandUtil.getIslandCoordinates(location, skyblockIslandSettings.getMaxIslandSize());
-        Optional<Island> island = skyblockIslandRepository.findSkyblockIsland(islandCoordinates).map(skyblockIsland -> skyblockIsland);
-        CompletableFuture<Optional<Island>> future = CompletableFuture.completedFuture(island);
-        return new IslandFindResult(future);
+        SkyblockIsland island = skyblockIslandRepository.findSkyblockIsland(islandCoordinates).orElse(null);
+        return IslandFindResult.of(island);
     }
 
 }

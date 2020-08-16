@@ -34,20 +34,14 @@ public class StructureGrowEventListener implements Listener {
         }
         Location location = e.getLocation();
         IslandFindResult result = islandService.findIslandAtLocation(location);
-        if (result.isLoading() || result.isLoaded()) {
-            CompletableFuture<Optional<Island>> future = result.getResult();
-            future.thenAccept(islandOpt -> removeBlocksWhenNotInIsland(e.getBlocks(), islandOpt));
-        }
+        result.getResult().ifPresent(island -> removeBlocksWhenNotInIsland(e.getBlocks(), island));
     }
 
-    private void removeBlocksWhenNotInIsland(List<BlockState> blocks, Optional<Island> islandOpt) {
-        if (islandOpt.isPresent()) {
-            Island island = islandOpt.get();
-            Cuboid cuboid = island.getCuboid();
-            blocks.stream()
-                    .filter(blockState -> !cuboid.contains(blockState.getLocation()))
-                    .forEach(blockState -> blockState.setType(Material.AIR));
-        }
+    private void removeBlocksWhenNotInIsland(List<BlockState> blocks, Island island) {
+        Cuboid cuboid = island.getCuboid();
+        blocks.stream()
+                .filter(blockState -> !cuboid.contains(blockState.getLocation()))
+                .forEach(blockState -> blockState.setType(Material.AIR));
     }
 
 }

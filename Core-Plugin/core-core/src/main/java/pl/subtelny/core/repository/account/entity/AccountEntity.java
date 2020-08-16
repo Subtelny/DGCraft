@@ -24,11 +24,20 @@ public class AccountEntity implements Account {
     public AccountEntity(AccountId accountId,
                          String name,
                          String displayName,
-                         LocalDateTime lastOnline) {
+                         LocalDateTime lastOnline,
+                         CityId cityId) {
         this.accountId = accountId;
         this.name = name;
         this.displayName = displayName;
         this.lastOnline = lastOnline;
+        this.cityId = cityId;
+    }
+
+    public AccountEntity(AccountId accountId,
+                         String name,
+                         String displayName,
+                         LocalDateTime lastOnline) {
+        this(accountId, name, displayName, lastOnline, null);
     }
 
     @Override

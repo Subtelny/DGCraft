@@ -1,7 +1,7 @@
 package pl.subtelny.core.player;
 
 import org.bukkit.entity.Player;
-import pl.subtelny.components.core.api.BeanService;
+import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.api.account.Accounts;
@@ -14,11 +14,9 @@ public class CorePlayerService {
 
     private final Accounts accounts;
 
-    private final BeanService beanService;
-
-    public CorePlayerService(Accounts accounts, BeanService beanService) {
+    @Autowired
+    public CorePlayerService(Accounts accounts) {
         this.accounts = accounts;
-        this.beanService = beanService;
         this.storage = new CorePlayerStorage();
     }
 
@@ -29,7 +27,7 @@ public class CorePlayerService {
     private CorePlayer buildCorePlayer(Player player) {
         Account account = accounts.findAccount(player)
                 .orElseThrow(() -> ValidationException.of("account.not_found", player.getDisplayName()));
-        return new CorePlayer(player, account, beanService);
+        return new CorePlayer(player, account);
     }
 
     public void invalidatePlayer(Player player) {
