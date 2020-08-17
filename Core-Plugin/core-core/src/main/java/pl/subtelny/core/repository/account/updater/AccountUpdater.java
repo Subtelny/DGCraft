@@ -19,8 +19,8 @@ public class AccountUpdater extends Updater<AccountAnemia, AccountId> {
 		performAction(accountAnemia);
 	}
 
-	public void updateAccountAsync(AccountAnemia accountAnemia) {
-		performActionAsync(accountAnemia);
+	public CompletableFuture<AccountId> updateAccountAsync(AccountAnemia accountAnemia) {
+		return performActionAsync(accountAnemia);
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.islander.model.IslanderId;
 import org.jooq.Configuration;
 import pl.subtelny.core.api.database.DatabaseConnection;
+import pl.subtelny.utilities.NullObject;
 
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class IslanderRepository {
 	}
 
 	public Optional<Islander> getIslanderIfPresent(IslanderId islanderId) {
-		return islanderStorage.getCacheIfPresent(islanderId);
+		return islanderStorage.getCacheIfPresent(islanderId).flatMap(NullObject::get);
 	}
 
 	public Optional<Islander> findIslander(IslanderId islanderId) {
@@ -39,12 +40,13 @@ public class IslanderRepository {
 			IslanderLoadRequest request = IslanderLoadRequest.newBuilder()
 					.where(islanderId1)
 					.build();
-			return islanderLoader.loadIslander(request);
-		});
+			Optional<Islander> islanderOpt = islanderLoader.loadIslander(request);
+			return islanderOpt.map(NullObject::of).orElse(NullObject.empty());
+		}).get();
 	}
 
 	public void updateIslander(Islander islander) {
-		islanderStorage.put(islander.getIslanderId(), Optional.of(islander));
+		islanderStorage.put(islander.getIslanderId(), NullObject.of(islander));
 		islanderUpdater.performActionAsync(islander);
 	}
 

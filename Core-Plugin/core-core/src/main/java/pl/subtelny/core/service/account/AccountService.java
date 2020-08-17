@@ -3,12 +3,13 @@ package pl.subtelny.core.service.account;
 import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.core.api.account.*;
+import pl.subtelny.core.api.account.Account;
+import pl.subtelny.core.api.account.AccountId;
+import pl.subtelny.core.api.account.Accounts;
+import pl.subtelny.core.api.account.CreateAccountRequest;
 import pl.subtelny.core.repository.account.AccountRepository;
-import pl.subtelny.jobs.JobsProvider;
 
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @Component
 public class AccountService implements Accounts {
@@ -23,11 +24,6 @@ public class AccountService implements Accounts {
     @Override
     public Optional<Account> findAccount(AccountId accountId) {
         return accountRepository.findAccount(accountId);
-    }
-
-    @Override
-    public CompletableFuture<Optional<Account>> findAccountAsync(AccountId accountId) {
-        return JobsProvider.supplyAsync(() -> findAccount(accountId));
     }
 
     @Override

@@ -66,5 +66,4 @@ public class TransactionProviderImpl implements TransactionProvider {
         return Optional.ofNullable(currentTransaction.get());
     }
 
-
 }

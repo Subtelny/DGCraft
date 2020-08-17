@@ -5,6 +5,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 
@@ -28,8 +29,8 @@ public abstract class Storage<KEY, VALUE> {
 		return cache.asMap();
 	}
 
-	public VALUE getCacheIfPresent(KEY key) {
-		return cache.getIfPresent(key);
+	public Optional<VALUE> getCacheIfPresent(KEY key) {
+		return Optional.ofNullable(cache.getIfPresent(key));
 	}
 
 	public void putIfAbsent(KEY key, VALUE value) {

@@ -7,8 +7,9 @@ import java.util.Optional;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.islander.model.IslanderId;
 import pl.subtelny.repository.Storage;
+import pl.subtelny.utilities.NullObject;
 
-public class IslanderStorage extends Storage<IslanderId, Optional<Islander>> {
+public class IslanderStorage extends Storage<IslanderId, NullObject<Islander>> {
 
 	public IslanderStorage() {
 		super(Caffeine.newBuilder().build());

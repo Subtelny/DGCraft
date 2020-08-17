@@ -10,7 +10,7 @@ public abstract class Updater<ENTITY, RESULT> {
 
     private final DatabaseConnection databaseConfiguration;
 
-    private final TransactionProvider transactionProvider;
+    protected final TransactionProvider transactionProvider;
 
     protected Updater(DatabaseConnection databaseConfiguration, TransactionProvider transactionProvider) {
         this.databaseConfiguration = databaseConfiguration;
