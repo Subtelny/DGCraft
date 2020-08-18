@@ -10,7 +10,7 @@ import pl.subtelny.core.city.City;
 import pl.subtelny.core.city.CityPortal;
 import pl.subtelny.core.city.repository.CityRepository;
 import pl.subtelny.core.player.CorePlayer;
-import pl.subtelny.core.repository.account.AccountRepository;
+import pl.subtelny.core.account.repository.AccountRepository;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.exception.ValidationException;
 
