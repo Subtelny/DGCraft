@@ -1,8 +1,4 @@
 # Project exclude paths
-/Core/target/
-/Islands/target/
-/Login/target/
-/target/
-/Abstract/target/
-/.idea/libraries/
 .gitignore
+target/
+.idea/
