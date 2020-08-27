@@ -2,7 +2,7 @@ configuration:
   size: 18
   title: 'Any title'
   global: true
-    permission: asd
+  permission: asd
 
 content:
   0:
