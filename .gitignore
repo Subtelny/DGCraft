@@ -4,5 +4,6 @@
 /Login/target/
 /target/
 /Abstract/target/
-/.idea/libraries/
 .gitignore
+target/
+.idea/
