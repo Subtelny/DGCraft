@@ -31,7 +31,7 @@ public class PlayerCrateSessionServiceImpl implements PlayerCrateSessionService 
 
     @Override
     public Optional<PlayerCrateSession> getSession(Player player) {
-        return sessionStorage.getCacheIfPresent(player);
+        return Optional.ofNullable(sessionStorage.getCacheIfPresent(player));
     }
 
     @Override
