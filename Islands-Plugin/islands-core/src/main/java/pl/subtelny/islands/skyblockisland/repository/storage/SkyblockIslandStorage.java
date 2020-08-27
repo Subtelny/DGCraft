@@ -30,7 +30,7 @@ public class SkyblockIslandStorage extends Storage<SkyblockIslandId, SkyblockIsl
 
     public void updateIslandCoordinates(@Nullable SkyblockIsland skyblockIsland) {
         if (skyblockIsland != null) {
-            islandCoordinatesCache.put(skyblockIsland.getIslandCoordinates(), skyblockIsland.getIslandId());
+            islandCoordinatesCache.put(skyblockIsland.getIslandCoordinates(), skyblockIsland.getId());
         }
     }
 

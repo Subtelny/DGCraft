@@ -8,7 +8,7 @@ import pl.subtelny.core.api.account.CreateAccountRequest;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.core.database.TransactionProviderImpl;
-import pl.subtelny.core.account.repository.upgrade.AccountDBUpgrade;
+import pl.subtelny.core.account.repository.upgrade.v1.AccountDBUpgradeV1;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public class AccountRepositoryImplTest implements AccountRepository {
     }
 
     private void initializeTables() {
-        new AccountDBUpgrade(databaseConnection).execute();
+        new AccountDBUpgradeV1(databaseConnection).execute();
     }
 
     @Nullable

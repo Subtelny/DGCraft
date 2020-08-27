@@ -1,12 +1,15 @@
 package pl.subtelny.islands.islander.model;
 
+import pl.subtelny.islands.island.IslandMember;
+import pl.subtelny.islands.island.IslandMemberId;
+import pl.subtelny.islands.island.IslanderId;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.utilities.exception.ValidationException;
 
 import java.util.Objects;
 import java.util.Optional;
 
-public class Islander {
+public class Islander implements IslandMember {
 
     private final IslanderId islanderId;
 
@@ -44,5 +47,10 @@ public class Islander {
     @Override
     public int hashCode() {
         return Objects.hash(islanderId);
+    }
+
+    @Override
+    public IslandMemberId getId() {
+        return IslandMemberId.of(islanderId);
     }
 }

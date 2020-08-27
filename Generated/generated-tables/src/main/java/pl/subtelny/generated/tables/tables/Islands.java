@@ -27,7 +27,6 @@ import org.jooq.impl.TableImpl;
 import pl.subtelny.generated.tables.Indexes;
 import pl.subtelny.generated.tables.Keys;
 import pl.subtelny.generated.tables.Public;
-import pl.subtelny.generated.tables.enums.Islandtype;
 import pl.subtelny.generated.tables.tables.records.IslandsRecord;
 
 
@@ -44,7 +43,7 @@ import pl.subtelny.generated.tables.tables.records.IslandsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Islands extends TableImpl<IslandsRecord> {
 
-    private static final long serialVersionUID = -1538045509;
+    private static final long serialVersionUID = -1957829377;
 
     /**
      * The reference instance of <code>public.islands</code>
@@ -65,19 +64,19 @@ public class Islands extends TableImpl<IslandsRecord> {
     public final TableField<IslandsRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('islands_id_seq'::regclass)", org.jooq.impl.SQLDataType.INTEGER)), this, "");
 
     /**
-     * The column <code>public.islands.created_date</code>.
-     */
-    public final TableField<IslandsRecord, Timestamp> CREATED_DATE = createField(DSL.name("created_date"), org.jooq.impl.SQLDataType.TIMESTAMP.defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
-
-    /**
      * The column <code>public.islands.spawn</code>.
      */
-    public final TableField<IslandsRecord, String> SPAWN = createField(DSL.name("spawn"), org.jooq.impl.SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<IslandsRecord, String> SPAWN = createField(DSL.name("spawn"), org.jooq.impl.SQLDataType.VARCHAR, this, "");
 
     /**
-     * The column <code>public.islands.type</code>.
+     * The column <code>public.islands.created_date</code>.
      */
-    public final TableField<IslandsRecord, Islandtype> TYPE = createField(DSL.name("type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false).asEnumDataType(pl.subtelny.generated.tables.enums.Islandtype.class), this, "");
+    public final TableField<IslandsRecord, Timestamp> CREATED_DATE = createField(DSL.name("created_date"), org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+
+    /**
+     * The column <code>public.islands.points</code>.
+     */
+    public final TableField<IslandsRecord, Integer> POINTS = createField(DSL.name("points"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
 
     /**
      * Create a <code>public.islands</code> table reference
@@ -119,7 +118,7 @@ public class Islands extends TableImpl<IslandsRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.ISLANDS_PKEY);
+        return Arrays.<Index>asList(Indexes.ISLANDS_ID_PK);
     }
 
     @Override
@@ -129,12 +128,12 @@ public class Islands extends TableImpl<IslandsRecord> {
 
     @Override
     public UniqueKey<IslandsRecord> getPrimaryKey() {
-        return Keys.ISLANDS_PKEY;
+        return Keys.ISLANDS_ID_PK;
     }
 
     @Override
     public List<UniqueKey<IslandsRecord>> getKeys() {
-        return Arrays.<UniqueKey<IslandsRecord>>asList(Keys.ISLANDS_PKEY);
+        return Arrays.<UniqueKey<IslandsRecord>>asList(Keys.ISLANDS_ID_PK);
     }
 
     @Override
@@ -168,7 +167,7 @@ public class Islands extends TableImpl<IslandsRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<Integer, Timestamp, String, Islandtype> fieldsRow() {
+    public Row4<Integer, String, Timestamp, Integer> fieldsRow() {
         return (Row4) super.fieldsRow();
     }
 }

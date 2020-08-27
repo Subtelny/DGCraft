@@ -1,13 +1,10 @@
 package pl.subtelny.core.loginhistory.repository;
 
 import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.core.loginhistory.repository.entity.LoginHistoryId;
 
 import java.time.LocalDateTime;
 
 public class LoginHistoryAnemia {
-
-    private LoginHistoryId id;
 
     private AccountId accountId;
 
@@ -18,8 +15,7 @@ public class LoginHistoryAnemia {
     public LoginHistoryAnemia() {
     }
 
-    public LoginHistoryAnemia(LoginHistoryId id, AccountId accountId, LocalDateTime loginTime, LocalDateTime logoutTime) {
-        this.id = id;
+    public LoginHistoryAnemia(AccountId accountId, LocalDateTime loginTime, LocalDateTime logoutTime) {
         this.accountId = accountId;
         this.loginTime = loginTime;
         this.logoutTime = logoutTime;
@@ -49,11 +45,4 @@ public class LoginHistoryAnemia {
         this.logoutTime = logoutTime;
     }
 
-    public LoginHistoryId getId() {
-        return id;
-    }
-
-    public void setId(LoginHistoryId id) {
-        this.id = id;
-    }
 }

@@ -13,11 +13,10 @@ import javax.annotation.processing.Generated;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row4;
+import org.jooq.Row3;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -44,7 +43,7 @@ import pl.subtelny.generated.tables.tables.records.LoginHistoriesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class LoginHistories extends TableImpl<LoginHistoriesRecord> {
 
-    private static final long serialVersionUID = -1998843714;
+    private static final long serialVersionUID = 600594162;
 
     /**
      * The reference instance of <code>public.login_histories</code>
@@ -60,9 +59,9 @@ public class LoginHistories extends TableImpl<LoginHistoriesRecord> {
     }
 
     /**
-     * The column <code>public.login_histories.id</code>.
+     * The column <code>public.login_histories.account</code>.
      */
-    public final TableField<LoginHistoriesRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('login_histories_id_seq'::regclass)", org.jooq.impl.SQLDataType.INTEGER)), this, "");
+    public final TableField<LoginHistoriesRecord, UUID> ACCOUNT = createField(DSL.name("account"), org.jooq.impl.SQLDataType.UUID.nullable(false), this, "");
 
     /**
      * The column <code>public.login_histories.login_time</code>.
@@ -73,11 +72,6 @@ public class LoginHistories extends TableImpl<LoginHistoriesRecord> {
      * The column <code>public.login_histories.logout_time</code>.
      */
     public final TableField<LoginHistoriesRecord, Timestamp> LOGOUT_TIME = createField(DSL.name("logout_time"), org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
-
-    /**
-     * The column <code>public.login_histories.account</code>.
-     */
-    public final TableField<LoginHistoriesRecord, UUID> ACCOUNT = createField(DSL.name("account"), org.jooq.impl.SQLDataType.UUID.nullable(false), this, "");
 
     /**
      * Create a <code>public.login_histories</code> table reference
@@ -119,31 +113,26 @@ public class LoginHistories extends TableImpl<LoginHistoriesRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.LOGIN_HISTORIES_PKEY);
-    }
-
-    @Override
-    public Identity<LoginHistoriesRecord, Integer> getIdentity() {
-        return Keys.IDENTITY_LOGIN_HISTORIES;
+        return Arrays.<Index>asList(Indexes.LH_ACCOUNT);
     }
 
     @Override
     public UniqueKey<LoginHistoriesRecord> getPrimaryKey() {
-        return Keys.LOGIN_HISTORIES_PKEY;
+        return Keys.LH_ACCOUNT;
     }
 
     @Override
     public List<UniqueKey<LoginHistoriesRecord>> getKeys() {
-        return Arrays.<UniqueKey<LoginHistoriesRecord>>asList(Keys.LOGIN_HISTORIES_PKEY);
+        return Arrays.<UniqueKey<LoginHistoriesRecord>>asList(Keys.LH_ACCOUNT);
     }
 
     @Override
     public List<ForeignKey<LoginHistoriesRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<LoginHistoriesRecord, ?>>asList(Keys.LOGIN_HISTORIES__LOGIN_HISTORIES_ACCOUNT_FKEY);
+        return Arrays.<ForeignKey<LoginHistoriesRecord, ?>>asList(Keys.LOGIN_HISTORIES__LH_ACCOUNT_FK);
     }
 
     public Accounts accounts() {
-        return new Accounts(this, Keys.LOGIN_HISTORIES__LOGIN_HISTORIES_ACCOUNT_FKEY);
+        return new Accounts(this, Keys.LOGIN_HISTORIES__LH_ACCOUNT_FK);
     }
 
     @Override
@@ -173,11 +162,11 @@ public class LoginHistories extends TableImpl<LoginHistoriesRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row4 type methods
+    // Row3 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<Integer, Timestamp, Timestamp, UUID> fieldsRow() {
-        return (Row4) super.fieldsRow();
+    public Row3<UUID, Timestamp, Timestamp> fieldsRow() {
+        return (Row3) super.fieldsRow();
     }
 }

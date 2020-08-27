@@ -1,10 +1,9 @@
 package pl.subtelny.islands.island.repository.loader;
 
 import java.util.Optional;
-
-import pl.subtelny.islands.islander.model.IslandId;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import pl.subtelny.islands.island.IslandId;
 
 public class IslandLoadRequest {
 

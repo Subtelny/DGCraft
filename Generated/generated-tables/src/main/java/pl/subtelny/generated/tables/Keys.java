@@ -12,18 +12,14 @@ import org.jooq.UniqueKey;
 import org.jooq.impl.Internal;
 
 import pl.subtelny.generated.tables.tables.Accounts;
-import pl.subtelny.generated.tables.tables.GuildIslands;
-import pl.subtelny.generated.tables.tables.Guilds;
+import pl.subtelny.generated.tables.tables.IslandMembership;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.Islands;
-import pl.subtelny.generated.tables.tables.IslandsMembership;
 import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.generated.tables.tables.SkyblockIslands;
 import pl.subtelny.generated.tables.tables.records.AccountsRecord;
-import pl.subtelny.generated.tables.tables.records.GuildIslandsRecord;
-import pl.subtelny.generated.tables.tables.records.GuildsRecord;
+import pl.subtelny.generated.tables.tables.records.IslandMembershipRecord;
 import pl.subtelny.generated.tables.tables.records.IslandersRecord;
-import pl.subtelny.generated.tables.tables.records.IslandsMembershipRecord;
 import pl.subtelny.generated.tables.tables.records.IslandsRecord;
 import pl.subtelny.generated.tables.tables.records.LoginHistoriesRecord;
 import pl.subtelny.generated.tables.tables.records.SkyblockIslandsRecord;
@@ -47,63 +43,55 @@ public class Keys {
     // IDENTITY definitions
     // -------------------------------------------------------------------------
 
-    public static final Identity<GuildsRecord, Integer> IDENTITY_GUILDS = Identities0.IDENTITY_GUILDS;
     public static final Identity<IslandsRecord, Integer> IDENTITY_ISLANDS = Identities0.IDENTITY_ISLANDS;
-    public static final Identity<LoginHistoriesRecord, Integer> IDENTITY_LOGIN_HISTORIES = Identities0.IDENTITY_LOGIN_HISTORIES;
+    public static final Identity<SkyblockIslandsRecord, Integer> IDENTITY_SKYBLOCK_ISLANDS = Identities0.IDENTITY_SKYBLOCK_ISLANDS;
 
     // -------------------------------------------------------------------------
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<AccountsRecord> ACCOUNTS_PKEY = UniqueKeys0.ACCOUNTS_PKEY;
-    public static final UniqueKey<GuildIslandsRecord> GUILD_ISLANDS_PKEY = UniqueKeys0.GUILD_ISLANDS_PKEY;
-    public static final UniqueKey<GuildsRecord> GUILDS_PKEY = UniqueKeys0.GUILDS_PKEY;
-    public static final UniqueKey<IslandersRecord> ISLANDERS_PKEY = UniqueKeys0.ISLANDERS_PKEY;
-    public static final UniqueKey<IslandsRecord> ISLANDS_PKEY = UniqueKeys0.ISLANDS_PKEY;
-    public static final UniqueKey<IslandsMembershipRecord> ISLANDS_MEMBERSHIP_PKEY = UniqueKeys0.ISLANDS_MEMBERSHIP_PKEY;
-    public static final UniqueKey<LoginHistoriesRecord> LOGIN_HISTORIES_PKEY = UniqueKeys0.LOGIN_HISTORIES_PKEY;
-    public static final UniqueKey<SkyblockIslandsRecord> SKYBLOCK_ISLANDS_PKEY = UniqueKeys0.SKYBLOCK_ISLANDS_PKEY;
-    public static final UniqueKey<SkyblockIslandsRecord> SKYBLOCK_ISLANDS_X_Z_KEY = UniqueKeys0.SKYBLOCK_ISLANDS_X_Z_KEY;
+    public static final UniqueKey<AccountsRecord> ACCOUNTS_ID_PK = UniqueKeys0.ACCOUNTS_ID_PK;
+    public static final UniqueKey<AccountsRecord> ACCOUNTS_NAME_UQ = UniqueKeys0.ACCOUNTS_NAME_UQ;
+    public static final UniqueKey<IslandMembershipRecord> MEMBERSHIP_ISLAND_ISLAND_PK = UniqueKeys0.MEMBERSHIP_ISLAND_ISLAND_PK;
+    public static final UniqueKey<IslandersRecord> ISLANDERS_ID_PK = UniqueKeys0.ISLANDERS_ID_PK;
+    public static final UniqueKey<IslandsRecord> ISLANDS_ID_PK = UniqueKeys0.ISLANDS_ID_PK;
+    public static final UniqueKey<LoginHistoriesRecord> LH_ACCOUNT = UniqueKeys0.LH_ACCOUNT;
+    public static final UniqueKey<SkyblockIslandsRecord> SKYBLOCK_ISLANDS_ID_PK = UniqueKeys0.SKYBLOCK_ISLANDS_ID_PK;
+    public static final UniqueKey<SkyblockIslandsRecord> SKYBLOCK_ISLAND_X_Z_PK = UniqueKeys0.SKYBLOCK_ISLAND_X_Z_PK;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<GuildIslandsRecord, IslandsRecord> GUILD_ISLANDS__GUILD_ISLANDS_ISLAND_ID_FKEY = ForeignKeys0.GUILD_ISLANDS__GUILD_ISLANDS_ISLAND_ID_FKEY;
-    public static final ForeignKey<IslandersRecord, AccountsRecord> ISLANDERS__ISLANDERS_ID_FKEY = ForeignKeys0.ISLANDERS__ISLANDERS_ID_FKEY;
-    public static final ForeignKey<IslandsMembershipRecord, IslandersRecord> ISLANDS_MEMBERSHIP__ISLANDS_MEMBERSHIP_ISLANDER_ID_FKEY = ForeignKeys0.ISLANDS_MEMBERSHIP__ISLANDS_MEMBERSHIP_ISLANDER_ID_FKEY;
-    public static final ForeignKey<IslandsMembershipRecord, IslandsRecord> ISLANDS_MEMBERSHIP__ISLANDS_MEMBERSHIP_ISLAND_ID_FKEY = ForeignKeys0.ISLANDS_MEMBERSHIP__ISLANDS_MEMBERSHIP_ISLAND_ID_FKEY;
-    public static final ForeignKey<LoginHistoriesRecord, AccountsRecord> LOGIN_HISTORIES__LOGIN_HISTORIES_ACCOUNT_FKEY = ForeignKeys0.LOGIN_HISTORIES__LOGIN_HISTORIES_ACCOUNT_FKEY;
-    public static final ForeignKey<SkyblockIslandsRecord, IslandsRecord> SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ISLAND_ID_FKEY = ForeignKeys0.SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ISLAND_ID_FKEY;
+    public static final ForeignKey<IslandMembershipRecord, IslandsRecord> ISLAND_MEMBERSHIP__MEMBERSHIP_ISLAND_ISLAND_FK = ForeignKeys0.ISLAND_MEMBERSHIP__MEMBERSHIP_ISLAND_ISLAND_FK;
+    public static final ForeignKey<IslandersRecord, AccountsRecord> ISLANDERS__ISLANDERS_ID_FOREIGN = ForeignKeys0.ISLANDERS__ISLANDERS_ID_FOREIGN;
+    public static final ForeignKey<LoginHistoriesRecord, AccountsRecord> LOGIN_HISTORIES__LH_ACCOUNT_FK = ForeignKeys0.LOGIN_HISTORIES__LH_ACCOUNT_FK;
+    public static final ForeignKey<SkyblockIslandsRecord, IslandsRecord> SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ID_FK = ForeignKeys0.SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ID_FK;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
     // -------------------------------------------------------------------------
 
     private static class Identities0 {
-        public static Identity<GuildsRecord, Integer> IDENTITY_GUILDS = Internal.createIdentity(Guilds.GUILDS, Guilds.GUILDS.ID);
         public static Identity<IslandsRecord, Integer> IDENTITY_ISLANDS = Internal.createIdentity(Islands.ISLANDS, Islands.ISLANDS.ID);
-        public static Identity<LoginHistoriesRecord, Integer> IDENTITY_LOGIN_HISTORIES = Internal.createIdentity(LoginHistories.LOGIN_HISTORIES, LoginHistories.LOGIN_HISTORIES.ID);
+        public static Identity<SkyblockIslandsRecord, Integer> IDENTITY_SKYBLOCK_ISLANDS = Internal.createIdentity(SkyblockIslands.SKYBLOCK_ISLANDS, SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID);
     }
 
     private static class UniqueKeys0 {
-        public static final UniqueKey<AccountsRecord> ACCOUNTS_PKEY = Internal.createUniqueKey(Accounts.ACCOUNTS, "accounts_pkey", Accounts.ACCOUNTS.ID);
-        public static final UniqueKey<GuildIslandsRecord> GUILD_ISLANDS_PKEY = Internal.createUniqueKey(GuildIslands.GUILD_ISLANDS, "guild_islands_pkey", GuildIslands.GUILD_ISLANDS.ISLAND_ID);
-        public static final UniqueKey<GuildsRecord> GUILDS_PKEY = Internal.createUniqueKey(Guilds.GUILDS, "guilds_pkey", Guilds.GUILDS.ID);
-        public static final UniqueKey<IslandersRecord> ISLANDERS_PKEY = Internal.createUniqueKey(Islanders.ISLANDERS, "islanders_pkey", Islanders.ISLANDERS.ID);
-        public static final UniqueKey<IslandsRecord> ISLANDS_PKEY = Internal.createUniqueKey(Islands.ISLANDS, "islands_pkey", Islands.ISLANDS.ID);
-        public static final UniqueKey<IslandsMembershipRecord> ISLANDS_MEMBERSHIP_PKEY = Internal.createUniqueKey(IslandsMembership.ISLANDS_MEMBERSHIP, "islands_membership_pkey", IslandsMembership.ISLANDS_MEMBERSHIP.ISLANDER_ID);
-        public static final UniqueKey<LoginHistoriesRecord> LOGIN_HISTORIES_PKEY = Internal.createUniqueKey(LoginHistories.LOGIN_HISTORIES, "login_histories_pkey", LoginHistories.LOGIN_HISTORIES.ID);
-        public static final UniqueKey<SkyblockIslandsRecord> SKYBLOCK_ISLANDS_PKEY = Internal.createUniqueKey(SkyblockIslands.SKYBLOCK_ISLANDS, "skyblock_islands_pkey", SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID);
-        public static final UniqueKey<SkyblockIslandsRecord> SKYBLOCK_ISLANDS_X_Z_KEY = Internal.createUniqueKey(SkyblockIslands.SKYBLOCK_ISLANDS, "skyblock_islands_x_z_key", SkyblockIslands.SKYBLOCK_ISLANDS.X, SkyblockIslands.SKYBLOCK_ISLANDS.Z);
+        public static final UniqueKey<AccountsRecord> ACCOUNTS_ID_PK = Internal.createUniqueKey(Accounts.ACCOUNTS, "accounts_id_pk", Accounts.ACCOUNTS.ID);
+        public static final UniqueKey<AccountsRecord> ACCOUNTS_NAME_UQ = Internal.createUniqueKey(Accounts.ACCOUNTS, "accounts_name_uq", Accounts.ACCOUNTS.NAME);
+        public static final UniqueKey<IslandMembershipRecord> MEMBERSHIP_ISLAND_ISLAND_PK = Internal.createUniqueKey(IslandMembership.ISLAND_MEMBERSHIP, "membership_island_island_pk", IslandMembership.ISLAND_MEMBERSHIP.ISLAND_MEMBER_ID, IslandMembership.ISLAND_MEMBERSHIP.ISLAND_ID);
+        public static final UniqueKey<IslandersRecord> ISLANDERS_ID_PK = Internal.createUniqueKey(Islanders.ISLANDERS, "islanders_id_pk", Islanders.ISLANDERS.ID);
+        public static final UniqueKey<IslandsRecord> ISLANDS_ID_PK = Internal.createUniqueKey(Islands.ISLANDS, "islands_id_pk", Islands.ISLANDS.ID);
+        public static final UniqueKey<LoginHistoriesRecord> LH_ACCOUNT = Internal.createUniqueKey(LoginHistories.LOGIN_HISTORIES, "lh_account", LoginHistories.LOGIN_HISTORIES.ACCOUNT);
+        public static final UniqueKey<SkyblockIslandsRecord> SKYBLOCK_ISLANDS_ID_PK = Internal.createUniqueKey(SkyblockIslands.SKYBLOCK_ISLANDS, "skyblock_islands_id_pk", SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID);
+        public static final UniqueKey<SkyblockIslandsRecord> SKYBLOCK_ISLAND_X_Z_PK = Internal.createUniqueKey(SkyblockIslands.SKYBLOCK_ISLANDS, "skyblock_island_x_z_pk", SkyblockIslands.SKYBLOCK_ISLANDS.X, SkyblockIslands.SKYBLOCK_ISLANDS.Z);
     }
 
     private static class ForeignKeys0 {
-        public static final ForeignKey<GuildIslandsRecord, IslandsRecord> GUILD_ISLANDS__GUILD_ISLANDS_ISLAND_ID_FKEY = Internal.createForeignKey(pl.subtelny.generated.tables.Keys.ISLANDS_PKEY, GuildIslands.GUILD_ISLANDS, "guild_islands__guild_islands_island_id_fkey", GuildIslands.GUILD_ISLANDS.ISLAND_ID);
-        public static final ForeignKey<IslandersRecord, AccountsRecord> ISLANDERS__ISLANDERS_ID_FKEY = Internal.createForeignKey(pl.subtelny.generated.tables.Keys.ACCOUNTS_PKEY, Islanders.ISLANDERS, "islanders__islanders_id_fkey", Islanders.ISLANDERS.ID);
-        public static final ForeignKey<IslandsMembershipRecord, IslandersRecord> ISLANDS_MEMBERSHIP__ISLANDS_MEMBERSHIP_ISLANDER_ID_FKEY = Internal.createForeignKey(pl.subtelny.generated.tables.Keys.ISLANDERS_PKEY, IslandsMembership.ISLANDS_MEMBERSHIP, "islands_membership__islands_membership_islander_id_fkey", IslandsMembership.ISLANDS_MEMBERSHIP.ISLANDER_ID);
-        public static final ForeignKey<IslandsMembershipRecord, IslandsRecord> ISLANDS_MEMBERSHIP__ISLANDS_MEMBERSHIP_ISLAND_ID_FKEY = Internal.createForeignKey(pl.subtelny.generated.tables.Keys.ISLANDS_PKEY, IslandsMembership.ISLANDS_MEMBERSHIP, "islands_membership__islands_membership_island_id_fkey", IslandsMembership.ISLANDS_MEMBERSHIP.ISLAND_ID);
-        public static final ForeignKey<LoginHistoriesRecord, AccountsRecord> LOGIN_HISTORIES__LOGIN_HISTORIES_ACCOUNT_FKEY = Internal.createForeignKey(pl.subtelny.generated.tables.Keys.ACCOUNTS_PKEY, LoginHistories.LOGIN_HISTORIES, "login_histories__login_histories_account_fkey", LoginHistories.LOGIN_HISTORIES.ACCOUNT);
-        public static final ForeignKey<SkyblockIslandsRecord, IslandsRecord> SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ISLAND_ID_FKEY = Internal.createForeignKey(pl.subtelny.generated.tables.Keys.ISLANDS_PKEY, SkyblockIslands.SKYBLOCK_ISLANDS, "skyblock_islands__skyblock_islands_island_id_fkey", SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID);
+        public static final ForeignKey<IslandMembershipRecord, IslandsRecord> ISLAND_MEMBERSHIP__MEMBERSHIP_ISLAND_ISLAND_FK = Internal.createForeignKey(pl.subtelny.generated.tables.Keys.ISLANDS_ID_PK, IslandMembership.ISLAND_MEMBERSHIP, "island_membership__membership_island_island_fk", IslandMembership.ISLAND_MEMBERSHIP.ISLAND_ID);
+        public static final ForeignKey<IslandersRecord, AccountsRecord> ISLANDERS__ISLANDERS_ID_FOREIGN = Internal.createForeignKey(pl.subtelny.generated.tables.Keys.ACCOUNTS_ID_PK, Islanders.ISLANDERS, "islanders__islanders_id_foreign", Islanders.ISLANDERS.ID);
+        public static final ForeignKey<LoginHistoriesRecord, AccountsRecord> LOGIN_HISTORIES__LH_ACCOUNT_FK = Internal.createForeignKey(pl.subtelny.generated.tables.Keys.ACCOUNTS_ID_PK, LoginHistories.LOGIN_HISTORIES, "login_histories__lh_account_fk", LoginHistories.LOGIN_HISTORIES.ACCOUNT);
+        public static final ForeignKey<SkyblockIslandsRecord, IslandsRecord> SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ID_FK = Internal.createForeignKey(pl.subtelny.generated.tables.Keys.ISLANDS_ID_PK, SkyblockIslands.SKYBLOCK_ISLANDS, "skyblock_islands__skyblock_islands_id_fk", SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID);
     }
 }

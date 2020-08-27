@@ -1,6 +1,6 @@
 package pl.subtelny.islands.islander.repository.loader;
 
-import pl.subtelny.islands.islander.model.IslanderId;
+import pl.subtelny.islands.island.IslanderId;
 
 import java.util.Optional;
 

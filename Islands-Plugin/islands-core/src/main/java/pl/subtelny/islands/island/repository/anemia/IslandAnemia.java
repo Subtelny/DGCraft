@@ -1,12 +1,10 @@
 package pl.subtelny.islands.island.repository.anemia;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.bukkit.Location;
-import pl.subtelny.islands.islander.model.IslandType;
-import pl.subtelny.islands.islander.model.IslandId;
+import pl.subtelny.islands.island.IslandId;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public abstract class IslandAnemia {
 
@@ -16,13 +14,16 @@ public abstract class IslandAnemia {
 
 	private Location spawn;
 
+	private int points;
+
 	public IslandAnemia() {
 	}
 
-	public IslandAnemia(IslandId islandId, LocalDateTime createdDate, Location spawn) {
+	public IslandAnemia(IslandId islandId, LocalDateTime createdDate, Location spawn, int points) {
 		this.islandId = islandId;
 		this.createdDate = createdDate;
 		this.spawn = spawn;
+		this.points = points;
 	}
 
 	public IslandId getIslandId() {
@@ -49,33 +50,27 @@ public abstract class IslandAnemia {
 		this.spawn = spawn;
 	}
 
-	public abstract IslandType getIslandType();
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
+	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		IslandAnemia that = (IslandAnemia) o;
-
-		return new EqualsBuilder()
-				.append(islandId, that.islandId)
-				.append(createdDate, that.createdDate)
-				.append(spawn, that.spawn)
-				.isEquals();
+		return points == that.points &&
+				Objects.equals(islandId, that.islandId) &&
+				Objects.equals(createdDate, that.createdDate) &&
+				Objects.equals(spawn, that.spawn);
 	}
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(17, 37)
-				.append(islandId)
-				.append(createdDate)
-				.append(spawn)
-				.toHashCode();
+		return Objects.hash(islandId, createdDate, spawn, points);
 	}
 }

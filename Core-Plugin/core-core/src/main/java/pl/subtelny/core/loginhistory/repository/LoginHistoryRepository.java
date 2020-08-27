@@ -9,7 +9,6 @@ import pl.subtelny.core.api.loginhistory.LoginHistory;
 import pl.subtelny.core.loginhistory.repository.loader.LoginHistoryLoader;
 import pl.subtelny.core.loginhistory.repository.storage.LoginHistoryStorage;
 import pl.subtelny.core.loginhistory.repository.entity.LoginHistoryEntity;
-import pl.subtelny.core.loginhistory.repository.entity.LoginHistoryId;
 import pl.subtelny.core.loginhistory.repository.loader.LoginHistoryLoadRequest;
 import pl.subtelny.core.loginhistory.repository.storage.LoginHistoryCacheKey;
 import pl.subtelny.core.loginhistory.repository.updater.LoginHistoryUpdater;
@@ -53,7 +52,7 @@ public class LoginHistoryRepository {
 
     public void createNewLoginHistory(AccountId accountId, LocalDateTime loginTime) {
         Period period = Period.of(loginTime, LocalDateTime.now());
-        LoginHistoryEntity entity = new LoginHistoryEntity(LoginHistoryId.empty(), period, accountId);
+        LoginHistoryEntity entity = new LoginHistoryEntity(period, accountId);
         storage.put(LoginHistoryCacheKey.of(accountId, "last"), Collections.singletonList(entity));
         updater.updateLoginHistoryAsync(toAnemia(entity)).handle((integer, throwable) -> {
             throwable.printStackTrace();
@@ -62,7 +61,7 @@ public class LoginHistoryRepository {
     }
 
     private LoginHistoryAnemia toAnemia(LoginHistoryEntity entity) {
-        return new LoginHistoryAnemia(entity.getInternal(), entity.getAccountId(), entity.getLoginTime(), entity.getLogoutTime());
+        return new LoginHistoryAnemia(entity.getAccountId(), entity.getLoginTime(), entity.getLogoutTime());
     }
 
 

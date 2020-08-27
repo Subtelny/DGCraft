@@ -7,21 +7,16 @@ import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.islands.island.repository.loader.IslandLoader;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.islander.model.IslanderId;
+import pl.subtelny.islands.island.IslanderId;
 import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidCalculator;
-import pl.subtelny.islands.skyblockisland.islandmembership.IslandMembershipRepository;
-import pl.subtelny.islands.skyblockisland.islandmembership.loader.IslandMembershipAnemiaLoadAction;
-import pl.subtelny.islands.skyblockisland.islandmembership.loader.IslandMembershipLoadRequest;
-import pl.subtelny.islands.skyblockisland.model.MembershipType;
+import pl.subtelny.islands.islandmembership.IslandMembershipRepository;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandId;
 import pl.subtelny.islands.skyblockisland.repository.anemia.SkyblockIslandAnemia;
 import pl.subtelny.utilities.cuboid.Cuboid;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -56,25 +51,14 @@ public class SkyblockIslandLoader extends IslandLoader<SkyblockIslandAnemia, Sky
 
     @Override
     protected SkyblockIsland mapAnemiaToDomain(SkyblockIslandAnemia anemia) {
-        Map<Islander, MembershipType> islanders = loadIslandMembers(anemia.getIslandId());
+        //Map<Islander, MembershipType> islanders = loadIslandMembers(anemia.getIslandId());
         IslandCoordinates islandCoordinates = anemia.getIslandCoordinates();
         int extendLevel = anemia.getExtendLevel();
         int points = anemia.getPoints();
         Cuboid cuboid = extendCuboidCalculator.calculateCuboid(islandCoordinates, extendLevel);
         LocalDateTime createdDate = anemia.getCreatedDate();
         Location spawn = anemia.getSpawn();
-        return new SkyblockIsland(anemia.getIslandId(), spawn, cuboid, createdDate, islanders, islandCoordinates, extendLevel, points);
+        return null;//new SkyblockIsland(anemia.getIslandId(), spawn, cuboid, createdDate, islanders, islandCoordinates, extendLevel, points);
     }
 
-    protected Map<Islander, MembershipType> loadIslandMembers(SkyblockIslandId islandId) {
-        Map<IslanderId, MembershipType> memberships = islandMembershipRepository.findIslandMemberships(islandId);
-        List<Islander> islanders = memberships.keySet().stream()
-                .map(islanderRepository::findIslander)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
-        return islanders.stream()
-                .filter(islander -> memberships.containsKey(islander.getIslanderId()))
-                .collect(Collectors.toMap(islander -> islander, islander -> memberships.get(islander.getIslanderId())));
-    }
 }

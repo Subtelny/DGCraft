@@ -7,7 +7,7 @@ public class SkyblockIslandAnemiaFactory {
 
     public static SkyblockIslandAnemia toAnemia(SkyblockIsland island) {
         SkyblockIslandAnemia anemia = new SkyblockIslandAnemia();
-        anemia.setIslandId(island.getIslandId());
+        anemia.setIslandId(island.getId());
         anemia.setCreatedDate(island.getCreatedDate());
         anemia.setSpawn(island.getSpawn());
         anemia.setExtendLevel(island.getExtendLevel());

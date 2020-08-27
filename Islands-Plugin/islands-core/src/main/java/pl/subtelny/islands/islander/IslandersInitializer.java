@@ -7,7 +7,7 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.components.core.api.DependencyActivatorPriority;
 import pl.subtelny.core.api.database.DatabaseConnection;
-import pl.subtelny.islands.islander.model.IslanderId;
+import pl.subtelny.islands.island.IslanderId;
 import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
 import pl.subtelny.islands.islander.repository.loader.IslanderAnemiaLoadAction;

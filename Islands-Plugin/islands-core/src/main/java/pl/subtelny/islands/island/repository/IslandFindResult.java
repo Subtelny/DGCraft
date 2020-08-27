@@ -1,24 +1,20 @@
 package pl.subtelny.islands.island.repository;
 
-import pl.subtelny.islands.islander.model.Island;
-import pl.subtelny.result.CompletableResult;
+import pl.subtelny.islands.island.model.AbstractIsland;
 import pl.subtelny.result.OptionalResult;
 
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-
-public class IslandFindResult extends OptionalResult<Island> {
+public class IslandFindResult extends OptionalResult<AbstractIsland> {
 
     public final static IslandFindResult NOT_ISLAND_WORLD = notIslandWorld();
 
     private final boolean notIslandWorld;
 
-    private IslandFindResult(Island result, boolean notIslandWorld) {
+    private IslandFindResult(AbstractIsland result, boolean notIslandWorld) {
         super(result);
         this.notIslandWorld = notIslandWorld;
     }
 
-    public static IslandFindResult of(Island result) {
+    public static IslandFindResult of(AbstractIsland result) {
         return new IslandFindResult(result, false);
     }
 

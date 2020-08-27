@@ -1,12 +1,11 @@
 package pl.subtelny.islands.skyblockisland.repository.anemia;
 
-import java.time.LocalDateTime;
 import org.bukkit.Location;
-import pl.subtelny.islands.islander.model.IslandType;
-import pl.subtelny.islands.islander.model.IslandCoordinates;
-import pl.subtelny.islands.islander.model.IslanderId;
 import pl.subtelny.islands.island.repository.anemia.IslandAnemia;
+import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandId;
+
+import java.time.LocalDateTime;
 
 public class SkyblockIslandAnemia extends IslandAnemia {
 
@@ -14,17 +13,14 @@ public class SkyblockIslandAnemia extends IslandAnemia {
 
 	private int extendLevel;
 
-	private int points;
-
 	public SkyblockIslandAnemia() {
 	}
 
 	public SkyblockIslandAnemia(SkyblockIslandId islandId, LocalDateTime createdDate, Location spawn,
 								IslandCoordinates islandCoordinates, int extendLevel, int points) {
-		super(islandId, createdDate, spawn);
+		super(islandId, createdDate, spawn, points);
 		this.islandCoordinates = islandCoordinates;
 		this.extendLevel = extendLevel;
-		this.points = points;
 	}
 
 	public IslandCoordinates getIslandCoordinates() {
@@ -43,21 +39,9 @@ public class SkyblockIslandAnemia extends IslandAnemia {
 		this.extendLevel = extendLevel;
 	}
 
-	public int getPoints() {
-		return points;
-	}
-
-	public void setPoints(int points) {
-		this.points = points;
-	}
-
 	@Override
 	public SkyblockIslandId getIslandId() {
 		return (SkyblockIslandId) super.getIslandId();
 	}
 
-	@Override
-	public IslandType getIslandType() {
-		return IslandType.SKYBLOCK;
-	}
 }

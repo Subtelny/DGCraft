@@ -11,11 +11,9 @@ import org.jooq.OrderField;
 import org.jooq.impl.Internal;
 
 import pl.subtelny.generated.tables.tables.Accounts;
-import pl.subtelny.generated.tables.tables.GuildIslands;
-import pl.subtelny.generated.tables.tables.Guilds;
+import pl.subtelny.generated.tables.tables.IslandMembership;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.Islands;
-import pl.subtelny.generated.tables.tables.IslandsMembership;
 import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.generated.tables.tables.SkyblockIslands;
 
@@ -37,29 +35,27 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
-    public static final Index ACCOUNTS_PKEY = Indexes0.ACCOUNTS_PKEY;
-    public static final Index GUILD_ISLANDS_PKEY = Indexes0.GUILD_ISLANDS_PKEY;
-    public static final Index GUILDS_PKEY = Indexes0.GUILDS_PKEY;
-    public static final Index ISLANDERS_PKEY = Indexes0.ISLANDERS_PKEY;
-    public static final Index ISLANDS_PKEY = Indexes0.ISLANDS_PKEY;
-    public static final Index ISLANDS_MEMBERSHIP_PKEY = Indexes0.ISLANDS_MEMBERSHIP_PKEY;
-    public static final Index LOGIN_HISTORIES_PKEY = Indexes0.LOGIN_HISTORIES_PKEY;
-    public static final Index SKYBLOCK_ISLANDS_PKEY = Indexes0.SKYBLOCK_ISLANDS_PKEY;
-    public static final Index SKYBLOCK_ISLANDS_X_Z_KEY = Indexes0.SKYBLOCK_ISLANDS_X_Z_KEY;
+    public static final Index ACCOUNTS_ID_PK = Indexes0.ACCOUNTS_ID_PK;
+    public static final Index ACCOUNTS_NAME_UQ = Indexes0.ACCOUNTS_NAME_UQ;
+    public static final Index MEMBERSHIP_ISLAND_ISLAND_PK = Indexes0.MEMBERSHIP_ISLAND_ISLAND_PK;
+    public static final Index ISLANDERS_ID_PK = Indexes0.ISLANDERS_ID_PK;
+    public static final Index ISLANDS_ID_PK = Indexes0.ISLANDS_ID_PK;
+    public static final Index LH_ACCOUNT = Indexes0.LH_ACCOUNT;
+    public static final Index SKYBLOCK_ISLAND_X_Z_PK = Indexes0.SKYBLOCK_ISLAND_X_Z_PK;
+    public static final Index SKYBLOCK_ISLANDS_ID_PK = Indexes0.SKYBLOCK_ISLANDS_ID_PK;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
     // -------------------------------------------------------------------------
 
     private static class Indexes0 {
-        public static Index ACCOUNTS_PKEY = Internal.createIndex("accounts_pkey", Accounts.ACCOUNTS, new OrderField[] { Accounts.ACCOUNTS.ID }, true);
-        public static Index GUILD_ISLANDS_PKEY = Internal.createIndex("guild_islands_pkey", GuildIslands.GUILD_ISLANDS, new OrderField[] { GuildIslands.GUILD_ISLANDS.ISLAND_ID }, true);
-        public static Index GUILDS_PKEY = Internal.createIndex("guilds_pkey", Guilds.GUILDS, new OrderField[] { Guilds.GUILDS.ID }, true);
-        public static Index ISLANDERS_PKEY = Internal.createIndex("islanders_pkey", Islanders.ISLANDERS, new OrderField[] { Islanders.ISLANDERS.ID }, true);
-        public static Index ISLANDS_PKEY = Internal.createIndex("islands_pkey", Islands.ISLANDS, new OrderField[] { Islands.ISLANDS.ID }, true);
-        public static Index ISLANDS_MEMBERSHIP_PKEY = Internal.createIndex("islands_membership_pkey", IslandsMembership.ISLANDS_MEMBERSHIP, new OrderField[] { IslandsMembership.ISLANDS_MEMBERSHIP.ISLANDER_ID }, true);
-        public static Index LOGIN_HISTORIES_PKEY = Internal.createIndex("login_histories_pkey", LoginHistories.LOGIN_HISTORIES, new OrderField[] { LoginHistories.LOGIN_HISTORIES.ID }, true);
-        public static Index SKYBLOCK_ISLANDS_PKEY = Internal.createIndex("skyblock_islands_pkey", SkyblockIslands.SKYBLOCK_ISLANDS, new OrderField[] { SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID }, true);
-        public static Index SKYBLOCK_ISLANDS_X_Z_KEY = Internal.createIndex("skyblock_islands_x_z_key", SkyblockIslands.SKYBLOCK_ISLANDS, new OrderField[] { SkyblockIslands.SKYBLOCK_ISLANDS.X, SkyblockIslands.SKYBLOCK_ISLANDS.Z }, true);
+        public static Index ACCOUNTS_ID_PK = Internal.createIndex("accounts_id_pk", Accounts.ACCOUNTS, new OrderField[] { Accounts.ACCOUNTS.ID }, true);
+        public static Index ACCOUNTS_NAME_UQ = Internal.createIndex("accounts_name_uq", Accounts.ACCOUNTS, new OrderField[] { Accounts.ACCOUNTS.NAME }, true);
+        public static Index MEMBERSHIP_ISLAND_ISLAND_PK = Internal.createIndex("membership_island_island_pk", IslandMembership.ISLAND_MEMBERSHIP, new OrderField[] { IslandMembership.ISLAND_MEMBERSHIP.ISLAND_MEMBER_ID, IslandMembership.ISLAND_MEMBERSHIP.ISLAND_ID }, true);
+        public static Index ISLANDERS_ID_PK = Internal.createIndex("islanders_id_pk", Islanders.ISLANDERS, new OrderField[] { Islanders.ISLANDERS.ID }, true);
+        public static Index ISLANDS_ID_PK = Internal.createIndex("islands_id_pk", Islands.ISLANDS, new OrderField[] { Islands.ISLANDS.ID }, true);
+        public static Index LH_ACCOUNT = Internal.createIndex("lh_account", LoginHistories.LOGIN_HISTORIES, new OrderField[] { LoginHistories.LOGIN_HISTORIES.ACCOUNT }, true);
+        public static Index SKYBLOCK_ISLAND_X_Z_PK = Internal.createIndex("skyblock_island_x_z_pk", SkyblockIslands.SKYBLOCK_ISLANDS, new OrderField[] { SkyblockIslands.SKYBLOCK_ISLANDS.X, SkyblockIslands.SKYBLOCK_ISLANDS.Z }, true);
+        public static Index SKYBLOCK_ISLANDS_ID_PK = Internal.createIndex("skyblock_islands_id_pk", SkyblockIslands.SKYBLOCK_ISLANDS, new OrderField[] { SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID }, true);
     }
 }

@@ -59,12 +59,17 @@ public class SkyblockIslandExtendCuboidService {
             }
         });
         Cuboid cuboid = cuboidCalculator.calculateCuboid(islandCoordinates, extendConfig);
-        skyblockIsland.changeCuboid(extendLevel, cuboid);
+        changeCuboid(skyblockIsland, extendLevel, cuboid);
     }
 
     public void extendCuboidToBasic(SkyblockIsland skyblockIsland, IslandCoordinates islandCoordinates) {
         Cuboid cuboid = cuboidCalculator.calculateCuboid(islandCoordinates);
-        skyblockIsland.changeCuboid(0, cuboid);
+        changeCuboid(skyblockIsland, 0, cuboid);
+    }
+
+    private void changeCuboid(SkyblockIsland skyblockIsland, int extendLevel, Cuboid cuboid) {
+        skyblockIsland.setCuboid(cuboid);
+        skyblockIsland.setExtendLevel(extendLevel);
     }
 
     private void validateConditions(Player player, SkyblockIslandExtendCuboidOption extendLevel) {

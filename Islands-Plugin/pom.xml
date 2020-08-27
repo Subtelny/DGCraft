@@ -14,6 +14,7 @@
 
     <modules>
         <module>islands-core</module>
+        <module>islands-api</module>
     </modules>
 
 </project>

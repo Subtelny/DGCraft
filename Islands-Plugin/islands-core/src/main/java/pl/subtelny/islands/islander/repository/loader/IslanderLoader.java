@@ -4,7 +4,7 @@ import org.jooq.Configuration;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.islander.model.IslanderId;
+import pl.subtelny.islands.island.IslanderId;
 
 import java.util.Optional;
 

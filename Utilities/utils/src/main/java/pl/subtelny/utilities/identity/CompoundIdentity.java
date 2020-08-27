@@ -24,9 +24,7 @@ public abstract class CompoundIdentity implements Serializable {
 
     @Override
     public String toString() {
-        return "CompoundIdentity{" +
-                "values=" + Arrays.toString(values) +
-                '}';
+        return String.join(SEPARATOR, values);
     }
 
     @Override

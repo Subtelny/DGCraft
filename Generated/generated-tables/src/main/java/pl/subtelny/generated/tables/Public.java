@@ -16,11 +16,9 @@ import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
 import pl.subtelny.generated.tables.tables.Accounts;
-import pl.subtelny.generated.tables.tables.GuildIslands;
-import pl.subtelny.generated.tables.tables.Guilds;
+import pl.subtelny.generated.tables.tables.IslandMembership;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.Islands;
-import pl.subtelny.generated.tables.tables.IslandsMembership;
 import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.generated.tables.tables.SkyblockIslands;
 
@@ -38,7 +36,7 @@ import pl.subtelny.generated.tables.tables.SkyblockIslands;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = 1510437238;
+    private static final long serialVersionUID = 449211975;
 
     /**
      * The reference instance of <code>public</code>
@@ -51,14 +49,9 @@ public class Public extends SchemaImpl {
     public final Accounts ACCOUNTS = pl.subtelny.generated.tables.tables.Accounts.ACCOUNTS;
 
     /**
-     * The table <code>public.guild_islands</code>.
+     * The table <code>public.island_membership</code>.
      */
-    public final GuildIslands GUILD_ISLANDS = pl.subtelny.generated.tables.tables.GuildIslands.GUILD_ISLANDS;
-
-    /**
-     * The table <code>public.guilds</code>.
-     */
-    public final Guilds GUILDS = pl.subtelny.generated.tables.tables.Guilds.GUILDS;
+    public final IslandMembership ISLAND_MEMBERSHIP = pl.subtelny.generated.tables.tables.IslandMembership.ISLAND_MEMBERSHIP;
 
     /**
      * The table <code>public.islanders</code>.
@@ -69,11 +62,6 @@ public class Public extends SchemaImpl {
      * The table <code>public.islands</code>.
      */
     public final Islands ISLANDS = pl.subtelny.generated.tables.tables.Islands.ISLANDS;
-
-    /**
-     * The table <code>public.islands_membership</code>.
-     */
-    public final IslandsMembership ISLANDS_MEMBERSHIP = pl.subtelny.generated.tables.tables.IslandsMembership.ISLANDS_MEMBERSHIP;
 
     /**
      * The table <code>public.login_histories</code>.
@@ -107,9 +95,8 @@ public class Public extends SchemaImpl {
 
     private final List<Sequence<?>> getSequences0() {
         return Arrays.<Sequence<?>>asList(
-            Sequences.GUILDS_ID_SEQ,
             Sequences.ISLANDS_ID_SEQ,
-            Sequences.LOGIN_HISTORIES_ID_SEQ);
+            Sequences.SKYBLOCK_ISLANDS_ISLAND_ID_SEQ);
     }
 
     @Override
@@ -122,11 +109,9 @@ public class Public extends SchemaImpl {
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
             Accounts.ACCOUNTS,
-            GuildIslands.GUILD_ISLANDS,
-            Guilds.GUILDS,
+            IslandMembership.ISLAND_MEMBERSHIP,
             Islanders.ISLANDERS,
             Islands.ISLANDS,
-            IslandsMembership.ISLANDS_MEMBERSHIP,
             LoginHistories.LOGIN_HISTORIES,
             SkyblockIslands.SKYBLOCK_ISLANDS);
     }

@@ -43,7 +43,6 @@ public class LoginHistoryLoader {
 
     private LoginHistory mapIntoDomain(LoginHistoryAnemia anemia) {
         return new LoginHistoryEntity(
-                anemia.getId(),
                 Period.of(anemia.getLoginTime(), anemia.getLogoutTime()),
                 anemia.getAccountId());
     }

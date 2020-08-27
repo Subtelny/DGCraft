@@ -11,6 +11,7 @@
         <module name="gui-api" />
         <module name="gui-core" />
         <module name="islands-core" />
+        <module name="islands-api" />
         <module name="generated-tables" />
         <module name="components-api" />
         <module name="dgcore-core" />

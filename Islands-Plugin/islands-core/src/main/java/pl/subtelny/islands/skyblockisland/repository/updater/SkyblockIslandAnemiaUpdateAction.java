@@ -70,8 +70,6 @@ public class SkyblockIslandAnemiaUpdateAction extends IslandAnemiaUpdateAction<S
         SkyblockIslandsRecord record = DSL.using(configuration).newRecord(SkyblockIslands.SKYBLOCK_ISLANDS);
         record.setIslandId(islandAnemia.getIslandId().getId());
         record.setExtendLevel(islandAnemia.getExtendLevel());
-        record.setPoints(islandAnemia.getPoints());
-
         IslandCoordinates islandCoordinates = islandAnemia.getIslandCoordinates();
         record.setX(islandCoordinates.getX());
         record.setZ(islandCoordinates.getZ());

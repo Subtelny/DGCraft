@@ -40,14 +40,13 @@
         </dependency>
         <dependency>
             <groupId>pl.subtelny</groupId>
-            <artifactId>utils</artifactId>
+            <artifactId>gui-api</artifactId>
             <version>1</version>
         </dependency>
         <dependency>
             <groupId>pl.subtelny</groupId>
-            <artifactId>gui-api</artifactId>
+            <artifactId>islands-api</artifactId>
             <version>1</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

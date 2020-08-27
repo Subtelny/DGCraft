@@ -2,6 +2,7 @@ package pl.subtelny.core.dbupgrade;
 
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.components.core.api.DependencyActivatorPriority;
 import pl.subtelny.core.api.upgrade.DatabaseUpgrade;
@@ -9,7 +10,8 @@ import pl.subtelny.core.api.upgrade.DatabaseUpgrade;
 import java.util.Comparator;
 import java.util.List;
 
-@DependencyActivatorPriority(priority = DependencyActivatorPriority.Priority.HIGH)
+@Component
+@DependencyActivatorPriority(priority = DependencyActivatorPriority.Priority.LOWEST)
 public class DatabaseUpgradeActivator implements DependencyActivator {
 
     private final List<DatabaseUpgrade> upgrades;

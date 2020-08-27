@@ -10,7 +10,7 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.island.IslandsQueryService;
 import pl.subtelny.islands.island.repository.IslandFindResult;
 import pl.subtelny.islands.islander.IslanderService;
-import pl.subtelny.islands.islander.model.Island;
+import pl.subtelny.islands.island.model.AbstractIsland;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
@@ -50,7 +50,7 @@ public class IslandActionGuard {
         IslandFindResult islandSourceResult = islandService.findIslandAtLocation(source);
         IslandActionGuardResult sourceResult = locationInIsland(source, islandSourceResult);
         if (sourceResult.isActionPermited()) {
-            Optional<Island> sourceIslandOpt = islandSourceResult.getResult();
+            Optional<AbstractIsland> sourceIslandOpt = islandSourceResult.getResult();
             if (sourceIslandOpt.isPresent()) {
                 return locationMatchIsland(target, sourceIslandOpt.get());
             }
@@ -62,14 +62,14 @@ public class IslandActionGuard {
         if (result.isNotIslandWorld()) {
             return IslandActionGuardResult.NOT_ISLAND_WORLD;
         }
-        Optional<Island> islandOpt = result.getResult();
+        Optional<AbstractIsland> islandOpt = result.getResult();
         if (islandOpt.isEmpty()) {
             return IslandActionGuardResult.ACTION_PROHIBITED;
         }
         return locationMatchIsland(location, islandOpt.get());
     }
 
-    private IslandActionGuardResult locationMatchIsland(Location location, Island island) {
+    private IslandActionGuardResult locationMatchIsland(Location location, AbstractIsland island) {
         boolean isInIsland = island.getCuboid().contains(location);
         if (isInIsland) {
             return IslandActionGuardResult.ACTION_PERMITED;
@@ -87,7 +87,7 @@ public class IslandActionGuard {
         return result;
     }
 
-    private void removeNonMatchingBlocksIntoIsland(Island island, List<Block> blocks) {
+    private void removeNonMatchingBlocksIntoIsland(AbstractIsland island, List<Block> blocks) {
         Cuboid islandCuboid = island.getCuboid();
         Iterator<Block> iterator = blocks.iterator();
         while (iterator.hasNext()) {
@@ -139,7 +139,7 @@ public class IslandActionGuard {
         if (islandFindResult.isNotIslandWorld()) {
             return IslandActionGuardResult.ACTION_PERMITED;
         }
-        Optional<Island> islandOpt = islandFindResult.getResult();
+        Optional<AbstractIsland> islandOpt = islandFindResult.getResult();
         Boolean hasAccess = islandOpt.map(island -> playerHasAccessToBuildOnIsland(player, location, island)).orElse(false);
         if (hasAccess) {
             return IslandActionGuardResult.ACTION_PERMITED;
@@ -147,7 +147,7 @@ public class IslandActionGuard {
         return IslandActionGuardResult.ACTION_PROHIBITED;
     }
 
-    private boolean playerHasAccessToBuildOnIsland(Player player, Location location, Island island) {
+    private boolean playerHasAccessToBuildOnIsland(Player player, Location location, AbstractIsland island) {
         Islander islander = islanderService.getIslander(player);
         if (island.isInIsland(islander)) {
             return island.getCuboid().contains(location);

@@ -43,7 +43,7 @@ import pl.subtelny.generated.tables.tables.records.AccountsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Accounts extends TableImpl<AccountsRecord> {
 
-    private static final long serialVersionUID = -421278899;
+    private static final long serialVersionUID = 1137312853;
 
     /**
      * The reference instance of <code>public.accounts</code>
@@ -76,7 +76,7 @@ public class Accounts extends TableImpl<AccountsRecord> {
     /**
      * The column <code>public.accounts.city</code>.
      */
-    public final TableField<AccountsRecord, String> CITY = createField(DSL.name("city"), org.jooq.impl.SQLDataType.VARCHAR(16).nullable(false), this, "");
+    public final TableField<AccountsRecord, String> CITY = createField(DSL.name("city"), org.jooq.impl.SQLDataType.VARCHAR(15), this, "");
 
     /**
      * The column <code>public.accounts.last_online</code>.
@@ -123,17 +123,17 @@ public class Accounts extends TableImpl<AccountsRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.ACCOUNTS_PKEY);
+        return Arrays.<Index>asList(Indexes.ACCOUNTS_ID_PK, Indexes.ACCOUNTS_NAME_UQ);
     }
 
     @Override
     public UniqueKey<AccountsRecord> getPrimaryKey() {
-        return Keys.ACCOUNTS_PKEY;
+        return Keys.ACCOUNTS_ID_PK;
     }
 
     @Override
     public List<UniqueKey<AccountsRecord>> getKeys() {
-        return Arrays.<UniqueKey<AccountsRecord>>asList(Keys.ACCOUNTS_PKEY);
+        return Arrays.<UniqueKey<AccountsRecord>>asList(Keys.ACCOUNTS_ID_PK, Keys.ACCOUNTS_NAME_UQ);
     }
 
     @Override

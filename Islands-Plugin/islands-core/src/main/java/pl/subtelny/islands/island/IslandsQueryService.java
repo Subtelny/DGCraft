@@ -4,17 +4,12 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.islander.model.Island;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.island.repository.IslandFindResult;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandRepository;
 import pl.subtelny.islands.utils.SkyblockIslandUtil;
-import pl.subtelny.jobs.JobsProvider;
-
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @Component
 public class IslandsQueryService {

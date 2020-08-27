@@ -3,12 +3,12 @@ package pl.subtelny.islands.island.repository.loader;
 import org.jooq.Configuration;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
-import pl.subtelny.islands.islander.model.Island;
+import pl.subtelny.islands.island.model.AbstractIsland;
 import pl.subtelny.islands.island.repository.anemia.IslandAnemia;
 
 import java.util.Optional;
 
-public abstract class IslandLoader<ANEMIA extends IslandAnemia, DOMAIN extends Island> {
+public abstract class IslandLoader<ANEMIA extends IslandAnemia, DOMAIN extends AbstractIsland> {
 
 	private final DatabaseConnection databaseConfiguration;
 

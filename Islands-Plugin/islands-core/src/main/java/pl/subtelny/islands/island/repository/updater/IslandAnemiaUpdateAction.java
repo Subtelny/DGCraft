@@ -1,7 +1,6 @@
 package pl.subtelny.islands.island.repository.updater;
 
 import org.jooq.InsertOnDuplicateSetMoreStep;
-import pl.subtelny.generated.tables.enums.Islandtype;
 import pl.subtelny.generated.tables.tables.Islands;
 import pl.subtelny.generated.tables.tables.records.IslandsRecord;
 import pl.subtelny.islands.island.repository.anemia.IslandAnemia;
@@ -36,9 +35,6 @@ public abstract class IslandAnemiaUpdateAction<T extends IslandAnemia, R> implem
 
         String serializedSpawn = LocationSerializer.serializeMinimalistic(islandAnemia.getSpawn());
         islandsRecord.setSpawn(serializedSpawn);
-
-        Islandtype islandType = Islandtype.valueOf(islandAnemia.getIslandType().name());
-        islandsRecord.setType(islandType);
         return islandsRecord;
     }
 }

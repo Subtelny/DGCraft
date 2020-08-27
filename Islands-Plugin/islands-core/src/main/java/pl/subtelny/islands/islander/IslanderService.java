@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.islander.model.IslanderId;
+import pl.subtelny.islands.island.IslanderId;
 import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.jobs.JobsProvider;
 import pl.subtelny.utilities.exception.ValidationException;

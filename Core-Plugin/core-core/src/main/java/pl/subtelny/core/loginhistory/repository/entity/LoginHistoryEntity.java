@@ -8,7 +8,7 @@ import pl.subtelny.utilities.Period;
 
 import java.time.LocalDateTime;
 
-public class LoginHistoryEntity extends BasicIdentity<LoginHistoryId> implements LoginHistory {
+public class LoginHistoryEntity implements LoginHistory {
 
     private final LocalDateTime loginTime;
 
@@ -16,8 +16,7 @@ public class LoginHistoryEntity extends BasicIdentity<LoginHistoryId> implements
 
     private final AccountId accountId;
 
-    public LoginHistoryEntity(LoginHistoryId loginHistoryId, Period period, AccountId accountId) {
-        super(loginHistoryId);
+    public LoginHistoryEntity(Period period, AccountId accountId) {
         Preconditions.checkNotNull(period, "Period cannot be null");
         this.loginTime = Preconditions.checkNotNull(period.getStart(), "LoginTime cannot be null");
         this.logoutTime = Preconditions.checkNotNull(period.getEnd(), "LogoutTime cannot be null");

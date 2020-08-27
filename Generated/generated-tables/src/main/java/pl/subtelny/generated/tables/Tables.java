@@ -7,11 +7,9 @@ package pl.subtelny.generated.tables;
 import javax.annotation.processing.Generated;
 
 import pl.subtelny.generated.tables.tables.Accounts;
-import pl.subtelny.generated.tables.tables.GuildIslands;
-import pl.subtelny.generated.tables.tables.Guilds;
+import pl.subtelny.generated.tables.tables.IslandMembership;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.Islands;
-import pl.subtelny.generated.tables.tables.IslandsMembership;
 import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.generated.tables.tables.SkyblockIslands;
 
@@ -35,14 +33,9 @@ public class Tables {
     public static final Accounts ACCOUNTS = Accounts.ACCOUNTS;
 
     /**
-     * The table <code>public.guild_islands</code>.
+     * The table <code>public.island_membership</code>.
      */
-    public static final GuildIslands GUILD_ISLANDS = GuildIslands.GUILD_ISLANDS;
-
-    /**
-     * The table <code>public.guilds</code>.
-     */
-    public static final Guilds GUILDS = Guilds.GUILDS;
+    public static final IslandMembership ISLAND_MEMBERSHIP = IslandMembership.ISLAND_MEMBERSHIP;
 
     /**
      * The table <code>public.islanders</code>.
@@ -53,11 +46,6 @@ public class Tables {
      * The table <code>public.islands</code>.
      */
     public static final Islands ISLANDS = Islands.ISLANDS;
-
-    /**
-     * The table <code>public.islands_membership</code>.
-     */
-    public static final IslandsMembership ISLANDS_MEMBERSHIP = IslandsMembership.ISLANDS_MEMBERSHIP;
 
     /**
      * The table <code>public.login_histories</code>.

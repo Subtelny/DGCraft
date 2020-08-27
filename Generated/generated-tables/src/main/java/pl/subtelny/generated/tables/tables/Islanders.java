@@ -42,7 +42,7 @@ import pl.subtelny.generated.tables.tables.records.IslandersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Islanders extends TableImpl<IslandersRecord> {
 
-    private static final long serialVersionUID = -311088994;
+    private static final long serialVersionUID = 373774244;
 
     /**
      * The reference instance of <code>public.islanders</code>
@@ -102,26 +102,26 @@ public class Islanders extends TableImpl<IslandersRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.ISLANDERS_PKEY);
+        return Arrays.<Index>asList(Indexes.ISLANDERS_ID_PK);
     }
 
     @Override
     public UniqueKey<IslandersRecord> getPrimaryKey() {
-        return Keys.ISLANDERS_PKEY;
+        return Keys.ISLANDERS_ID_PK;
     }
 
     @Override
     public List<UniqueKey<IslandersRecord>> getKeys() {
-        return Arrays.<UniqueKey<IslandersRecord>>asList(Keys.ISLANDERS_PKEY);
+        return Arrays.<UniqueKey<IslandersRecord>>asList(Keys.ISLANDERS_ID_PK);
     }
 
     @Override
     public List<ForeignKey<IslandersRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<IslandersRecord, ?>>asList(Keys.ISLANDERS__ISLANDERS_ID_FKEY);
+        return Arrays.<ForeignKey<IslandersRecord, ?>>asList(Keys.ISLANDERS__ISLANDERS_ID_FOREIGN);
     }
 
     public Accounts accounts() {
-        return new Accounts(this, Keys.ISLANDERS__ISLANDERS_ID_FKEY);
+        return new Accounts(this, Keys.ISLANDERS__ISLANDERS_ID_FOREIGN);
     }
 
     @Override

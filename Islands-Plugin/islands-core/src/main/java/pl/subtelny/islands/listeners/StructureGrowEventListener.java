@@ -9,13 +9,11 @@ import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.StructureGrowEvent;
-import pl.subtelny.islands.islander.model.Island;
+import pl.subtelny.islands.island.model.AbstractIsland;
 import pl.subtelny.islands.island.IslandsQueryService;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @Component
 public class StructureGrowEventListener implements Listener {
@@ -37,7 +35,7 @@ public class StructureGrowEventListener implements Listener {
         result.getResult().ifPresent(island -> removeBlocksWhenNotInIsland(e.getBlocks(), island));
     }
 
-    private void removeBlocksWhenNotInIsland(List<BlockState> blocks, Island island) {
+    private void removeBlocksWhenNotInIsland(List<BlockState> blocks, AbstractIsland island) {
         Cuboid cuboid = island.getCuboid();
         blocks.stream()
                 .filter(blockState -> !cuboid.contains(blockState.getLocation()))

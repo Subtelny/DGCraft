@@ -5,7 +5,6 @@ import org.jooq.impl.DSL;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.core.loginhistory.repository.LoginHistoryAnemia;
-import pl.subtelny.core.loginhistory.repository.entity.LoginHistoryId;
 import pl.subtelny.repository.LoadAction;
 
 import java.sql.Timestamp;
@@ -56,15 +55,13 @@ public class LoginHistoryAnemiaLoadAction implements LoadAction<LoginHistoryAnem
     }
 
     private LoginHistoryAnemia mapToAnemia(Record record) {
-        Integer id = record.get(LoginHistories.LOGIN_HISTORIES.ID);
         UUID uuid = record.get(LoginHistories.LOGIN_HISTORIES.ACCOUNT);
         Timestamp loginTime = record.get(LoginHistories.LOGIN_HISTORIES.LOGIN_TIME);
         Timestamp logoutTime = record.get(LoginHistories.LOGIN_HISTORIES.LOGOUT_TIME);
 
-        LoginHistoryId loginHistoryId = LoginHistoryId.of(id);
         AccountId accountId = AccountId.of(uuid);
         LocalDateTime loginTimeDate = loginTime.toLocalDateTime();
         LocalDateTime logoutTimeDate = logoutTime.toLocalDateTime();
-        return new LoginHistoryAnemia(loginHistoryId, accountId, loginTimeDate, logoutTimeDate);
+        return new LoginHistoryAnemia(accountId, loginTimeDate, logoutTimeDate);
     }
 }

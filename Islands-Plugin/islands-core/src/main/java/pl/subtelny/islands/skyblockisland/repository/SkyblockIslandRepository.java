@@ -7,11 +7,10 @@ import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.islander.model.IslanderId;
+import pl.subtelny.islands.island.IslanderId;
 import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidCalculator;
-import pl.subtelny.islands.skyblockisland.islandmembership.IslandMembershipRepository;
-import pl.subtelny.islands.skyblockisland.model.MembershipType;
+import pl.subtelny.islands.islandmembership.IslandMembershipRepository;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.repository.loader.SkyblockIslandLoader;
 import pl.subtelny.islands.skyblockisland.repository.storage.SkyblockIslandStorage;
@@ -46,11 +45,8 @@ public class SkyblockIslandRepository {
     }
 
     public SkyblockIsland createIsland(IslandCoordinates islandCoordinates, Location spawn, Cuboid cuboid, Islander owner) {
-        SkyblockIsland island = new SkyblockIsland(null, spawn, cuboid, owner, islandCoordinates);
+        SkyblockIsland island = null;//new SkyblockIsland(null, spawn, cuboid, owner, islandCoordinates);
         SkyblockIslandId islandId = updater.update(island);
-        Map<IslanderId, MembershipType> membership = island.getMembers().entrySet().stream()
-                .collect(Collectors.toMap(entry -> entry.getKey().getIslanderId(), Map.Entry::getValue));
-        islandMembershipRepository.updateIslandMembership(islandId, membership);
         return findSkyblockIsland(islandId).orElseThrow();
     }
 

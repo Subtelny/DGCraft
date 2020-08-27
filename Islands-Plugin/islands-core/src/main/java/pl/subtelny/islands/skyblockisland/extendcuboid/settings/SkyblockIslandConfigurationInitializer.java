@@ -11,7 +11,7 @@ import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
 
 @Component
-@DependencyActivatorPriority(priority = DependencyActivatorPriority.Priority.LOWEST)
+@DependencyActivatorPriority(priority = DependencyActivatorPriority.Priority.LOW)
 public class SkyblockIslandConfigurationInitializer implements DependencyActivator {
 
     private final IslanderRepository islanderRepository;

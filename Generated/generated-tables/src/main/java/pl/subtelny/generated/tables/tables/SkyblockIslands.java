@@ -11,10 +11,11 @@ import javax.annotation.processing.Generated;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row5;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -41,7 +42,7 @@ import pl.subtelny.generated.tables.tables.records.SkyblockIslandsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SkyblockIslands extends TableImpl<SkyblockIslandsRecord> {
 
-    private static final long serialVersionUID = -1675857140;
+    private static final long serialVersionUID = 792788137;
 
     /**
      * The reference instance of <code>public.skyblock_islands</code>
@@ -59,7 +60,7 @@ public class SkyblockIslands extends TableImpl<SkyblockIslandsRecord> {
     /**
      * The column <code>public.skyblock_islands.island_id</code>.
      */
-    public final TableField<SkyblockIslandsRecord, Integer> ISLAND_ID = createField(DSL.name("island_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<SkyblockIslandsRecord, Integer> ISLAND_ID = createField(DSL.name("island_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('skyblock_islands_island_id_seq'::regclass)", org.jooq.impl.SQLDataType.INTEGER)), this, "");
 
     /**
      * The column <code>public.skyblock_islands.x</code>.
@@ -72,14 +73,9 @@ public class SkyblockIslands extends TableImpl<SkyblockIslandsRecord> {
     public final TableField<SkyblockIslandsRecord, Integer> Z = createField(DSL.name("z"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>public.skyblock_islands.points</code>.
-     */
-    public final TableField<SkyblockIslandsRecord, Integer> POINTS = createField(DSL.name("points"), org.jooq.impl.SQLDataType.INTEGER.defaultValue(org.jooq.impl.DSL.field("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
-
-    /**
      * The column <code>public.skyblock_islands.extend_level</code>.
      */
-    public final TableField<SkyblockIslandsRecord, Integer> EXTEND_LEVEL = createField(DSL.name("extend_level"), org.jooq.impl.SQLDataType.INTEGER.defaultValue(org.jooq.impl.DSL.field("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
+    public final TableField<SkyblockIslandsRecord, Integer> EXTEND_LEVEL = createField(DSL.name("extend_level"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
 
     /**
      * Create a <code>public.skyblock_islands</code> table reference
@@ -121,26 +117,31 @@ public class SkyblockIslands extends TableImpl<SkyblockIslandsRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.SKYBLOCK_ISLANDS_PKEY, Indexes.SKYBLOCK_ISLANDS_X_Z_KEY);
+        return Arrays.<Index>asList(Indexes.SKYBLOCK_ISLAND_X_Z_PK, Indexes.SKYBLOCK_ISLANDS_ID_PK);
+    }
+
+    @Override
+    public Identity<SkyblockIslandsRecord, Integer> getIdentity() {
+        return Keys.IDENTITY_SKYBLOCK_ISLANDS;
     }
 
     @Override
     public UniqueKey<SkyblockIslandsRecord> getPrimaryKey() {
-        return Keys.SKYBLOCK_ISLANDS_PKEY;
+        return Keys.SKYBLOCK_ISLAND_X_Z_PK;
     }
 
     @Override
     public List<UniqueKey<SkyblockIslandsRecord>> getKeys() {
-        return Arrays.<UniqueKey<SkyblockIslandsRecord>>asList(Keys.SKYBLOCK_ISLANDS_PKEY, Keys.SKYBLOCK_ISLANDS_X_Z_KEY);
+        return Arrays.<UniqueKey<SkyblockIslandsRecord>>asList(Keys.SKYBLOCK_ISLANDS_ID_PK, Keys.SKYBLOCK_ISLAND_X_Z_PK);
     }
 
     @Override
     public List<ForeignKey<SkyblockIslandsRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<SkyblockIslandsRecord, ?>>asList(Keys.SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ISLAND_ID_FKEY);
+        return Arrays.<ForeignKey<SkyblockIslandsRecord, ?>>asList(Keys.SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ID_FK);
     }
 
     public Islands islands() {
-        return new Islands(this, Keys.SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ISLAND_ID_FKEY);
+        return new Islands(this, Keys.SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ID_FK);
     }
 
     @Override
@@ -170,11 +171,11 @@ public class SkyblockIslands extends TableImpl<SkyblockIslandsRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<Integer, Integer, Integer, Integer, Integer> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row4<Integer, Integer, Integer, Integer> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 }

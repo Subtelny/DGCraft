@@ -1,5 +1,6 @@
 package pl.subtelny.components.core;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import pl.subtelny.components.core.api.BeanContextException;
 import pl.subtelny.components.core.prototype.BeanPrototype;
@@ -15,6 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BeansInitializer {
 
@@ -35,16 +37,20 @@ public class BeansInitializer {
     }
 
     private int getBeanPrototypeDependencyCount(BeanPrototype beanPrototype) {
-        Class[] parameterTypes = beanPrototype.getConstructor().getParameterTypes();
-        List<BeanPrototype> dependencyBeans = Arrays.stream(parameterTypes)
-                .map(aClass ->
-                        beanPrototypes.stream()
-                                .filter(bean -> bean.isBeanPrototypeClass(aClass))
-                                .findAny()
-                                .get()
-                )
+        List<BeanPrototype> dependencyBeans = Arrays.stream(beanPrototype.getConstructor().getParameters())
+                .flatMap(parameter -> {
+                    Class<?> parameterType = parameter.getType();
+                    if (CollectionUtil.isCollection(parameterType)) {
+                        Class<?> genericType = BeanUtil.genericTypeFromParemeter(parameter);
+                        return findBeanPrototypes(genericType).stream();
+                    }
+                    return Stream.of(findBeanPrototype(parameterType));
+                })
                 .collect(Collectors.toList());
-        int deepDependencyCount = dependencyBeans.stream().map(this::getBeanPrototypeDependencyCount).mapToInt(Integer::intValue).sum();
+        int deepDependencyCount = dependencyBeans.stream()
+                .map(this::getBeanPrototypeDependencyCount)
+                .mapToInt(Integer::intValue)
+                .sum();
         return dependencyBeans.size() + deepDependencyCount;
     }
 
