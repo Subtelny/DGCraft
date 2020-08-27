@@ -42,14 +42,14 @@ public class InventoryClickListener implements Listener {
 
             Optional<PlayerCrateSession> sessionOpt = sessionService.getSession(player);
             if (sessionOpt.isEmpty()) {
-                player.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
+                player.closeInventory();
                 return;
             }
 
             PlayerCrateSession session = sessionOpt.get();
             CraftCrateInventory crateInventory = (CraftCrateInventory) topInventory;
             if (!session.isSameInventory(crateInventory)) {
-                player.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
+                player.closeInventory();
                 return;
             }
 

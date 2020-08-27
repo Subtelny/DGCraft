@@ -33,7 +33,7 @@ public class InventoryOpenListener implements Listener {
         Inventory inventory = e.getInventory();
         if (CrateUtil.isCrateInventory(inventory)) {
             if (!sessionService.hasSession(player)) {
-                player.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
+                player.closeInventory();
             }
         }
     }
