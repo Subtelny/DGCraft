@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="GUI">
-    <output-path>$PROJECT_DIR$/../Desktop/Minecraft Serwer/plugins</output-path>
-    <root id="archive" name="GUI.jar">
-      <element id="module-output" name="gui-core" />
-      <element id="module-output" name="gui-api" />
-    </root>
-  </artifact>
-</component>
