@@ -17,6 +17,7 @@
         <module>Utilities</module>
         <module>Commands</module>
         <module>GUI-Plugin</module>
+        <module>Groups</module>
     </modules>
 
     <repositories>

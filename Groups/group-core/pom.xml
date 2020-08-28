@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>Groups</artifactId>
+        <groupId>pl.subtelny</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>group-core</artifactId>
+    <version>1</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>pl.subtelny</groupId>
+            <artifactId>islands-api</artifactId>
+            <version>1</version>
+        </dependency>
+        <dependency>
+            <groupId>pl.subtelny</groupId>
+            <artifactId>components-api</artifactId>
+            <version>1</version>
+        </dependency>
+        <dependency>
+            <groupId>pl.subtelny</groupId>
+            <artifactId>components-core</artifactId>
+            <version>1</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+</project>
