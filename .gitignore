@@ -1,6 +1,8 @@
 # Project exclude paths
 .gitignore
 target/
-.idea/
+.idea/*
+!.idea/artifacts/
+!.idea/libraries/
 .DS_Store
 *.iml
