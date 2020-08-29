@@ -15,11 +15,6 @@
     <dependencies>
         <dependency>
             <groupId>pl.subtelny</groupId>
-            <artifactId>islands-api</artifactId>
-            <version>1</version>
-        </dependency>
-        <dependency>
-            <groupId>pl.subtelny</groupId>
             <artifactId>components-api</artifactId>
             <version>1</version>
         </dependency>
