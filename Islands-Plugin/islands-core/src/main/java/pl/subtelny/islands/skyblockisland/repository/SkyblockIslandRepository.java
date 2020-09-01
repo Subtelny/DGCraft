@@ -10,7 +10,6 @@ import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.island.IslanderId;
 import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidCalculator;
-import pl.subtelny.islands.islandmembership.IslandMembershipRepository;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.repository.loader.SkyblockIslandLoader;
 import pl.subtelny.islands.skyblockisland.repository.storage.SkyblockIslandStorage;
@@ -24,8 +23,6 @@ import java.util.stream.Collectors;
 @Component
 public class SkyblockIslandRepository {
 
-    private final IslandMembershipRepository islandMembershipRepository;
-
     private final SkyblockIslandLoader loader;
 
     private final SkyblockIslandStorage storage;
@@ -33,14 +30,12 @@ public class SkyblockIslandRepository {
     private final SkyblockIslandUpdater updater;
 
     @Autowired
-    public SkyblockIslandRepository(IslandMembershipRepository islandMembershipRepository,
-                                    DatabaseConnection databaseConfiguration,
+    public SkyblockIslandRepository(DatabaseConnection databaseConfiguration,
                                     IslanderRepository islanderRepository,
                                     SkyblockIslandExtendCuboidCalculator extendCuboidCalculator,
                                     TransactionProvider transactionProvider) {
-        this.islandMembershipRepository = islandMembershipRepository;
         this.storage = new SkyblockIslandStorage();
-        this.loader = new SkyblockIslandLoader(databaseConfiguration, islanderRepository, islandMembershipRepository, extendCuboidCalculator, transactionProvider);
+        this.loader = new SkyblockIslandLoader(databaseConfiguration, islanderRepository, extendCuboidCalculator, transactionProvider);
         this.updater = new SkyblockIslandUpdater(databaseConfiguration, transactionProvider);
     }
 

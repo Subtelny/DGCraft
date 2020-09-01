@@ -1,19 +1,18 @@
 package pl.subtelny.islands.island.model;
 
 import org.bukkit.Location;
+import pl.subtelny.groups.api.Group;
+import pl.subtelny.groups.api.GroupId;
+import pl.subtelny.groups.api.GroupsContext;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMember;
-import pl.subtelny.islands.island.IslandMemberRank;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.cuboid.Cuboid;
 import pl.subtelny.utilities.location.LocationUtil;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class AbstractIsland implements Island {
 
@@ -25,7 +24,7 @@ public abstract class AbstractIsland implements Island {
 
     protected Location spawn;
 
-    protected Map<IslandMember, IslandMemberRank> members = new HashMap<>();
+    protected GroupsContext groupsContext;
 
     private int points;
 
@@ -57,14 +56,8 @@ public abstract class AbstractIsland implements Island {
     }
 
     @Override
-    public Map<IslandMember, IslandMemberRank> getMembers() {
-        return new HashMap<>(members);
-    }
-
-    @Override
-    public IslandMemberRank getMemberRank(IslandMember member) {
-        validateIsMember(member);
-        return members.get(member);
+    public Map<IslandMember, List<Group>> getMembers() {
+        return null;
     }
 
     @Override
@@ -74,10 +67,30 @@ public abstract class AbstractIsland implements Island {
 
     @Override
     public boolean isInIsland(IslandMember member) {
-        return members.containsKey(member);
+        return false;//members.containsKey(member);
     }
 
     @Override
+    public void join(IslandMember member, GroupId rank) {
+
+    }
+
+    @Override
+    public void exit(IslandMember member) {
+
+    }
+
+    @Override
+    public void addRank(IslandMember member, GroupId groupId) {
+
+    }
+
+    @Override
+    public void removeRank(IslandMember member, GroupId groupId) {
+
+    }
+
+    /*@Override
     public void join(IslandMember member, IslandMemberRank rank) {
         Validation.isTrue(!members.containsKey(member), "island.join_already_member", member.getId());
         validateUniqueRank(member, rank);
@@ -110,7 +123,7 @@ public abstract class AbstractIsland implements Island {
                     .findAny();
             Validation.isTrue(islandMemberOpt.isEmpty(), "island.changeRank.rank_unique", member.getId(), rank);
         }
-    }
+    }*/
 
     @Override
     public void changeSpawn(Location spawn) {
@@ -138,8 +151,7 @@ public abstract class AbstractIsland implements Island {
         return islandId.equals(that.islandId) &&
                 Objects.equals(createdDate, that.createdDate) &&
                 Objects.equals(cuboid, that.cuboid) &&
-                Objects.equals(spawn, that.spawn) &&
-                Objects.equals(members, that.members);
+                Objects.equals(spawn, that.spawn);
     }
 
     @Override

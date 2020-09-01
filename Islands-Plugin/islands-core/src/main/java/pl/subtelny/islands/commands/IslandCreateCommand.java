@@ -12,6 +12,7 @@ import pl.subtelny.islands.Islands;
 import pl.subtelny.islands.islander.IslanderService;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.message.IslandMessages;
+import pl.subtelny.islands.skyblockisland.creator.SkyblockIslandCreateRequest;
 import pl.subtelny.islands.skyblockisland.creator.SkyblockIslandCreator;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.schematic.SkyblockIslandSchematicOption;
@@ -19,6 +20,7 @@ import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
 import pl.subtelny.jobs.JobsProvider;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.exception.ValidationException;
+import pl.subtelny.utilities.log.LogUtil;
 
 import java.util.Optional;
 
@@ -27,7 +29,7 @@ public class IslandCreateCommand extends BaseCommand {
 
     private final IslanderService islanderService;
 
-    private final SkyblockIslandCreator creator;
+    private final SkyblockIslandCreator islandCreator;
 
     private final SkyblockIslandSettings settings;
 
@@ -38,13 +40,13 @@ public class IslandCreateCommand extends BaseCommand {
     @Autowired
     public IslandCreateCommand(IslandMessages messages,
                                IslanderService islanderService,
-                               SkyblockIslandCreator creator,
+                               SkyblockIslandCreator islandCreator,
                                SkyblockIslandSettings settings,
                                CrateRepository crateRepository,
                                PlayerCrateSessionService sessionService) {
         super(messages);
         this.islanderService = islanderService;
-        this.creator = creator;
+        this.islandCreator = islandCreator;
         this.settings = settings;
         this.crateRepository = crateRepository;
         this.sessionService = sessionService;
@@ -55,36 +57,45 @@ public class IslandCreateCommand extends BaseCommand {
         Player player = (Player) sender;
         Islander islander = islanderService.getIslander(player);
 
-        if (args.length > 0) {
-            SkyblockIslandSchematicOption schematicOption = getSchematicOption(args[0]);
-            creator.createIsland(islander, schematicOption).whenComplete((skyblockIsland, throwable) -> {
-                if (throwable != null) {
-                    islandFailureCreate(player, throwable);
-                } else {
-                    islandSucessfullyCreated(player, skyblockIsland);
-                }
-            });
-        } else {
+        if (args.length == 0) {
             openGuiCreator(player);
+            return;
         }
+        SkyblockIslandSchematicOption schematicOption = getSchematicOption(args[0]);
+        createIsland(schematicOption, player, islander);
     }
 
-    public void islandFailureCreate(Player player, Throwable throwable) {
-        throwable.printStackTrace();
+    private void createIsland(SkyblockIslandSchematicOption schematicOption, Player player, Islander islander) {
+        SkyblockIslandCreateRequest request = SkyblockIslandCreateRequest.builder(islander)
+                .option(schematicOption)
+                .build();
+
+        islandCreator.create(request)
+                .whenComplete((skyblockIsland, throwable) -> {
+                    if (throwable != null) {
+                        islandFailureCreate(player, throwable);
+                    } else {
+                        islandSucessfullyCreated(player, skyblockIsland);
+                    }
+                });
+    }
+
+    private void islandFailureCreate(Player player, Throwable throwable) {
+        LogUtil.warning("Error while creating island: " + throwable.getMessage());
         getMessages().sendTo(player, getMessages().getRawMessage("command.island.create.internal_error"));
     }
 
-    public void islandSucessfullyCreated(Player player, SkyblockIsland skyblockIsland) {
+    private void islandSucessfullyCreated(Player player, SkyblockIsland skyblockIsland) {
         JobsProvider.runSync(Islands.plugin, () -> {
             player.teleport(skyblockIsland.getSpawn());
+            getMessages().sendTo(player, getMessages().getRawMessage("command.island.create.island_created"));
         });
-        getMessages().sendTo(player, getMessages().getRawMessage("command.island.create.island_created"));
     }
 
     private void openGuiCreator(Player player) {
         String creatorGui = settings.getCreatorGui();
         Crate crate = crateRepository.findInternalCrate(creatorGui)
-                .orElseThrow(() -> ValidationException.of("command.island.create.create_gui_not_found"));
+                .orElseThrow(() -> ValidationException.of("command.island.create.gui_not_found"));
         sessionService.openSession(player, crate);
     }
 

@@ -4,7 +4,6 @@ import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftInventoryCustom;
 import org.bukkit.inventory.InventoryHolder;
 import pl.subtelny.gui.api.crate.inventory.CrateInventory;
 import pl.subtelny.gui.api.crate.model.CrateId;
-
 import java.util.Objects;
 
 public class CraftCrateInventory extends CraftInventoryCustom implements CrateInventory {

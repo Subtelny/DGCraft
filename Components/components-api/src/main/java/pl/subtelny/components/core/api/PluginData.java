@@ -1,5 +1,6 @@
 package pl.subtelny.components.core.api;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ public class PluginData {
     }
 
     public List<String> getPaths() {
-        return paths;
+        return new ArrayList<>(paths);
     }
 
     public ClassLoader getClassLoader() {

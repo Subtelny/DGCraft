@@ -3,7 +3,6 @@ package pl.subtelny.islands.skyblockisland.model;
 import org.bukkit.Location;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMember;
-import pl.subtelny.islands.island.IslandMemberRank;
 import pl.subtelny.islands.island.model.AbstractIsland;
 import pl.subtelny.islands.islander.model.*;
 import pl.subtelny.islands.skyblockisland.SkyblockIslandUtil;
@@ -26,12 +25,6 @@ public class SkyblockIsland extends AbstractIsland {
     public SkyblockIsland(SkyblockIslandId islandId, Location spawn, LocalDateTime createdDate, Cuboid cuboid, IslandCoordinates islandCoordinates) {
         super(islandId, spawn, createdDate, cuboid);
         this.islandCoordinates = islandCoordinates;
-    }
-
-    @Override
-    public void join(IslandMember member, IslandMemberRank rank) {
-        validateIslander(member);
-        super.join(member, rank);
     }
 
     public Location recalculateSpawn() {
@@ -57,15 +50,6 @@ public class SkyblockIsland extends AbstractIsland {
     public void setExtendLevel(int extendLevel) {
         Validation.isTrue(extendLevel >= 0, "skyblockIsland.setExtendLevel.less_than_zero");
         this.extendLevel = extendLevel;
-    }
-
-    public Islander getOwner() {
-        return members.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(SkyblockIslandUtil.RANK_OWNER))
-                .map(Map.Entry::getKey)
-                .findAny()
-                .map(islandMember -> (Islander) islandMember)
-                .orElseThrow(() -> ValidationException.of("skyblockIsland.getOwner.owner_not_found" + getId()));
     }
 
     public int getExtendLevel() {

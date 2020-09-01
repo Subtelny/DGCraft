@@ -8,6 +8,8 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.core.api.schematic.SchematicLoader;
 import pl.subtelny.islands.Islands;
+import pl.subtelny.islands.island.creator.IslandCreateRequest;
+import pl.subtelny.islands.island.creator.IslandCreator;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidCalculator;
@@ -29,7 +31,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class SkyblockIslandCreator {
+public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, SkyblockIslandCreateRequest> {
 
     private final TransactionProvider transactionProvider;
 
@@ -50,15 +52,11 @@ public class SkyblockIslandCreator {
         this.settings = settings;
     }
 
-    public CompletableFuture<SkyblockIsland> createIsland(Islander islander, @Nullable IslandCoordinates coordinates, @Nullable SkyblockIslandSchematicOption schematic) {
-        IslandCoordinates islandCoordinates = Optional.ofNullable(coordinates).orElse(getNextIslandCoordinates());
-        SkyblockIslandSchematicOption schematicOption = Optional.ofNullable(schematic)
-                .orElse(settings.getDefaultSchematicOption());
-        return createSkyblockIsland(islander, islandCoordinates, schematicOption);
-    }
-
-    public CompletableFuture<SkyblockIsland> createIsland(Islander islander, SkyblockIslandSchematicOption schematic) {
-        return createIsland(islander, null, schematic);
+    @Override
+    public CompletableFuture<SkyblockIsland> create(SkyblockIslandCreateRequest request) {
+        IslandCoordinates islandCoordinates = request.getCoordinates().orElse(getNextIslandCoordinates());
+        SkyblockIslandSchematicOption schematicOption = request.getOption().orElse(settings.getDefaultSchematicOption());
+        return createSkyblockIsland(request.getIslander(), islandCoordinates, schematicOption);
     }
 
     private CompletableFuture<SkyblockIsland> createSkyblockIsland(Islander islander, IslandCoordinates coordinates, SkyblockIslandSchematicOption schematic) {

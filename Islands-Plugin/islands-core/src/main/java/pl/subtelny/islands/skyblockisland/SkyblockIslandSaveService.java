@@ -12,9 +12,4 @@ public class SkyblockIslandSaveService implements IslandSaver<SkyblockIsland> {
 
     }
 
-    @Override
-    public Class<SkyblockIsland> getIslandClass() {
-        return SkyblockIsland.class;
-    }
-
 }

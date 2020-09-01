@@ -1,9 +1,12 @@
 package pl.subtelny.islands.island;
 
 import org.bukkit.Location;
+import pl.subtelny.groups.api.Group;
+import pl.subtelny.groups.api.GroupId;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 public interface Island {
@@ -16,19 +19,19 @@ public interface Island {
 
     int getPoints();
 
-    Map<IslandMember, IslandMemberRank> getMembers();
-
-    IslandMemberRank getMemberRank(IslandMember member);
+    Map<IslandMember, List<Group>> getMembers();
 
     Location getSpawn();
 
     boolean isInIsland(IslandMember member);
 
-    void join(IslandMember member, IslandMemberRank rank);
+    void join(IslandMember member, GroupId rank);
 
     void exit(IslandMember member);
 
-    void changeRank(IslandMember member, IslandMemberRank rank);
+    void addRank(IslandMember member, GroupId groupId);
+
+    void removeRank(IslandMember member, GroupId groupId);
 
     void changeSpawn(Location spawn);
 
