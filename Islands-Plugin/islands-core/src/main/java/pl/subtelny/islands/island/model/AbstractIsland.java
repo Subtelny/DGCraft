@@ -28,6 +28,15 @@ public abstract class AbstractIsland implements Island {
 
     private int points;
 
+    public AbstractIsland(IslandId islandId, LocalDateTime createdDate, Cuboid cuboid, Location spawn, GroupsContext groupsContext, int points) {
+        this.islandId = islandId;
+        this.createdDate = createdDate;
+        this.cuboid = cuboid;
+        this.spawn = spawn;
+        this.groupsContext = groupsContext;
+        this.points = points;
+    }
+
     public AbstractIsland(IslandId islandId, Location spawn, LocalDateTime createdDate, Cuboid cuboid) {
         this.islandId = islandId;
         this.spawn = spawn;

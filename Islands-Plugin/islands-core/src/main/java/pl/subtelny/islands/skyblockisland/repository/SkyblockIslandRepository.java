@@ -5,10 +5,8 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
+import pl.subtelny.groups.api.GroupsContextService;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
-import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.islander.repository.IslanderRepository;
-import pl.subtelny.islands.islandmembership.repository.IslandMembershipRepository;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidCalculator;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.repository.loader.SkyblockIslandLoader;
@@ -27,24 +25,19 @@ public class SkyblockIslandRepository {
 
     private final SkyblockIslandUpdater updater;
 
-    private final IslandMembershipRepository islandMembershipRepository;
-
     @Autowired
     public SkyblockIslandRepository(DatabaseConnection databaseConfiguration,
-                                    IslanderRepository islanderRepository,
                                     SkyblockIslandExtendCuboidCalculator extendCuboidCalculator,
-                                    TransactionProvider transactionProvider,
-                                    IslandMembershipRepository islandMembershipRepository) {
-        this.islandMembershipRepository = islandMembershipRepository;
+                                    GroupsContextService groupsContextService,
+                                    TransactionProvider transactionProvider) {
         this.storage = new SkyblockIslandStorage();
-        this.loader = new SkyblockIslandLoader(databaseConfiguration, islanderRepository, extendCuboidCalculator, transactionProvider);
+        this.loader = new SkyblockIslandLoader(databaseConfiguration, extendCuboidCalculator, transactionProvider, groupsContextService);
         this.updater = new SkyblockIslandUpdater(databaseConfiguration, transactionProvider);
     }
 
-    public SkyblockIsland createIsland(IslandCoordinates islandCoordinates, Location spawn, Cuboid cuboid, Islander owner) {
+    public SkyblockIsland createIsland(IslandCoordinates islandCoordinates, Location spawn, Cuboid cuboid) {
         SkyblockIsland island = new SkyblockIsland(null, spawn, cuboid, islandCoordinates);
         SkyblockIslandId islandId = updater.update(island);
-        islandMembershipRepository.createIslandMembership(owner, islandId);
         return findSkyblockIsland(islandId).orElseThrow();
     }
 

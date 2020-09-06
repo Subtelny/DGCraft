@@ -1,29 +1,24 @@
 package pl.subtelny.islands.skyblockisland.creator;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.core.api.schematic.SchematicLoader;
-import pl.subtelny.islands.Islands;
-import pl.subtelny.islands.island.creator.IslandCreateRequest;
+import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.creator.IslandCreator;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.islander.model.Islander;
+import pl.subtelny.islands.islandmembership.repository.IslandMembershipRepository;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidCalculator;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandRepository;
 import pl.subtelny.islands.skyblockisland.schematic.SkyblockIslandSchematicOption;
 import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
-import pl.subtelny.jobs.JobsProvider;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.cuboid.Cuboid;
-import pl.subtelny.utilities.cuboid.CuboidUtil;
 import pl.subtelny.utilities.exception.ValidationException;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -37,17 +32,21 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Skyb
 
     private final SkyblockIslandRepository repository;
 
-    private final SchematicLoader schematicLoader;
+    private final IslandMembershipRepository islandMembershipRepository;
 
     private final SkyblockIslandExtendCuboidCalculator cuboidCalculator;
 
     private final SkyblockIslandSettings settings;
 
     @Autowired
-    public SkyblockIslandCreator(TransactionProvider transactionProvider, SkyblockIslandRepository repository, SchematicLoader schematicLoader, SkyblockIslandExtendCuboidCalculator cuboidCalculator, SkyblockIslandSettings settings) {
+    public SkyblockIslandCreator(TransactionProvider transactionProvider,
+                                 SkyblockIslandRepository repository,
+                                 IslandMembershipRepository islandMembershipRepository,
+                                 SkyblockIslandExtendCuboidCalculator cuboidCalculator,
+                                 SkyblockIslandSettings settings) {
         this.transactionProvider = transactionProvider;
         this.repository = repository;
-        this.schematicLoader = schematicLoader;
+        this.islandMembershipRepository = islandMembershipRepository;
         this.cuboidCalculator = cuboidCalculator;
         this.settings = settings;
     }
@@ -65,9 +64,19 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Skyb
         Cuboid cuboid = cuboidCalculator.calculateCuboid(coordinates);
         return transactionProvider.transactionResultAsync(() -> {
             pasteSchematic(schematic, cuboid.getCenter());
-            Location spawn = new SkyblockIslandSpawnCalculator(cuboid).calculate();
-            return repository.createIsland(coordinates, spawn, cuboid, islander);
+            SkyblockIsland island = createSkyblockIsland(coordinates, cuboid);
+            createOwnerIslandMembership(islander, island.getId());
+            return island;
         }).toCompletableFuture();
+    }
+
+    private void createOwnerIslandMembership(Islander islander, IslandId islandId) {
+        islandMembershipRepository.createIslandMembership(islander, islandId);
+    }
+
+    private SkyblockIsland createSkyblockIsland(IslandCoordinates coordinates, Cuboid cuboid) {
+        Location spawn = new SkyblockIslandSpawnCalculator(cuboid).calculate();
+        return repository.createIsland(coordinates, spawn, cuboid);
     }
 
     private void pasteSchematic(SkyblockIslandSchematicOption schematic, Location center) {
@@ -75,7 +84,7 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Skyb
             CountDownLatch latch = new CountDownLatch(1);
             File schematicFile = new File(schematic.getSchematicFilePath());
             Validation.isTrue(schematicFile.exists(), "creator.skyblockIsland.schema_file_not_found", schematic.getSchematicFilePath());
-            schematicLoader.pasteSchematic(center, schematicFile, aBoolean -> latch.countDown());
+            SchematicLoader.pasteSchematic(center, schematicFile, aBoolean -> latch.countDown());
             latch.await(1, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
             throw ValidationException.of("creator.skyblockIsland.error_while_pasting_island");

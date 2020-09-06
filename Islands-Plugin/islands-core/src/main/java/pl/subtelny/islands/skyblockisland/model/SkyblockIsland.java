@@ -1,6 +1,8 @@
 package pl.subtelny.islands.skyblockisland.model;
 
 import org.bukkit.Location;
+import pl.subtelny.groups.api.GroupsContext;
+import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMember;
 import pl.subtelny.islands.island.model.AbstractIsland;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
@@ -18,6 +20,25 @@ public class SkyblockIsland extends AbstractIsland {
     private final IslandCoordinates islandCoordinates;
 
     private int extendLevel;
+
+    public SkyblockIsland(SkyblockIslandId islandId,
+                          Location spawn,
+                          LocalDateTime createdDate,
+                          Cuboid cuboid,
+                          GroupsContext groupsContext,
+                          IslandCoordinates islandCoordinates,
+                          int points,
+                          int extendLevel) {
+        super(islandId, createdDate, cuboid, spawn, groupsContext, points);
+        this.islandCoordinates = islandCoordinates;
+        this.extendLevel = extendLevel;
+    }
+
+    public SkyblockIsland(IslandId islandId, Location spawn, LocalDateTime createdDate, Cuboid cuboid, IslandCoordinates islandCoordinates, int extendLevel) {
+        super(islandId, spawn, createdDate, cuboid);
+        this.islandCoordinates = islandCoordinates;
+        this.extendLevel = extendLevel;
+    }
 
     public SkyblockIsland(SkyblockIslandId islandId, Location spawn, LocalDateTime createdDate, Cuboid cuboid, IslandCoordinates islandCoordinates) {
         super(islandId, spawn, createdDate, cuboid);

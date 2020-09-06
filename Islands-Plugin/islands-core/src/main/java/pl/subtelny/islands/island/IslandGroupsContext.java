@@ -1,10 +1,12 @@
 package pl.subtelny.islands.island;
 
 import pl.subtelny.groups.api.Group;
+import pl.subtelny.groups.api.GroupId;
 import pl.subtelny.groups.api.GroupMemberId;
 import pl.subtelny.groups.api.GroupsContext;
 
 import java.util.List;
+import java.util.Optional;
 
 public class IslandGroupsContext implements GroupsContext {
 
@@ -12,6 +14,11 @@ public class IslandGroupsContext implements GroupsContext {
 
     public IslandGroupsContext(GroupsContext groupsContext) {
         this.groupsContext = groupsContext;
+    }
+
+    @Override
+    public Optional<Group> getGroup(GroupId groupId) {
+        return groupsContext.getGroup(groupId);
     }
 
     @Override

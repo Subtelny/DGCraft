@@ -1,4 +1,4 @@
-package pl.subtelny.core.worldedit;
+package pl.subtelny.core.api.worldedit;
 
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
@@ -11,22 +11,23 @@ import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.primesoft.asyncworldedit.api.IAsyncWorldEdit;
 import org.primesoft.asyncworldedit.api.blockPlacer.IBlockPlacer;
 import org.primesoft.asyncworldedit.api.blockPlacer.IBlockPlacerListener;
-import org.primesoft.asyncworldedit.api.blockPlacer.entries.IJobEntry;
 import org.primesoft.asyncworldedit.api.playerManager.IPlayerEntry;
 import org.primesoft.asyncworldedit.api.playerManager.IPlayerManager;
 import org.primesoft.asyncworldedit.api.utils.IFuncParamEx;
 import org.primesoft.asyncworldedit.api.worldedit.IAsyncEditSessionFactory;
 import org.primesoft.asyncworldedit.api.worldedit.ICancelabeEditSession;
 import org.primesoft.asyncworldedit.api.worldedit.IThreadSafeEditSession;
+import pl.subtelny.utilities.Validation;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.UUID;
 
 public final class WorldEditHelper {
 
@@ -37,6 +38,7 @@ public final class WorldEditHelper {
 	}
 
 	public static void pasteSchematic(Location location, File schematic, IBlockPlacerListener iBlockPlacerListener) throws IOException {
+		Validation.isTrue(aweAPI != null, "AsyncWorldEdit not found");
 		IPlayerManager playerManager = aweAPI.getPlayerManager();
 		IPlayerEntry fakePlayer = playerManager.createFakePlayer("WEH-LS", UUID.randomUUID());
 
@@ -67,7 +69,7 @@ public final class WorldEditHelper {
 		}
 
 		@Override
-		public Integer execute(ICancelabeEditSession editSession) throws MaxChangedBlocksException {
+		public Integer execute(ICancelabeEditSession editSession) {
 			editSession.enableQueue();
 			editSession.setFastMode(true);
 
