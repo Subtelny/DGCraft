@@ -7,8 +7,8 @@ import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.island.IslanderId;
 import pl.subtelny.islands.islander.repository.IslanderRepository;
+import pl.subtelny.islands.islandmembership.repository.IslandMembershipRepository;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidCalculator;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.repository.loader.SkyblockIslandLoader;
@@ -16,9 +16,7 @@ import pl.subtelny.islands.skyblockisland.repository.storage.SkyblockIslandStora
 import pl.subtelny.islands.skyblockisland.repository.updater.SkyblockIslandUpdater;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class SkyblockIslandRepository {
@@ -29,19 +27,24 @@ public class SkyblockIslandRepository {
 
     private final SkyblockIslandUpdater updater;
 
+    private final IslandMembershipRepository islandMembershipRepository;
+
     @Autowired
     public SkyblockIslandRepository(DatabaseConnection databaseConfiguration,
                                     IslanderRepository islanderRepository,
                                     SkyblockIslandExtendCuboidCalculator extendCuboidCalculator,
-                                    TransactionProvider transactionProvider) {
+                                    TransactionProvider transactionProvider,
+                                    IslandMembershipRepository islandMembershipRepository) {
+        this.islandMembershipRepository = islandMembershipRepository;
         this.storage = new SkyblockIslandStorage();
         this.loader = new SkyblockIslandLoader(databaseConfiguration, islanderRepository, extendCuboidCalculator, transactionProvider);
         this.updater = new SkyblockIslandUpdater(databaseConfiguration, transactionProvider);
     }
 
     public SkyblockIsland createIsland(IslandCoordinates islandCoordinates, Location spawn, Cuboid cuboid, Islander owner) {
-        SkyblockIsland island = null;//new SkyblockIsland(null, spawn, cuboid, owner, islandCoordinates);
+        SkyblockIsland island = new SkyblockIsland(null, spawn, cuboid, islandCoordinates);
         SkyblockIslandId islandId = updater.update(island);
+        islandMembershipRepository.createIslandMembership(owner, islandId);
         return findSkyblockIsland(islandId).orElseThrow();
     }
 

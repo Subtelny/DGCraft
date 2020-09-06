@@ -1,19 +1,16 @@
 package pl.subtelny.islands.skyblockisland.model;
 
 import org.bukkit.Location;
-import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMember;
 import pl.subtelny.islands.island.model.AbstractIsland;
-import pl.subtelny.islands.islander.model.*;
-import pl.subtelny.islands.skyblockisland.SkyblockIslandUtil;
+import pl.subtelny.islands.islander.model.IslandCoordinates;
+import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandId;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.cuboid.Cuboid;
-import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.location.LocationUtil;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Optional;
 
 public class SkyblockIsland extends AbstractIsland {
@@ -25,6 +22,10 @@ public class SkyblockIsland extends AbstractIsland {
     public SkyblockIsland(SkyblockIslandId islandId, Location spawn, LocalDateTime createdDate, Cuboid cuboid, IslandCoordinates islandCoordinates) {
         super(islandId, spawn, createdDate, cuboid);
         this.islandCoordinates = islandCoordinates;
+    }
+
+    public SkyblockIsland(SkyblockIslandId islandId, Location spawn, Cuboid cuboid, IslandCoordinates islandCoordinates) {
+        this(islandId, spawn, LocalDateTime.now(), cuboid, islandCoordinates);
     }
 
     public Location recalculateSpawn() {

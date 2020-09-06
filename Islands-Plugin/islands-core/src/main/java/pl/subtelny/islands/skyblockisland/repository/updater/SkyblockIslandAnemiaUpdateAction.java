@@ -48,12 +48,11 @@ public class SkyblockIslandAnemiaUpdateAction extends IslandAnemiaUpdateAction<S
                 .thenApply(aVoid -> skyblockIslandAnemia.getIslandId());
     }
 
-    public SkyblockIslandId executeMissingId(SkyblockIslandAnemia islandAnemia) {
+    private SkyblockIslandId executeMissingId(SkyblockIslandAnemia islandAnemia) {
         Record1<Integer> record = getIslandRecordStatement(islandAnemia).returningResult(Islands.ISLANDS.ID).fetchOne();
         SkyblockIslandId id = SkyblockIslandId.of(record.component1());
         islandAnemia.setIslandId(id);
         getSkyblockIslandRecordStatement(islandAnemia).execute();
-
         return id;
     }
 

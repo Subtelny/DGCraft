@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public abstract class CompoundIdentity implements Serializable {
 
-    private static final String SEPARATOR = "@";
+    protected static final String SEPARATOR = "@";
 
     private final String[] values;
 
@@ -14,12 +14,16 @@ public abstract class CompoundIdentity implements Serializable {
         this.values = values.split(SEPARATOR);
     }
 
-    public static String values(Object... objects) {
-        return Arrays.stream(objects).map(String::valueOf).collect(Collectors.joining(SEPARATOR));
+    public static String values(String... values) {
+        return Arrays.stream(values).map(String::valueOf).collect(Collectors.joining(SEPARATOR));
     }
 
     public String getAtPosition(int position) {
         return values[position];
+    }
+
+    public String getInternal() {
+        return String.join(SEPARATOR, values);
     }
 
     @Override

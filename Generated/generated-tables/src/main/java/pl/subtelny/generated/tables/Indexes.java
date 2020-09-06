@@ -11,7 +11,7 @@ import org.jooq.OrderField;
 import org.jooq.impl.Internal;
 
 import pl.subtelny.generated.tables.tables.Accounts;
-import pl.subtelny.generated.tables.tables.IslandMembership;
+import pl.subtelny.generated.tables.tables.IslandMemberships;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.Islands;
 import pl.subtelny.generated.tables.tables.LoginHistories;
@@ -37,7 +37,7 @@ public class Indexes {
 
     public static final Index ACCOUNTS_ID_PK = Indexes0.ACCOUNTS_ID_PK;
     public static final Index ACCOUNTS_NAME_UQ = Indexes0.ACCOUNTS_NAME_UQ;
-    public static final Index MEMBERSHIP_ISLAND_ISLAND_PK = Indexes0.MEMBERSHIP_ISLAND_ISLAND_PK;
+    public static final Index ISLAND_MEMBERSHIPS_UQ = Indexes0.ISLAND_MEMBERSHIPS_UQ;
     public static final Index ISLANDERS_ID_PK = Indexes0.ISLANDERS_ID_PK;
     public static final Index ISLANDS_ID_PK = Indexes0.ISLANDS_ID_PK;
     public static final Index LH_ACCOUNT = Indexes0.LH_ACCOUNT;
@@ -51,7 +51,7 @@ public class Indexes {
     private static class Indexes0 {
         public static Index ACCOUNTS_ID_PK = Internal.createIndex("accounts_id_pk", Accounts.ACCOUNTS, new OrderField[] { Accounts.ACCOUNTS.ID }, true);
         public static Index ACCOUNTS_NAME_UQ = Internal.createIndex("accounts_name_uq", Accounts.ACCOUNTS, new OrderField[] { Accounts.ACCOUNTS.NAME }, true);
-        public static Index MEMBERSHIP_ISLAND_ISLAND_PK = Internal.createIndex("membership_island_island_pk", IslandMembership.ISLAND_MEMBERSHIP, new OrderField[] { IslandMembership.ISLAND_MEMBERSHIP.ISLAND_MEMBER_ID, IslandMembership.ISLAND_MEMBERSHIP.ISLAND_ID }, true);
+        public static Index ISLAND_MEMBERSHIPS_UQ = Internal.createIndex("island_memberships_uq", IslandMemberships.ISLAND_MEMBERSHIPS, new OrderField[] { IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID, IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_MEMBER_ID }, true);
         public static Index ISLANDERS_ID_PK = Internal.createIndex("islanders_id_pk", Islanders.ISLANDERS, new OrderField[] { Islanders.ISLANDERS.ID }, true);
         public static Index ISLANDS_ID_PK = Internal.createIndex("islands_id_pk", Islands.ISLANDS, new OrderField[] { Islands.ISLANDS.ID }, true);
         public static Index LH_ACCOUNT = Internal.createIndex("lh_account", LoginHistories.LOGIN_HISTORIES, new OrderField[] { LoginHistories.LOGIN_HISTORIES.ACCOUNT }, true);

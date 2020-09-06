@@ -7,7 +7,7 @@ package pl.subtelny.generated.tables;
 import javax.annotation.processing.Generated;
 
 import pl.subtelny.generated.tables.tables.Accounts;
-import pl.subtelny.generated.tables.tables.IslandMembership;
+import pl.subtelny.generated.tables.tables.IslandMemberships;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.Islands;
 import pl.subtelny.generated.tables.tables.LoginHistories;
@@ -33,9 +33,9 @@ public class Tables {
     public static final Accounts ACCOUNTS = Accounts.ACCOUNTS;
 
     /**
-     * The table <code>public.island_membership</code>.
+     * The table <code>public.island_memberships</code>.
      */
-    public static final IslandMembership ISLAND_MEMBERSHIP = IslandMembership.ISLAND_MEMBERSHIP;
+    public static final IslandMemberships ISLAND_MEMBERSHIPS = IslandMemberships.ISLAND_MEMBERSHIPS;
 
     /**
      * The table <code>public.islanders</code>.

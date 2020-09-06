@@ -9,7 +9,7 @@ public class IslandId extends CompoundIdentity {
 	private static final int ISLAND_ID_POSITION = 1;
 
 	public IslandId(String value, Integer id) {
-		super(CompoundIdentity.values(value, id));
+		super(values(value, id.toString()));
 	}
 
 	public static IslandId of(String value, Integer id) {
