@@ -5,6 +5,11 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.core.api.schematic.SchematicLoader;
+import pl.subtelny.groups.api.GroupId;
+import pl.subtelny.groups.api.GroupMemberId;
+import pl.subtelny.groups.api.GroupsContextId;
+import pl.subtelny.groups.api.GroupsContextService;
+import pl.subtelny.islands.island.IslandGroupsContext;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.creator.IslandCreator;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
@@ -38,17 +43,21 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Skyb
 
     private final SkyblockIslandSettings settings;
 
+    private final GroupsContextService groupsContextService;
+
     @Autowired
     public SkyblockIslandCreator(TransactionProvider transactionProvider,
                                  SkyblockIslandRepository repository,
                                  IslandMembershipRepository islandMembershipRepository,
                                  SkyblockIslandExtendCuboidCalculator cuboidCalculator,
-                                 SkyblockIslandSettings settings) {
+                                 SkyblockIslandSettings settings,
+                                 GroupsContextService groupsContextService) {
         this.transactionProvider = transactionProvider;
         this.repository = repository;
         this.islandMembershipRepository = islandMembershipRepository;
         this.cuboidCalculator = cuboidCalculator;
         this.settings = settings;
+        this.groupsContextService = groupsContextService;
     }
 
     @Override
@@ -65,18 +74,32 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Skyb
         return transactionProvider.transactionResultAsync(() -> {
             pasteSchematic(schematic, cuboid.getCenter());
             SkyblockIsland island = createSkyblockIsland(coordinates, cuboid);
-            createOwnerIslandMembership(islander, island.getId());
+            createOwner(islander, island);
             return island;
         }).toCompletableFuture();
-    }
-
-    private void createOwnerIslandMembership(Islander islander, IslandId islandId) {
-        islandMembershipRepository.createIslandMembership(islander, islandId);
     }
 
     private SkyblockIsland createSkyblockIsland(IslandCoordinates coordinates, Cuboid cuboid) {
         Location spawn = new SkyblockIslandSpawnCalculator(cuboid).calculate();
         return repository.createIsland(coordinates, spawn, cuboid);
+    }
+
+    private void createOwner(Islander islander, SkyblockIsland skyblockIsland) {
+        IslandId skyblockIslandId = skyblockIsland.getId();
+        createIslandMembership(islander, skyblockIslandId);
+        createGroup(islander, skyblockIslandId);
+    }
+
+    private void createIslandMembership(Islander islander, IslandId skyblockIslandId) {
+        islandMembershipRepository.createIslandMembership(islander, skyblockIslandId);
+    }
+
+    private void createGroup(Islander islander, IslandId skyblockIslandId) {
+        GroupsContextId groupsContextId = GroupsContextId.of(skyblockIslandId.getInternal());
+        GroupMemberId groupMemberId = GroupMemberId.of(islander.getId().getInternal());
+        GroupId owner = IslandGroupsContext.OWNER;
+        groupsContextService.createGroup(groupsContextId, owner);
+        groupsContextService.addMember(groupsContextId, owner, groupMemberId);
     }
 
     private void pasteSchematic(SkyblockIslandSchematicOption schematic, Location center) {

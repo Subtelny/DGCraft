@@ -16,4 +16,12 @@ public final class Validation {
         }
     }
 
+    public static void isFalse(boolean condition, String message, Object... objects) {
+        isTrue(!condition, message, objects);
+    }
+
+    public static void isFalse(boolean condition, String message) {
+        isTrue(!condition, message);
+    }
+
 }

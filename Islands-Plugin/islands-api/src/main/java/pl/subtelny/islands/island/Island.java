@@ -25,13 +25,9 @@ public interface Island {
 
     boolean isInIsland(IslandMember member);
 
-    void join(IslandMember member, GroupId rank);
+    void join(IslandMember member);
 
     void exit(IslandMember member);
-
-    void addRank(IslandMember member, GroupId groupId);
-
-    void removeRank(IslandMember member, GroupId groupId);
 
     void changeSpawn(Location spawn);
 

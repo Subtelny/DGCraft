@@ -10,6 +10,8 @@ import java.util.Optional;
 
 public class IslandGroupsContext implements GroupsContext {
 
+    public static final GroupId OWNER = GroupId.of("OWNER");
+
     private final GroupsContext groupsContext;
 
     public IslandGroupsContext(GroupsContext groupsContext) {

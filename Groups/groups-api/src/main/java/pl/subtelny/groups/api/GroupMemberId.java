@@ -8,4 +8,8 @@ public class GroupMemberId extends BasicIdentity<String> {
         super(id);
     }
 
+    public static GroupMemberId of(String id) {
+        return new GroupMemberId(id);
+    }
+
 }

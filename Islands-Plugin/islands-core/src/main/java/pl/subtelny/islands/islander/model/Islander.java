@@ -1,15 +1,15 @@
 package pl.subtelny.islands.islander.model;
 
-import pl.subtelny.islands.island.IslandMember;
 import pl.subtelny.islands.island.IslandMemberId;
 import pl.subtelny.islands.island.IslanderId;
+import pl.subtelny.islands.island.model.AbstractIslandMember;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.utilities.exception.ValidationException;
 
 import java.util.Objects;
 import java.util.Optional;
 
-public class Islander implements IslandMember {
+public class Islander extends AbstractIslandMember {
 
     private final IslanderId islanderId;
 

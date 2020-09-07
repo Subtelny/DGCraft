@@ -13,7 +13,6 @@ import pl.subtelny.islands.skyblockisland.repository.loader.SkyblockIslandLoader
 import pl.subtelny.islands.skyblockisland.repository.storage.SkyblockIslandStorage;
 import pl.subtelny.islands.skyblockisland.repository.updater.SkyblockIslandUpdater;
 import pl.subtelny.utilities.cuboid.Cuboid;
-
 import java.util.Optional;
 
 @Component
@@ -36,7 +35,7 @@ public class SkyblockIslandRepository {
     }
 
     public SkyblockIsland createIsland(IslandCoordinates islandCoordinates, Location spawn, Cuboid cuboid) {
-        SkyblockIsland island = new SkyblockIsland(null, spawn, cuboid, islandCoordinates);
+        SkyblockIsland island = new SkyblockIsland(spawn, cuboid, islandCoordinates);
         SkyblockIslandId islandId = updater.update(island);
         return findSkyblockIsland(islandId).orElseThrow();
     }
