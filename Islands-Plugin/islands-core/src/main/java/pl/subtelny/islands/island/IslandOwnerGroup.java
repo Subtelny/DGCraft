@@ -15,6 +15,11 @@ public class IslandOwnerGroup implements Group {
     private final List<GroupMemberId> groupMemberIds = new ArrayList<>();
 
     @Override
+    public GroupId getId() {
+        return ID;
+    }
+
+    @Override
     public List<GroupMemberId> getGroupMembers() {
         return new ArrayList<>(groupMemberIds);
     }

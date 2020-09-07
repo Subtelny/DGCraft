@@ -1,5 +1,6 @@
 package pl.subtelny.islands.islandmembership.repository.updater;
 
+import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
@@ -11,6 +12,7 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class IslandMembershipUpdater extends Updater<IslandMembershipUpdateRequest, Integer> {
 
+    @Autowired
     public IslandMembershipUpdater(DatabaseConnection databaseConfiguration, TransactionProvider transactionProvider) {
         super(databaseConfiguration, transactionProvider);
     }
@@ -32,7 +34,10 @@ public class IslandMembershipUpdater extends Updater<IslandMembershipUpdateReque
     }
 
     private IslandMembershipAnemia toAnemia(IslandMembershipUpdateRequest request) {
-        return new IslandMembershipAnemia(request.getIslandId().getId(), request.getIslandMemberId().getInternal());
+        return new IslandMembershipAnemia(
+                request.getIslandId().getId(),
+                request.getIslandMemberId().getInternal(),
+                request.isOwner());
     }
 
 }

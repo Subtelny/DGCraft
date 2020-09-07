@@ -14,7 +14,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row2;
+import org.jooq.Row3;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -41,7 +41,7 @@ import pl.subtelny.generated.tables.tables.records.IslandMembershipsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class IslandMemberships extends TableImpl<IslandMembershipsRecord> {
 
-    private static final long serialVersionUID = 578866409;
+    private static final long serialVersionUID = -2136138256;
 
     /**
      * The reference instance of <code>public.island_memberships</code>
@@ -65,6 +65,11 @@ public class IslandMemberships extends TableImpl<IslandMembershipsRecord> {
      * The column <code>public.island_memberships.island_member_id</code>.
      */
     public final TableField<IslandMembershipsRecord, String> ISLAND_MEMBER_ID = createField(DSL.name("island_member_id"), org.jooq.impl.SQLDataType.VARCHAR(50).nullable(false), this, "");
+
+    /**
+     * The column <code>public.island_memberships.owner</code>.
+     */
+    public final TableField<IslandMembershipsRecord, Boolean> OWNER = createField(DSL.name("owner"), org.jooq.impl.SQLDataType.BOOLEAN.nullable(false), this, "");
 
     /**
      * Create a <code>public.island_memberships</code> table reference
@@ -150,11 +155,11 @@ public class IslandMemberships extends TableImpl<IslandMembershipsRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row2 type methods
+    // Row3 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row2<Integer, String> fieldsRow() {
-        return (Row2) super.fieldsRow();
+    public Row3<Integer, String, Boolean> fieldsRow() {
+        return (Row3) super.fieldsRow();
     }
 }

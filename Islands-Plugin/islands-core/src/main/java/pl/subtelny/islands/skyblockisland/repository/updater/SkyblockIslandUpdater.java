@@ -10,34 +10,42 @@ import pl.subtelny.repository.Updater;
 
 import java.util.concurrent.CompletableFuture;
 
-public class SkyblockIslandUpdater extends Updater<SkyblockIsland, SkyblockIslandId> {
+public class SkyblockIslandUpdater extends Updater<SkyblockIslandAnemia, SkyblockIslandId> {
 
     public SkyblockIslandUpdater(DatabaseConnection databaseConfiguration, TransactionProvider transactionProvider) {
         super(databaseConfiguration, transactionProvider);
     }
 
-    public SkyblockIslandId update(SkyblockIsland skyblockIsland) {
+    public SkyblockIslandId update(SkyblockIslandAnemia skyblockIsland) {
         return performAction(skyblockIsland);
     }
 
+    public SkyblockIslandId update(SkyblockIsland skyblockIsland) {
+        SkyblockIslandAnemia anemia = SkyblockIslandAnemiaFactory.toAnemia(skyblockIsland);
+        return performAction(anemia);
+    }
+
     public CompletableFuture<SkyblockIslandId> updateAsync(SkyblockIsland skyblockIsland) {
+        SkyblockIslandAnemia anemia = SkyblockIslandAnemiaFactory.toAnemia(skyblockIsland);
+        return performActionAsync(anemia);
+    }
+
+    public CompletableFuture<SkyblockIslandId> updateAsync(SkyblockIslandAnemia skyblockIsland) {
         return performActionAsync(skyblockIsland);
     }
 
     @Override
-    protected SkyblockIslandId performAction(SkyblockIsland skyblockIsland) {
+    protected SkyblockIslandId performAction(SkyblockIslandAnemia skyblockIsland) {
         Configuration configuration = getConfiguration();
         SkyblockIslandAnemiaUpdateAction action = new SkyblockIslandAnemiaUpdateAction(configuration);
-        SkyblockIslandAnemia anemia = SkyblockIslandAnemiaFactory.toAnemia(skyblockIsland);
-        return action.perform(anemia);
+        return action.perform(skyblockIsland);
     }
 
     @Override
-    protected CompletableFuture<SkyblockIslandId> performActionAsync(SkyblockIsland skyblockIsland) {
+    protected CompletableFuture<SkyblockIslandId> performActionAsync(SkyblockIslandAnemia skyblockIsland) {
         Configuration configuration = getConfiguration();
         SkyblockIslandAnemiaUpdateAction action = new SkyblockIslandAnemiaUpdateAction(configuration);
-        SkyblockIslandAnemia anemia = SkyblockIslandAnemiaFactory.toAnemia(skyblockIsland);
-        return action.performAsync(anemia).toCompletableFuture();
+        return action.performAsync(skyblockIsland).toCompletableFuture();
     }
 
 }

@@ -4,10 +4,6 @@ import org.bukkit.Location;
 import org.jooq.Configuration;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
-import pl.subtelny.groups.api.GroupsContext;
-import pl.subtelny.groups.api.GroupsContextId;
-import pl.subtelny.groups.api.GroupsContextService;
-import pl.subtelny.islands.island.IslandGroupsContext;
 import pl.subtelny.islands.island.repository.loader.IslandLoader;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidCalculator;
@@ -21,17 +17,13 @@ import java.util.Optional;
 
 public class SkyblockIslandLoader extends IslandLoader<SkyblockIslandAnemia, SkyblockIsland> {
 
-    private final GroupsContextService groupsContextService;
-
     private final SkyblockIslandExtendCuboidCalculator extendCuboidCalculator;
 
     public SkyblockIslandLoader(DatabaseConnection databaseConfiguration,
                                 SkyblockIslandExtendCuboidCalculator extendCuboidCalculator,
-                                TransactionProvider transactionProvider,
-                                GroupsContextService groupsContextService) {
+                                TransactionProvider transactionProvider) {
         super(databaseConfiguration, transactionProvider);
         this.extendCuboidCalculator = extendCuboidCalculator;
-        this.groupsContextService = groupsContextService;
     }
 
     public Optional<SkyblockIsland> loadIsland(SkyblockIslandId skyblockIslandId) {
@@ -56,7 +48,6 @@ public class SkyblockIslandLoader extends IslandLoader<SkyblockIslandAnemia, Sky
                 spawn,
                 createdDate,
                 calculateCuboid(islandCoordinates, extendLevel),
-                getGroupsContext(islandId),
                 islandCoordinates,
                 extendLevel,
                 points);
@@ -65,11 +56,4 @@ public class SkyblockIslandLoader extends IslandLoader<SkyblockIslandAnemia, Sky
     private Cuboid calculateCuboid(IslandCoordinates islandCoordinates, int extendLevel) {
         return extendCuboidCalculator.calculateCuboid(islandCoordinates, extendLevel);
     }
-
-    private IslandGroupsContext getGroupsContext(SkyblockIslandId islandId) {
-        GroupsContextId groupsContextId = GroupsContextId.of(islandId.getInternal());
-        GroupsContext groupsContext = groupsContextService.getOrCreateGroupsContext(groupsContextId);
-        return new IslandGroupsContext(groupsContext);
-    }
-
 }

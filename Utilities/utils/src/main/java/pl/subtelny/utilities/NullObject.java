@@ -11,6 +11,9 @@ public interface NullObject<T> {
     }
 
     static <V> NullObject<V> of(V value) {
+        if (value == null) {
+            return empty();
+        }
         return new ExistNullObject<>(value);
     }
 

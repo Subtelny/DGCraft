@@ -26,8 +26,8 @@ public class IslandMembershipRepository {
         this.updater = new IslandMembershipUpdater(databaseConnection, transactionProvider);
     }
 
-    public void createIslandMembership(IslandMember islandMember, IslandId islandId) {
-        IslandMembershipUpdateRequest request = IslandMembershipUpdateRequest.request(islandId, islandMember.getId());
+    public void createIslandMembership(IslandMember islandMember, IslandId islandId, boolean owner) {
+        IslandMembershipUpdateRequest request = IslandMembershipUpdateRequest.request(islandId, islandMember.getId(), owner);
         updater.performAction(request);
     }
 

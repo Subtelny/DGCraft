@@ -43,6 +43,7 @@ public class IslandMembershipUpdateAction implements UpdateAction<IslandMembersh
         IslandMembershipsRecord record = DSL.using(configuration).newRecord(IslandMemberships.ISLAND_MEMBERSHIPS);
         record.setIslandId(request.getIslandId());
         record.setIslandMemberId(request.getIslandMemberId());
+        record.setOwner(request.isOwner());
         return record;
     }
 }

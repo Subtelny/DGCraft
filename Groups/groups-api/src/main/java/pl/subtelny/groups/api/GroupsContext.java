@@ -5,6 +5,8 @@ import java.util.Optional;
 
 public interface GroupsContext {
 
+    GroupsContextId getId();
+
     Optional<Group> getGroup(GroupId groupId);
 
     List<Group> getGroups();

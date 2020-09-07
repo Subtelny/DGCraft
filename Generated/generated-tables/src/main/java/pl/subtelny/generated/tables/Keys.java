@@ -67,6 +67,7 @@ public class Keys {
     public static final ForeignKey<IslandersRecord, AccountsRecord> ISLANDERS__ISLANDERS_ID_FOREIGN = ForeignKeys0.ISLANDERS__ISLANDERS_ID_FOREIGN;
     public static final ForeignKey<LoginHistoriesRecord, AccountsRecord> LOGIN_HISTORIES__LH_ACCOUNT_FK = ForeignKeys0.LOGIN_HISTORIES__LH_ACCOUNT_FK;
     public static final ForeignKey<SkyblockIslandsRecord, IslandsRecord> SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ID_FK = ForeignKeys0.SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ID_FK;
+    public static final ForeignKey<SkyblockIslandsRecord, IslandersRecord> SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_OWNER_FK = ForeignKeys0.SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_OWNER_FK;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -93,5 +94,6 @@ public class Keys {
         public static final ForeignKey<IslandersRecord, AccountsRecord> ISLANDERS__ISLANDERS_ID_FOREIGN = Internal.createForeignKey(pl.subtelny.generated.tables.Keys.ACCOUNTS_ID_PK, Islanders.ISLANDERS, "islanders__islanders_id_foreign", Islanders.ISLANDERS.ID);
         public static final ForeignKey<LoginHistoriesRecord, AccountsRecord> LOGIN_HISTORIES__LH_ACCOUNT_FK = Internal.createForeignKey(pl.subtelny.generated.tables.Keys.ACCOUNTS_ID_PK, LoginHistories.LOGIN_HISTORIES, "login_histories__lh_account_fk", LoginHistories.LOGIN_HISTORIES.ACCOUNT);
         public static final ForeignKey<SkyblockIslandsRecord, IslandsRecord> SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ID_FK = Internal.createForeignKey(pl.subtelny.generated.tables.Keys.ISLANDS_ID_PK, SkyblockIslands.SKYBLOCK_ISLANDS, "skyblock_islands__skyblock_islands_id_fk", SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID);
+        public static final ForeignKey<SkyblockIslandsRecord, IslandersRecord> SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_OWNER_FK = Internal.createForeignKey(pl.subtelny.generated.tables.Keys.ISLANDERS_ID_PK, SkyblockIslands.SKYBLOCK_ISLANDS, "skyblock_islands__skyblock_islands_owner_fk", SkyblockIslands.SKYBLOCK_ISLANDS.ISLANDER_OWNER);
     }
 }

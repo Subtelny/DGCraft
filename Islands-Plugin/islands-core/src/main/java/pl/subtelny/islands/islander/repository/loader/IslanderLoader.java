@@ -18,11 +18,7 @@ public class IslanderLoader {
 
 	public Optional<Islander> loadIslander(IslanderLoadRequest request) {
 		Optional<IslanderAnemia> anemiaOpt = performAction(request);
-		if (anemiaOpt.isPresent()) {
-			Islander islander = mapAnemiaIntoDomain(anemiaOpt.get());
-			return Optional.of(islander);
-		}
-		return Optional.empty();
+		return anemiaOpt.map(this::mapAnemiaIntoDomain);
 	}
 
 	private Optional<IslanderAnemia> performAction(IslanderLoadRequest request) {

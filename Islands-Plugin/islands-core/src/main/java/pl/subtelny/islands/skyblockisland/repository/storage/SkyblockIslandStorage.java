@@ -14,9 +14,9 @@ import java.util.Queue;
 
 public class SkyblockIslandStorage extends Storage<SkyblockIslandId, SkyblockIsland> {
 
-    private Queue<IslandCoordinates> freeIslands;
+    private final Queue<IslandCoordinates> freeIslands;
 
-    private Cache<IslandCoordinates, SkyblockIslandId> islandCoordinatesCache;
+    private final Cache<IslandCoordinates, SkyblockIslandId> islandCoordinatesCache;
 
     public SkyblockIslandStorage() {
         super(Caffeine.newBuilder().build());

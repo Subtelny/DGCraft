@@ -8,6 +8,8 @@ import pl.subtelny.utilities.cuboid.Cuboid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public interface Island {
 
@@ -19,19 +21,17 @@ public interface Island {
 
     int getPoints();
 
-    Map<IslandMember, List<Group>> getMembers();
+    Set<IslandMember> getMembers();
+
+    Optional<IslandMember> getOwner();
 
     Location getSpawn();
 
     boolean isInIsland(IslandMember member);
 
-    void join(IslandMember member, GroupId rank);
+    void join(IslandMember member);
 
     void exit(IslandMember member);
-
-    void addRank(IslandMember member, GroupId groupId);
-
-    void removeRank(IslandMember member, GroupId groupId);
 
     void changeSpawn(Location spawn);
 

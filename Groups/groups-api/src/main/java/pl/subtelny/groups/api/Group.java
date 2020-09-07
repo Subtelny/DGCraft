@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface Group {
 
+    GroupId getId();
+
     List<GroupMemberId> getGroupMembers();
 
     boolean hasPermission(String permission);

@@ -1,19 +1,23 @@
 package pl.subtelny.islands.island;
 
-import pl.subtelny.groups.api.Group;
-import pl.subtelny.groups.api.GroupId;
-import pl.subtelny.groups.api.GroupMemberId;
-import pl.subtelny.groups.api.GroupsContext;
+import pl.subtelny.groups.api.*;
 
 import java.util.List;
 import java.util.Optional;
 
 public class IslandGroupsContext implements GroupsContext {
 
+    public static final GroupId OWNER = GroupId.of("OWNER");
+
     private final GroupsContext groupsContext;
 
     public IslandGroupsContext(GroupsContext groupsContext) {
         this.groupsContext = groupsContext;
+    }
+
+    @Override
+    public GroupsContextId getId() {
+        return null;
     }
 
     @Override

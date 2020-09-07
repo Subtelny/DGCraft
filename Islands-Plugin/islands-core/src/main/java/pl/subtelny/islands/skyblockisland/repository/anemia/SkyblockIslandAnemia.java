@@ -16,6 +16,11 @@ public class SkyblockIslandAnemia extends IslandAnemia {
 	public SkyblockIslandAnemia() {
 	}
 
+	public SkyblockIslandAnemia(Location spawn, IslandCoordinates islandCoordinates) {
+		super(null, LocalDateTime.now(), spawn, 0);
+		this.islandCoordinates = islandCoordinates;
+	}
+
 	public SkyblockIslandAnemia(SkyblockIslandId islandId, LocalDateTime createdDate, Location spawn,
 								IslandCoordinates islandCoordinates, int extendLevel, int points) {
 		super(islandId, createdDate, spawn, points);

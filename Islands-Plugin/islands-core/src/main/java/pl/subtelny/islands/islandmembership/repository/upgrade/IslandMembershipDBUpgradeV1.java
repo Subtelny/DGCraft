@@ -23,8 +23,9 @@ public class IslandMembershipDBUpgradeV1 implements DatabaseUpgrade {
     public void execute() {
         DSL.using(databaseConnection.getConfiguration())
                 .createTableIfNotExists("island_memberships")
-                .column("island_id", SQLDataType.VARCHAR(50).nullable(false))
+                .column("island_id", SQLDataType.INTEGER.nullable(false))
                 .column("island_member_id", SQLDataType.VARCHAR(50).nullable(false))
+                .column("owner", SQLDataType.BOOLEAN.nullable(false))
                 .constraints(
                         constraint("island_id_fk")
                                 .foreignKey("island_id")

@@ -7,7 +7,7 @@ import pl.subtelny.islands.skyblockisland.schematic.SkyblockIslandSchematicOptio
 
 import java.util.Optional;
 
-public class SkyblockIslandCreateRequest extends IslandCreateRequest {
+public class CreateSkyblockIslandRequest extends IslandCreateRequest {
 
     private final Islander islander;
 
@@ -15,7 +15,7 @@ public class SkyblockIslandCreateRequest extends IslandCreateRequest {
 
     private SkyblockIslandSchematicOption option;
 
-    private SkyblockIslandCreateRequest(Islander islander, IslandCoordinates coordinates, SkyblockIslandSchematicOption option) {
+    private CreateSkyblockIslandRequest(Islander islander, IslandCoordinates coordinates, SkyblockIslandSchematicOption option) {
         this.islander = islander;
         this.coordinates = coordinates;
         this.option = option;
@@ -59,8 +59,8 @@ public class SkyblockIslandCreateRequest extends IslandCreateRequest {
             return this;
         }
 
-        public SkyblockIslandCreateRequest build() {
-            return new SkyblockIslandCreateRequest(islander, coordinates, option);
+        public CreateSkyblockIslandRequest build() {
+            return new CreateSkyblockIslandRequest(islander, coordinates, option);
         }
     }
 

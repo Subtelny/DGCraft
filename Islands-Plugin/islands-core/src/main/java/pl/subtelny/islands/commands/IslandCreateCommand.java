@@ -12,7 +12,7 @@ import pl.subtelny.islands.Islands;
 import pl.subtelny.islands.islander.IslanderService;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.message.IslandMessages;
-import pl.subtelny.islands.skyblockisland.creator.SkyblockIslandCreateRequest;
+import pl.subtelny.islands.skyblockisland.creator.CreateSkyblockIslandRequest;
 import pl.subtelny.islands.skyblockisland.creator.SkyblockIslandCreator;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.schematic.SkyblockIslandSchematicOption;
@@ -66,7 +66,7 @@ public class IslandCreateCommand extends BaseCommand {
     }
 
     private void createIsland(SkyblockIslandSchematicOption schematicOption, Player player, Islander islander) {
-        SkyblockIslandCreateRequest request = SkyblockIslandCreateRequest.builder(islander)
+        CreateSkyblockIslandRequest request = CreateSkyblockIslandRequest.builder(islander)
                 .option(schematicOption)
                 .build();
 
