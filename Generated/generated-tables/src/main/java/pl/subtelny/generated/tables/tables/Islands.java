@@ -16,7 +16,7 @@ import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row4;
+import org.jooq.Row5;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -43,7 +43,7 @@ import pl.subtelny.generated.tables.tables.records.IslandsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Islands extends TableImpl<IslandsRecord> {
 
-    private static final long serialVersionUID = -1957829377;
+    private static final long serialVersionUID = -1167134137;
 
     /**
      * The reference instance of <code>public.islands</code>
@@ -62,6 +62,11 @@ public class Islands extends TableImpl<IslandsRecord> {
      * The column <code>public.islands.id</code>.
      */
     public final TableField<IslandsRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('islands_id_seq'::regclass)", org.jooq.impl.SQLDataType.INTEGER)), this, "");
+
+    /**
+     * The column <code>public.islands.type</code>.
+     */
+    public final TableField<IslandsRecord, String> TYPE = createField(DSL.name("type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
      * The column <code>public.islands.spawn</code>.
@@ -163,11 +168,11 @@ public class Islands extends TableImpl<IslandsRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row4 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<Integer, String, Timestamp, Integer> fieldsRow() {
-        return (Row4) super.fieldsRow();
+    public Row5<Integer, String, String, Timestamp, Integer> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 }

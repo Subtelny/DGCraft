@@ -8,7 +8,6 @@ import pl.subtelny.generated.tables.tables.SkyblockIslands;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.island.repository.loader.IslandAnemiaLoadAction;
-import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandId;
 import pl.subtelny.islands.skyblockisland.repository.anemia.SkyblockIslandAnemia;
 import pl.subtelny.utilities.location.LocationSerializer;
 
@@ -35,7 +34,7 @@ public class SkyblockIslandAnemiaLoadAction extends IslandAnemiaLoadAction<Skybl
                         .and(SkyblockIslands.SKYBLOCK_ISLANDS.Z.eq(islandCoordinates.getZ()))));
 
         Optional<IslandId> islandIdOpt = request.getIslandId();
-        islandIdOpt.ifPresent(islandId -> conditions.add(Islands.ISLANDS.ID.eq(islandId.getId())));
+        islandIdOpt.ifPresent(islandId -> conditions.add(Islands.ISLANDS.ID.eq(islandId.getInternal())));
         return conditions;
     }
 
@@ -54,7 +53,7 @@ public class SkyblockIslandAnemiaLoadAction extends IslandAnemiaLoadAction<Skybl
     private SkyblockIslandAnemia mapRecordToAnemia(Record record) {
         LocalDateTime createdDate = record.get(Islands.ISLANDS.CREATED_DATE).toLocalDateTime();
         Location spawn = LocationSerializer.deserializeMinimalistic(record.get(Islands.ISLANDS.SPAWN));
-        SkyblockIslandId islandId = new SkyblockIslandId(record.get(Islands.ISLANDS.ID));
+        IslandId islandId = new IslandId(record.get(Islands.ISLANDS.ID));
         int points = record.get(Islands.ISLANDS.POINTS);
         int x = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.X);
         int z = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.Z);

@@ -6,7 +6,9 @@ import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.island.IslanderId;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class IslanderLoader {
 
@@ -21,10 +23,26 @@ public class IslanderLoader {
 		return anemiaOpt.map(this::mapAnemiaIntoDomain);
 	}
 
+	public List<Islander> loadIslanders(IslanderLoadRequest request) {
+		List<IslanderAnemia> anemiaOpt = performListAction(request);
+		return anemiaOpt.stream()
+				.map(this::mapAnemiaIntoDomain)
+				.collect(Collectors.toList());
+	}
+
 	private Optional<IslanderAnemia> performAction(IslanderLoadRequest request) {
-		Configuration configuration = databaseConfiguration.getConfiguration();
-		IslanderAnemiaLoadAction action = new IslanderAnemiaLoadAction(configuration, request);
+		IslanderAnemiaLoadAction action = getIslanderAnemiaLoadAction(request);
 		return Optional.ofNullable(action.perform());
+	}
+
+	private List<IslanderAnemia> performListAction(IslanderLoadRequest request) {
+		IslanderAnemiaLoadAction action = getIslanderAnemiaLoadAction(request);
+		return action.performList();
+	}
+
+	private IslanderAnemiaLoadAction getIslanderAnemiaLoadAction(IslanderLoadRequest request) {
+		Configuration configuration = databaseConfiguration.getConfiguration();
+		return new IslanderAnemiaLoadAction(configuration, request);
 	}
 
 	private Islander mapAnemiaIntoDomain(IslanderAnemia anemia) {

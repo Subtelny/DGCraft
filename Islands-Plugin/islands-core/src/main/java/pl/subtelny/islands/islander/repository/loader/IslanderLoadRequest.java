@@ -2,18 +2,18 @@ package pl.subtelny.islands.islander.repository.loader;
 
 import pl.subtelny.islands.island.IslanderId;
 
-import java.util.Optional;
+import java.util.*;
 
 public class IslanderLoadRequest {
 
-    private final IslanderId islanderId;
+    private final List<IslanderId> islanderIds;
 
-    public IslanderLoadRequest(IslanderId islanderId) {
-        this.islanderId = islanderId;
+    public IslanderLoadRequest(List<IslanderId> islanderIds) {
+        this.islanderIds = islanderIds;
     }
 
-    public Optional<IslanderId> getIslanderId() {
-        return Optional.ofNullable(islanderId);
+    public List<IslanderId> getIslanderIds() {
+        return islanderIds;
     }
 
     public static Builder newBuilder() {
@@ -22,15 +22,20 @@ public class IslanderLoadRequest {
 
     public static class Builder {
 
-        private IslanderId islanderId;
+        private List<IslanderId> islanderIds = new ArrayList<>();
 
         public Builder where(IslanderId islanderId) {
-            this.islanderId = islanderId;
+            this.islanderIds = Collections.singletonList(islanderId);
+            return this;
+        }
+
+        public Builder where(List<IslanderId> islanderIds) {
+            this.islanderIds = islanderIds;
             return this;
         }
 
         public IslanderLoadRequest build() {
-            return new IslanderLoadRequest(islanderId);
+            return new IslanderLoadRequest(islanderIds);
         }
 
     }

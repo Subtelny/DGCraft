@@ -9,10 +9,11 @@ import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.islands.island.IslanderId;
 import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
 import pl.subtelny.repository.LoadAction;
+import pl.subtelny.utilities.identity.BasicIdentity;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class IslanderAnemiaLoadAction implements LoadAction<IslanderAnemia> {
 
@@ -45,8 +46,10 @@ public class IslanderAnemiaLoadAction implements LoadAction<IslanderAnemia> {
 
     private List<Condition> whereConditions() {
         List<Condition> conditions = Lists.newArrayList();
-        Optional<IslanderId> islanderIdOpt = request.getIslanderId();
-        islanderIdOpt.ifPresent(islanderId -> conditions.add(Islanders.ISLANDERS.ID.eq(islanderId.getInternal())));
+        List<UUID> islanderUuids = request.getIslanderIds().stream().map(BasicIdentity::getInternal).collect(Collectors.toList());
+        if (!islanderUuids.isEmpty()) {
+            conditions.add(Islanders.ISLANDERS.ID.in(islanderUuids));
+        }
         return conditions;
     }
 

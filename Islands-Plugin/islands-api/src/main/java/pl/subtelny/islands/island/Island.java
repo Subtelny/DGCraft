@@ -1,13 +1,9 @@
 package pl.subtelny.islands.island;
 
 import org.bukkit.Location;
-import pl.subtelny.groups.api.Group;
-import pl.subtelny.groups.api.GroupId;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -38,5 +34,7 @@ public interface Island {
     void setCuboid(Cuboid cuboid);
 
     void setPoints(int points);
+
+    IslandType getType();
 
 }

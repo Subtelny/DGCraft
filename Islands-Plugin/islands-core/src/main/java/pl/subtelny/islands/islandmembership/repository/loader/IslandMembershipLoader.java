@@ -21,18 +21,23 @@ public class IslandMembershipLoader {
         this.databaseConnection = databaseConnection;
     }
 
-    public List<IslandMemberId> loadIslandMemberIds(IslandId islandId) {
+    public List<IslandMembership> loadIslandMemberIds(IslandId islandId) {
         IslandMembershipLoadRequest request = IslandMembershipLoadRequest.builder().islandId(islandId).build();
         Configuration configuration = databaseConnection.getConfiguration();
         IslandMembershipAnemiaLoadAction action = new IslandMembershipAnemiaLoadAction(request, configuration);
-        return mapAnemiasIntoIds(action.performList());
+        return mapAnemiasIntoDomain(action.performList());
     }
 
-    private List<IslandMemberId> mapAnemiasIntoIds(List<IslandMembershipAnemia> anemias) {
+    private List<IslandMembership> mapAnemiasIntoDomain(List<IslandMembershipAnemia> anemias) {
         return anemias.stream()
-                .map(IslandMembershipAnemia::getIslandMemberId)
-                .map(IslandMemberId::of)
+                .map(this::mapAnemiaIntoDomain)
                 .collect(Collectors.toList());
+    }
+
+    private IslandMembership mapAnemiaIntoDomain(IslandMembershipAnemia anemia) {
+        IslandId islandId = IslandId.of(anemia.getIslandId());
+        IslandMemberId islandMemberId = IslandMemberId.of(anemia.getIslandMemberId());
+        return new IslandMembership(islandId, islandMemberId, anemia.isOwner());
     }
 
 }

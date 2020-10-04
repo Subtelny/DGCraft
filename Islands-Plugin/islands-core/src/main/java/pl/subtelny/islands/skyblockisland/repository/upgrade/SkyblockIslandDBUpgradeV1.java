@@ -27,7 +27,6 @@ public class SkyblockIslandDBUpgradeV1 implements DatabaseUpgrade {
                 .column("x", SQLDataType.INTEGER.nullable(false))
                 .column("z", SQLDataType.INTEGER.nullable(false))
                 .column("extend_level", SQLDataType.INTEGER.nullable(false).defaultValue(0))
-                .column("islander_owner", SQLDataType.UUID.nullable(false))
                 .constraints(
                         constraint("skyblock_islands_id_fk")
                                 .foreignKey("island_id")
@@ -37,10 +36,7 @@ public class SkyblockIslandDBUpgradeV1 implements DatabaseUpgrade {
                         constraint("skyblock_island_x_z_pk")
                                 .primaryKey("x", "z"),
                         constraint("skyblock_islands_x_z_uq")
-                                .unique("x", "z"),
-                        constraint("skyblock_islands_owner_fk")
-                                .foreignKey("islander_owner")
-                                .references("islanders", "id")
+                                .unique("x", "z")
                 )
                 .execute();
     }

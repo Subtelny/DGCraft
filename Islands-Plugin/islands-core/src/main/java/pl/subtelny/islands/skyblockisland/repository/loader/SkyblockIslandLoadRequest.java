@@ -2,17 +2,17 @@ package pl.subtelny.islands.skyblockisland.repository.loader;
 
 import java.util.Optional;
 
+import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import pl.subtelny.islands.island.repository.loader.IslandLoadRequest;
-import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandId;
 
 public class SkyblockIslandLoadRequest extends IslandLoadRequest {
 
 	private final IslandCoordinates islandCoordinates;
 
-	public SkyblockIslandLoadRequest(SkyblockIslandId islandId, IslandCoordinates islandCoordinates) {
+	public SkyblockIslandLoadRequest(IslandId islandId, IslandCoordinates islandCoordinates) {
 		super(islandId);
 		this.islandCoordinates = islandCoordinates;
 	}
@@ -29,7 +29,7 @@ public class SkyblockIslandLoadRequest extends IslandLoadRequest {
 
 		private IslandCoordinates islandCoordinates;
 
-		private SkyblockIslandId islandId;
+		private IslandId islandId;
 
 		private Builder() { }
 
@@ -38,7 +38,7 @@ public class SkyblockIslandLoadRequest extends IslandLoadRequest {
 			return this;
 		}
 
-		public Builder where(SkyblockIslandId islandId) {
+		public Builder where(IslandId islandId) {
 			this.islandId = islandId;
 			return this;
 		}

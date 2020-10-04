@@ -36,13 +36,17 @@ public class IslandMembershipAnemiaLoadAction implements LoadAction<IslandMember
 
     @Override
     public List<IslandMembershipAnemia> performList() {
-        return null;
+        return DSL.using(configuration)
+                .select()
+                .from(IslandMemberships.ISLAND_MEMBERSHIPS)
+                .where(whereConditions())
+                .fetch(this::mapIntoAnemia);
     }
 
     private List<Condition> whereConditions() {
         List<Condition> conditions = Lists.newArrayList();
         Optional<IslandId> islanderIdOpt = request.getIslandId();
-        islanderIdOpt.ifPresent(islandId -> conditions.add(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID.eq(islandId.getId())));
+        islanderIdOpt.ifPresent(islandId -> conditions.add(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID.eq(islandId.getInternal())));
 
         Optional<IslandMemberId> islandMemberIdOpt = request.getIslandMemberId();
         islandMemberIdOpt.ifPresent(islandMemberId -> conditions.add(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_MEMBER_ID.eq(islandMemberId.getInternal())));
@@ -52,6 +56,7 @@ public class IslandMembershipAnemiaLoadAction implements LoadAction<IslandMember
     private IslandMembershipAnemia mapIntoAnemia(Record record) {
         Integer islandId = record.get(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID);
         String rawIslandMemberId = record.get(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_MEMBER_ID);
-        return new IslandMembershipAnemia(islandId, rawIslandMemberId);
+        Boolean owner = record.get(IslandMemberships.ISLAND_MEMBERSHIPS.OWNER);
+        return new IslandMembershipAnemia(islandId, rawIslandMemberId, owner);
     }
 }

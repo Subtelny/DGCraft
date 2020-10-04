@@ -1,12 +1,14 @@
 package pl.subtelny.islands.skyblockisland.model;
 
 import org.bukkit.Location;
+import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMember;
+import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.island.model.AbstractIsland;
 import pl.subtelny.islands.island.model.AbstractIslandMember;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandId;
+import pl.subtelny.islands.skyblockisland.SkyblockIslandType;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.cuboid.Cuboid;
 import pl.subtelny.utilities.location.LocationUtil;
@@ -20,7 +22,7 @@ public class SkyblockIsland extends AbstractIsland {
 
     private int extendLevel;
 
-    public SkyblockIsland(SkyblockIslandId islandId,
+    public SkyblockIsland(IslandId islandId,
                           Location spawn,
                           LocalDateTime createdDate,
                           Cuboid cuboid,
@@ -32,12 +34,12 @@ public class SkyblockIsland extends AbstractIsland {
         this.extendLevel = extendLevel;
     }
 
-    public SkyblockIsland(SkyblockIslandId islandId, LocalDateTime createdDate, Location spawn, Cuboid cuboid, IslandCoordinates islandCoordinates) {
+    public SkyblockIsland(IslandId islandId, LocalDateTime createdDate, Location spawn, Cuboid cuboid, IslandCoordinates islandCoordinates) {
         super(islandId, createdDate, cuboid, spawn);
         this.islandCoordinates = islandCoordinates;
     }
 
-    public SkyblockIsland(SkyblockIslandId islandId, Location spawn, Cuboid cuboid, IslandCoordinates islandCoordinates) {
+    public SkyblockIsland(IslandId islandId, Location spawn, Cuboid cuboid, IslandCoordinates islandCoordinates) {
         this(islandId, LocalDateTime.now(), spawn, cuboid, islandCoordinates);
     }
 
@@ -63,6 +65,11 @@ public class SkyblockIsland extends AbstractIsland {
     public void setCuboid(Cuboid cuboid) {
         Validation.isTrue(cuboid.contains(spawn), "skyblockIsland.setCuboid.not_contains_spawn");
         this.cuboid = cuboid;
+    }
+
+    @Override
+    public IslandType getType() {
+        return SkyblockIslandType.TYPE;
     }
 
     public void setExtendLevel(int extendLevel) {
@@ -91,11 +98,6 @@ public class SkyblockIsland extends AbstractIsland {
         super.exit(member);
         AbstractIslandMember abstractIslandMember = (AbstractIslandMember) member;
         abstractIslandMember.removeIsland(this);
-    }
-
-    @Override
-    public SkyblockIslandId getId() {
-        return (SkyblockIslandId) super.getId();
     }
 
     private boolean isIslander(IslandMember islandMember) {

@@ -19,13 +19,15 @@ public abstract class AbstractIsland implements Island {
 
     protected final List<IslandMember> islandMembers = new ArrayList<>();
 
+    protected final List<IslandMemberChangedRequest> islandMembersChangesRequests = new ArrayList<>();
+
+    private int points;
+
     protected Cuboid cuboid;
 
     protected Location spawn;
 
     protected IslandMember owner;
-
-    private int points;
 
     public AbstractIsland(IslandId islandId, LocalDateTime createdDate, Cuboid cuboid, Location spawn, int points) {
         this.islandId = islandId;
@@ -40,6 +42,10 @@ public abstract class AbstractIsland implements Island {
         this.createdDate = createdDate;
         this.cuboid = cuboid;
         this.spawn = spawn;
+    }
+
+    public List<IslandMemberChangedRequest> getIslandMembersChangesRequests() {
+        return islandMembersChangesRequests;
     }
 
     @Override
@@ -86,12 +92,14 @@ public abstract class AbstractIsland implements Island {
     public void join(IslandMember member) {
         Validation.isFalse(isInIsland(member), "island.validate.member_already_added");
         islandMembers.add(member);
+        islandMembersChangesRequests.add(IslandMemberChangedRequest.added(member));
     }
 
     @Override
     public void exit(IslandMember member) {
         Validation.isTrue(isInIsland(member), "island.validate.member_not_added");
         islandMembers.remove(member);
+        islandMembersChangesRequests.add(IslandMemberChangedRequest.removed(member));
     }
 
     @Override

@@ -35,7 +35,7 @@ public class IslandMembershipUpdater extends Updater<IslandMembershipUpdateReque
 
     private IslandMembershipAnemia toAnemia(IslandMembershipUpdateRequest request) {
         return new IslandMembershipAnemia(
-                request.getIslandId().getId(),
+                request.getIslandId().getInternal(),
                 request.getIslandMemberId().getInternal(),
                 request.isOwner());
     }

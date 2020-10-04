@@ -24,6 +24,7 @@ public class IslandDBUpgradeV1 implements DatabaseUpgrade {
         DSL.using(databaseConnection.getConfiguration())
                 .createTableIfNotExists("islands")
                 .column("id", SQLDataType.INTEGER.nullable(false).identity(true))
+                .column("type", SQLDataType.VARCHAR.nullable(false))
                 .column("spawn", SQLDataType.VARCHAR)
                 .column("created_date", SQLDataType.LOCALDATETIME.nullable(false).defaultValue(DSL.field("CURRENT_TIMESTAMP", SQLDataType.LOCALDATETIME)))
                 .column("points", SQLDataType.INTEGER.defaultValue(0).nullable(false))

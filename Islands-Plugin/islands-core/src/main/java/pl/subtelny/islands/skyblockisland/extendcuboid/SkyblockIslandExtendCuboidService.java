@@ -3,11 +3,11 @@ package pl.subtelny.islands.skyblockisland.extendcuboid;
 import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.islands.island.repository.IslandRepository;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.skyblockisland.extendcuboid.settings.SkyblockIslandExtendCuboidOption;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
-import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandRepository;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.cuboid.Cuboid;
 import pl.subtelny.utilities.exception.ValidationException;
@@ -18,19 +18,19 @@ import java.util.stream.Stream;
 @Component
 public class SkyblockIslandExtendCuboidService {
 
-    private final SkyblockIslandRepository skyblockIslandRepository;
-
     private final SkyblockIslandSettings skyblockIslandSettings;
 
     private final SkyblockIslandExtendCuboidCalculator cuboidCalculator;
 
+    private final IslandRepository islandRepository;
+
     @Autowired
-    public SkyblockIslandExtendCuboidService(SkyblockIslandRepository skyblockIslandRepository,
-                                             SkyblockIslandSettings skyblockIslandSettings,
-                                             SkyblockIslandExtendCuboidCalculator cuboidCalculator) {
-        this.skyblockIslandRepository = skyblockIslandRepository;
+    public SkyblockIslandExtendCuboidService(SkyblockIslandSettings skyblockIslandSettings,
+                                             SkyblockIslandExtendCuboidCalculator cuboidCalculator,
+                                             IslandRepository islandRepository) {
         this.skyblockIslandSettings = skyblockIslandSettings;
         this.cuboidCalculator = cuboidCalculator;
+        this.islandRepository = islandRepository;
     }
 
     public void extendCuboid(SkyblockIslandExtendCuboidRequest request) {
@@ -43,7 +43,7 @@ public class SkyblockIslandExtendCuboidService {
         } else {
             extendCuboidToBasic(skyblockIsland, islandCoordinates);
         }
-        skyblockIslandRepository.saveIsland(skyblockIsland);
+        islandRepository.updateIsland(skyblockIsland);
     }
 
     private void extendCuboidToLevel(SkyblockIslandExtendCuboidRequest request) {

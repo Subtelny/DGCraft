@@ -6,7 +6,6 @@ package pl.subtelny.generated.tables.tables;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.processing.Generated;
 
@@ -16,7 +15,7 @@ import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row5;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -43,7 +42,7 @@ import pl.subtelny.generated.tables.tables.records.SkyblockIslandsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SkyblockIslands extends TableImpl<SkyblockIslandsRecord> {
 
-    private static final long serialVersionUID = -1471535290;
+    private static final long serialVersionUID = 792788137;
 
     /**
      * The reference instance of <code>public.skyblock_islands</code>
@@ -77,11 +76,6 @@ public class SkyblockIslands extends TableImpl<SkyblockIslandsRecord> {
      * The column <code>public.skyblock_islands.extend_level</code>.
      */
     public final TableField<SkyblockIslandsRecord, Integer> EXTEND_LEVEL = createField(DSL.name("extend_level"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
-
-    /**
-     * The column <code>public.skyblock_islands.islander_owner</code>.
-     */
-    public final TableField<SkyblockIslandsRecord, UUID> ISLANDER_OWNER = createField(DSL.name("islander_owner"), org.jooq.impl.SQLDataType.UUID.nullable(false), this, "");
 
     /**
      * Create a <code>public.skyblock_islands</code> table reference
@@ -143,15 +137,11 @@ public class SkyblockIslands extends TableImpl<SkyblockIslandsRecord> {
 
     @Override
     public List<ForeignKey<SkyblockIslandsRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<SkyblockIslandsRecord, ?>>asList(Keys.SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ID_FK, Keys.SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_OWNER_FK);
+        return Arrays.<ForeignKey<SkyblockIslandsRecord, ?>>asList(Keys.SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ID_FK);
     }
 
     public Islands islands() {
         return new Islands(this, Keys.SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_ID_FK);
-    }
-
-    public Islanders islanders() {
-        return new Islanders(this, Keys.SKYBLOCK_ISLANDS__SKYBLOCK_ISLANDS_OWNER_FK);
     }
 
     @Override
@@ -181,11 +171,11 @@ public class SkyblockIslands extends TableImpl<SkyblockIslandsRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<Integer, Integer, Integer, Integer, UUID> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row4<Integer, Integer, Integer, Integer> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 }

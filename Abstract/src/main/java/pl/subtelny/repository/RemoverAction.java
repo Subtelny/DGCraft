@@ -4,8 +4,8 @@ import java.util.concurrent.CompletableFuture;
 
 public interface RemoverAction<T> {
 
-    void perform();
+    void perform(T t);
 
-    CompletableFuture<Integer> performAsync();
+    CompletableFuture<Integer> performAsync(T t);
 
 }

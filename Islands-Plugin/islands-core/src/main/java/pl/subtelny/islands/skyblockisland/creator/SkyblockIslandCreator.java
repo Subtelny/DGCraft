@@ -5,13 +5,15 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.core.api.schematic.SchematicLoader;
+import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.creator.IslandCreator;
+import pl.subtelny.islands.island.repository.IslandRepository;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.islander.model.Islander;
+import pl.subtelny.islands.skyblockisland.SkyblockIslandQueryService;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidCalculator;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
-import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandCreateRequest;
-import pl.subtelny.islands.skyblockisland.repository.SkyblockIslandRepository;
+import pl.subtelny.islands.skyblockisland.repository.storage.SkyblockIslandCache;
 import pl.subtelny.islands.skyblockisland.schematic.SkyblockIslandSchematicOption;
 import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
 import pl.subtelny.jobs.JobsProvider;
@@ -30,7 +32,11 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Crea
 
     private final TransactionProvider transactionProvider;
 
-    private final SkyblockIslandRepository repository;
+    private final SkyblockIslandCache skyblockIslandCache;
+
+    private final IslandRepository islandRepository;
+
+    private final SkyblockIslandQueryService skyblockIslandQueryService;
 
     private final SkyblockIslandExtendCuboidCalculator cuboidCalculator;
 
@@ -38,11 +44,14 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Crea
 
     @Autowired
     public SkyblockIslandCreator(TransactionProvider transactionProvider,
-                                 SkyblockIslandRepository repository,
+                                 SkyblockIslandCache skyblockIslandCache,
+                                 IslandRepository islandRepository, SkyblockIslandQueryService skyblockIslandQueryService,
                                  SkyblockIslandExtendCuboidCalculator cuboidCalculator,
                                  SkyblockIslandSettings settings) {
         this.transactionProvider = transactionProvider;
-        this.repository = repository;
+        this.skyblockIslandCache = skyblockIslandCache;
+        this.islandRepository = islandRepository;
+        this.skyblockIslandQueryService = skyblockIslandQueryService;
         this.cuboidCalculator = cuboidCalculator;
         this.settings = settings;
     }
@@ -55,7 +64,7 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Crea
     }
 
     private IslandCoordinates getNextIslandCoordinates() {
-        return repository.nextFreeIslandCoordinates()
+        return skyblockIslandCache.nextFreeIslandCoordinates()
                 .orElseThrow(() -> ValidationException.of("creator.skyblockIsland.no_free_island_coordinates"));
     }
 
@@ -74,7 +83,8 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Crea
     }
 
     private void validateIslandCoordinates(IslandCoordinates islandCoordinates) {
-        Validation.isTrue(repository.findSkyblockIsland(islandCoordinates).isEmpty(), "creator.skyblockIsland.coordinates_taken");
+        boolean islandFound = skyblockIslandQueryService.findSkyblockIsland(islandCoordinates).isEmpty();
+        Validation.isTrue(islandFound, "creator.skyblockIsland.coordinates_taken");
     }
 
     private class IslandCreatorTransaction {
@@ -94,14 +104,16 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Crea
         }
 
         public CompletableFuture<SkyblockIsland> createIsland() {
-            return transactionProvider.transactionResultAsync(() ->
-                    createSkyblockIsland(islander, islandCoordinates, cuboid)).toCompletableFuture();
+            return transactionProvider.transactionResultAsync(this::createSkyblockIsland).toCompletableFuture();
         }
 
-        private SkyblockIsland createSkyblockIsland(Islander islander, IslandCoordinates coordinates, Cuboid cuboid) {
+        private SkyblockIsland createSkyblockIsland() {
             Location spawn = new SkyblockIslandSpawnCalculator(cuboid).calculate();
-            SkyblockIslandCreateRequest request = new SkyblockIslandCreateRequest(coordinates, spawn, islander, cuboid);
-            return repository.createIsland(request);
+            SkyblockIsland skyblockIsland = new SkyblockIsland(spawn, cuboid, islandCoordinates);
+            skyblockIsland.join(islander);
+            IslandId islandId = islandRepository.updateIsland(skyblockIsland);
+            return skyblockIslandQueryService.findSkyblockIsland(islandId)
+                    .orElseThrow(() -> new IllegalStateException("Not found just created a skyblock island " + islandId));
         }
 
     }
