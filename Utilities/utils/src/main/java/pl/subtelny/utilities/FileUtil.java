@@ -9,6 +9,11 @@ import java.io.OutputStream;
 
 public final class FileUtil {
 
+    public static File getFile(Plugin plugin, String fileName) {
+        File dataFolder = plugin.getDataFolder();
+        return new File(dataFolder, fileName);
+    }
+
     public static File copyFile(Plugin plugin, String file) {
         File configFile = new File(plugin.getDataFolder(), file);
         if (!configFile.exists()) {

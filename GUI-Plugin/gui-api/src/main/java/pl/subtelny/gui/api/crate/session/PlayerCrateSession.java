@@ -1,7 +1,7 @@
 package pl.subtelny.gui.api.crate.session;
 
 import pl.subtelny.gui.api.crate.inventory.CrateInventory;
-import pl.subtelny.gui.api.crate.model.Crate;
+import pl.subtelny.gui.api.crate.model.CrateId;
 
 public interface PlayerCrateSession {
 
@@ -11,7 +11,7 @@ public interface PlayerCrateSession {
 
     void closeCrateInventory();
 
-    Crate getCrate();
+    CrateId getCrate();
 
     void click(int slot);
 

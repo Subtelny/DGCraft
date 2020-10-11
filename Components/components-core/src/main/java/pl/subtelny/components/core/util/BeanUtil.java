@@ -13,14 +13,24 @@ public final class BeanUtil {
         if (!(type instanceof ParameterizedType)) {
             throw BeanContextException.of("Type " + type.getTypeName() + " is not ParameterizedType");
         }
-        ParameterizedType parameterizedType = ((ParameterizedType) type);
-        Type genericType = parameterizedType.getActualTypeArguments()[0];
-        String genericName = genericType.getTypeName();
+        String genericName = getGenericName(type);
         try {
             return Class.forName(genericName);
         } catch (ClassNotFoundException e) {
-            throw BeanContextException.of("Not found class " + genericName + " in generic type " + parameterizedType.toString());
+            throw BeanContextException.of("Not found class " + genericName + " in generic type " + type.toString());
         }
+    }
+
+    public static String getGenericName(Type type) {
+        if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = ((ParameterizedType) type);
+            Type genericType = parameterizedType.getActualTypeArguments()[0];
+            String typeName = genericType.getTypeName();
+            if (!"?".equals(typeName)) {
+                return getGenericName(genericType);
+            }
+        }
+        return type.getTypeName().replace("<?>", "");
     }
 
 }

@@ -1,5 +1,6 @@
-package pl.subtelny.gui.api.crate.model;
+package pl.subtelny.gui.crate.model;
 
+import pl.subtelny.gui.api.crate.model.CrateId;
 import pl.subtelny.utilities.Validation;
 
 import java.util.HashMap;

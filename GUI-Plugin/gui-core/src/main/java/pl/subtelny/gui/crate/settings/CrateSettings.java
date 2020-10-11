@@ -14,7 +14,7 @@ public class CrateSettings {
 
     private ItemStack notSatisfiedConditionsItemPattern;
 
-    public void initCrates(Plugin plugin, CratesLoader crateLoader) {
+    public void initSettings(Plugin plugin) {
         File config = FileUtil.copyFile(plugin, "config.yml");
         notSatisfiedConditionsItemPattern = new ItemStackFileParserStrategy(config).load("not-satisfied.item");
     }

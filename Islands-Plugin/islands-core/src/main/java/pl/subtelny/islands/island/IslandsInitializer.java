@@ -1,7 +1,6 @@
 package pl.subtelny.islands.island;
 
 import org.bukkit.plugin.Plugin;
-import org.jooq.Configuration;
 import org.jooq.impl.DSL;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
@@ -9,20 +8,12 @@ import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.components.core.api.DependencyActivatorPriority;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.generated.tables.tables.Islands;
-import pl.subtelny.islands.island.Island;
-import pl.subtelny.islands.island.IslandId;
-import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.island.repository.IslandRepository;
-import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
-import pl.subtelny.islands.skyblockisland.repository.anemia.SkyblockIslandAnemia;
-import pl.subtelny.islands.skyblockisland.repository.loader.SkyblockIslandAnemiaLoadAction;
-import pl.subtelny.islands.skyblockisland.repository.loader.SkyblockIslandLoadRequest;
 import pl.subtelny.utilities.log.LogUtil;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component

@@ -1,13 +1,12 @@
 package pl.subtelny.islands.skyblockisland.creator;
 
-import pl.subtelny.islands.island.creator.IslandCreateRequest;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.skyblockisland.schematic.SkyblockIslandSchematicOption;
 
 import java.util.Optional;
 
-public class CreateSkyblockIslandRequest extends IslandCreateRequest {
+public class CreateSkyblockIslandRequest {
 
     private final Islander islander;
 

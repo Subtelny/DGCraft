@@ -89,7 +89,7 @@ public class SkyblockIslandExtendCuboidService {
     }
 
     private SkyblockIslandExtendCuboidOption getExtendConfig(int extendLevel) {
-        return skyblockIslandSettings.getExtendCuboidLevel(extendLevel - 1)
+        return skyblockIslandSettings.getExtendCuboidLevel(extendLevel)
                 .orElseThrow(() -> ValidationException.of("extendSkyblockIslandCuboid.extendCuboid.extend_level_not_found", extendLevel));
     }
 

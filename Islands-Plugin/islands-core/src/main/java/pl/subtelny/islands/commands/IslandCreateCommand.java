@@ -5,8 +5,7 @@ import org.bukkit.entity.Player;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
-import pl.subtelny.gui.api.crate.model.Crate;
-import pl.subtelny.gui.api.crate.repository.CrateRepository;
+import pl.subtelny.gui.api.crate.model.CrateId;
 import pl.subtelny.gui.api.crate.session.PlayerCrateSessionService;
 import pl.subtelny.islands.Islands;
 import pl.subtelny.islands.islander.IslanderService;
@@ -19,7 +18,6 @@ import pl.subtelny.islands.skyblockisland.schematic.SkyblockIslandSchematicOptio
 import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
 import pl.subtelny.jobs.JobsProvider;
 import pl.subtelny.utilities.Validation;
-import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.log.LogUtil;
 
 import java.util.Optional;
@@ -33,8 +31,6 @@ public class IslandCreateCommand extends BaseCommand {
 
     private final SkyblockIslandSettings settings;
 
-    private final CrateRepository crateRepository;
-
     private final PlayerCrateSessionService sessionService;
 
     @Autowired
@@ -42,13 +38,11 @@ public class IslandCreateCommand extends BaseCommand {
                                IslanderService islanderService,
                                SkyblockIslandCreator islandCreator,
                                SkyblockIslandSettings settings,
-                               CrateRepository crateRepository,
                                PlayerCrateSessionService sessionService) {
         super(messages);
         this.islanderService = islanderService;
         this.islandCreator = islandCreator;
         this.settings = settings;
-        this.crateRepository = crateRepository;
         this.sessionService = sessionService;
     }
 
@@ -94,9 +88,8 @@ public class IslandCreateCommand extends BaseCommand {
 
     private void openGuiCreator(Player player) {
         String creatorGui = settings.getCreatorGui();
-        Crate crate = crateRepository.findInternalCrate(creatorGui)
-                .orElseThrow(() -> ValidationException.of("command.island.create.gui_not_found"));
-        sessionService.openSession(player, crate);
+        CrateId crateId = CrateId.of(Islands.plugin, creatorGui);
+        sessionService.openSession(player, crateId);
     }
 
     private SkyblockIslandSchematicOption getSchematicOption(String schematicOptionRaw) {

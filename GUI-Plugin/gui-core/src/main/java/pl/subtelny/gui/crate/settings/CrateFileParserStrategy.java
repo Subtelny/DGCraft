@@ -2,10 +2,11 @@ package pl.subtelny.gui.crate.settings;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import pl.subtelny.gui.GUI;
-import pl.subtelny.gui.api.crate.model.Crate;
+import pl.subtelny.gui.crate.model.Crate;
 import pl.subtelny.gui.api.crate.model.CrateId;
-import pl.subtelny.gui.api.crate.model.ItemCrate;
+import pl.subtelny.gui.crate.model.ItemCrate;
 import pl.subtelny.utilities.ConfigUtil;
 import pl.subtelny.utilities.condition.*;
 import pl.subtelny.utilities.file.AbstractFileParserStrategy;
@@ -31,19 +32,23 @@ public class CrateFileParserStrategy extends AbstractFileParserStrategy<Crate> {
 
     private final Map<String, AbstractFileParserStrategy<? extends Reward>> rewardParsers;
 
+    private final Plugin plugin;
+
     public CrateFileParserStrategy(YamlConfiguration configuration, File file,
                                    Map<String, AbstractFileParserStrategy<? extends Condition>> conditionParsers,
                                    Map<String, AbstractFileParserStrategy<? extends CostCondition>> costConditionParsers,
-                                   Map<String, AbstractFileParserStrategy<? extends Reward>> rewardParsers) {
+                                   Map<String, AbstractFileParserStrategy<? extends Reward>> rewardParsers,
+                                   Plugin plugin) {
         super(configuration, file);
         this.conditionParsers = conditionParsers;
         this.costConditionParsers = costConditionParsers;
         this.rewardParsers = rewardParsers;
+        this.plugin = plugin;
     }
 
     @Override
     public Crate load(String path) {
-        CrateId crateId = CrateId.of(GUI.plugin, file.getName().split("\\.")[0]);
+        CrateId crateId = CrateId.of(plugin, file.getName().split("\\.")[0]);
         int size = configuration.getInt("configuration.size");
         String title = configuration.getString("configuration.title");
         boolean global = configuration.getBoolean("configuration.global");

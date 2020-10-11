@@ -29,7 +29,7 @@ public class CrateConditionsService {
         this.messages = messages;
     }
 
-    public void informAboutNotSatisfiedConditions(Player player, List<Condition> notSatisfiedConditions) {
+    public void getNotSatisfiedConditions(Player player, List<Condition> notSatisfiedConditions) {
         notSatisfiedConditions.forEach(condition -> {
             MessageKey messageKey = condition.getMessageKey();
             messages.sendTo(player, messageKey.getKey(), messageKey.getObjects());
@@ -52,7 +52,7 @@ public class CrateConditionsService {
         });
     }
 
-    public Stream<? extends String> computeLoreLine(List<Condition> conditions, String loreLine) {
+    private Stream<? extends String> computeLoreLine(List<Condition> conditions, String loreLine) {
         if (loreLine.contains("{CONDITION}")) {
             String pattern = loreLine.replace("{CONDITION}", "%s");
             return prepareConditionMessages(conditions, pattern).stream();

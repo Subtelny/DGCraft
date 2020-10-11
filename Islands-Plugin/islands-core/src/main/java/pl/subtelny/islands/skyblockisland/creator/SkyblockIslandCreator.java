@@ -74,7 +74,7 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Crea
         Cuboid cuboid = cuboidCalculator.calculateCuboid(coordinates);
         return new IslandSchematicPaster(cuboid.getCenter(), schematic)
                 .pasteSchematic()
-                .thenCompose(unused -> new IslandCreatorTransaction(cuboid, coordinates, islander).createIsland());
+                .thenCompose(unused -> new IslandCreatorJob(cuboid, coordinates, islander).createIsland());
     }
 
     private void validateIslander(Islander islander) {
@@ -87,7 +87,7 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Crea
         Validation.isTrue(islandFound, "creator.skyblockIsland.coordinates_taken");
     }
 
-    private class IslandCreatorTransaction {
+    private class IslandCreatorJob {
 
         private final Cuboid cuboid;
 
@@ -95,9 +95,9 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Crea
 
         private final Islander islander;
 
-        private IslandCreatorTransaction(Cuboid cuboid,
-                                         IslandCoordinates islandCoordinates,
-                                         Islander islander) {
+        private IslandCreatorJob(Cuboid cuboid,
+                                 IslandCoordinates islandCoordinates,
+                                 Islander islander) {
             this.cuboid = cuboid;
             this.islandCoordinates = islandCoordinates;
             this.islander = islander;

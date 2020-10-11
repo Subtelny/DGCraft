@@ -1,10 +1,13 @@
-package pl.subtelny.gui.crate.settings;
+package pl.subtelny.gui.crate;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.economy.EconomyProvider;
-import pl.subtelny.gui.api.crate.model.Crate;
+import pl.subtelny.gui.GUI;
+import pl.subtelny.gui.crate.model.Crate;
+import pl.subtelny.gui.crate.settings.CrateFileParserStrategy;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.condition.CostCondition;
 import pl.subtelny.utilities.condition.itemstack.ItemStackConditionFileParserStrategy;
@@ -25,29 +28,37 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class CratesLoader {
+public class CratesFileLoader {
 
     private final EconomyProvider economyProvider;
 
     @Autowired
-    public CratesLoader(EconomyProvider economyProvider) {
+    public CratesFileLoader(EconomyProvider economyProvider) {
         this.economyProvider = economyProvider;
     }
 
-    public List<Crate> loadAllCratesFromDirectory(File dir) {
+    public List<Crate> loadAllCratesFromDirectory(File dir, Plugin plugin) {
         File[] files = dir.listFiles();
         if (files != null) {
-            return Arrays.stream(files).map(this::loadCrateFromFile).collect(Collectors.toList());
+            return Arrays.stream(files).map(file -> loadCrateFromFile(file, plugin)).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
 
+    public List<Crate> loadAllCratesFromDirectory(File dir) {
+        return loadAllCratesFromDirectory(dir, GUI.plugin);
+    }
+
     public Crate loadCrateFromFile(File file) {
+        return loadCrateFromFile(file, GUI.plugin);
+    }
+
+    public Crate loadCrateFromFile(File file, Plugin plugin) {
         YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
         Map<String, AbstractFileParserStrategy<? extends Condition>> conditionParsers = getConditionParsers(file, configuration);
         Map<String, AbstractFileParserStrategy<? extends CostCondition>> costConditionParsers = getCostConditionParsers(file, configuration);
         Map<String, AbstractFileParserStrategy<? extends Reward>> rewardParsers = getRewardParsers(file, configuration);
-        return new CrateFileParserStrategy(configuration, file, conditionParsers, costConditionParsers, rewardParsers).load("");
+        return new CrateFileParserStrategy(configuration, file, conditionParsers, costConditionParsers, rewardParsers, plugin).load("");
     }
 
     private Map<String, AbstractFileParserStrategy<? extends Condition>> getConditionParsers(File file, YamlConfiguration configuration) {

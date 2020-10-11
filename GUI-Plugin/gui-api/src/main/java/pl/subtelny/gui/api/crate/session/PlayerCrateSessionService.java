@@ -2,7 +2,7 @@ package pl.subtelny.gui.api.crate.session;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import pl.subtelny.gui.api.crate.model.Crate;
+import pl.subtelny.gui.api.crate.model.CrateId;
 
 import java.util.Optional;
 
@@ -16,7 +16,10 @@ public interface PlayerCrateSessionService {
 
     void closeInventory(Player player);
 
-    void openSession(Player player, Crate crate);
+    void openSession(Player player, CrateId crateId);
 
     void closeAllSessions(Plugin plugin);
+
+    void closeAllSessions(CrateId crateId);
+
 }

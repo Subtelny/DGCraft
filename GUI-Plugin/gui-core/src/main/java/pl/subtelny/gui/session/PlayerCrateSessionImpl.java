@@ -5,9 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import pl.subtelny.gui.GUI;
 import pl.subtelny.gui.api.crate.inventory.CrateInventory;
-import pl.subtelny.gui.api.crate.model.Crate;
+import pl.subtelny.gui.crate.model.Crate;
 import pl.subtelny.gui.api.crate.model.CrateId;
-import pl.subtelny.gui.api.crate.model.ItemCrate;
+import pl.subtelny.gui.crate.model.ItemCrate;
 import pl.subtelny.gui.api.crate.session.PlayerCrateSession;
 import pl.subtelny.gui.crate.CrateConditionsService;
 import pl.subtelny.gui.events.CrateInventoryChangeEvent;
@@ -29,7 +29,7 @@ public class PlayerCrateSessionImpl implements PlayerCrateSession {
 
     private final CrateConditionsService conditionsService;
 
-    private Map<Integer, BukkitTask> tasks = new HashMap<>();
+    private final Map<Integer, BukkitTask> tasks = new HashMap<>();
 
     public PlayerCrateSessionImpl(Player player, Crate crate, CrateInventory inventory, CrateConditionsService conditionsService) {
         this.player = player;
@@ -55,8 +55,8 @@ public class PlayerCrateSessionImpl implements PlayerCrateSession {
     }
 
     @Override
-    public Crate getCrate() {
-        return crate;
+    public CrateId getCrate() {
+        return crate.getId();
     }
 
     @Override
@@ -75,7 +75,7 @@ public class PlayerCrateSessionImpl implements PlayerCrateSession {
             itemCrate.getCrateToOpen().ifPresent(this::changeCrateInventory);
         } else {
             if (crate.isGlobal()) {
-                conditionsService.informAboutNotSatisfiedConditions(player, notStatisfiedConditions);
+                conditionsService.getNotSatisfiedConditions(player, notStatisfiedConditions);
             } else {
                 setNotSatisfiedConditionItem(slot, notStatisfiedConditions);
             }

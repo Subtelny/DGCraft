@@ -1,0 +1,15 @@
+configuration:
+  size: 18
+  title: 'Stworz wyspe'
+  global: true
+
+content:
+  0:
+    item: GRASS
+    amount: 1
+    name: 'Wyspa podstawowa'
+    lore:
+      - 'something'
+      - 'something2'
+    onclick:
+      command: w stworz default

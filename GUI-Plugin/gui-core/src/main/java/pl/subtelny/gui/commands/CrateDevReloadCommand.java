@@ -5,38 +5,33 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.gui.GUI;
-import pl.subtelny.gui.api.crate.repository.CrateRepository;
-import pl.subtelny.gui.crate.settings.CratesLoader;
+import pl.subtelny.gui.api.crate.CratesLoaderService;
 import pl.subtelny.gui.messages.CrateMessages;
-import pl.subtelny.gui.api.crate.session.PlayerCrateSessionService;
+import pl.subtelny.utilities.FileUtil;
 
 import java.io.File;
 
 @PluginSubCommand(command = "reload", mainCommand = CrateDevCommand.class)
 public class CrateDevReloadCommand extends BaseCommand {
 
-    private final CrateRepository crateRepository;
-
-    private final CratesLoader cratesLoader;
-
-    private final PlayerCrateSessionService sessionService;
+    private final CratesLoaderService cratesLoaderService;
 
     @Autowired
-    public CrateDevReloadCommand(CrateMessages messages, CrateRepository crateRepository, CratesLoader cratesLoader, PlayerCrateSessionService sessionService) {
+    public CrateDevReloadCommand(CrateMessages messages, CratesLoaderService cratesLoaderService) {
         super(messages);
-        this.crateRepository = crateRepository;
-        this.cratesLoader = cratesLoader;
-        this.sessionService = sessionService;
+        this.cratesLoaderService = cratesLoaderService;
     }
 
     @Override
     public void handleCommand(CommandSender sender, String[] args) {
-        sessionService.closeAllSessions(GUI.plugin);
-        crateRepository.unregisterAll(GUI.plugin);
-        File dataFolder = GUI.plugin.getDataFolder();
-        File dir = new File(dataFolder, "guis");
-        cratesLoader.loadAllCratesFromDirectory(dir).forEach(crateRepository::registerCrate);
+        reloadGuis();
         getMessages().sendTo(sender, "command.cratedev.reload.reloaded");
+    }
+
+    private void reloadGuis() {
+        cratesLoaderService.unloadAllCrates(GUI.plugin);
+        File dir = FileUtil.getFile(GUI.plugin, "guis");
+        cratesLoaderService.loadAllCratesFromDir(GUI.plugin, dir);
     }
 
     @Override

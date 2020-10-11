@@ -1,7 +1,8 @@
-package pl.subtelny.gui.api.crate.model;
+package pl.subtelny.gui.crate.model;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import pl.subtelny.gui.api.crate.model.CrateId;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.condition.CostCondition;
 import pl.subtelny.utilities.reward.Reward;

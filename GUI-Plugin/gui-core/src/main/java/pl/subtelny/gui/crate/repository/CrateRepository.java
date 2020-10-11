@@ -2,11 +2,10 @@ package pl.subtelny.gui.crate.repository;
 
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.gui.GUI;
 import pl.subtelny.gui.api.crate.inventory.CrateInventory;
-import pl.subtelny.gui.api.crate.model.Crate;
 import pl.subtelny.gui.api.crate.model.CrateId;
-import pl.subtelny.gui.api.crate.repository.CrateRepository;
+import pl.subtelny.gui.crate.model.Crate;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,35 +13,26 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-public class CrateRepositoryImpl implements CrateRepository {
+public class CrateRepository {
 
-    private Map<CrateId, Crate> crates = new HashMap<>();
+    private final Map<CrateId, Crate> crates = new HashMap<>();
 
-    private Map<CrateId, CrateInventory> globalInventories = new HashMap<>();
+    private final Map<CrateId, CrateInventory> globalInventories = new HashMap<>();
 
-    @Override
-    public Optional<Crate> findInternalCrate(String crateIdentity) {
-        return findCrate(CrateId.of(GUI.plugin, crateIdentity));
-    }
-
-    @Override
     public Optional<Crate> findCrate(CrateId crateId) {
         return Optional.ofNullable(crates.get(crateId));
     }
 
-    @Override
-    public void registerCrate(Crate crate) {
+    public void addCrate(Crate crate) {
         crates.put(crate.getId(), crate);
     }
 
-    @Override
-    public void unregisterCrate(CrateId crateId) {
+    public void removeCrate(CrateId crateId) {
         crates.remove(crateId);
         globalInventories.remove(crateId);
     }
 
-    @Override
-    public void unregisterAll(Plugin plugin) {
+    public void removeAll(Plugin plugin) {
         List<CrateId> crateIds = crates.keySet().stream()
                 .filter(crateId -> crateId.getPluginName().equals(plugin.getName())).collect(Collectors.toList());
         crateIds.forEach(crateId -> {
@@ -51,12 +41,10 @@ public class CrateRepositoryImpl implements CrateRepository {
         });
     }
 
-    @Override
     public Optional<CrateInventory> findGlobalInventory(CrateId crateId) {
         return Optional.ofNullable(globalInventories.get(crateId));
     }
 
-    @Override
     public void updateGlobalInventory(CrateInventory crateInventory) {
         globalInventories.put(crateInventory.getCrateId(), crateInventory);
     }
