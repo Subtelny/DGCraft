@@ -4,7 +4,7 @@ import org.jooq.Configuration;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.core.loginhistory.repository.LoginHistoryAnemia;
-import pl.subtelny.repository.Updater;
+import pl.subtelny.core.api.repository.Updater;
 
 import java.util.concurrent.CompletableFuture;
 

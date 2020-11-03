@@ -8,7 +8,7 @@ import org.jooq.impl.DSL;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.islands.island.IslanderId;
 import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
-import pl.subtelny.repository.LoadAction;
+import pl.subtelny.core.api.repository.LoadAction;
 import pl.subtelny.utilities.identity.BasicIdentity;
 
 import java.util.List;

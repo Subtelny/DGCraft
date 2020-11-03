@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 import pl.subtelny.utilities.location.LocationFileParserStrategy;
-import pl.subtelny.utilities.file.Saveable;
+import pl.subtelny.utilities.Saveable;
 
 import java.io.File;
 

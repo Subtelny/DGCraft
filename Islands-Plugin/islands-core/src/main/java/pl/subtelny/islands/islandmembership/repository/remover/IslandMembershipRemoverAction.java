@@ -6,13 +6,13 @@ import org.jooq.DeleteConditionStep;
 import org.jooq.impl.DSL;
 import pl.subtelny.generated.tables.tables.IslandMemberships;
 import pl.subtelny.generated.tables.tables.records.IslandMembershipsRecord;
-import pl.subtelny.repository.RemoverAction;
+import pl.subtelny.core.api.repository.RemoveAction;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class IslandMembershipRemoverAction implements RemoverAction<IslandMembershipRemoveRequest> {
+public class IslandMembershipRemoverAction implements RemoveAction<IslandMembershipRemoveRequest> {
 
     private final Configuration configuration;
 

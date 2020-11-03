@@ -8,7 +8,7 @@ import pl.subtelny.core.api.city.CityId;
 import pl.subtelny.core.account.repository.AccountAnemia;
 import pl.subtelny.generated.tables.tables.Accounts;
 import pl.subtelny.generated.tables.tables.records.AccountsRecord;
-import pl.subtelny.repository.UpdateAction;
+import pl.subtelny.core.api.repository.UpdateAction;
 
 import java.sql.Timestamp;
 import java.util.concurrent.CompletableFuture;

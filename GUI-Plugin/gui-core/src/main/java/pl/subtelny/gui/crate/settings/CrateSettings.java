@@ -3,7 +3,7 @@ package pl.subtelny.gui.crate.settings;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.utilities.FileUtil;
+import pl.subtelny.utilities.file.FileUtil;
 import pl.subtelny.utilities.item.ItemStackFileParserStrategy;
 
 import java.io.File;

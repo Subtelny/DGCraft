@@ -9,7 +9,7 @@ import pl.subtelny.generated.tables.tables.IslandMemberships;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMemberId;
 import pl.subtelny.islands.islandmembership.repository.anemia.IslandMembershipAnemia;
-import pl.subtelny.repository.LoadAction;
+import pl.subtelny.core.api.repository.LoadAction;
 
 import java.util.List;
 import java.util.Optional;

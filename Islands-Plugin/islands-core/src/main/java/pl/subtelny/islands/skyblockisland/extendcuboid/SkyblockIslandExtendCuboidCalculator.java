@@ -9,6 +9,7 @@ import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
 import pl.subtelny.islands.utils.SkyblockIslandUtil;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.cuboid.Cuboid;
+import pl.subtelny.utilities.exception.ValidationException;
 
 import java.util.Optional;
 
@@ -25,11 +26,15 @@ public class SkyblockIslandExtendCuboidCalculator {
     public Cuboid calculateCuboid(IslandCoordinates islandCoordinates, int extendLevel) {
         Optional<SkyblockIslandExtendCuboidOption> level = skyblockIslandSettings.getExtendCuboidLevel(extendLevel - 1);
         return level.map(level1 -> calculateCuboid(islandCoordinates, level1))
-                .orElse(calculateCuboid(islandCoordinates));
+                .orElseThrow(() -> ValidationException.of("cuboidCalculator.not_found_extend_level", extendLevel));
+    }
+
+    public Cuboid calculateMaxCuboid(IslandCoordinates islandCoordinates) {
+        return buildCuboid(islandCoordinates, skyblockIslandSettings.getMaxIslandSizeWithSpaceBetween());
     }
 
     public Cuboid calculateCuboid(IslandCoordinates islandCoordinates) {
-        return buildCuboid(islandCoordinates, skyblockIslandSettings.getIslandSize());
+        return buildCuboid(islandCoordinates, skyblockIslandSettings.getBasicIslandSize());
     }
 
     public Cuboid calculateCuboid(IslandCoordinates islandCoordinates, SkyblockIslandExtendCuboidOption level) {
@@ -37,16 +42,13 @@ public class SkyblockIslandExtendCuboidCalculator {
     }
 
     private Cuboid buildCuboid(IslandCoordinates islandCoordinates, int islandSize) {
-        int basicIslandSize = skyblockIslandSettings.getIslandSize();
-        int maxIslandSize = skyblockIslandSettings.getMaxIslandSize();
-        Validation.isTrue(islandSize <= maxIslandSize, "Tried to set islandSize: " + islandSize + " when max is " + maxIslandSize);
-        Validation.isTrue(islandSize >= basicIslandSize, "Tried to set islandSize: " + islandSize + " when min is " + basicIslandSize);
+        int basicIslandSize = skyblockIslandSettings.getBasicIslandSize();
+        int maxIslandSize = skyblockIslandSettings.getMaxIslandSizeWithSpaceBetween();
+        Validation.isTrue(islandSize <= maxIslandSize, "Tried to set islandSize: %s  when max is %s", islandSize, maxIslandSize);
+        Validation.isTrue(islandSize >= basicIslandSize, "Tried to set islandSize: %s when min is %s", islandSize, basicIslandSize);
 
-        World world = skyblockIslandSettings.getWorld();
         int spaceBetweenIslands = skyblockIslandSettings.getSpaceBetweenIslands();
-        if (islandSize != maxIslandSize) {
-            spaceBetweenIslands = 0;
-        }
+        World world = skyblockIslandSettings.getWorld();
         return SkyblockIslandUtil.buildCuboid(islandCoordinates, world, maxIslandSize, islandSize, spaceBetweenIslands);
     }
 }

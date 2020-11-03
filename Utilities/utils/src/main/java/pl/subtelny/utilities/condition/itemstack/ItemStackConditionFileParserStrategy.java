@@ -3,7 +3,7 @@ package pl.subtelny.utilities.condition.itemstack;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import pl.subtelny.utilities.file.AbstractFileParserStrategy;
-import pl.subtelny.utilities.file.Saveable;
+import pl.subtelny.utilities.Saveable;
 import pl.subtelny.utilities.item.ItemStackFileParserStrategy;
 
 import java.io.File;

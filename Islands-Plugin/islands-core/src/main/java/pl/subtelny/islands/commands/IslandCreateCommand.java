@@ -12,11 +12,12 @@ import pl.subtelny.islands.islander.IslanderService;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.message.IslandMessages;
 import pl.subtelny.islands.skyblockisland.creator.CreateSkyblockIslandRequest;
+import pl.subtelny.islands.skyblockisland.creator.IslandCreateStateListener;
 import pl.subtelny.islands.skyblockisland.creator.SkyblockIslandCreator;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.schematic.SkyblockIslandSchematicOption;
 import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
-import pl.subtelny.jobs.JobsProvider;
+import pl.subtelny.utilities.job.JobsProvider;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.log.LogUtil;
 
@@ -55,34 +56,41 @@ public class IslandCreateCommand extends BaseCommand {
             openGuiCreator(player);
             return;
         }
+
         SkyblockIslandSchematicOption schematicOption = getSchematicOption(args[0]);
         createIsland(schematicOption, player, islander);
     }
 
     private void createIsland(SkyblockIslandSchematicOption schematicOption, Player player, Islander islander) {
         CreateSkyblockIslandRequest request = CreateSkyblockIslandRequest.builder(islander)
+                .stateListener(getStateListener(player))
                 .option(schematicOption)
                 .build();
 
-        islandCreator.create(request)
+        JobsProvider.runAsync(() -> islandCreator.create(request)
                 .whenComplete((skyblockIsland, throwable) -> {
                     if (throwable != null) {
                         islandFailureCreate(player, throwable);
                     } else {
                         islandSucessfullyCreated(player, skyblockIsland);
                     }
-                });
+                }));
+    }
+
+    private IslandCreateStateListener getStateListener(Player player) {
+        return state -> getMessages().sendTo(player, "command.island.create.state_progress", state);
     }
 
     private void islandFailureCreate(Player player, Throwable throwable) {
         LogUtil.warning("Error while creating island: " + throwable.getMessage());
-        getMessages().sendTo(player, getMessages().getRawMessage("command.island.create.internal_error"));
+        throwable.printStackTrace();
+        getMessages().sendTo(player, "command.island.create.internal_error");
     }
 
     private void islandSucessfullyCreated(Player player, SkyblockIsland skyblockIsland) {
         JobsProvider.runSync(Islands.plugin, () -> {
             player.teleport(skyblockIsland.getSpawn());
-            getMessages().sendTo(player, getMessages().getRawMessage("command.island.create.island_created"));
+            getMessages().sendTo(player, "command.island.create.island_created");
         });
     }
 

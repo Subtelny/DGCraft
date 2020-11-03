@@ -2,7 +2,7 @@ package pl.subtelny.islands.message;
 
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.utilities.FileUtil;
+import pl.subtelny.utilities.file.FileUtil;
 import pl.subtelny.utilities.messages.FileMessagesStorage;
 import pl.subtelny.utilities.messages.Messages;
 

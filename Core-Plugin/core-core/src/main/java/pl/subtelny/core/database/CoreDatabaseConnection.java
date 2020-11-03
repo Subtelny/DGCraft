@@ -9,6 +9,7 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.DatabaseConnection;
 
 import javax.sql.DataSource;
+import java.util.concurrent.Executor;
 
 @Component
 public class CoreDatabaseConnection implements DatabaseConnection {

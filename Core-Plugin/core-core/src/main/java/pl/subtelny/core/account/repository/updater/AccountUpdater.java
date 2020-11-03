@@ -5,7 +5,7 @@ import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.core.account.repository.AccountAnemia;
-import pl.subtelny.repository.Updater;
+import pl.subtelny.core.api.repository.Updater;
 
 import java.util.concurrent.CompletableFuture;
 

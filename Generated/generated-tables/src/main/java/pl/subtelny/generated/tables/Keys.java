@@ -52,7 +52,7 @@ public class Keys {
 
     public static final UniqueKey<AccountsRecord> ACCOUNTS_ID_PK = UniqueKeys0.ACCOUNTS_ID_PK;
     public static final UniqueKey<AccountsRecord> ACCOUNTS_NAME_UQ = UniqueKeys0.ACCOUNTS_NAME_UQ;
-    public static final UniqueKey<IslandMembershipsRecord> ISLAND_MEMBERSHIPS_UQ = UniqueKeys0.ISLAND_MEMBERSHIPS_UQ;
+    public static final UniqueKey<IslandMembershipsRecord> ISLAND_MEMBERSHIP_ID = UniqueKeys0.ISLAND_MEMBERSHIP_ID;
     public static final UniqueKey<IslandersRecord> ISLANDERS_ID_PK = UniqueKeys0.ISLANDERS_ID_PK;
     public static final UniqueKey<IslandsRecord> ISLANDS_ID_PK = UniqueKeys0.ISLANDS_ID_PK;
     public static final UniqueKey<LoginHistoriesRecord> LH_ACCOUNT = UniqueKeys0.LH_ACCOUNT;
@@ -80,7 +80,7 @@ public class Keys {
     private static class UniqueKeys0 {
         public static final UniqueKey<AccountsRecord> ACCOUNTS_ID_PK = Internal.createUniqueKey(Accounts.ACCOUNTS, "accounts_id_pk", Accounts.ACCOUNTS.ID);
         public static final UniqueKey<AccountsRecord> ACCOUNTS_NAME_UQ = Internal.createUniqueKey(Accounts.ACCOUNTS, "accounts_name_uq", Accounts.ACCOUNTS.NAME);
-        public static final UniqueKey<IslandMembershipsRecord> ISLAND_MEMBERSHIPS_UQ = Internal.createUniqueKey(IslandMemberships.ISLAND_MEMBERSHIPS, "island_memberships_uq", IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID, IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_MEMBER_ID);
+        public static final UniqueKey<IslandMembershipsRecord> ISLAND_MEMBERSHIP_ID = Internal.createUniqueKey(IslandMemberships.ISLAND_MEMBERSHIPS, "island_membership_id", IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID, IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_MEMBER_ID);
         public static final UniqueKey<IslandersRecord> ISLANDERS_ID_PK = Internal.createUniqueKey(Islanders.ISLANDERS, "islanders_id_pk", Islanders.ISLANDERS.ID);
         public static final UniqueKey<IslandsRecord> ISLANDS_ID_PK = Internal.createUniqueKey(Islands.ISLANDS, "islands_id_pk", Islands.ISLANDS.ID);
         public static final UniqueKey<LoginHistoriesRecord> LH_ACCOUNT = Internal.createUniqueKey(LoginHistories.LOGIN_HISTORIES, "lh_account", LoginHistories.LOGIN_HISTORIES.ACCOUNT);

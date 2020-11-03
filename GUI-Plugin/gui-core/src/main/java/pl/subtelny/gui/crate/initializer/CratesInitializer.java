@@ -7,7 +7,7 @@ import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.gui.GUI;
 import pl.subtelny.gui.api.crate.CratesLoaderService;
 import pl.subtelny.gui.crate.settings.CrateSettings;
-import pl.subtelny.utilities.FileUtil;
+import pl.subtelny.utilities.file.FileUtil;
 
 import java.io.File;
 

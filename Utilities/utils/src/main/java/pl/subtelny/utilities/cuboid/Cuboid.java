@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 /**
  * This class is a region/cuboid from one location to another. It can be used for blocks protection and things like WorldEdit.
@@ -571,6 +574,13 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         return res;
     }
 
+    public List<Player> getPlayers() {
+        return Bukkit.getOnlinePlayers()
+                .stream()
+                .filter(player -> contains(player.getLocation()))
+                .collect(Collectors.toList());
+    }
+
     public Iterator<Block> iterator() {
         return new CuboidIterator(this.getWorld(), this.x1, this.y1, this.z1, this.x2, this.y2, this.z2);
     }
@@ -582,7 +592,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 
     @Override
     public String toString() {
-        return new String("Cuboid: " + this.worldName + "," + this.x1 + "," + this.y1 + "," + this.z1 + "=>" + this.x2 + "," + this.y2 + "," + this.z2);
+        return "Cuboid: " + this.worldName + "," + this.x1 + "," + this.y1 + "," + this.z1 + "=>" + this.x2 + "," + this.y2 + "," + this.z2;
     }
 
     public class CuboidIterator implements Iterator<Block> {

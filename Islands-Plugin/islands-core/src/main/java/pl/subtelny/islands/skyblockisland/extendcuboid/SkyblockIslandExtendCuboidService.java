@@ -3,7 +3,7 @@ package pl.subtelny.islands.skyblockisland.extendcuboid;
 import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.island.repository.IslandRepository;
+import pl.subtelny.islands.islandold.repository.IslandRepository;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.skyblockisland.extendcuboid.settings.SkyblockIslandExtendCuboidOption;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
@@ -68,7 +68,7 @@ public class SkyblockIslandExtendCuboidService {
     }
 
     private void changeCuboid(SkyblockIsland skyblockIsland, int extendLevel, Cuboid cuboid) {
-        skyblockIsland.setCuboid(cuboid);
+        skyblockIsland.updateCuboid(cuboid);
         skyblockIsland.setExtendLevel(extendLevel);
     }
 

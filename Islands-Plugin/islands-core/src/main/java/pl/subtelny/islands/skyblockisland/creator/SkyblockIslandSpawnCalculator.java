@@ -1,12 +1,16 @@
 package pl.subtelny.islands.skyblockisland.creator;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import pl.subtelny.islands.Islands;
-import pl.subtelny.jobs.JobsProvider;
 import pl.subtelny.utilities.cuboid.Cuboid;
-import pl.subtelny.utilities.cuboid.CuboidUtil;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class SkyblockIslandSpawnCalculator {
 
@@ -16,21 +20,21 @@ public class SkyblockIslandSpawnCalculator {
         this.cuboid = cuboid;
     }
 
-    public Location calculate() {
-        var ref = new Object() {
-            Location location = cuboid.getCenter();
-        };
-        JobsProvider.runSync(Islands.plugin, () -> {
+    public Location calculate() throws InterruptedException, ExecutionException, TimeoutException {
+        return Bukkit.getScheduler().callSyncMethod(Islands.plugin, () -> {
             for (Block block : cuboid) {
                 if (block.getType() == Material.END_PORTAL_FRAME) {
-                    ref.location = block.getLocation();
                     block.setType(Material.AIR);
-                    return;
+                    return block.getLocation();
                 }
             }
-            CuboidUtil.findSafeLocationSpirally(cuboid).ifPresent(location -> ref.location = location);
-        });
-        return ref.location;
+            Location center = cuboid.getCenter();
+            Block blockDown = center.getBlock().getRelative(BlockFace.DOWN);
+            if (blockDown.getType() == Material.AIR) {
+                blockDown.setType(Material.GRASS);
+            }
+            return center;
+        }).get(1, TimeUnit.MINUTES);
     }
 
 }

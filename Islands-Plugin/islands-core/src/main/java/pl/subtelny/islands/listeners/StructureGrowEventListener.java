@@ -2,15 +2,15 @@ package pl.subtelny.islands.listeners;
 
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.island.repository.IslandFindResult;
+import pl.subtelny.islands.island.Island;
+import pl.subtelny.islands.island.query.IslandFindResult;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.StructureGrowEvent;
-import pl.subtelny.islands.island.model.AbstractIsland;
-import pl.subtelny.islands.island.IslandsQueryService;
+import pl.subtelny.islands.islandold.IslandsQueryService;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class StructureGrowEventListener implements Listener {
         result.getResult().ifPresent(island -> removeBlocksWhenNotInIsland(e.getBlocks(), island));
     }
 
-    private void removeBlocksWhenNotInIsland(List<BlockState> blocks, AbstractIsland island) {
+    private void removeBlocksWhenNotInIsland(List<BlockState> blocks, Island island) {
         Cuboid cuboid = island.getCuboid();
         blocks.stream()
                 .filter(blockState -> !cuboid.contains(blockState.getLocation()))

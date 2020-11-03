@@ -4,10 +4,11 @@ import org.bukkit.Location;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.TransactionProvider;
-import pl.subtelny.core.api.schematic.SchematicLoader;
+import pl.subtelny.core.api.worldedit.SchematicPasteSession;
+import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.IslandId;
-import pl.subtelny.islands.island.creator.IslandCreator;
-import pl.subtelny.islands.island.repository.IslandRepository;
+import pl.subtelny.islands.islandold.creator.IslandCreator;
+import pl.subtelny.islands.islandold.repository.IslandRepository;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.skyblockisland.SkyblockIslandQueryService;
@@ -16,16 +17,17 @@ import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.repository.storage.SkyblockIslandCache;
 import pl.subtelny.islands.skyblockisland.schematic.SkyblockIslandSchematicOption;
 import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
-import pl.subtelny.jobs.JobsProvider;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.cuboid.Cuboid;
 import pl.subtelny.utilities.exception.ValidationException;
+import pl.subtelny.utilities.job.Job;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 @Component
 public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, CreateSkyblockIslandRequest> {
@@ -58,9 +60,15 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Crea
 
     @Override
     public CompletableFuture<SkyblockIsland> create(CreateSkyblockIslandRequest request) {
-        IslandCoordinates islandCoordinates = request.getCoordinates().orElse(getNextIslandCoordinates());
-        SkyblockIslandSchematicOption schematicOption = request.getOption().orElse(settings.getDefaultSchematicOption());
-        return createSkyblockIsland(request.getIslander(), islandCoordinates, schematicOption);
+        validateIslander(request.getIslander());
+        IslandCoordinates islandCoordinates = request.getCoordinates().orElseGet(this::getNextIslandCoordinates);
+        validateIslandCoordinates(islandCoordinates);
+
+        Cuboid cuboid = cuboidCalculator.calculateCuboid(islandCoordinates);
+        SkyblockIslandSchematicOption schematicOption = request.getOption().orElseGet(settings::getDefaultSchematicOption);
+        IslandCreateStateListener stateListener = request.getStateListener().orElse(null);
+        return pasteSchematic(cuboid.getCenter(), schematicOption, stateListener)
+                .thenCompose(v -> createSkyblockIsland(request.getIslander(), islandCoordinates, cuboid));
     }
 
     private IslandCoordinates getNextIslandCoordinates() {
@@ -68,18 +76,24 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Crea
                 .orElseThrow(() -> ValidationException.of("creator.skyblockIsland.no_free_island_coordinates"));
     }
 
-    private CompletableFuture<SkyblockIsland> createSkyblockIsland(Islander islander, IslandCoordinates coordinates, SkyblockIslandSchematicOption schematic) {
-        validateIslander(islander);
-        validateIslandCoordinates(coordinates);
-        Cuboid cuboid = cuboidCalculator.calculateCuboid(coordinates);
-        return new IslandSchematicPaster(cuboid.getCenter(), schematic)
-                .pasteSchematic()
-                .thenCompose(unused -> new IslandCreatorJob(cuboid, coordinates, islander).createIsland());
+    private CompletableFuture<Void> pasteSchematic(Location location, SkyblockIslandSchematicOption schematic, @Nullable IslandCreateStateListener stateListener) {
+        File schematicFile = new File(schematic.getSchematicFilePath());
+        Validation.isTrue(schematicFile.exists(), "creator.skyblockIsland.schematic_not_found");
+        SchematicPasteSession pasteSession = new SchematicPasteSession(schematicFile, location);
+        if (stateListener != null) {
+            pasteSession.setStateListener(stateListener::state);
+        }
+        return pasteSession.performAsync();
+    }
+
+    private CompletableFuture<SkyblockIsland> createSkyblockIsland(Islander islander, IslandCoordinates coordinates, Cuboid cuboid) {
+        SkyblockIslandCreatorJob islandCreatorJob = new SkyblockIslandCreatorJob(cuboid, coordinates, islander);
+        return transactionProvider.transactionResultAsync(islandCreatorJob::execute).toCompletableFuture();
     }
 
     private void validateIslander(Islander islander) {
-        Optional<SkyblockIsland> skyblockIsland = islander.getSkyblockIsland();
-        Validation.isTrue(skyblockIsland.isEmpty(), "creator.skyblockIsland.already_has_island");
+        Optional<Island> island = islander.findIsland(SkyblockIsland.TYPE);
+        Validation.isTrue(island.isEmpty(), "creator.skyblockIsland.already_has_island");
     }
 
     private void validateIslandCoordinates(IslandCoordinates islandCoordinates) {
@@ -87,7 +101,7 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Crea
         Validation.isTrue(islandFound, "creator.skyblockIsland.coordinates_taken");
     }
 
-    private class IslandCreatorJob {
+    private class SkyblockIslandCreatorJob implements Job<SkyblockIsland> {
 
         private final Cuboid cuboid;
 
@@ -95,58 +109,35 @@ public class SkyblockIslandCreator implements IslandCreator<SkyblockIsland, Crea
 
         private final Islander islander;
 
-        private IslandCreatorJob(Cuboid cuboid,
-                                 IslandCoordinates islandCoordinates,
-                                 Islander islander) {
+        private SkyblockIslandCreatorJob(Cuboid cuboid,
+                                         IslandCoordinates islandCoordinates,
+                                         Islander islander) {
             this.cuboid = cuboid;
             this.islandCoordinates = islandCoordinates;
             this.islander = islander;
         }
 
-        public CompletableFuture<SkyblockIsland> createIsland() {
-            return transactionProvider.transactionResultAsync(this::createSkyblockIsland).toCompletableFuture();
+        @Override
+        public SkyblockIsland execute() {
+            return createSkyblockIsland();
         }
 
         private SkyblockIsland createSkyblockIsland() {
-            Location spawn = new SkyblockIslandSpawnCalculator(cuboid).calculate();
+            Location spawn = calculateSpawn();
             SkyblockIsland skyblockIsland = new SkyblockIsland(spawn, cuboid, islandCoordinates);
             skyblockIsland.join(islander);
+            skyblockIsland.changeOwner(islander);
             IslandId islandId = islandRepository.updateIsland(skyblockIsland);
             return skyblockIslandQueryService.findSkyblockIsland(islandId)
                     .orElseThrow(() -> new IllegalStateException("Not found just created a skyblock island " + islandId));
         }
 
-    }
-
-    private static class IslandSchematicPaster {
-
-        private final Location location;
-
-        private final SkyblockIslandSchematicOption schematicOption;
-
-        private IslandSchematicPaster(Location location, SkyblockIslandSchematicOption schematicOption) {
-            this.location = location;
-            this.schematicOption = schematicOption;
-        }
-
-        public CompletableFuture<Void> pasteSchematic() {
-            return JobsProvider.runAsync(() -> {
-                try {
-                    CountDownLatch latch = new CountDownLatch(1);
-                    File schematicFile = new File(schematicOption.getSchematicFilePath());
-                    validateSchematicFile(schematicFile);
-                    SchematicLoader.pasteSchematic(location, schematicFile, aBoolean -> latch.countDown());
-                    latch.await(1, TimeUnit.MINUTES);
-                } catch (InterruptedException e) {
-                    throw ValidationException.of("creator.skyblockIsland.error_while_pasting_island");
-                }
-            });
-        }
-
-        private void validateSchematicFile(File schematicFile) {
-            Validation.isTrue(schematicFile.exists(),
-                    "creator.skyblockIsland.schema_file_not_found",
-                    schematicOption.getSchematicFilePath());
+        private Location calculateSpawn() {
+            try {
+                return new SkyblockIslandSpawnCalculator(cuboid).calculate();
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                throw new IllegalStateException("Could not calculate spawn for island: " + e.getMessage());
+            }
         }
 
     }

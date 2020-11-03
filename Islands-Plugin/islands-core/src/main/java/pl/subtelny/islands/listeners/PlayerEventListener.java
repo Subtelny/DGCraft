@@ -13,8 +13,13 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.guard.IslandActionGuard;
 import pl.subtelny.islands.guard.IslandActionGuardResult;
+import pl.subtelny.islands.island.Island;
+import pl.subtelny.islands.islandold.IslandsQueryService;
 import pl.subtelny.islands.islander.IslanderService;
+import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
 import pl.subtelny.utilities.location.LocationUtil;
+
+import java.util.Optional;
 
 @Component
 public class PlayerEventListener implements Listener {
@@ -23,11 +28,18 @@ public class PlayerEventListener implements Listener {
 
     private final IslandActionGuard islandActionGuard;
 
+    private final IslandsQueryService islandsQueryService;
+
+    private final SkyblockIslandSettings settings;
+
     @Autowired
     public PlayerEventListener(IslanderService islanderService,
-                               IslandActionGuard islandActionGuard) {
+                               IslandActionGuard islandActionGuard, IslandsQueryService islandsQueryService,
+                               SkyblockIslandSettings settings) {
         this.islanderService = islanderService;
         this.islandActionGuard = islandActionGuard;
+        this.islandsQueryService = islandsQueryService;
+        this.settings = settings;
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -53,7 +65,27 @@ public class PlayerEventListener implements Listener {
             e.setCancelled(true);
             Location teleportTo = LocationUtil.toLocationWithCenteredBlock(from);
             player.teleport(teleportTo);
+            return;
         }
+
+        if (result.isNotIslandWorld()) {
+            return;
+        }
+
+        Optional<Island> fromIslandOpt = islandsQueryService.findIslandAtLocation(from).getResult();
+        Optional<Island> toIslandOpt = islandsQueryService.findIslandAtLocation(to).getResult();
+
+        if (toIslandOpt.isPresent()) {
+            Island toIsland = toIslandOpt.get();
+            if (fromIslandOpt.isPresent()) {
+                if (fromIslandOpt.get().equals(toIsland)) {
+                    return;
+                }
+            }
+            player.sendMessage("Wszedles na wyspe id " + toIsland.getId());
+            return;
+        }
+        fromIslandOpt.ifPresent(island -> player.sendMessage("wyszedles z wyspy id " + island.getId()));
     }
 
     @EventHandler

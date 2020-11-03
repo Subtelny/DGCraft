@@ -6,7 +6,7 @@ import org.jooq.impl.DSL;
 import pl.subtelny.core.loginhistory.repository.LoginHistoryAnemia;
 import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.generated.tables.tables.records.LoginHistoriesRecord;
-import pl.subtelny.repository.UpdateAction;
+import pl.subtelny.core.api.repository.UpdateAction;
 
 import java.sql.Timestamp;
 import java.util.concurrent.CompletableFuture;

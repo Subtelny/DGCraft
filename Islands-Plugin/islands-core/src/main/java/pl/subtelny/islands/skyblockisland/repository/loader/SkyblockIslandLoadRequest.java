@@ -1,19 +1,21 @@
 package pl.subtelny.islands.skyblockisland.repository.loader;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import pl.subtelny.islands.island.IslandId;
+import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.islander.model.IslandCoordinates;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import pl.subtelny.islands.island.repository.loader.IslandLoadRequest;
+import pl.subtelny.islands.island.repository.IslandLoadRequest;
 
 public class SkyblockIslandLoadRequest extends IslandLoadRequest {
 
 	private final IslandCoordinates islandCoordinates;
 
-	public SkyblockIslandLoadRequest(IslandId islandId, IslandCoordinates islandCoordinates) {
-		super(islandId);
+	public SkyblockIslandLoadRequest(IslandId islandId, IslandCoordinates islandCoordinates, IslandType islandType) {
+		super(islandId, islandType);
 		this.islandCoordinates = islandCoordinates;
 	}
 
@@ -21,8 +23,8 @@ public class SkyblockIslandLoadRequest extends IslandLoadRequest {
 		return Optional.ofNullable(islandCoordinates);
 	}
 
-	public static Builder newBuilder() {
-		return new Builder();
+	public static Builder newBuilder(IslandType islandType) {
+		return new Builder(islandType);
 	}
 
 	public static class Builder {
@@ -31,7 +33,11 @@ public class SkyblockIslandLoadRequest extends IslandLoadRequest {
 
 		private IslandId islandId;
 
-		private Builder() { }
+		private final IslandType islandType;
+
+		private Builder(IslandType islandType) {
+			this.islandType = islandType;
+		}
 
 		public Builder where(IslandCoordinates islandCoordinates) {
 			this.islandCoordinates = islandCoordinates;
@@ -44,34 +50,22 @@ public class SkyblockIslandLoadRequest extends IslandLoadRequest {
 		}
 
 		public SkyblockIslandLoadRequest build() {
-			return new SkyblockIslandLoadRequest(islandId, islandCoordinates);
+			return new SkyblockIslandLoadRequest(islandId, islandCoordinates, islandType);
 		}
 
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
 		SkyblockIslandLoadRequest that = (SkyblockIslandLoadRequest) o;
-
-		return new EqualsBuilder()
-				.appendSuper(super.equals(o))
-				.append(islandCoordinates, that.islandCoordinates)
-				.isEquals();
+		return Objects.equals(islandCoordinates, that.islandCoordinates);
 	}
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(17, 37)
-				.appendSuper(super.hashCode())
-				.append(islandCoordinates)
-				.toHashCode();
+		return Objects.hash(super.hashCode(), islandCoordinates);
 	}
 }

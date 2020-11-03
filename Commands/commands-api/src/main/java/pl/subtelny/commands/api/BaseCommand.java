@@ -16,7 +16,7 @@ public abstract class BaseCommand implements Command {
 
     private String permission;
 
-    private Map<String, Command> subCommands = new HashMap<>();
+    private final Map<String, Command> subCommands = new HashMap<>();
 
     private final Messages messages;
 

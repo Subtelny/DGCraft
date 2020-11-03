@@ -1,6 +1,7 @@
 package pl.subtelny.utilities.file;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import pl.subtelny.utilities.Saveable;
 
 import java.io.File;
 import java.io.IOException;

@@ -5,7 +5,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.utilities.FileUtil;
+import pl.subtelny.utilities.file.FileUtil;
 import pl.subtelny.utilities.location.LocationFileParserStrategy;
 
 import java.io.File;

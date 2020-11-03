@@ -5,7 +5,7 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginCommand;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.core.configuration.CoreMessages;
-import pl.subtelny.utilities.MessageUtil;
+import pl.subtelny.utilities.messages.MessageUtil;
 
 @PluginCommand(
         command = "author",

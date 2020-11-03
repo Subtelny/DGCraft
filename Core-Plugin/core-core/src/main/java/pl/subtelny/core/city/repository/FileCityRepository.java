@@ -8,7 +8,7 @@ import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.city.CityId;
 import pl.subtelny.core.city.City;
-import pl.subtelny.utilities.FileUtil;
+import pl.subtelny.utilities.file.FileUtil;
 
 import java.io.File;
 import java.util.HashMap;

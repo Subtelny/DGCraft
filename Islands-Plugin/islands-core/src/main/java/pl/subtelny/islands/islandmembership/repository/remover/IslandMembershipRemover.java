@@ -4,7 +4,7 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
-import pl.subtelny.repository.Remover;
+import pl.subtelny.core.api.repository.Remover;
 
 import java.util.concurrent.CompletableFuture;
 

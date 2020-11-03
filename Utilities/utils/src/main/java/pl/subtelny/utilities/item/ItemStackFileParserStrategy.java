@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import pl.subtelny.utilities.ColorUtil;
 import pl.subtelny.utilities.Pair;
 import pl.subtelny.utilities.file.AbstractFileParserStrategy;
-import pl.subtelny.utilities.file.Saveable;
+import pl.subtelny.utilities.Saveable;
 
 import java.io.File;
 import java.util.List;

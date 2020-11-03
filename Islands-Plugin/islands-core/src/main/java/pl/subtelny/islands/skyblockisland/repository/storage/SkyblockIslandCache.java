@@ -57,4 +57,5 @@ public class SkyblockIslandCache {
     public void removeFreeIslandCoordinates(IslandCoordinates islandCoordinates) {
         freeIslands.remove(islandCoordinates);
     }
+
 }

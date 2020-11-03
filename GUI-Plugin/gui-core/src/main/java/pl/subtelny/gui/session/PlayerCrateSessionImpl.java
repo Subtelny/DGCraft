@@ -11,7 +11,7 @@ import pl.subtelny.gui.crate.model.ItemCrate;
 import pl.subtelny.gui.api.crate.session.PlayerCrateSession;
 import pl.subtelny.gui.crate.CrateConditionsService;
 import pl.subtelny.gui.events.CrateInventoryChangeEvent;
-import pl.subtelny.jobs.JobsProvider;
+import pl.subtelny.utilities.job.JobsProvider;
 import pl.subtelny.utilities.condition.Condition;
 
 import java.util.HashMap;

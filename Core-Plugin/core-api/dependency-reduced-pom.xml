@@ -8,43 +8,19 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>core-api</artifactId>
   <version>1</version>
+  <repositories>
+    <repository>
+      <releases />
+      <snapshots />
+      <id>sk89q-snapshots</id>
+      <url>http://maven.sk89q.com/artifactory/repo</url>
+    </repository>
+    <repository>
+      <id>github-asyncworldedit-api</id>
+      <url>https://raw.githubusercontent.com/SBPrime/AsyncWorldEdit/maven-artifact/</url>
+    </repository>
+  </repositories>
   <dependencies>
-    <dependency>
-      <groupId>com.destroystokyo.paper</groupId>
-      <artifactId>paper-api</artifactId>
-      <version>1.14.4-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>commons-lang</artifactId>
-          <groupId>commons-lang</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>json-simple</artifactId>
-          <groupId>com.googlecode.json-simple</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>gson</artifactId>
-          <groupId>com.google.code.gson</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>bungeecord-chat</artifactId>
-          <groupId>net.md-5</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>snakeyaml</artifactId>
-          <groupId>org.yaml</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>asm</artifactId>
-          <groupId>org.ow2.asm</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>asm-commons</artifactId>
-          <groupId>org.ow2.asm</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>

@@ -2,7 +2,7 @@ package pl.subtelny.core.player;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.bukkit.entity.Player;
-import pl.subtelny.repository.Storage;
+import pl.subtelny.core.api.repository.Storage;
 
 public class CorePlayerStorage extends Storage<Player, CorePlayer> {
 

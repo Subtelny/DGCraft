@@ -8,7 +8,7 @@ import pl.subtelny.utilities.cuboid.Cuboid;
 import pl.subtelny.utilities.cuboid.CuboidFileParserStrategy;
 import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 import pl.subtelny.utilities.file.ObjectFileParserStrategy;
-import pl.subtelny.utilities.file.Saveable;
+import pl.subtelny.utilities.Saveable;
 import pl.subtelny.utilities.location.LocationFileParserStrategy;
 
 import java.io.File;

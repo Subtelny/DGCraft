@@ -7,10 +7,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.island.IslandsQueryService;
-import pl.subtelny.islands.island.repository.IslandFindResult;
+import pl.subtelny.islands.island.Island;
+import pl.subtelny.islands.islandold.IslandsQueryService;
+import pl.subtelny.islands.island.query.IslandFindResult;
 import pl.subtelny.islands.islander.IslanderService;
-import pl.subtelny.islands.island.model.AbstractIsland;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
@@ -41,6 +41,9 @@ public class IslandActionGuard {
 
     public IslandActionGuardResult accessToEnter(Player player, Location location) {
         if (player.hasPermission(ENTER_BYPASS_PERMISSION)) {
+            if (!islandService.isIslandWorld(location)) {
+                return IslandActionGuardResult.NOT_ISLAND_WORLD;
+            }
             return IslandActionGuardResult.ACTION_PERMITED;
         }
         return playerHasAccessToLocation(player, location);
@@ -50,7 +53,7 @@ public class IslandActionGuard {
         IslandFindResult islandSourceResult = islandService.findIslandAtLocation(source);
         IslandActionGuardResult sourceResult = locationInIsland(source, islandSourceResult);
         if (sourceResult.isActionPermited()) {
-            Optional<AbstractIsland> sourceIslandOpt = islandSourceResult.getResult();
+            Optional<Island> sourceIslandOpt = islandSourceResult.getResult();
             if (sourceIslandOpt.isPresent()) {
                 return locationMatchIsland(target, sourceIslandOpt.get());
             }
@@ -62,14 +65,14 @@ public class IslandActionGuard {
         if (result.isNotIslandWorld()) {
             return IslandActionGuardResult.NOT_ISLAND_WORLD;
         }
-        Optional<AbstractIsland> islandOpt = result.getResult();
+        Optional<Island> islandOpt = result.getResult();
         if (islandOpt.isEmpty()) {
             return IslandActionGuardResult.ACTION_PROHIBITED;
         }
         return locationMatchIsland(location, islandOpt.get());
     }
 
-    private IslandActionGuardResult locationMatchIsland(Location location, AbstractIsland island) {
+    private IslandActionGuardResult locationMatchIsland(Location location, Island island) {
         boolean isInIsland = island.getCuboid().contains(location);
         if (isInIsland) {
             return IslandActionGuardResult.ACTION_PERMITED;
@@ -87,7 +90,7 @@ public class IslandActionGuard {
         return result;
     }
 
-    private void removeNonMatchingBlocksIntoIsland(AbstractIsland island, List<Block> blocks) {
+    private void removeNonMatchingBlocksIntoIsland(Island island, List<Block> blocks) {
         Cuboid islandCuboid = island.getCuboid();
         Iterator<Block> iterator = blocks.iterator();
         while (iterator.hasNext()) {
@@ -139,7 +142,7 @@ public class IslandActionGuard {
         if (islandFindResult.isNotIslandWorld()) {
             return IslandActionGuardResult.ACTION_PERMITED;
         }
-        Optional<AbstractIsland> islandOpt = islandFindResult.getResult();
+        Optional<Island> islandOpt = islandFindResult.getResult();
         Boolean hasAccess = islandOpt.map(island -> playerHasAccessToBuildOnIsland(player, location, island)).orElse(false);
         if (hasAccess) {
             return IslandActionGuardResult.ACTION_PERMITED;
@@ -147,9 +150,9 @@ public class IslandActionGuard {
         return IslandActionGuardResult.ACTION_PROHIBITED;
     }
 
-    private boolean playerHasAccessToBuildOnIsland(Player player, Location location, AbstractIsland island) {
+    private boolean playerHasAccessToBuildOnIsland(Player player, Location location, Island island) {
         Islander islander = islanderService.getIslander(player);
-        if (island.isInIsland(islander)) {
+        if (island.isMemberOfIsland(islander)) {
             return island.getCuboid().contains(location);
         }
         return false;

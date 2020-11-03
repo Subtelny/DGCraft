@@ -1,12 +1,9 @@
 package pl.subtelny.utilities.reward.command;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 import pl.subtelny.utilities.file.ObjectFileParserStrategy;
-import pl.subtelny.utilities.file.Saveable;
-import pl.subtelny.utilities.item.ItemStackFileParserStrategy;
-import pl.subtelny.utilities.reward.itemstack.ItemStackReward;
+import pl.subtelny.utilities.Saveable;
 
 import java.io.File;
 
@@ -18,7 +15,7 @@ public class CommandRewardFileParserStrategy extends AbstractFileParserStrategy<
 
     @Override
     public CommandReward load(String path) {
-        String command = new ObjectFileParserStrategy<String>(configuration, file).load(path);
+        String command = new ObjectFileParserStrategy<String>(configuration, file).load(path + ".command");
         return new CommandReward(command);
     }
 

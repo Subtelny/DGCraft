@@ -10,7 +10,7 @@ import pl.subtelny.gui.crate.model.ItemCrate;
 import pl.subtelny.utilities.ConfigUtil;
 import pl.subtelny.utilities.condition.*;
 import pl.subtelny.utilities.file.AbstractFileParserStrategy;
-import pl.subtelny.utilities.file.Saveable;
+import pl.subtelny.utilities.Saveable;
 import pl.subtelny.utilities.item.ItemStackFileParserStrategy;
 import pl.subtelny.utilities.reward.Reward;
 import pl.subtelny.utilities.reward.RewardFileParserStrategy;

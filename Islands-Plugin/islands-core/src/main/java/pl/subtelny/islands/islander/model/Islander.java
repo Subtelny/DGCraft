@@ -1,21 +1,24 @@
 package pl.subtelny.islands.islander.model;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMemberId;
 import pl.subtelny.islands.island.IslanderId;
-import pl.subtelny.islands.island.model.AbstractIslandMember;
-import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
-import pl.subtelny.utilities.exception.ValidationException;
+import pl.subtelny.islands.island.membership.AbstractIslandMember;
+import pl.subtelny.islands.island.query.IslandQueryService;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public class Islander extends AbstractIslandMember {
 
+    public final static String ISLAND_MEMBER_TYPE = "ISLANDER";
+
     private final IslanderId islanderId;
 
-    private SkyblockIsland skyblockIsland;
-
-    public Islander(IslanderId islanderId) {
+    public Islander(IslanderId islanderId, List<IslandId> islandIds, IslandQueryService islandQueryService) {
+        super(islandIds, islandQueryService);
         this.islanderId = islanderId;
     }
 
@@ -23,17 +26,13 @@ public class Islander extends AbstractIslandMember {
         return islanderId;
     }
 
-    public Optional<SkyblockIsland> getSkyblockIsland() {
-        return Optional.ofNullable(skyblockIsland);
+    @Override
+    public IslandMemberId getId() {
+        return IslandMemberId.of(ISLAND_MEMBER_TYPE, islanderId.getInternal().toString());
     }
 
-    public void setSkyblockIsland(SkyblockIsland skyblockIsland) {
-        if (skyblockIsland != null && !skyblockIsland.isInIsland(this)) {
-            throw ValidationException.of("islander.setSkyblockIsland.not_member_new_island");
-        } else if (this.skyblockIsland.isInIsland(this)) {
-            throw ValidationException.of("islander.setSkyblockIsland.already_member_new_island");
-        }
-        this.skyblockIsland = skyblockIsland;
+    public Player getPlayer() {
+        return Bukkit.getPlayer(islanderId.getInternal());
     }
 
     @Override
@@ -49,8 +48,4 @@ public class Islander extends AbstractIslandMember {
         return Objects.hash(islanderId);
     }
 
-    @Override
-    public IslandMemberId getId() {
-        return IslandMemberId.of(islanderId);
-    }
 }

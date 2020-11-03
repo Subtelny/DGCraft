@@ -5,7 +5,7 @@ import org.jooq.impl.DSL;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.core.loginhistory.repository.LoginHistoryAnemia;
-import pl.subtelny.repository.LoadAction;
+import pl.subtelny.core.api.repository.LoadAction;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

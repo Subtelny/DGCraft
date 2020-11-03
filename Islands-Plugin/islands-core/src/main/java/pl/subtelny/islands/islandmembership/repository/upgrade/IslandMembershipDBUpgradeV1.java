@@ -27,6 +27,8 @@ public class IslandMembershipDBUpgradeV1 implements DatabaseUpgrade {
                 .column("island_member_id", SQLDataType.VARCHAR(50).nullable(false))
                 .column("owner", SQLDataType.BOOLEAN.nullable(false))
                 .constraints(
+                        constraint("island_membership_id")
+                                .primaryKey("island_id", "island_member_id"),
                         constraint("island_id_fk")
                                 .foreignKey("island_id")
                                 .references("islands", "id"),

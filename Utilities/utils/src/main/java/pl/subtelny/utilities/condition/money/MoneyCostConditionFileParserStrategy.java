@@ -3,7 +3,7 @@ package pl.subtelny.utilities.condition.money;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.file.YamlConfiguration;
 import pl.subtelny.utilities.file.AbstractFileParserStrategy;
-import pl.subtelny.utilities.file.Saveable;
+import pl.subtelny.utilities.Saveable;
 
 import java.io.File;
 

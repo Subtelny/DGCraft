@@ -3,14 +3,16 @@ package pl.subtelny.islands.skyblockisland.settings;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.plugin.Plugin;
+import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.core.api.economy.EconomyProvider;
+import pl.subtelny.islands.Islands;
 import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.islands.skyblockisland.extendcuboid.settings.SkyblockIslandExtendCuboidOption;
 import pl.subtelny.islands.skyblockisland.extendcuboid.settings.SkyblockIslandExtendCuboidOptionsLoader;
 import pl.subtelny.islands.skyblockisland.schematic.SkyblockIslandSchematicOption;
 import pl.subtelny.islands.skyblockisland.schematic.SkyblockIslandSchematicOptionLoader;
-import pl.subtelny.utilities.FileUtil;
+import pl.subtelny.utilities.file.FileUtil;
 import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.file.ObjectFileParserStrategy;
 
@@ -21,6 +23,10 @@ import java.util.*;
 public class SkyblockIslandSettings {
 
     private static final String CONFIG_FILE_NAME = "skyblockIsland.yml";
+
+    private final IslanderRepository islanderRepository;
+
+    private final EconomyProvider economyProvider;
 
     private World BASIC_ISLAND_WORLD;
 
@@ -34,9 +40,16 @@ public class SkyblockIslandSettings {
 
     private Map<String, SkyblockIslandSchematicOption> SCHEMATIC_OPTIONS = new HashMap<>();
 
-    public void initConfig(Plugin plugin, Economy economy, IslanderRepository islanderRepository) {
-        File configFile = FileUtil.copyFile(plugin, CONFIG_FILE_NAME);
-        new File(plugin.getDataFolder(), "schematics").mkdirs();
+    @Autowired
+    public SkyblockIslandSettings(IslanderRepository islanderRepository, EconomyProvider economyProvider) {
+        this.islanderRepository = islanderRepository;
+        this.economyProvider = economyProvider;
+    }
+
+    public void initConfig() {
+        File configFile = FileUtil.copyFile(Islands.plugin, CONFIG_FILE_NAME);
+        FileUtil.getFile(Islands.plugin, "schematics").mkdirs();
+        Economy economy = economyProvider.getEconomy();
         BASIC_ISLAND_WORLD = Bukkit.getWorld(new ObjectFileParserStrategy<String>(configFile).load("basic.island_world"));
         BASIC_SPACE_BETWEEN_ISLANDS = new ObjectFileParserStrategy<Integer>(configFile).load("basic.space_between_islands");
         BASIC_ISLAND_SIZE = new ObjectFileParserStrategy<Integer>(configFile).load("basic.island_size");
@@ -53,7 +66,7 @@ public class SkyblockIslandSettings {
         return BASIC_SPACE_BETWEEN_ISLANDS;
     }
 
-    public int getIslandSize() {
+    public int getBasicIslandSize() {
         return BASIC_ISLAND_SIZE;
     }
 
@@ -61,11 +74,11 @@ public class SkyblockIslandSettings {
         return CREATOR_GUI;
     }
 
-    public int getMaxIslandSize() {
+    public int getMaxIslandSizeWithSpaceBetween() {
         return EXTEND_CUBOID_LEVELS.values().stream()
                 .max(Comparator.comparingInt(SkyblockIslandExtendCuboidOption::getIslandSize))
                 .map(SkyblockIslandExtendCuboidOption::getIslandSize)
-                .orElse(BASIC_ISLAND_SIZE);
+                .orElse(BASIC_ISLAND_SIZE) + BASIC_SPACE_BETWEEN_ISLANDS;
     }
 
     public int getMaxExtendCuboidLevel() {

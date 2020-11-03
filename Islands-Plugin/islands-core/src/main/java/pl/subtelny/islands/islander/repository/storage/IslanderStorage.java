@@ -4,7 +4,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.island.IslanderId;
-import pl.subtelny.repository.Storage;
+import pl.subtelny.core.api.repository.Storage;
 import pl.subtelny.utilities.NullObject;
 
 public class IslanderStorage extends Storage<IslanderId, NullObject<Islander>> {

@@ -6,13 +6,13 @@ import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.island.repository.IslandRepositoryConnector;
+import pl.subtelny.islands.islandold.repository.IslandRepositoryConnector;
 import pl.subtelny.islands.islander.repository.IslanderRepository;
 import pl.subtelny.islands.islandmembership.repository.IslandMembershipRepository;
-import pl.subtelny.islands.skyblockisland.SkyblockIslandType;
 import pl.subtelny.islands.skyblockisland.extendcuboid.SkyblockIslandExtendCuboidCalculator;
 import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.skyblockisland.repository.loader.SkyblockIslandLoader;
+import pl.subtelny.islands.islandold.repository.remover.IslandRemover;
 import pl.subtelny.islands.skyblockisland.repository.storage.SkyblockIslandCache;
 import pl.subtelny.islands.skyblockisland.repository.updater.SkyblockIslandUpdater;
 
@@ -27,14 +27,18 @@ public class SkyblockIslandRepositoryConnector implements IslandRepositoryConnec
 
     private final SkyblockIslandUpdater updater;
 
+    private final IslandRemover remover;
+
     @Autowired
     public SkyblockIslandRepositoryConnector(SkyblockIslandCache skyblockIslandCache,
                                              DatabaseConnection databaseConfiguration,
                                              SkyblockIslandExtendCuboidCalculator extendCuboidCalculator,
                                              TransactionProvider transactionProvider,
                                              IslandMembershipRepository islandMembershipRepository,
-                                             IslanderRepository islanderRepository) {
+                                             IslanderRepository islanderRepository,
+                                             IslandRemover remover) {
         this.skyblockIslandCache = skyblockIslandCache;
+        this.remover = remover;
         this.loader = new SkyblockIslandLoader(databaseConfiguration, extendCuboidCalculator, transactionProvider, islandMembershipRepository, islanderRepository);
         this.updater = new SkyblockIslandUpdater(databaseConfiguration, transactionProvider);
     }
@@ -54,8 +58,13 @@ public class SkyblockIslandRepositoryConnector implements IslandRepositoryConnec
     }
 
     @Override
+    public void removeIsland(SkyblockIsland island) {
+        remover.removeIsland(island);
+    }
+
+    @Override
     public IslandType getType() {
-        return SkyblockIslandType.TYPE;
+        return SkyblockIsland.TYPE;
     }
 
 }

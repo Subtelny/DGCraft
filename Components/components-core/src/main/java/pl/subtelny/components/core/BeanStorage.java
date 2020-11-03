@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class BeanStorage {
 
-    private Map<Class, Object> beans = Maps.newHashMap();
+    private final Map<Class, Object> beans = Maps.newHashMap();
 
     public void addBeans(Map<Class, Object> beans) {
         this.beans.putAll(beans);

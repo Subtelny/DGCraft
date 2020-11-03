@@ -18,6 +18,7 @@ import pl.subtelny.utilities.condition.permission.PermissionConditionFileParserS
 import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 import pl.subtelny.utilities.reward.Reward;
 import pl.subtelny.utilities.reward.command.CommandRewardFileParserStrategy;
+import pl.subtelny.utilities.reward.command.PlayerCommandRewardFileParserStrategy;
 import pl.subtelny.utilities.reward.itemstack.ItemStackRewardFileParserStrategy;
 import pl.subtelny.utilities.reward.money.MoneyRewardFileParserStrategy;
 import java.io.File;
@@ -78,7 +79,8 @@ public class CratesFileLoader {
         return Map.of(
                 "item", new ItemStackRewardFileParserStrategy(configuration, file),
                 "money", new MoneyRewardFileParserStrategy(configuration, file, economyProvider.getEconomy()),
-                "command", new CommandRewardFileParserStrategy(configuration, file)
+                "command", new CommandRewardFileParserStrategy(configuration, file),
+                "player-command", new PlayerCommandRewardFileParserStrategy(configuration, file)
         );
     }
 

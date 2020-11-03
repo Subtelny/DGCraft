@@ -6,7 +6,7 @@ import org.jooq.impl.DSL;
 import pl.subtelny.generated.tables.tables.IslandMemberships;
 import pl.subtelny.generated.tables.tables.records.IslandMembershipsRecord;
 import pl.subtelny.islands.islandmembership.repository.anemia.IslandMembershipAnemia;
-import pl.subtelny.repository.UpdateAction;
+import pl.subtelny.core.api.repository.UpdateAction;
 
 import java.util.concurrent.CompletableFuture;
 

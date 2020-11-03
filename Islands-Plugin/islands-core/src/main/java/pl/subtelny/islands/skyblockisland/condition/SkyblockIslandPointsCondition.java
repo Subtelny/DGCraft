@@ -1,9 +1,10 @@
 package pl.subtelny.islands.skyblockisland.condition;
 
 import org.bukkit.entity.Player;
-import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.island.IslanderId;
+import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.islander.repository.IslanderRepository;
+import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.messages.MessageKey;
 
@@ -25,8 +26,9 @@ public class SkyblockIslandPointsCondition implements Condition {
     public boolean satisfiesCondition(Player player) {
         Optional<Islander> islanderOpt = islanderRepository.getIslanderIfPresent(IslanderId.of(player.getUniqueId()));
         return islanderOpt.
-                flatMap(Islander::getSkyblockIsland)
-                .filter(skyblockIsland -> skyblockIsland.getPoints() >= points).isPresent();
+                flatMap(islander -> islander.findIsland(SkyblockIsland.TYPE))
+                .filter(skyblockIsland -> skyblockIsland.getPoints() >= points)
+                .isPresent();
     }
 
     @Override

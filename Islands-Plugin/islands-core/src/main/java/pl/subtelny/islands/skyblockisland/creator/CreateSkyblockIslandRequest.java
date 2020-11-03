@@ -14,10 +14,13 @@ public class CreateSkyblockIslandRequest {
 
     private SkyblockIslandSchematicOption option;
 
-    private CreateSkyblockIslandRequest(Islander islander, IslandCoordinates coordinates, SkyblockIslandSchematicOption option) {
+    private IslandCreateStateListener stateListener;
+
+    private CreateSkyblockIslandRequest(Islander islander, IslandCoordinates coordinates, SkyblockIslandSchematicOption option, IslandCreateStateListener stateListener) {
         this.islander = islander;
         this.coordinates = coordinates;
         this.option = option;
+        this.stateListener = stateListener;
     }
 
     public Islander getIslander() {
@@ -32,6 +35,10 @@ public class CreateSkyblockIslandRequest {
         return Optional.ofNullable(option);
     }
 
+    public Optional<IslandCreateStateListener> getStateListener() {
+        return Optional.ofNullable(stateListener);
+    }
+
     public static Builder builder(Islander islander) {
         return new Builder(islander);
     }
@@ -43,6 +50,8 @@ public class CreateSkyblockIslandRequest {
         private IslandCoordinates coordinates;
 
         private SkyblockIslandSchematicOption option;
+
+        private IslandCreateStateListener stateListener;
 
         public Builder(Islander islander) {
             this.islander = islander;
@@ -58,8 +67,13 @@ public class CreateSkyblockIslandRequest {
             return this;
         }
 
+        public Builder stateListener(IslandCreateStateListener stateListener) {
+            this.stateListener = stateListener;
+            return this;
+        }
+
         public CreateSkyblockIslandRequest build() {
-            return new CreateSkyblockIslandRequest(islander, coordinates, option);
+            return new CreateSkyblockIslandRequest(islander, coordinates, option, stateListener);
         }
     }
 

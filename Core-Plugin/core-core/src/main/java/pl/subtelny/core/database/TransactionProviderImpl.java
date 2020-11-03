@@ -16,7 +16,7 @@ import java.util.concurrent.CompletionStage;
 @Component
 public class TransactionProviderImpl implements TransactionProvider {
 
-    private ThreadLocal<Configuration> currentTransaction = new ThreadLocal<>();
+    private final ThreadLocal<Configuration> currentTransaction = new ThreadLocal<>();
 
     private final DatabaseConnection databaseConnection;
 

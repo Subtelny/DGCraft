@@ -5,7 +5,7 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.islands.Islands;
-import pl.subtelny.utilities.FileUtil;
+import pl.subtelny.utilities.file.FileUtil;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,26 +1,19 @@
 package pl.subtelny.core.api.worldedit;
 
-import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
-import com.sk89q.worldedit.function.operation.Operation;
-import com.sk89q.worldedit.function.operation.Operations;
-import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.primesoft.asyncworldedit.api.IAsyncWorldEdit;
 import org.primesoft.asyncworldedit.api.blockPlacer.IBlockPlacer;
-import org.primesoft.asyncworldedit.api.blockPlacer.IBlockPlacerListener;
 import org.primesoft.asyncworldedit.api.playerManager.IPlayerEntry;
 import org.primesoft.asyncworldedit.api.playerManager.IPlayerManager;
-import org.primesoft.asyncworldedit.api.utils.IFuncParamEx;
 import org.primesoft.asyncworldedit.api.worldedit.IAsyncEditSessionFactory;
-import org.primesoft.asyncworldedit.api.worldedit.ICancelabeEditSession;
 import org.primesoft.asyncworldedit.api.worldedit.IThreadSafeEditSession;
 import pl.subtelny.utilities.Validation;
 
@@ -28,62 +21,51 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public final class WorldEditHelper {
 
-	private final static IAsyncWorldEdit aweAPI = (IAsyncWorldEdit) Bukkit.getServer().getPluginManager().getPlugin("AsyncWorldEdit");
+    private final static IAsyncWorldEdit aweAPI = (IAsyncWorldEdit) Bukkit.getServer().getPluginManager().getPlugin("AsyncWorldEdit");
 
-	private static IAsyncEditSessionFactory getAsyncEditSessionFactory() {
-		return (IAsyncEditSessionFactory) WorldEdit.getInstance().getEditSessionFactory();
-	}
+    public static void clearRegion(Location pos1, Location pos2, Consumer<Boolean> consumer) {
+        Validation.isTrue(aweAPI != null, "AsyncWorldEdit not found");
+        IPlayerEntry fakePlayer = buildPlayer("WEH-CR");
 
-	public static void pasteSchematic(Location location, File schematic, IBlockPlacerListener iBlockPlacerListener) throws IOException {
-		Validation.isTrue(aweAPI != null, "AsyncWorldEdit not found");
-		IPlayerManager playerManager = aweAPI.getPlayerManager();
-		IPlayerEntry fakePlayer = playerManager.createFakePlayer("WEH-LS", UUID.randomUUID());
+        World world = new BukkitWorld(pos1.getWorld());
+        String jobName = "clearRegion-" + pos1.toString() + "," + pos2.toString();
+        ClearAction clearAction = new ClearAction(pos1, pos2);
+        performAction(consumer, world, fakePlayer, clearAction, jobName);
+    }
 
-		IAsyncEditSessionFactory editSessionFactory = getAsyncEditSessionFactory();
-		World world = new BukkitWorld(location.getWorld());
-		IThreadSafeEditSession safeEditSession = editSessionFactory.getThreadSafeEditSession(world, -1, null, fakePlayer);
+    public static void pasteSchematic(Location location, File schematic, Consumer<Boolean> consumer) throws IOException {
+        Validation.isTrue(aweAPI != null, "AsyncWorldEdit not found");
+        IPlayerEntry fakePlayer = buildPlayer("WEH-LS");
 
-		ClipboardReader reader = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getReader(new FileInputStream(schematic));
-		Clipboard clipboard = reader.read();
-		ClipboardHolder holder = new ClipboardHolder(clipboard);
+        ClipboardReader reader = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getReader(new FileInputStream(schematic));
+        Clipboard clipboard = reader.read();
+        ClipboardHolder holder = new ClipboardHolder(clipboard);
 
-		PasteAction pasteAction = new PasteAction(holder, location);
+        World world = new BukkitWorld(location.getWorld());
+        String jobName = "pasteSchematic-" + schematic.getName() + "-at-" + location.toString();
+        PasteAction pasteAction = new PasteAction(holder, location);
+        performAction(consumer, world, fakePlayer, pasteAction, jobName);
+    }
 
-		IBlockPlacer blockPlacer = aweAPI.getBlockPlacer();
-		blockPlacer.addListener(iBlockPlacerListener);
-		blockPlacer.performAsAsyncJob(safeEditSession, fakePlayer, "pasteSchematic-" + schematic.getName() + "-at-" + location.toString(), pasteAction);
-	}
+    private static IPlayerEntry buildPlayer(String playerName) {
+        IPlayerManager playerManager = aweAPI.getPlayerManager();
+        return playerManager.createFakePlayer(playerName, UUID.randomUUID());
+    }
 
-	private static class PasteAction implements IFuncParamEx<Integer, ICancelabeEditSession, MaxChangedBlocksException> {
+    private static void performAction(Consumer<Boolean> consumer, World world, IPlayerEntry player, WorldEditAction action, String jobName) {
+        IAsyncEditSessionFactory editSessionFactory = getAsyncEditSessionFactory();
+        IThreadSafeEditSession safeEditSession = editSessionFactory.getThreadSafeEditSession(world, -1, null, player);
+        IBlockPlacer blockPlacer = aweAPI.getBlockPlacer();
+        blockPlacer.addListener(new WorldEditBlockPlacerListener(jobName, consumer, blockPlacer));
+        blockPlacer.performAsAsyncJob(safeEditSession, player, jobName, action);
+    }
 
-		private final ClipboardHolder holder;
-
-		private final Location location;
-
-		private PasteAction(ClipboardHolder clipboardHolder, Location location) {
-			this.holder = clipboardHolder;
-			this.location = location;
-		}
-
-		@Override
-		public Integer execute(ICancelabeEditSession editSession) {
-			editSession.enableQueue();
-			editSession.setFastMode(true);
-
-			BlockVector3 to = BlockVector3.at(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-			final Operation build = holder.createPaste(editSession)
-					.to(to)
-					.ignoreAirBlocks(true)
-					.build();
-
-			Operations.completeBlindly(build);
-			editSession.flushSession();
-			return 1;
-		}
-
-	}
+    private static IAsyncEditSessionFactory getAsyncEditSessionFactory() {
+        return (IAsyncEditSessionFactory) WorldEdit.getInstance().getEditSessionFactory();
+    }
 
 }

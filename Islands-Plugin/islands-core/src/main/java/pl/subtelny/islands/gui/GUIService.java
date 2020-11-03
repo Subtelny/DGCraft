@@ -6,7 +6,7 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.gui.api.crate.CratesLoaderService;
 import pl.subtelny.islands.Islands;
-import pl.subtelny.utilities.FileUtil;
+import pl.subtelny.utilities.file.FileUtil;
 
 @Component
 public class GUIService {

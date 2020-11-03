@@ -5,7 +5,7 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.islands.islandmembership.repository.anemia.IslandMembershipAnemia;
-import pl.subtelny.repository.Updater;
+import pl.subtelny.core.api.repository.Updater;
 
 import java.util.concurrent.CompletableFuture;
 

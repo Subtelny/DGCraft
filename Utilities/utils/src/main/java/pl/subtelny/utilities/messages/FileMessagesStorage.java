@@ -39,7 +39,7 @@ public class FileMessagesStorage implements MessagesStorage {
         ConfigurationSection configurationSection = config.getConfigurationSection(MESSAGES_PATH);
         if (configurationSection != null) {
             messagesCache = configurationSection
-                    .getKeys(false).stream()
+                    .getKeys(true).stream()
                     .collect(mapMessages(config));
         }
     }

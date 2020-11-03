@@ -2,7 +2,6 @@ package pl.subtelny.commands.api;
 
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import pl.subtelny.utilities.MessageUtil;
 import pl.subtelny.utilities.exception.ValidationException;
 
 public final class BukkitCommandAdapter implements CommandExecutor {
