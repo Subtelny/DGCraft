@@ -1,24 +1,22 @@
 package pl.subtelny.core.account.repository.updater;
 
-import org.jooq.Configuration;
+import org.jooq.DSLContext;
 import org.jooq.InsertOnDuplicateSetMoreStep;
-import org.jooq.impl.DSL;
+import pl.subtelny.core.account.repository.AccountAnemia;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.core.api.city.CityId;
-import pl.subtelny.core.account.repository.AccountAnemia;
+import pl.subtelny.core.api.repository.UpdateAction;
 import pl.subtelny.generated.tables.tables.Accounts;
 import pl.subtelny.generated.tables.tables.records.AccountsRecord;
-import pl.subtelny.core.api.repository.UpdateAction;
 
 import java.sql.Timestamp;
-import java.util.concurrent.CompletableFuture;
 
 public class AccountAnemiaUpdateAction implements UpdateAction<AccountAnemia, AccountId> {
 
-    private final Configuration configuration;
+    private final DSLContext connection;
 
-    public AccountAnemiaUpdateAction(Configuration configuration) {
-        this.configuration = configuration;
+    public AccountAnemiaUpdateAction(DSLContext connection) {
+        this.connection = connection;
     }
 
     @Override
@@ -28,24 +26,16 @@ public class AccountAnemiaUpdateAction implements UpdateAction<AccountAnemia, Ac
         return accountId;
     }
 
-    @Override
-    public CompletableFuture<AccountId> performAsync(AccountAnemia accountAnemia) {
-        return prepareExecute(accountAnemia).executeAsync()
-                .toCompletableFuture()
-                .thenApply(integer -> accountAnemia.getAccountId());
-    }
-
     private InsertOnDuplicateSetMoreStep<AccountsRecord> prepareExecute(AccountAnemia accountAnemia) {
         AccountsRecord record = toRecord(accountAnemia);
-        return DSL.using(configuration)
-                .insertInto(Accounts.ACCOUNTS)
+        return connection.insertInto(Accounts.ACCOUNTS)
                 .set(record)
                 .onDuplicateKeyUpdate()
                 .set(record);
     }
 
     private AccountsRecord toRecord(AccountAnemia accountAnemia) {
-        AccountsRecord record = DSL.using(configuration).newRecord(Accounts.ACCOUNTS);
+        AccountsRecord record = connection.newRecord(Accounts.ACCOUNTS);
         record.setId(accountAnemia.getAccountId().getInternal());
         record.setName(accountAnemia.getName());
         record.setDisplayName(accountAnemia.getDisplayName());

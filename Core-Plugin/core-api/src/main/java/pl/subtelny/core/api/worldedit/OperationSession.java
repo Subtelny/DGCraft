@@ -2,11 +2,11 @@ package pl.subtelny.core.api.worldedit;
 
 import pl.subtelny.utilities.Callback;
 
-import java.util.concurrent.CompletableFuture;
+import java.io.IOException;
 
 public interface OperationSession {
 
-    CompletableFuture<Void> performAsync();
+    void perform() throws IOException, InterruptedException;
 
     void cancel();
 

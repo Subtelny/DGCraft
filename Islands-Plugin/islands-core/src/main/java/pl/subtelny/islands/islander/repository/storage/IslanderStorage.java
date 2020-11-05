@@ -1,16 +1,15 @@
 package pl.subtelny.islands.islander.repository.storage;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-
-import pl.subtelny.islands.islander.model.Islander;
+import pl.subtelny.core.api.repository.LoadingStorage;
 import pl.subtelny.islands.island.IslanderId;
-import pl.subtelny.core.api.repository.Storage;
+import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.utilities.NullObject;
 
-public class IslanderStorage extends Storage<IslanderId, NullObject<Islander>> {
+public class IslanderStorage extends LoadingStorage<IslanderId, NullObject<Islander>> {
 
-	public IslanderStorage() {
-		super(Caffeine.newBuilder().build());
-	}
-
+    public IslanderStorage(IslanderCacheLoader islanderCacheLoader) {
+        super(Caffeine.newBuilder()
+                .build(islanderCacheLoader));
+    }
 }

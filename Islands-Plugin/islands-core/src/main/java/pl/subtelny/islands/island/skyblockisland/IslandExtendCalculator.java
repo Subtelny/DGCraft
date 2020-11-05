@@ -1,13 +1,13 @@
 package pl.subtelny.islands.island.skyblockisland;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
+import pl.subtelny.islands.island.IslandCoordinates;
 import pl.subtelny.islands.island.configuration.Configuration;
 import pl.subtelny.islands.island.configuration.IslandExtendConfiguration;
 import pl.subtelny.islands.island.configuration.IslandExtendLevel;
 import pl.subtelny.islands.island.skyblockisland.configuration.SkyblockIslandConfiguration;
-import pl.subtelny.islands.islander.model.IslandCoordinates;
-import pl.subtelny.islands.utils.SkyblockIslandUtil;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.util.List;
@@ -18,6 +18,10 @@ public class IslandExtendCalculator {
 
     public IslandExtendCalculator(Configuration<SkyblockIslandConfiguration> configuration) {
         this.configuration = configuration;
+    }
+
+    public Cuboid calculateFullyCuboid(IslandCoordinates islandCoordinates) {
+        return calculateCuboid(islandCoordinates, configuration.get().getTotalSize());
     }
 
     public Cuboid calculateDefaultCuboid(IslandCoordinates islandCoordinates) {
@@ -35,7 +39,7 @@ public class IslandExtendCalculator {
         int totalSize = islandConfiguration.getTotalSize();
         int spaceBetweenIslands = islandConfiguration.getSpaceBetweenIslands();
         World world = Bukkit.getWorld(islandConfiguration.getWorldName());
-        return SkyblockIslandUtil.buildCuboid(islandCoordinates, world, totalSize, size, spaceBetweenIslands);
+        return buildCuboid(islandCoordinates, world, totalSize, size, spaceBetweenIslands);
     }
 
     private int getExtendLevelSizeOrDefault(int extendLevel) {
@@ -46,6 +50,31 @@ public class IslandExtendCalculator {
             return levels.get(extendLevel).getSize();
         }
         return islandConfiguration.getDefaultSize();
+    }
+
+    private Cuboid buildCuboid(IslandCoordinates islandCoordinates, World islandWorld, int totalIslandSize, int islandSize, int spaceBetweenIslands) {
+        Cuboid maxedCuboid = buildCuboid(islandCoordinates, islandWorld, totalIslandSize, spaceBetweenIslands);
+        int toShrink = totalIslandSize - islandSize;
+        return maxedCuboid.inset(Cuboid.CuboidDirection.Horizontal, toShrink);
+    }
+
+    private Cuboid buildCuboid(IslandCoordinates islandCoordinates, World islandWorld, int islandSize, int spaceBetweenIslands) {
+        return calculateIslandCuboid(islandWorld,
+                islandCoordinates.getX(),
+                islandCoordinates.getZ(),
+                islandSize,
+                spaceBetweenIslands);
+    }
+
+    private Cuboid calculateIslandCuboid(World world, int x, int z, int size, int space) {
+        int x1 = x * size + space;
+        int z1 = z * size + space;
+        int x2 = x * size + size - space;
+        int z2 = z * size + size - space;
+
+        Location firstCorner = new Location(world, x1, 0, z1);
+        Location secondCorner = new Location(world, x2, 256, z2);
+        return new Cuboid(firstCorner, secondCorner);
     }
 
 }

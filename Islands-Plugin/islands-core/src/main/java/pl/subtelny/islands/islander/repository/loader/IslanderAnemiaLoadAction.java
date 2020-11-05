@@ -3,6 +3,7 @@ package pl.subtelny.islands.islander.repository.loader;
 import com.google.common.collect.Lists;
 import org.jooq.Condition;
 import org.jooq.Configuration;
+import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.impl.DSL;
 import pl.subtelny.generated.tables.tables.Islanders;
@@ -17,19 +18,18 @@ import java.util.stream.Collectors;
 
 public class IslanderAnemiaLoadAction implements LoadAction<IslanderAnemia> {
 
-    private final Configuration configuration;
+    private final DSLContext connection;
 
     private final IslanderLoadRequest request;
 
-    public IslanderAnemiaLoadAction(Configuration configuration, IslanderLoadRequest request) {
-        this.configuration = configuration;
+    public IslanderAnemiaLoadAction(DSLContext connection, IslanderLoadRequest request) {
+        this.connection = connection;
         this.request = request;
     }
 
     @Override
     public IslanderAnemia perform() {
-        return DSL.using(configuration)
-                .select()
+        return connection.select()
                 .from(Islanders.ISLANDERS)
                 .where(whereConditions())
                 .fetchOne(this::mapIntoAnemia);
@@ -37,8 +37,7 @@ public class IslanderAnemiaLoadAction implements LoadAction<IslanderAnemia> {
 
     @Override
     public List<IslanderAnemia> performList() {
-        return DSL.using(configuration)
-                .select()
+        return connection.select()
                 .from(Islanders.ISLANDERS)
                 .where(whereConditions())
                 .fetch(this::mapIntoAnemia);

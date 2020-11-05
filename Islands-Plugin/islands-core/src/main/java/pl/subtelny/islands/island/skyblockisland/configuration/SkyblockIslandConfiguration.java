@@ -1,37 +1,34 @@
 package pl.subtelny.islands.island.skyblockisland.configuration;
 
 import org.bukkit.Location;
+import pl.subtelny.islands.Islands;
+import pl.subtelny.islands.island.IslandCoordinates;
 import pl.subtelny.islands.island.configuration.IslandConfiguration;
 import pl.subtelny.islands.island.configuration.IslandExtendConfiguration;
-import pl.subtelny.islands.island.configuration.IslandSchematicConfiguration;
-import pl.subtelny.islands.islander.model.IslandCoordinates;
+import pl.subtelny.utilities.file.FileUtil;
 
+import java.io.File;
 import java.util.Objects;
 
 public class SkyblockIslandConfiguration extends IslandConfiguration {
 
     private final IslandExtendConfiguration extendConfiguration;
 
-    private final IslandSchematicConfiguration schematicConfiguration;
-
     private final int defaultSize;
 
     private final int spaceBetweenIslands;
 
+    private final String schematicFilePath;
+
     public SkyblockIslandConfiguration(String worldName,
                                        IslandExtendConfiguration extendConfiguration,
-                                       IslandSchematicConfiguration schematicConfiguration,
                                        int defaultSize,
-                                       int spaceBetweenIslands) {
+                                       int spaceBetweenIslands, String schematicFilePath) {
         super(worldName);
         this.extendConfiguration = extendConfiguration;
-        this.schematicConfiguration = schematicConfiguration;
         this.defaultSize = defaultSize;
         this.spaceBetweenIslands = spaceBetweenIslands;
-    }
-
-    public IslandSchematicConfiguration getSchematicConfiguration() {
-        return schematicConfiguration;
+        this.schematicFilePath = schematicFilePath;
     }
 
     public IslandExtendConfiguration getExtendConfiguration() {
@@ -51,6 +48,14 @@ public class SkyblockIslandConfiguration extends IslandConfiguration {
         return spaceBetweenIslands;
     }
 
+    public String getSchematicFilePath() {
+        return schematicFilePath;
+    }
+
+    public File getSchematicFile() {
+        return FileUtil.getFile(Islands.plugin, schematicFilePath);
+    }
+
     public IslandCoordinates toIslandCoords(Location location) {
         int maxSize = getTotalSize() + spaceBetweenIslands;
         int blockX = location.getBlockX();
@@ -67,13 +72,13 @@ public class SkyblockIslandConfiguration extends IslandConfiguration {
         if (o == null || getClass() != o.getClass()) return false;
         SkyblockIslandConfiguration that = (SkyblockIslandConfiguration) o;
         return defaultSize == that.defaultSize &&
+                spaceBetweenIslands == that.spaceBetweenIslands &&
                 Objects.equals(extendConfiguration, that.extendConfiguration) &&
-                Objects.equals(schematicConfiguration, that.schematicConfiguration);
+                Objects.equals(schematicFilePath, that.schematicFilePath);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(extendConfiguration, schematicConfiguration, defaultSize);
+        return Objects.hash(extendConfiguration, defaultSize, spaceBetweenIslands, schematicFilePath);
     }
-
 }

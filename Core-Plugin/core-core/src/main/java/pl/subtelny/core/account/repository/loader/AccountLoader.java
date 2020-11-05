@@ -1,18 +1,19 @@
 package pl.subtelny.core.account.repository.loader;
 
+import org.jooq.DSLContext;
 import pl.subtelny.core.api.account.Account;
-import pl.subtelny.core.api.database.DatabaseConnection;
+import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.core.account.repository.AccountAnemia;
-import pl.subtelny.core.account.repository.entity.AccountEntity;
+import pl.subtelny.core.account.repository.model.CoreAccount;
 
 import java.util.Optional;
 
 public class AccountLoader {
 
-    private final DatabaseConnection databaseConnection;
+    private final ConnectionProvider connectionProvider;
 
-    public AccountLoader(DatabaseConnection databaseConnection) {
-        this.databaseConnection = databaseConnection;
+    public AccountLoader(ConnectionProvider connectionProvider) {
+        this.connectionProvider = connectionProvider;
     }
 
     public Optional<Account> loadAccount(AccountLoadRequest request) {
@@ -21,15 +22,16 @@ public class AccountLoader {
     }
 
     private Optional<AccountAnemia> performAction(AccountLoadRequest request) {
-        AccountAnemiaLoadAction loader = new AccountAnemiaLoadAction(databaseConnection.getConfiguration(), request);
+        DSLContext connection = connectionProvider.getCurrentConnection();
+        AccountAnemiaLoadAction loader = new AccountAnemiaLoadAction(connection, request);
         AccountAnemia loadedData = loader.perform();
         return Optional.ofNullable(loadedData);
     }
 
     private static class AccountMapper {
 
-        private static AccountEntity map(AccountAnemia accountAnemia) {
-			return new AccountEntity(
+        private static CoreAccount map(AccountAnemia accountAnemia) {
+			return new CoreAccount(
 					accountAnemia.getAccountId(),
 					accountAnemia.getName(),
 					accountAnemia.getDisplayName(),

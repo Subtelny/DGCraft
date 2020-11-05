@@ -2,13 +2,15 @@ package pl.subtelny.core.account;
 
 import pl.subtelny.core.account.repository.AccountRepository;
 import pl.subtelny.core.account.repository.AccountRepositoryImpl;
+import pl.subtelny.core.account.repository.upgrade.v1.AccountDBUpgradeV1;
 import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.core.api.account.CreateAccountRequest;
+import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
+import pl.subtelny.core.database.ConnectionConfigurationProviderImpl;
 import pl.subtelny.core.database.TransactionProviderImpl;
-import pl.subtelny.core.account.repository.upgrade.v1.AccountDBUpgradeV1;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -20,9 +22,10 @@ public class AccountRepositoryImplTest implements AccountRepository {
     private final DatabaseConnection databaseConnection;
 
     public AccountRepositoryImplTest() {
-       this.databaseConnection = new DatabaseConnectionImplTest();
+        this.databaseConnection = new DatabaseConnectionImplTest();
         TransactionProvider transactionProvider = new TransactionProviderImpl(databaseConnection);
-        this.accountRepository = new AccountRepositoryImpl(databaseConnection, transactionProvider);
+        ConnectionProvider provider = new ConnectionConfigurationProviderImpl(databaseConnection, transactionProvider);
+        this.accountRepository = new AccountRepositoryImpl(provider);
 
         initializeTables();
     }

@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.island.repository.anemia.IslandAnemia;
-import pl.subtelny.islands.islander.model.IslandCoordinates;
+import pl.subtelny.islands.island.IslandCoordinates;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +14,7 @@ public class SkyblockIslandAnemia extends IslandAnemia {
 
 	private int extendLevel;
 
-	public SkyblockIslandAnemia() {
+	SkyblockIslandAnemia() {
 	}
 
 	public SkyblockIslandAnemia(Location spawn, IslandCoordinates islandCoordinates, IslandType islandType) {

@@ -3,22 +3,20 @@ package pl.subtelny.core.account;
 import org.junit.Assert;
 import org.junit.Test;
 import pl.subtelny.core.account.repository.AccountAnemia;
-import pl.subtelny.core.api.account.Account;
-import pl.subtelny.core.api.account.AccountId;
-import pl.subtelny.core.api.database.DatabaseConnection;
-import pl.subtelny.core.api.database.TransactionProvider;
-import pl.subtelny.core.database.TransactionProviderImpl;
 import pl.subtelny.core.account.repository.loader.AccountLoadRequest;
 import pl.subtelny.core.account.repository.loader.AccountLoader;
 import pl.subtelny.core.account.repository.updater.AccountUpdater;
+import pl.subtelny.core.api.account.Account;
+import pl.subtelny.core.api.account.AccountId;
+import pl.subtelny.core.api.database.ConnectionProvider;
+import pl.subtelny.core.api.database.DatabaseConnection;
+import pl.subtelny.core.api.database.TransactionProvider;
+import pl.subtelny.core.database.ConnectionConfigurationProviderImpl;
+import pl.subtelny.core.database.TransactionProviderImpl;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class AccountUpdaterTest {
 
@@ -29,8 +27,9 @@ public class AccountUpdaterTest {
     public AccountUpdaterTest() {
         DatabaseConnection databaseConnection = new DatabaseConnectionImplTest();
         TransactionProvider transactionProvider = new TransactionProviderImpl(databaseConnection);
-        this.updater = new AccountUpdater(databaseConnection, transactionProvider);
-        this.loader = new AccountLoader(databaseConnection);
+        ConnectionProvider provider = new ConnectionConfigurationProviderImpl(databaseConnection, transactionProvider);
+        this.updater = new AccountUpdater(provider);
+        this.loader = new AccountLoader(provider);
     }
 
     @Test
@@ -73,29 +72,6 @@ public class AccountUpdaterTest {
         Assert.assertTrue(updatedAccount.isPresent());
         Assert.assertEquals(updatedAccount.get().getAccountId(), accountId);
         Assert.assertEquals(updatedAccount.get().getName(), newName);
-    }
-
-    @Test
-    public void updateAccountAsync() throws InterruptedException, ExecutionException, TimeoutException {
-        //given
-        String name = "test_name";
-        AccountId accountId = AccountId.of(UUID.randomUUID());
-        AccountAnemia anemia = createAnemia(accountId, name);
-
-        //when
-        CompletableFuture<AccountId> updateFuture = updateAccountAsync(anemia);
-        AccountId updateFutureAccountId = updateFuture.get(5, TimeUnit.SECONDS);
-
-        Optional<Account> accountOpt = loadAccount(updateFutureAccountId);
-
-        //then
-        Assert.assertEquals(accountId, updateFutureAccountId);
-        Assert.assertTrue(accountOpt.isPresent());
-        Assert.assertEquals(accountOpt.get().getName(), name);
-    }
-
-    private CompletableFuture<AccountId> updateAccountAsync(AccountAnemia anemia) {
-        return updater.updateAccountAsync(anemia);
     }
 
     private void updateAccount(AccountAnemia anemia) {

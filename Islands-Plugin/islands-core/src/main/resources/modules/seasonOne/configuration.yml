@@ -1,0 +1,37 @@
+module:
+  type: SKYBLOCK
+
+configuration:
+  #
+  # BASIC CONFIGURATION
+  #
+  world: world
+  default-size: 10
+  space-between-islands: 3
+  #
+  # EXTENDS
+  #
+  extends:
+    0:
+      size: 15
+      conditions:
+        0:
+          condition: COST
+          money: 1000
+        1:
+          condition: COST
+          item: GRASS
+          amount: 2
+    1:
+      size: 20
+      conditions:
+        0:
+          condition: CONDITION
+          item: STONE
+          amount: 100
+        1:
+          condition: CONDITION
+          permission: 'skyblockIsland.extend.level.2'
+        2:
+          condition: CONDITION
+          island_points: 1000

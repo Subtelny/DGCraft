@@ -21,7 +21,7 @@ public class IslandIdToIslandTypeService {
     }
 
     public void update(Island island) {
-        islandIdIslandTypeCache.put(island.getId(), island.getType());
+        islandIdIslandTypeCache.put(island.getId(), island.getIslandType());
     }
 
     public void invalidate(IslandId islandId) {

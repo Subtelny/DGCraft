@@ -5,9 +5,8 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.core.api.account.CreateAccountRequest;
-import pl.subtelny.core.api.database.DatabaseConnection;
-import pl.subtelny.core.api.database.TransactionProvider;
-import pl.subtelny.core.account.repository.entity.AccountEntity;
+import pl.subtelny.core.api.database.ConnectionProvider;
+import pl.subtelny.core.account.repository.model.CoreAccount;
 import pl.subtelny.core.account.repository.loader.AccountLoadRequest;
 import pl.subtelny.core.account.repository.loader.AccountLoader;
 import pl.subtelny.core.account.repository.storage.AccountStorage;
@@ -27,10 +26,10 @@ public class AccountRepositoryImpl implements AccountRepository {
     private final AccountLoader accountLoader;
 
     @Autowired
-    public AccountRepositoryImpl(DatabaseConnection databaseConnection, TransactionProvider transactionProvider) {
+    public AccountRepositoryImpl(ConnectionProvider connectionProvider) {
         accountStorage = new AccountStorage();
-        accountUpdater = new AccountUpdater(databaseConnection, transactionProvider);
-        accountLoader = new AccountLoader(databaseConnection);
+        accountUpdater = new AccountUpdater(connectionProvider);
+        accountLoader = new AccountLoader(connectionProvider);
     }
 
     @Override
@@ -51,7 +50,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Account createAccount(CreateAccountRequest request) {
-        AccountEntity account = new AccountEntity(
+        CoreAccount account = new CoreAccount(
                 request.getAccountId(),
                 request.getName(),
                 request.getDisplayName(),
@@ -64,7 +63,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public void saveAccount(Account account) {
         accountStorage.put(account.getAccountId(), NullObject.of(account));
-        accountUpdater.updateAccountAsync(toAnemia(account));
+        accountUpdater.updateAccount(toAnemia(account));
     }
 
     private AccountAnemia toAnemia(Account entity) {

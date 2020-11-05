@@ -1,35 +1,26 @@
 package pl.subtelny.islands.islander.repository.updater;
 
-import org.jooq.Configuration;
-import pl.subtelny.core.api.database.DatabaseConnection;
-import pl.subtelny.core.api.database.TransactionProvider;
-import pl.subtelny.islands.island.IslanderId;
-import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
-import pl.subtelny.islands.islander.model.Islander;
+import org.jooq.DSLContext;
+import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.core.api.repository.Updater;
+import pl.subtelny.islands.island.IslanderId;
+import pl.subtelny.islands.islander.model.Islander;
+import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
 
-import java.util.concurrent.CompletableFuture;
+public class IslanderUpdater implements Updater<Islander, IslanderId> {
 
-public class IslanderUpdater extends Updater<Islander, IslanderId> {
+    private final ConnectionProvider connectionProvider;
 
-	public IslanderUpdater(DatabaseConnection databaseConnection, TransactionProvider transactionProvider) {
-        super(databaseConnection, transactionProvider);
-	}
-
-	@Override
-    public IslanderId performAction(Islander entity) {
-        Configuration configuration = getConfiguration();
-        IslanderAnemiaUpdateAction action = new IslanderAnemiaUpdateAction(configuration);
-        IslanderAnemia islanderAnemia = domainToAnemia(entity);
-        return action.perform(islanderAnemia);
+    public IslanderUpdater(ConnectionProvider connectionProvider) {
+        this.connectionProvider = connectionProvider;
     }
 
     @Override
-    public CompletableFuture<IslanderId> performActionAsync(Islander islander) {
-        Configuration configuration = getConfiguration();
-        IslanderAnemiaUpdateAction action = new IslanderAnemiaUpdateAction(configuration);
-        IslanderAnemia islanderAnemia = domainToAnemia(islander);
-        return action.performAsync(islanderAnemia);
+    public IslanderId performAction(Islander entity) {
+        DSLContext connection = connectionProvider.getCurrentConnection();
+        IslanderAnemiaUpdateAction action = new IslanderAnemiaUpdateAction(connection);
+        IslanderAnemia islanderAnemia = domainToAnemia(entity);
+        return action.perform(islanderAnemia);
     }
 
     private IslanderAnemia domainToAnemia(Islander islander) {

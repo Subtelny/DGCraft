@@ -1,6 +1,5 @@
 package pl.subtelny.islands.island;
 
-import org.bukkit.World;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.island.module.IslandModule;
@@ -14,9 +13,11 @@ public class IslandCommandService extends IslandService {
         super(islandModules, islandIdToIslandTypeCache);
     }
 
-    public Island createIsland(IslandType islandType) {
+    public Island createIsland(IslandType islandType, IslandCreateRequest request) {
         IslandModule<Island> islandModule = getIslandModule(islandType);
-        return islandModule.createIsland();
+        Island island = islandModule.createIsland(request);
+        updateCache(island);
+        return island;
     }
 
     public void removeIsland(Island island) {
@@ -31,18 +32,13 @@ public class IslandCommandService extends IslandService {
     }
 
     private IslandModule<Island> getIslandModule(Island island) {
-        World world = island.getWorld();
-        return getIslandModule(world);
+        IslandType islandType = island.getIslandType();
+        return getIslandModule(islandType);
     }
 
     private IslandModule<Island> getIslandModule(IslandType islandType) {
         return findIslandModule(islandType)
                 .orElseThrow(() -> new IllegalStateException("Not found IslandModule for type " + islandType.getInternal()));
-    }
-
-    private IslandModule<Island> getIslandModule(World world) {
-        return findIslandModule(world)
-                .orElseThrow(() -> new IllegalStateException("Not found IslandModule for world " + world));
     }
 
 }

@@ -1,35 +1,17 @@
 package pl.subtelny.islands.island.module;
 
-import org.bukkit.plugin.Plugin;
-import pl.subtelny.components.core.api.Autowired;
-import pl.subtelny.components.core.api.Component;
-import pl.subtelny.components.core.api.DependencyActivator;
+import org.bukkit.World;
 import pl.subtelny.islands.island.Island;
+import pl.subtelny.islands.island.IslandType;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-@Component
-public class IslandModules implements DependencyActivator {
+public interface IslandModules {
 
-    private final List<IslandModuleCreator> islandModuleCreators;
+    Optional<IslandModule<Island>> findIslandModule(IslandType islandType);
 
-    private final List<IslandModule<Island>> islandModules = new ArrayList<>();
+    Optional<IslandModule<Island>> findIslandModule(World world);
 
-    @Autowired
-    public IslandModules(List<IslandModuleCreator> islandModuleCreators) {
-        this.islandModuleCreators = islandModuleCreators;
-    }
-
-    public List<IslandModule<Island>> getIslandModules() {
-        return Collections.unmodifiableList(islandModules);
-    }
-
-    @Override
-    public void activate(Plugin plugin) {
-        islandModuleCreators.stream()
-                .map(IslandModuleCreator::createModule)
-                .forEach(islandModules::add);
-    }
+    List<IslandModule<Island>> getIslandModules();
 }

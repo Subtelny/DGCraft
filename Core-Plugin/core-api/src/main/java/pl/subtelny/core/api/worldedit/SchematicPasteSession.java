@@ -10,7 +10,6 @@ import org.bukkit.World;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
 
 public class SchematicPasteSession extends WorldEditOperationSession {
 
@@ -24,17 +23,13 @@ public class SchematicPasteSession extends WorldEditOperationSession {
     }
 
     @Override
-    public CompletableFuture<Void> performAsync() {
-        try {
-            ClipboardReader reader = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getReader(new FileInputStream(schematic));
-            Clipboard clipboard = reader.read();
-            ClipboardHolder holder = new ClipboardHolder(clipboard);
+    public void perform() throws IOException, InterruptedException {
+        ClipboardReader reader = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getReader(new FileInputStream(schematic));
+        Clipboard clipboard = reader.read();
+        ClipboardHolder holder = new ClipboardHolder(clipboard);
 
-            PasteAction pasteAction = new PasteAction(holder, location);
-            return runOperationAsync(pasteAction);
-        } catch (IOException e) {
-            return CompletableFuture.failedFuture(new IllegalStateException("There is problem with paste schematic: " + e.getMessage()));
-        }
+        PasteAction pasteAction = new PasteAction(holder, location);
+        runOperation(pasteAction);
     }
 
     @Override

@@ -1,14 +1,14 @@
 package pl.subtelny.core.account.repository.loader;
 
-import org.jooq.Configuration;
+import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.SelectConditionStep;
-import org.jooq.impl.DSL;
+import pl.subtelny.core.account.repository.AccountAnemia;
 import pl.subtelny.core.api.account.AccountId;
 import pl.subtelny.core.api.city.CityId;
-import pl.subtelny.core.account.repository.AccountAnemia;
-import pl.subtelny.generated.tables.tables.Accounts;
 import pl.subtelny.core.api.repository.LoadAction;
+import pl.subtelny.generated.tables.tables.Accounts;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,12 +16,12 @@ import java.util.UUID;
 
 public class AccountAnemiaLoadAction implements LoadAction<AccountAnemia> {
 
-    private final Configuration configuration;
+    private final DSLContext connection;
 
     private final AccountAnemiaLoaderRequest request;
 
-    public AccountAnemiaLoadAction(Configuration configuration, AccountLoadRequest request) {
-        this.configuration = configuration;
+    public AccountAnemiaLoadAction(DSLContext connection, AccountLoadRequest request) {
+        this.connection = connection;
         this.request = AccountAnemiaLoaderRequest.toRequest(request);
     }
 
@@ -46,8 +46,7 @@ public class AccountAnemiaLoadAction implements LoadAction<AccountAnemia> {
     }
 
     private SelectConditionStep<Record> constructQuery() {
-        return DSL.using(configuration)
-                .select()
+        return connection.select()
                 .from(Accounts.ACCOUNTS)
                 .where(request.getWhere());
     }

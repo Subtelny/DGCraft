@@ -29,9 +29,9 @@ public abstract class WorldEditOperationSession implements OperationSession {
 
     private Callback<Integer> state;
 
-    protected CompletableFuture<Void> runOperationAsync(WorldEditAction worldEditAction) {
+    protected void runOperation(WorldEditAction worldEditAction) throws InterruptedException {
         OperationJob operationJob = new OperationJob(createSession(), getFakePlayer(), worldEditAction, state);
-        return JobsProvider.runAsync(operationJob);
+        operationJob.execute();
     }
 
     private IPlayerEntry getFakePlayer() {
@@ -68,7 +68,7 @@ public abstract class WorldEditOperationSession implements OperationSession {
         this.state = state;
     }
 
-    private static final class OperationJob implements JobRun {
+    private static final class OperationJob {
 
         private static final IBlockPlacer BLOCK_PLACER = aweAPI.getBlockPlacer();
 
@@ -87,8 +87,7 @@ public abstract class WorldEditOperationSession implements OperationSession {
             this.state = state;
         }
 
-        @Override
-        public void execute() {
+        public void execute() throws InterruptedException {
             String jobName = fakePlayer.getName();
             BLOCK_PLACER.performAsAsyncJob(session, fakePlayer, jobName, worldEditAction);
             addStateListener();
@@ -103,7 +102,7 @@ public abstract class WorldEditOperationSession implements OperationSession {
             job.addStateChangedListener(iJobEntry -> state.done(iJobEntry.getStatus().getSeqNumber()));
         }
 
-        private void waitTillEnd() {
+        private void waitTillEnd() throws InterruptedException {
             IJobEntry job = getJob();
             if (job != null && !job.isTaskDone()) {
                 CountDownLatch latch = new CountDownLatch(1);
@@ -112,11 +111,7 @@ public abstract class WorldEditOperationSession implements OperationSession {
                         latch.countDown();
                     }
                 });
-                try {
-                    latch.await(1, TimeUnit.MINUTES);
-                } catch (InterruptedException e) {
-                    throw ValidationException.of("There is problem while waiting for countdown latch", e.getMessage());
-                }
+                latch.await(1, TimeUnit.MINUTES);
             }
         }
 

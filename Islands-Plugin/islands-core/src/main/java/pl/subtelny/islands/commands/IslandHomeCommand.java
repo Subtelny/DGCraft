@@ -6,17 +6,17 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.islands.island.Island;
-import pl.subtelny.islands.islander.IslanderService;
+import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.message.IslandMessages;
 
 @PluginSubCommand(command = "dom", aliases = "home", mainCommand = IslandCommand.class)
 public class IslandHomeCommand extends BaseCommand {
 
-    private final IslanderService islanderService;
+    private final IslanderQueryService islanderService;
 
     @Autowired
-    public IslandHomeCommand(IslandMessages messages, IslanderService islanderService) {
+    public IslandHomeCommand(IslandMessages messages, IslanderQueryService islanderService) {
         super(messages);
         this.islanderService = islanderService;
     }

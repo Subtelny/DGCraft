@@ -2,10 +2,10 @@ package pl.subtelny.islands.island.skyblockisland.repository;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import pl.subtelny.core.api.repository.Storage;
-import pl.subtelny.islands.islander.model.IslandCoordinates;
+import pl.subtelny.islands.island.IslandCoordinates;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.repository.IslandStorage;
-import pl.subtelny.islands.skyblockisland.model.SkyblockIsland;
+import pl.subtelny.islands.island.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.utilities.NullObject;
 
 import java.util.Optional;

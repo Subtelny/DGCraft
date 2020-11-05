@@ -3,7 +3,7 @@ package pl.subtelny.components.core;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import pl.subtelny.components.core.api.PluginData;
-import pl.subtelny.components.core.api.module.ModuleProvider;
+import pl.subtelny.components.core.api.module.BeanProvider;
 import pl.subtelny.components.core.api.plugin.DGPlugin;
 import pl.subtelny.components.core.module.ModuleProviderImpl;
 import pl.subtelny.components.core.plugin.DependenciesInitializer;
@@ -49,8 +49,8 @@ public final class ComponentsContext {
 
     private static void initModuleProvider() {
         Map<Class, Object> map = new HashMap<>();
-        ModuleProvider moduleProvider = new ModuleProviderImpl();
-        map.put(ModuleProvider.class, moduleProvider);
+        BeanProvider moduleProvider = new ModuleProviderImpl();
+        map.put(BeanProvider.class, moduleProvider);
         addBeans(map);
     }
 

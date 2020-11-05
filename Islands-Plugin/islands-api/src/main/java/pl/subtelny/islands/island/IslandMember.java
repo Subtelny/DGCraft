@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface IslandMember {
 
-    IslandMemberId getId();
+    IslandMemberId getIslandMemberId();
 
     void addIsland(Island island);
 

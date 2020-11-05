@@ -27,11 +27,11 @@ public final class IslandMemberChangedRequest {
     }
 
     public static IslandMemberChangedRequest added(IslandMember islandMember) {
-        return new IslandMemberChangedRequest(islandMember.getId(), Type.ADDED, false);
+        return new IslandMemberChangedRequest(islandMember.getIslandMemberId(), Type.ADDED, false);
     }
 
     public static IslandMemberChangedRequest removed(IslandMember islandMember) {
-        return new IslandMemberChangedRequest(islandMember.getId(), Type.REMOVED);
+        return new IslandMemberChangedRequest(islandMember.getIslandMemberId(), Type.REMOVED);
     }
 
     public IslandMemberId getIslandMember() {

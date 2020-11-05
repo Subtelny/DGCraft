@@ -27,19 +27,23 @@ public class IslandQueryService extends IslandService {
     }
 
     public IslandFindResult findIsland(IslandId islandId) {
-        IslandType islandType = islandIdToIslandTypeCache.getIslandType(islandId);
-        return findIslandModule(islandType)
+        IslandType islandType = getIslandType(islandId);
+        IslandFindResult islandFindResult = findIslandModule(islandType)
                 .map(islandModule -> islandModule.findIsland(islandId))
                 .map(island -> IslandFindResult.of(island.orElse(null)))
                 .orElseGet(IslandFindResult::notIslandWorld);
+        islandFindResult.getResult().ifPresent(this::updateCache);
+        return islandFindResult;
     }
 
     public IslandFindResult findIsland(Location location) {
         World world = location.getWorld();
-        return findIslandModule(world)
+        IslandFindResult islandFindResult = findIslandModule(world)
                 .map(islandModule -> islandModule.findIsland(location))
                 .map(island -> IslandFindResult.of(island.orElse(null)))
                 .orElseGet(IslandFindResult::notIslandWorld);
+        islandFindResult.getResult().ifPresent(this::updateCache);
+        return islandFindResult;
     }
 
     public boolean isIslandWorld(World world) {

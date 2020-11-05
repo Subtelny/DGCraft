@@ -1,25 +1,22 @@
 package pl.subtelny.islands.islander.repository.updater;
 
-import org.jooq.Configuration;
+import org.jooq.DSLContext;
 import org.jooq.InsertOnDuplicateSetMoreStep;
 import org.jooq.Record1;
-import org.jooq.impl.DSL;
+import pl.subtelny.core.api.repository.UpdateAction;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.records.IslandersRecord;
 import pl.subtelny.islands.island.IslanderId;
 import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
-import pl.subtelny.utilities.job.JobsProvider;
-import pl.subtelny.core.api.repository.UpdateAction;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 public class IslanderAnemiaUpdateAction implements UpdateAction<IslanderAnemia, IslanderId> {
 
-    private final Configuration configuration;
+    private final DSLContext connection;
 
-    public IslanderAnemiaUpdateAction(Configuration configuration) {
-        this.configuration = configuration;
+    public IslanderAnemiaUpdateAction(DSLContext connection) {
+        this.connection = connection;
     }
 
     @Override
@@ -32,21 +29,9 @@ public class IslanderAnemiaUpdateAction implements UpdateAction<IslanderAnemia, 
         return islanderId;
     }
 
-    @Override
-    public CompletableFuture<IslanderId> performAsync(IslanderAnemia islanderAnemia) {
-        IslanderId islanderId = islanderAnemia.getIslanderId();
-        if (islanderId.getInternal() == null) {
-            return JobsProvider.supplyAsync(() -> executeMissingId(islanderAnemia));
-        }
-        return createIslanderStatement(islanderAnemia).executeAsync()
-                .toCompletableFuture()
-                .thenApply(integer -> islanderId);
-    }
-
     private InsertOnDuplicateSetMoreStep<IslandersRecord> createIslanderStatement(IslanderAnemia islanderAnemia) {
         IslandersRecord islanderRecord = createIslanderRecord(islanderAnemia);
-        return DSL.using(configuration)
-                .insertInto(Islanders.ISLANDERS)
+        return connection.insertInto(Islanders.ISLANDERS)
                 .set(islanderRecord)
                 .onDuplicateKeyUpdate()
                 .set(islanderRecord);

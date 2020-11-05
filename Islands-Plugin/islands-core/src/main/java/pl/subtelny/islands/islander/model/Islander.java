@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMemberId;
 import pl.subtelny.islands.island.IslanderId;
-import pl.subtelny.islands.island.membership.AbstractIslandMember;
+import pl.subtelny.islands.island.membership.model.AbstractIslandMember;
 import pl.subtelny.islands.island.query.IslandQueryService;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class Islander extends AbstractIslandMember {
     }
 
     @Override
-    public IslandMemberId getId() {
+    public IslandMemberId getIslandMemberId() {
         return IslandMemberId.of(ISLAND_MEMBER_TYPE, islanderId.getInternal().toString());
     }
 

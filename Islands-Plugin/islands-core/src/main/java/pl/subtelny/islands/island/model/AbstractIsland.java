@@ -3,7 +3,7 @@ package pl.subtelny.islands.island.model;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import pl.subtelny.islands.island.*;
-import pl.subtelny.islands.islandmember.IslandMemberQueryService;
+import pl.subtelny.islands.island.membership.IslandMemberQueryService;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.cuboid.Cuboid;
 import pl.subtelny.utilities.location.LocationUtil;
@@ -119,7 +119,7 @@ public abstract class AbstractIsland implements Island {
 
     @Override
     public void changeOwner(IslandMember islandMember) {
-        IslandMemberId newOwner = islandMember.getId();
+        IslandMemberId newOwner = islandMember.getIslandMemberId();
         Validation.isTrue(islandMemberIds.contains(newOwner), "island.member_not_added_to_owner");
         if (owner != null) {
             islandMembersChangesRequests.add(IslandMemberChangedRequest.update(owner, false));
@@ -130,20 +130,20 @@ public abstract class AbstractIsland implements Island {
 
     @Override
     public boolean isMemberOfIsland(IslandMember member) {
-        return islandMemberIds.contains(member.getId());
+        return islandMemberIds.contains(member.getIslandMemberId());
     }
 
     @Override
     public void join(IslandMember member) {
-        Validation.isFalse(islandMemberIds.contains(member.getId()), "island.member_already_added");
-        islandMemberIds.add(member.getId());
+        Validation.isFalse(islandMemberIds.contains(member.getIslandMemberId()), "island.member_already_added");
+        islandMemberIds.add(member.getIslandMemberId());
         islandMembersChangesRequests.add(IslandMemberChangedRequest.added(member));
     }
 
     @Override
     public void exit(IslandMember member) {
-        Validation.isTrue(islandMemberIds.contains(member.getId()), "island.member_not_added");
-        islandMemberIds.remove(member.getId());
+        Validation.isTrue(islandMemberIds.contains(member.getIslandMemberId()), "island.member_not_added");
+        islandMemberIds.remove(member.getIslandMemberId());
         islandMembersChangesRequests.add(IslandMemberChangedRequest.removed(member));
     }
 

@@ -10,7 +10,7 @@ import pl.subtelny.core.api.confirmation.ConfirmationRequest;
 import pl.subtelny.core.api.confirmation.ConfirmationService;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.islandold.IslandRemoveService;
-import pl.subtelny.islands.islander.IslanderService;
+import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.message.IslandMessages;
 import pl.subtelny.utilities.Callback;
@@ -24,11 +24,11 @@ public class IslandDeleteCommand extends BaseCommand {
 
     private final ConfirmationService confirmationService;
 
-    private final IslanderService islanderService;
+    private final IslanderQueryService islanderService;
 
     @Autowired
     public IslandDeleteCommand(IslandMessages messages,
-                               IslanderService islanderService,
+                               IslanderQueryService islanderService,
                                IslandRemoveService islandRemover,
                                ConfirmationService confirmationService) {
         super(messages);
