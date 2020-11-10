@@ -5,9 +5,11 @@ configuration:
   #
   # BASIC CONFIGURATION
   #
+  create-enabled: false
   world: world
   default-size: 10
   space-between-islands: 3
+  schematic-file-name: basic
   #
   # EXTENDS
   #

@@ -1,9 +1,9 @@
 package pl.subtelny.gui.messages;
 
-import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
+import pl.subtelny.gui.GUI;
 
 @Component
 public class CrateMessagesInitializer implements DependencyActivator {
@@ -16,7 +16,7 @@ public class CrateMessagesInitializer implements DependencyActivator {
     }
 
     @Override
-    public void activate(Plugin plugin) {
-        messages.initMessages(plugin);
+    public void activate() {
+        messages.initMessages(GUI.plugin);
     }
 }

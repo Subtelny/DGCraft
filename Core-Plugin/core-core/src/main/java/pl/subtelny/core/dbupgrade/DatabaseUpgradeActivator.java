@@ -1,6 +1,5 @@
 package pl.subtelny.core.dbupgrade;
 
-import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
@@ -22,7 +21,7 @@ public class DatabaseUpgradeActivator implements DependencyActivator {
     }
 
     @Override
-    public void activate(Plugin plugin) {
+    public void activate() {
         upgrades.stream()
                 .sorted(Comparator.comparingInt(DatabaseUpgrade::order))
                 .forEach(DatabaseUpgrade::execute);

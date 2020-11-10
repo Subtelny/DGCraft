@@ -2,12 +2,12 @@ package pl.subtelny.utilities.condition.money;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.file.YamlConfiguration;
-import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 import pl.subtelny.utilities.Saveable;
+import pl.subtelny.utilities.file.PathAbstractFileParserStrategy;
 
 import java.io.File;
 
-public class MoneyConditionFileParserStrategy extends AbstractFileParserStrategy<MoneyCondition> {
+public class MoneyConditionFileParserStrategy extends PathAbstractFileParserStrategy<MoneyCondition> {
 
     private final Economy economy;
 
@@ -23,7 +23,7 @@ public class MoneyConditionFileParserStrategy extends AbstractFileParserStrategy
 
     @Override
     public MoneyCondition load(String path) {
-        double money = configuration.getDouble(path + ".money");
+        double money = configuration.getDouble(path + "." + getPath());
         return new MoneyCondition(economy, money);
     }
 
@@ -32,4 +32,8 @@ public class MoneyConditionFileParserStrategy extends AbstractFileParserStrategy
         throw new UnsupportedOperationException("Saving MoneyCondition is not implemented yet");
     }
 
+    @Override
+    public String getPath() {
+        return "money";
+    }
 }

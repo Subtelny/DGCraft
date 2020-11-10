@@ -31,7 +31,7 @@ public class IslandModulesInitializer {
     }
 
     private IslandModule<Island> initializeModule(File moduleDirectory) {
-        File configFile = new File(moduleDirectory.getAbsolutePath(), "configuration.yml");
+        File configFile = new File(moduleDirectory, "configuration.yml");
         if (!configFile.exists()) {
             throw new IllegalStateException("Not found configuration file for module " + moduleDirectory.getName());
         }

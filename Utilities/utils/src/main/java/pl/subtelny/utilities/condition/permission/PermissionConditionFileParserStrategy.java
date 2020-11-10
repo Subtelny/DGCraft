@@ -1,11 +1,12 @@
 package pl.subtelny.utilities.condition.permission;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 import pl.subtelny.utilities.Saveable;
+import pl.subtelny.utilities.file.PathAbstractFileParserStrategy;
+
 import java.io.File;
 
-public class PermissionConditionFileParserStrategy extends AbstractFileParserStrategy<PermissionCondition> {
+public class PermissionConditionFileParserStrategy extends PathAbstractFileParserStrategy<PermissionCondition> {
 
     public PermissionConditionFileParserStrategy(YamlConfiguration configuration, File file) {
         super(configuration, file);
@@ -16,8 +17,13 @@ public class PermissionConditionFileParserStrategy extends AbstractFileParserStr
     }
 
     @Override
+    public String getPath() {
+        return "permission";
+    }
+
+    @Override
     public PermissionCondition load(String path) {
-        String permission = configuration.getString(path + ".permission");
+        String permission = configuration.getString(path + "." + getPath());
         return new PermissionCondition(permission);
     }
 

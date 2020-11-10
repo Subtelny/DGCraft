@@ -2,28 +2,28 @@ package pl.subtelny.utilities.condition.money;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.file.YamlConfiguration;
-import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 import pl.subtelny.utilities.Saveable;
+import pl.subtelny.utilities.file.PathAbstractFileParserStrategy;
 
 import java.io.File;
 
-public class MoneyCostConditionFileParserStrategy extends AbstractFileParserStrategy<MoneyCostCondition> {
+public class MoneyCostConditionFileParserStrategy extends PathAbstractFileParserStrategy<MoneyCostCondition> {
 
-    private final Economy economy;
+    private final MoneyConditionFileParserStrategy parserStrategy;
 
     public MoneyCostConditionFileParserStrategy(YamlConfiguration configuration, File file, Economy economy) {
         super(configuration, file);
-        this.economy = economy;
+        this.parserStrategy = new MoneyConditionFileParserStrategy(configuration, file, economy);
     }
 
     protected MoneyCostConditionFileParserStrategy(File file, Economy economy) {
         super(file);
-        this.economy = economy;
+        this.parserStrategy = new MoneyConditionFileParserStrategy(configuration, file, economy);
     }
 
     @Override
     public MoneyCostCondition load(String path) {
-        MoneyCondition moneyCondition = new MoneyConditionFileParserStrategy(configuration, file, economy).load(path);
+        MoneyCondition moneyCondition = parserStrategy.load(path);
         return new MoneyCostCondition(moneyCondition);
     }
 
@@ -32,4 +32,8 @@ public class MoneyCostConditionFileParserStrategy extends AbstractFileParserStra
         throw new UnsupportedOperationException("Saving MoneyCostCondition is not implemented yet");
     }
 
+    @Override
+    public String getPath() {
+        return parserStrategy.getPath();
+    }
 }

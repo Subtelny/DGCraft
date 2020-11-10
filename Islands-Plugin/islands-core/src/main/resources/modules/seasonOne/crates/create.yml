@@ -1,6 +1,6 @@
 configuration:
   size: 18
-  title: 'Stworz wyspe'
+  title: 'sezon 1'
   global: true
 
 content:
@@ -11,5 +11,8 @@ content:
     lore:
       - 'something'
       - 'something2'
+    close-after-click: true
     onclick:
-      command: w stworz default
+      rewards:
+        0:
+          player-command: w create seasonOne

@@ -17,7 +17,7 @@ public abstract class IslandService {
         this.islandIdToIslandTypeCache = islandIdToIslandTypeCache;
     }
 
-    protected IslandType getIslandType(IslandId islandId) {
+    public IslandType getIslandType(IslandId islandId) {
         return islandIdToIslandTypeCache.getIslandType(islandId);
     }
 

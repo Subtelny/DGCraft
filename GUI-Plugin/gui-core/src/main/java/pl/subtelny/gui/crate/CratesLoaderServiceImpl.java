@@ -4,13 +4,13 @@ import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.gui.api.crate.CratesLoaderService;
+import pl.subtelny.gui.api.crate.CrateLoadRequest;
 import pl.subtelny.gui.api.crate.model.CrateId;
 import pl.subtelny.gui.api.crate.session.PlayerCrateSessionService;
 import pl.subtelny.gui.crate.model.Crate;
 import pl.subtelny.gui.crate.repository.CrateRepository;
 import pl.subtelny.utilities.Validation;
 
-import java.io.File;
 import java.util.List;
 
 @Component
@@ -42,15 +42,8 @@ public class CratesLoaderServiceImpl implements CratesLoaderService {
     }
 
     @Override
-    public void loadCrate(Plugin plugin, File file) {
-        Crate crate = cratesFileLoader.loadCrateFromFile(file, plugin);
-        validateAlreadyLoaded(crate.getId());
-        crateRepository.addCrate(crate);
-    }
-
-    @Override
-    public void loadAllCratesFromDir(Plugin plugin, File dir) {
-        List<Crate> crates = cratesFileLoader.loadAllCratesFromDirectory(dir, plugin);
+    public void loadCrates(CrateLoadRequest request) {
+        List<Crate> crates = cratesFileLoader.loadCrates(request);
         crates.forEach(crate -> {
             validateAlreadyLoaded(crate.getId());
             crateRepository.addCrate(crate);

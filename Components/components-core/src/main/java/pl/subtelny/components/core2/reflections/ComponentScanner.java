@@ -1,4 +1,4 @@
-package pl.subtelny.components.core.reflections;
+package pl.subtelny.components.core2.reflections;
 
 import org.reflections.scanners.TypeAnnotationsScanner;
 import pl.subtelny.components.core.api.Component;

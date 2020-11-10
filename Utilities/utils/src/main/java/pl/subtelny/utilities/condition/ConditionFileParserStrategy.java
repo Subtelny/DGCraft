@@ -1,28 +1,29 @@
 package pl.subtelny.utilities.condition;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 import pl.subtelny.utilities.Saveable;
+import pl.subtelny.utilities.file.AbstractFileParserStrategy;
+import pl.subtelny.utilities.file.PathAbstractFileParserStrategy;
 
 import java.io.File;
-import java.util.Map;
+import java.util.List;
 
 public class ConditionFileParserStrategy extends AbstractFileParserStrategy<Condition> {
 
-    private final Map<String, AbstractFileParserStrategy<? extends Condition>> conditionParsers;
+    private final List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers;
 
     public ConditionFileParserStrategy(YamlConfiguration configuration, File file,
-                                       Map<String, AbstractFileParserStrategy<? extends Condition>> conditionParsers) {
+                                       List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers) {
         super(configuration, file);
         this.conditionParsers = conditionParsers;
     }
 
     @Override
     public Condition load(String path) {
-        return conditionParsers.entrySet().stream()
-                .filter(entry -> configuration.contains(path + "." + entry.getKey()))
+        return conditionParsers.stream()
+                .filter(parserStrategy -> configuration.contains(path + "." + parserStrategy.getPath()))
                 .findAny()
-                .map(entry -> entry.getValue().load(path))
+                .map(parserStrategy -> parserStrategy.load(path))
                 .orElseThrow(() -> new IllegalArgumentException("Not found any condition"));
     }
 

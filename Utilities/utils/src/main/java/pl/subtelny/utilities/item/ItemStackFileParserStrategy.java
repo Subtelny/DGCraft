@@ -10,8 +10,8 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import pl.subtelny.utilities.ColorUtil;
 import pl.subtelny.utilities.Pair;
-import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 import pl.subtelny.utilities.Saveable;
+import pl.subtelny.utilities.file.PathAbstractFileParserStrategy;
 
 import java.io.File;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 import static pl.subtelny.utilities.ConfigUtil.*;
 
-public class ItemStackFileParserStrategy extends AbstractFileParserStrategy<ItemStack> {
+public class ItemStackFileParserStrategy extends PathAbstractFileParserStrategy<ItemStack> {
 
     public ItemStackFileParserStrategy(YamlConfiguration configuration, File file) {
         super(configuration, file);
@@ -28,6 +28,11 @@ public class ItemStackFileParserStrategy extends AbstractFileParserStrategy<Item
 
     public ItemStackFileParserStrategy(File file) {
         super(file);
+    }
+
+    @Override
+    public String getPath() {
+        return "item";
     }
 
     @Override
@@ -41,7 +46,7 @@ public class ItemStackFileParserStrategy extends AbstractFileParserStrategy<Item
     }
 
     private ItemStack createItemStack(String path) {
-        Material material = Material.valueOf(configuration.getString(path + ".item"));
+        Material material = Material.valueOf(configuration.getString(path + ".item" + getPath()));
         int amount = configuration.getInt(path + ".amount", 1);
         ItemStack itemStack = new ItemStack(material, amount);
         itemStack.setItemMeta(updateItemMeta(path, itemStack.getItemMeta()));

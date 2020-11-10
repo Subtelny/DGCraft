@@ -24,18 +24,18 @@ public class ItemCrate {
 
     private final List<Reward> rewards;
 
-    private final CrateId crateToOpen;
+    private final boolean closeAfterClick;
 
     public ItemCrate(ItemStack originalItemStack,
                      List<Condition> conditions,
                      List<CostCondition> costConditions,
                      List<Reward> rewards,
-                     @Nullable CrateId crateToOpen) {
+                     boolean closeAfterClick) {
         this.originalItemStack = originalItemStack;
         this.conditions = conditions;
         this.costConditions = costConditions;
         this.rewards = rewards;
-        this.crateToOpen = crateToOpen;
+        this.closeAfterClick = closeAfterClick;
     }
 
     public void rewardPlayer(Player player) {
@@ -73,8 +73,8 @@ public class ItemCrate {
         return rewards;
     }
 
-    public Optional<CrateId> getCrateToOpen() {
-        return Optional.ofNullable(crateToOpen);
+    public boolean isCloseAfterClick() {
+        return closeAfterClick;
     }
 
     @Override
@@ -82,15 +82,15 @@ public class ItemCrate {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemCrate itemCrate = (ItemCrate) o;
-        return Objects.equals(originalItemStack, itemCrate.originalItemStack) &&
+        return closeAfterClick == itemCrate.closeAfterClick &&
+                Objects.equals(originalItemStack, itemCrate.originalItemStack) &&
                 Objects.equals(conditions, itemCrate.conditions) &&
                 Objects.equals(costConditions, itemCrate.costConditions) &&
-                Objects.equals(rewards, itemCrate.rewards) &&
-                Objects.equals(crateToOpen, itemCrate.crateToOpen);
+                Objects.equals(rewards, itemCrate.rewards);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(originalItemStack, conditions, costConditions, rewards, crateToOpen);
+        return Objects.hash(originalItemStack, conditions, costConditions, rewards, closeAfterClick);
     }
 }

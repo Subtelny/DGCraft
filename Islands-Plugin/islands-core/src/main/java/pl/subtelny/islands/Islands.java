@@ -1,11 +1,11 @@
 package pl.subtelny.islands;
 
-import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.plugin.DGPlugin;
+import pl.subtelny.islands.configuration.IslandsConfiguration;
 
 public class Islands extends DGPlugin {
 
-    public static Plugin plugin;
+    public static Islands plugin;
 
     @Override
     public void onEnable() {
@@ -15,6 +15,7 @@ public class Islands extends DGPlugin {
 
     @Override
     public void onEnabled() {
+        IslandsConfiguration.init(this);
     }
 
     @Override

@@ -2,6 +2,7 @@ package pl.subtelny.islands.island;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
+import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.islands.island.query.IslandTypeCacheLoader;
@@ -11,6 +12,7 @@ public class IslandIdToIslandTypeService {
 
     private final LoadingCache<IslandId, IslandType> islandIdIslandTypeCache;
 
+    @Autowired
     public IslandIdToIslandTypeService(ConnectionProvider connectionProvider) {
         this.islandIdIslandTypeCache = Caffeine.newBuilder()
                 .build(new IslandTypeCacheLoader(connectionProvider));

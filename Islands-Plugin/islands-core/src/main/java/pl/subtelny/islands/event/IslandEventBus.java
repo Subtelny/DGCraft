@@ -1,5 +1,6 @@
 package pl.subtelny.islands.event;
 
+import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 
 import java.lang.reflect.ParameterizedType;
@@ -8,13 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
 public class IslandEventBus {
 
     private static IslandEventBus instance;
 
     private final Map<Class<? extends IslandEvent>, List<IslandEventListener<? extends IslandEvent>>> listeners;
 
+    @Autowired
     public IslandEventBus(List<IslandEventListener<?>> listeners) {
         instance = this;
         this.listeners = mapListenersPerEvent(listeners);

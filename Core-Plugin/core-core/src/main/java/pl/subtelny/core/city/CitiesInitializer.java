@@ -1,9 +1,9 @@
 package pl.subtelny.core.city;
 
-import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
+import pl.subtelny.core.Core;
 import pl.subtelny.core.city.repository.FileCityRepository;
 
 @Component
@@ -17,9 +17,9 @@ public class CitiesInitializer implements DependencyActivator {
     }
 
     @Override
-    public void activate(Plugin plugin) {
+    public void activate() {
         try {
-            fileCityRepository.initializeFile(plugin);
+            fileCityRepository.initializeFile(Core.plugin);
             fileCityRepository.loadCitiesFromFile();
         } catch (Exception e) {
             e.printStackTrace();

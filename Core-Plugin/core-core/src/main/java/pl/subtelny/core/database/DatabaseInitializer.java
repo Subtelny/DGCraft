@@ -6,6 +6,7 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivatorPriority;
+import pl.subtelny.core.Core;
 import pl.subtelny.utilities.file.FileUtil;
 
 import java.io.File;
@@ -24,8 +25,8 @@ public class DatabaseInitializer implements DependencyActivator {
     }
 
     @Override
-    public void activate(Plugin plugin) {
-        File file = FileUtil.copyFile(plugin, CONFIG_FILE_NAME);
+    public void activate() {
+        File file = FileUtil.copyFile(Core.plugin, CONFIG_FILE_NAME);
         DatabaseConfiguration databaseConfiguration = loadConfiguration(file);
         coreDatabaseConnection.setupDatabase(databaseConfiguration);
     }

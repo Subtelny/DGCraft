@@ -4,6 +4,7 @@ import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
+import pl.subtelny.core.Core;
 
 @Component
 public class ConfigurationInitializer implements DependencyActivator {
@@ -22,7 +23,8 @@ public class ConfigurationInitializer implements DependencyActivator {
     }
 
     @Override
-    public void activate(Plugin plugin) {
+    public void activate() {
+        Plugin plugin = Core.plugin;
         messages.initMessages(plugin);
         settings.initSettings(plugin);
         locations.initLocations(plugin);

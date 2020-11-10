@@ -21,10 +21,11 @@ public class SkyblockIslandConfiguration extends IslandConfiguration {
     private final String schematicFilePath;
 
     public SkyblockIslandConfiguration(String worldName,
+                                       boolean createEnabled,
                                        IslandExtendConfiguration extendConfiguration,
                                        int defaultSize,
                                        int spaceBetweenIslands, String schematicFilePath) {
-        super(worldName);
+        super(worldName, createEnabled);
         this.extendConfiguration = extendConfiguration;
         this.defaultSize = defaultSize;
         this.spaceBetweenIslands = spaceBetweenIslands;
@@ -46,10 +47,6 @@ public class SkyblockIslandConfiguration extends IslandConfiguration {
 
     public int getSpaceBetweenIslands() {
         return spaceBetweenIslands;
-    }
-
-    public String getSchematicFilePath() {
-        return schematicFilePath;
     }
 
     public File getSchematicFile() {

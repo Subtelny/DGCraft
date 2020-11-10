@@ -4,19 +4,28 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 import pl.subtelny.utilities.Saveable;
+import pl.subtelny.utilities.file.PathAbstractFileParserStrategy;
 import pl.subtelny.utilities.item.ItemStackFileParserStrategy;
 
 import java.io.File;
 
-public class ItemStackConditionFileParserStrategy extends AbstractFileParserStrategy<ItemStackCondition> {
+public class ItemStackConditionFileParserStrategy extends PathAbstractFileParserStrategy<ItemStackCondition> {
+
+    private final ItemStackFileParserStrategy parserStrategy;
 
     public ItemStackConditionFileParserStrategy(YamlConfiguration configuration, File file) {
         super(configuration, file);
+        this.parserStrategy = new ItemStackFileParserStrategy(configuration, file);
+    }
+
+    @Override
+    public String getPath() {
+        return parserStrategy.getPath();
     }
 
     @Override
     public ItemStackCondition load(String path) {
-        ItemStack itemStack = new ItemStackFileParserStrategy(configuration, file).load(path);
+        ItemStack itemStack = parserStrategy.load(path);
         return new ItemStackCondition(itemStack);
     }
 

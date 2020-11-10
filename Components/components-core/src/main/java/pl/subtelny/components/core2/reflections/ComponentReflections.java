@@ -1,4 +1,4 @@
-package pl.subtelny.components.core.reflections;
+package pl.subtelny.components.core2.reflections;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;

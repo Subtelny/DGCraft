@@ -4,11 +4,18 @@ public class IslandConfiguration {
 
     private final String worldName;
 
-    public IslandConfiguration(String worldName) {
+    private final boolean createEnabled;
+
+    public IslandConfiguration(String worldName, boolean createEnabled) {
         this.worldName = worldName;
+        this.createEnabled = createEnabled;
     }
 
     public String getWorldName() {
         return worldName;
+    }
+
+    public boolean isCreateEnabled() {
+        return createEnabled;
     }
 }

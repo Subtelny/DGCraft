@@ -1,29 +1,34 @@
 package pl.subtelny.utilities.reward;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 import pl.subtelny.utilities.Saveable;
+import pl.subtelny.utilities.file.AbstractFileParserStrategy;
+import pl.subtelny.utilities.file.PathAbstractFileParserStrategy;
 
 import java.io.File;
-import java.util.Map;
+import java.util.List;
 
 public class RewardFileParserStrategy extends AbstractFileParserStrategy<Reward> {
 
-    private final Map<String, AbstractFileParserStrategy<? extends Reward>> rewardParsers;
+    private final List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers;
 
-    public RewardFileParserStrategy(YamlConfiguration configuration, File file,
-                                    Map<String, AbstractFileParserStrategy<? extends Reward>> rewardParsers) {
+    public RewardFileParserStrategy(YamlConfiguration configuration, File file, List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers) {
         super(configuration, file);
+        this.rewardParsers = rewardParsers;
+    }
+
+    protected RewardFileParserStrategy(File file, List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers) {
+        super(file);
         this.rewardParsers = rewardParsers;
     }
 
     @Override
     public Reward load(String path) {
-        return rewardParsers.entrySet().stream()
-                .filter(entry -> configuration.contains(path + "." + entry.getKey()))
+        return rewardParsers.stream()
+                .filter(parserStrategy -> configuration.contains(path + "." + parserStrategy.getPath()))
                 .findAny()
-                .map(entry -> entry.getValue().load(path))
-                .orElseThrow(() -> new IllegalArgumentException("Not found any reward"));
+                .map(parserStrategy -> parserStrategy.load(path))
+                .orElseThrow(() -> new IllegalStateException("Not found any reward at path " + path));
     }
 
     @Override

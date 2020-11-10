@@ -15,6 +15,25 @@ public class IslandCreateRequest {
         return Optional.ofNullable(owner);
     }
 
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private IslandMember owner;
+
+        public Builder setOwner(IslandMember owner) {
+            this.owner = owner;
+            return this;
+        }
+
+        public IslandCreateRequest build() {
+            return new IslandCreateRequest(owner);
+        }
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

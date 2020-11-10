@@ -72,7 +72,9 @@ public class PlayerCrateSessionImpl implements PlayerCrateSession {
         if (notStatisfiedConditions.isEmpty()) {
             itemCrate.satisfyCostConditions(player);
             itemCrate.rewardPlayer(player);
-            itemCrate.getCrateToOpen().ifPresent(this::changeCrateInventory);
+            if (itemCrate.isCloseAfterClick()) {
+                closeCrateInventory();
+            }
         } else {
             if (crate.isGlobal()) {
                 conditionsService.getNotSatisfiedConditions(player, notStatisfiedConditions);

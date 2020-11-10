@@ -1,6 +1,7 @@
 package pl.subtelny.islands.island.membership.repository;
 
 import org.jooq.DSLContext;
+import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.islands.island.IslandId;
@@ -21,6 +22,7 @@ public class IslandMembershipRepository {
 
     private final ConnectionProvider connectionProvider;
 
+    @Autowired
     public IslandMembershipRepository(ConnectionProvider connectionProvider) {
         this.connectionProvider = connectionProvider;
     }

@@ -6,6 +6,7 @@ import org.bukkit.World;
 import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.islands.island.*;
 import pl.subtelny.islands.island.configuration.ConfigurationReloadable;
+import pl.subtelny.islands.island.gui.IslandCrates;
 import pl.subtelny.islands.island.membership.IslandMemberQueryService;
 import pl.subtelny.islands.island.membership.IslandMembershipCommandService;
 import pl.subtelny.islands.island.membership.IslandMembershipQueryService;
@@ -15,6 +16,7 @@ import pl.subtelny.islands.island.skyblockisland.IslandExtendCalculator;
 import pl.subtelny.islands.island.skyblockisland.configuration.SkyblockIslandConfiguration;
 import pl.subtelny.islands.island.skyblockisland.creator.SkyblockIslandCreateRequest;
 import pl.subtelny.islands.island.skyblockisland.creator.SkyblockIslandCreator;
+import pl.subtelny.islands.island.skyblockisland.crates.SkyblockIslandCrates;
 import pl.subtelny.islands.island.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.island.skyblockisland.repository.SkyblockIslandRepository;
 import pl.subtelny.islands.islander.model.Islander;
@@ -30,6 +32,8 @@ public class SkyblockIslandModule implements IslandModule<SkyblockIsland> {
 
     private final IslandType islandType;
 
+    private final SkyblockIslandCrates islandCrates;
+
     private final SkyblockIslandRepository repository;
 
     private final SkyblockIslandCreator islandCreator;
@@ -41,12 +45,14 @@ public class SkyblockIslandModule implements IslandModule<SkyblockIsland> {
     public SkyblockIslandModule(ConnectionProvider connectionProvider,
                                 IslandType islandType,
                                 ConfigurationReloadable<SkyblockIslandConfiguration> configuration,
+                                SkyblockIslandCrates islandCrates,
                                 IslandMemberQueryService islandMemberQueryService,
                                 IslandMembershipQueryService islandMembershipLoader,
                                 IslandMembershipCommandService islandMembershipCommandService,
                                 Messages messages) {
         this.islandType = islandType;
         this.configuration = configuration;
+        this.islandCrates = islandCrates;
         this.islandMembershipCommandService = islandMembershipCommandService;
         IslandExtendCalculator extendCalculator = new IslandExtendCalculator(configuration);
         this.repository = new SkyblockIslandRepository(islandType, connectionProvider, islandMemberQueryService, islandMembershipLoader, extendCalculator);
@@ -76,10 +82,19 @@ public class SkyblockIslandModule implements IslandModule<SkyblockIsland> {
 
     @Override
     public SkyblockIsland createIsland(IslandCreateRequest request) {
+        if (!configuration.get().isCreateEnabled()) {
+            throw ValidationException.of("skyblockIslandModule.create_island_disabled");
+        }
+
         SkyblockIslandCreateRequest skyblockRequest = toSkyblockCreateRequest(request);
         IslandId islandId = islandCreator.createIsland(skyblockRequest);
         return findIsland(islandId)
                 .orElseThrow(() -> ValidationException.of("skyblockIslandModule.not_found_island_after_create"));
+    }
+
+    @Override
+    public IslandCrates getIslandCrates() {
+        return islandCrates;
     }
 
     @Override

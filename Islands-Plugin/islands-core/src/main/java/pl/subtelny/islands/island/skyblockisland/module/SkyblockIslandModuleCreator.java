@@ -6,14 +6,19 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.core.api.economy.EconomyProvider;
+import pl.subtelny.gui.api.crate.CratesLoaderService;
 import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.island.configuration.*;
+import pl.subtelny.islands.island.configuration.ConfigurationReloadable;
+import pl.subtelny.islands.island.configuration.IslandExtendConfiguration;
+import pl.subtelny.islands.island.configuration.IslandExtendLevel;
+import pl.subtelny.islands.island.configuration.IslandExtendLevelFileParserStrategy;
 import pl.subtelny.islands.island.membership.IslandMemberQueryService;
 import pl.subtelny.islands.island.membership.IslandMembershipCommandService;
 import pl.subtelny.islands.island.membership.IslandMembershipQueryService;
 import pl.subtelny.islands.island.module.IslandModule;
 import pl.subtelny.islands.island.module.IslandModuleCreator;
 import pl.subtelny.islands.island.skyblockisland.configuration.SkyblockIslandConfiguration;
+import pl.subtelny.islands.island.skyblockisland.crates.SkyblockIslandCrates;
 import pl.subtelny.islands.island.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.message.IslandMessages;
 import pl.subtelny.utilities.ConfigUtil;
@@ -42,29 +47,35 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
 
     private final IslandMessages islandMessages;
 
+    private final CratesLoaderService cratesLoaderService;
+
     @Autowired
     public SkyblockIslandModuleCreator(EconomyProvider economyProvider,
                                        ConnectionProvider connectionProvider,
                                        IslandMemberQueryService islandMemberQueryService,
                                        IslandMembershipQueryService islandMembershipQueryService,
                                        IslandMembershipCommandService islandMembershipCommandService,
-                                       IslandMessages islandMessages) {
+                                       IslandMessages islandMessages,
+                                       CratesLoaderService cratesLoaderService) {
         this.economyProvider = economyProvider;
         this.connectionProvider = connectionProvider;
         this.islandMemberQueryService = islandMemberQueryService;
         this.islandMembershipQueryService = islandMembershipQueryService;
         this.islandMembershipCommandService = islandMembershipCommandService;
         this.islandMessages = islandMessages;
+        this.cratesLoaderService = cratesLoaderService;
     }
 
     @Override
     public IslandModule<SkyblockIsland> createModule(File moduleDir) {
         SkyblockIslandConfiguration configuration = createConfiguration(moduleDir);
         ConfigReloadable configReloadable = new ConfigReloadable(configuration, moduleDir.getPath());
-        configReloadable.reloadConfiguration();
+        IslandType islandType = new IslandType(moduleDir.getName());
+        SkyblockIslandCrates skyblockIslandCrates = loadIslandCrates(islandType, moduleDir);
         return new SkyblockIslandModule(connectionProvider,
-                new IslandType(moduleDir.getName()),
+                islandType,
                 configReloadable,
+                skyblockIslandCrates,
                 islandMemberQueryService,
                 islandMembershipQueryService,
                 islandMembershipCommandService,
@@ -84,10 +95,11 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
         int defaultSize = new ObjectFileParserStrategy<Integer>(configuration, file).load("configuration.default-size");
         int spaceBetweenIslands = new ObjectFileParserStrategy<Integer>(configuration, file).load("configuration.space-between-islands");
         String schematicFileName = new ObjectFileParserStrategy<String>(configuration, file).load("configuration.schematic-file-name");
+        boolean createEnabled = new ObjectFileParserStrategy<Boolean>(configuration, file).load("configuration.create-enabled");
 
         Economy economy = economyProvider.getEconomy();
         IslandExtendConfiguration extendConfiguration = createExtendConfiguration(configuration, file, economy);
-        return new SkyblockIslandConfiguration(worldName, extendConfiguration, defaultSize, spaceBetweenIslands, schematicFileName);
+        return new SkyblockIslandConfiguration(worldName, createEnabled, extendConfiguration, defaultSize, spaceBetweenIslands, schematicFileName);
     }
 
     private IslandExtendConfiguration createExtendConfiguration(YamlConfiguration configuration, File file, Economy economy) {
@@ -103,6 +115,13 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
         return paths.stream()
                 .map(strategy::load)
                 .collect(Collectors.toList());
+    }
+
+    private SkyblockIslandCrates loadIslandCrates(IslandType islandType, File moduleDir) {
+        File cratesDir = new File(moduleDir, "crates");
+        SkyblockIslandCrates skyblockIslandCrates = new SkyblockIslandCrates(islandType, cratesLoaderService, cratesDir);
+        skyblockIslandCrates.loadCrates();
+        return skyblockIslandCrates;
     }
 
     private class ConfigReloadable implements ConfigurationReloadable<SkyblockIslandConfiguration> {

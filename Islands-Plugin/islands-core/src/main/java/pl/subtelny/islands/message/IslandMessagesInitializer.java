@@ -1,9 +1,9 @@
 package pl.subtelny.islands.message;
 
-import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
+import pl.subtelny.islands.Islands;
 
 @Component
 public class IslandMessagesInitializer implements DependencyActivator {
@@ -16,7 +16,7 @@ public class IslandMessagesInitializer implements DependencyActivator {
     }
 
     @Override
-    public void activate(Plugin plugin) {
-        islandMessages.initMessages(plugin);
+    public void activate() {
+        islandMessages.initMessages(Islands.plugin);
     }
 }

@@ -1,10 +1,10 @@
 package pl.subtelny.islands.island.module;
 
 import org.bukkit.World;
-import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
+import pl.subtelny.islands.Islands;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.IslandType;
 
@@ -45,9 +45,9 @@ public class IslandModulesImpl implements DependencyActivator, IslandModules {
     }
 
     @Override
-    public void activate(Plugin plugin) {
+    public void activate() {
         IslandModulesInitializer modulesInitializer = new IslandModulesInitializer(islandModuleCreators);
-        List<IslandModule<Island>> islandModules = modulesInitializer.initializeModules(plugin);
+        List<IslandModule<Island>> islandModules = modulesInitializer.initializeModules(Islands.plugin);
         this.islandModules.addAll(islandModules);
     }
 }

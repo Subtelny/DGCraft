@@ -8,11 +8,11 @@ import pl.subtelny.utilities.condition.itemstack.ItemStackCostConditionFileParse
 import pl.subtelny.utilities.condition.money.MoneyConditionFileParserStrategy;
 import pl.subtelny.utilities.condition.money.MoneyCostConditionFileParserStrategy;
 import pl.subtelny.utilities.condition.permission.PermissionConditionFileParserStrategy;
-import pl.subtelny.utilities.file.AbstractFileParserStrategy;
+import pl.subtelny.utilities.file.PathAbstractFileParserStrategy;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ConditionsFileLoader {
@@ -30,39 +30,32 @@ public class ConditionsFileLoader {
     }
 
     public List<Condition> loadConditions(String path) {
-        Map<String, AbstractFileParserStrategy<? extends Condition>> conditions = getConditions();
+        List<PathAbstractFileParserStrategy<? extends Condition>> conditions = getConditions();
+        ConditionFileParserStrategy parserStrategy = new ConditionFileParserStrategy(configuration, file, conditions);
         return ConditionUtil.findConditionPaths(configuration, path).stream()
-                .map(conditionPath -> loadCondition(path, conditions)).collect(Collectors.toList());
+                .map(parserStrategy::load)
+                .collect(Collectors.toList());
     }
 
     public List<CostCondition> loadCostConditions(String path) {
-        Map<String, AbstractFileParserStrategy<? extends CostCondition>> costConditions = getCostConditions();
+        List<PathAbstractFileParserStrategy<? extends CostCondition>> costConditions = getCostConditions();
+        CostConditionFileParserStrategy parserStrategy = new CostConditionFileParserStrategy(configuration, file, costConditions);
         return ConditionUtil.findCostConditionPaths(configuration, path).stream()
-                .map(conditionPath -> loadCostCondition(conditionPath, costConditions)).collect(Collectors.toList());
+                .map(parserStrategy::load)
+                .collect(Collectors.toList());
     }
 
-    private Map<String, AbstractFileParserStrategy<? extends Condition>> getConditions() {
-        MoneyConditionFileParserStrategy moneyStrategy = new MoneyConditionFileParserStrategy(configuration, file, economy);
-        ItemStackConditionFileParserStrategy itemStackStrategy = new ItemStackConditionFileParserStrategy(configuration, file);
-        PermissionConditionFileParserStrategy permissionStrategy = new PermissionConditionFileParserStrategy(configuration, file);
-        return Map.of("money", moneyStrategy,
-                "item", itemStackStrategy,
-                "permission", permissionStrategy);
+    private List<PathAbstractFileParserStrategy<? extends Condition>> getConditions() {
+        return Arrays.asList(
+                new MoneyConditionFileParserStrategy(configuration, file, economy),
+                new ItemStackConditionFileParserStrategy(configuration, file),
+                new PermissionConditionFileParserStrategy(configuration, file));
     }
 
-    private Map<String, AbstractFileParserStrategy<? extends CostCondition>> getCostConditions() {
-        MoneyCostConditionFileParserStrategy moneyStrategy = new MoneyCostConditionFileParserStrategy(configuration, file, economy);
-        ItemStackCostConditionFileParserStrategy itemStackStrategy = new ItemStackCostConditionFileParserStrategy(configuration, file);
-        return Map.of("money", moneyStrategy,
-                "item", itemStackStrategy);
-    }
-
-    private Condition loadCondition(String path, Map<String, AbstractFileParserStrategy<? extends Condition>> conditionParsers) {
-        return new ConditionFileParserStrategy(configuration, file, conditionParsers).load(path);
-    }
-
-    private CostCondition loadCostCondition(String path, Map<String, AbstractFileParserStrategy<? extends CostCondition>> costConditionParsers) {
-        return new CostConditionFileParserStrategy(configuration, file, costConditionParsers).load(path);
+    private List<PathAbstractFileParserStrategy<? extends CostCondition>> getCostConditions() {
+        return Arrays.asList(
+                new MoneyCostConditionFileParserStrategy(configuration, file, economy),
+                new ItemStackCostConditionFileParserStrategy(configuration, file));
     }
 
 }

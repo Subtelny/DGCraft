@@ -5,6 +5,7 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.gui.GUI;
+import pl.subtelny.gui.api.crate.CrateLoadRequest;
 import pl.subtelny.gui.api.crate.CratesLoaderService;
 import pl.subtelny.gui.crate.settings.CrateSettings;
 import pl.subtelny.utilities.file.FileUtil;
@@ -36,7 +37,10 @@ public class CratesInitializer implements DependencyActivator {
 
     private void initCrates() {
         File dir = FileUtil.getFile(GUI.plugin, "guis");
-        crateLoader.loadAllCratesFromDir(GUI.plugin, dir);
+        CrateLoadRequest request = CrateLoadRequest.newBuilder(dir)
+                .setPlugin(GUI.plugin)
+                .build();
+        crateLoader.loadCrates(request);
     }
 
 }

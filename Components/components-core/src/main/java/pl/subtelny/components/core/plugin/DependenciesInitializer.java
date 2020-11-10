@@ -84,10 +84,7 @@ public class DependenciesInitializer {
                     int t2Priority = findPriority(t2).getPriority();
                     return Integer.compare(t1Priority, t2Priority);
                 })
-                .forEach(beansInitialized -> {
-                    DGPlugin pluginForBean = findPluginForBean(beansInitialized);
-                    beansInitialized.activate(pluginForBean);
-                });
+                .forEach(DependencyActivator::activate);
     }
 
     private DependencyActivatorPriority.Priority findPriority(DependencyActivator dependencyActivator) {

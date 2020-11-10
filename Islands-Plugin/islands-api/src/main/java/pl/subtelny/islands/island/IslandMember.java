@@ -13,4 +13,6 @@ public interface IslandMember {
 
     Optional<Island> findIsland(IslandType islandType);
 
+    boolean hasIsland(IslandType islandType);
+
 }

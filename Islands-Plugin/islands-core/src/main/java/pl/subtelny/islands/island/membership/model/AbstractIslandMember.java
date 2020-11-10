@@ -22,6 +22,12 @@ public abstract class AbstractIslandMember implements IslandMember {
     }
 
     @Override
+    public boolean hasIsland(IslandType islandType) {
+        return islandIds.stream()
+                .anyMatch(islandId -> islandQueryService.getIslandType(islandId).equals(islandType));
+    }
+
+    @Override
     public void addIsland(Island island) {
         Validation.isTrue(island.isMemberOfIsland(this), "islandMember.cannot_add_island_not_member");
         islandIds.add(island.getId());

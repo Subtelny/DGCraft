@@ -5,6 +5,7 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.gui.GUI;
+import pl.subtelny.gui.api.crate.CrateLoadRequest;
 import pl.subtelny.gui.api.crate.CratesLoaderService;
 import pl.subtelny.gui.messages.CrateMessages;
 import pl.subtelny.utilities.file.FileUtil;
@@ -31,7 +32,10 @@ public class CrateDevReloadCommand extends BaseCommand {
     private void reloadGuis() {
         cratesLoaderService.unloadAllCrates(GUI.plugin);
         File dir = FileUtil.getFile(GUI.plugin, "guis");
-        cratesLoaderService.loadAllCratesFromDir(GUI.plugin, dir);
+        CrateLoadRequest request = CrateLoadRequest.newBuilder(dir)
+                .setPlugin(GUI.plugin)
+                .build();
+        cratesLoaderService.loadCrates(request);
     }
 
     @Override

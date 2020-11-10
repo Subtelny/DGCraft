@@ -2,8 +2,8 @@ package pl.subtelny.components.core;
 
 import pl.subtelny.components.core.prototype.BeanPrototype;
 import pl.subtelny.components.core.prototype.BeanPrototypeConstructor;
-import pl.subtelny.components.core.reflections.ComponentReflections;
-import pl.subtelny.components.core.reflections.ComponentScanner;
+import pl.subtelny.components.core2.reflections.ComponentReflections;
+import pl.subtelny.components.core2.reflections.ComponentScanner;
 
 import java.util.ArrayList;
 import java.util.List;

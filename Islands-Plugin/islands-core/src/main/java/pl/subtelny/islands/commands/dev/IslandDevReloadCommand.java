@@ -4,28 +4,26 @@ import org.bukkit.command.CommandSender;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
-import pl.subtelny.islands.gui.GUIService;
+import pl.subtelny.islands.Islands;
+import pl.subtelny.islands.configuration.IslandsConfiguration;
+import pl.subtelny.islands.crate.IslandCrateService;
 import pl.subtelny.islands.message.IslandMessages;
-import pl.subtelny.islands.skyblockisland.settings.SkyblockIslandSettings;
 
 @PluginSubCommand(command = "reload", aliases = "reload", mainCommand = IslandDevCommand.class)
 public class IslandDevReloadCommand extends BaseCommand {
 
-    private final SkyblockIslandSettings settings;
-
-    private final GUIService guiService;
+    private final IslandCrateService islandCrateService;
 
     @Autowired
-    public IslandDevReloadCommand(IslandMessages messages, SkyblockIslandSettings settings, GUIService guiService) {
+    public IslandDevReloadCommand(IslandMessages messages, IslandCrateService islandCrateService) {
         super(messages);
-        this.settings = settings;
-        this.guiService = guiService;
+        this.islandCrateService = islandCrateService;
     }
 
     @Override
     public void handleCommand(CommandSender sender, String[] args) {
-        settings.initConfig();
-        guiService.reloadGuis();
+        islandCrateService.reloadGuis();
+        IslandsConfiguration.init(Islands.plugin);
         getMessages().sendTo(sender, "command.islanddev.reloaded");
     }
 

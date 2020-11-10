@@ -2,14 +2,14 @@ package pl.subtelny.utilities.reward.money;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.file.YamlConfiguration;
-import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 import pl.subtelny.utilities.Saveable;
+import pl.subtelny.utilities.file.PathAbstractFileParserStrategy;
 
 import java.io.File;
 
 import static pl.subtelny.utilities.ConfigUtil.getDouble;
 
-public class MoneyRewardFileParserStrategy extends AbstractFileParserStrategy<MoneyReward> {
+public class MoneyRewardFileParserStrategy extends PathAbstractFileParserStrategy<MoneyReward> {
 
     private final Economy economy;
 
@@ -20,12 +20,17 @@ public class MoneyRewardFileParserStrategy extends AbstractFileParserStrategy<Mo
 
     @Override
     public MoneyReward load(String path) {
-        Double money = getDouble(configuration, path + ".money").orElse(0.0);
+        Double money = getDouble(configuration, path + "." + getPath()).orElse(0.0);
         return new MoneyReward(economy, money);
     }
 
     @Override
     public Saveable set(String path, MoneyReward value) {
         throw new UnsupportedOperationException("Saving Money Reward is not implemented yet");
+    }
+
+    @Override
+    public String getPath() {
+        return "money";
     }
 }

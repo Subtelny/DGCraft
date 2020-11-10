@@ -1,6 +1,5 @@
 package pl.subtelny.components.core;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import pl.subtelny.components.core.api.BeanContextException;
 import pl.subtelny.components.core.prototype.BeanPrototype;
