@@ -1,5 +1,7 @@
 package pl.subtelny.utilities.collection;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +12,13 @@ public final class CollectionUtil {
 
     public static boolean isCollection(Class clazz) {
         return Collection.class.isAssignableFrom(clazz);
+    }
+
+    public static Collection<?> streamToCollectionByType(Type type, Stream<?> stream) {
+        if(type instanceof ParameterizedType) {
+            return streamToCollectionByType(((ParameterizedType) type).getRawType(), stream);
+        }
+        return streamToCollectionByType((Class<?>) type, stream);
     }
 
     public static Collection<?> streamToCollectionByType(Class collectionType, Stream<?> stream) {

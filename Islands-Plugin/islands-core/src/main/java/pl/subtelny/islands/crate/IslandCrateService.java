@@ -1,7 +1,6 @@
 
 package pl.subtelny.islands.crate;
 
-import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
@@ -34,7 +33,7 @@ public class IslandCrateService implements DependencyActivator {
     }
 
     @Override
-    public void activate(Plugin plugin) {
+    public void activate() {
         loadCrates();
     }
 

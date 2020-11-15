@@ -24,7 +24,7 @@ public class ConditionFileParserStrategy extends AbstractFileParserStrategy<Cond
                 .filter(parserStrategy -> configuration.contains(path + "." + parserStrategy.getPath()))
                 .findAny()
                 .map(parserStrategy -> parserStrategy.load(path))
-                .orElseThrow(() -> new IllegalArgumentException("Not found any condition"));
+                .orElse(null);
     }
 
     @Override

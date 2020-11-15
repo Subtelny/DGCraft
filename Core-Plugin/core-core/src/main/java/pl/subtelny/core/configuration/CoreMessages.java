@@ -1,6 +1,7 @@
 package pl.subtelny.core.configuration;
 
 import org.bukkit.plugin.Plugin;
+import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.utilities.file.FileUtil;
 import pl.subtelny.utilities.messages.FileMessagesStorage;
@@ -16,6 +17,10 @@ public final class CoreMessages extends Messages {
     private final static String MESSAGES_FILE_NAME = "messages.yml";
 
     private final FileMessagesStorage fileMessagesStorage = new FileMessagesStorage(MESSAGES_PATH);
+
+    @Autowired
+    public CoreMessages() {
+    }
 
     public void initMessages(Plugin plugin) {
         File file = FileUtil.copyFile(plugin, MESSAGES_FILE_NAME);

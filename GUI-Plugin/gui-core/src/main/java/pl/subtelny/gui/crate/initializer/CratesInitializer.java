@@ -26,8 +26,8 @@ public class CratesInitializer implements DependencyActivator {
     }
 
     @Override
-    public void activate(Plugin plugin) {
-        initSettings(plugin);
+    public void activate() {
+        initSettings(GUI.plugin);
         initCrates();
     }
 

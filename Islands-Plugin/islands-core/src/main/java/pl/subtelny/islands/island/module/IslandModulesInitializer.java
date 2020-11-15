@@ -19,7 +19,7 @@ public class IslandModulesInitializer {
     }
 
     public List<IslandModule<Island>> initializeModules(Plugin plugin) {
-        File modulesDir = FileUtil.copyFile(plugin, "modules");
+        File modulesDir = FileUtil.getFile(plugin, "modules");
         File[] moduleFiles = modulesDir.listFiles();
         if (moduleFiles == null) {
             throw new IllegalStateException("Not found any modules");
@@ -37,9 +37,18 @@ public class IslandModulesInitializer {
         }
 
         String moduleType = new ObjectFileParserStrategy<String>(configFile).load("module.type");
-        return findProperIslandModuleCreatorFor(moduleType)
-                .createModule(moduleDirectory);
+        return createModule(moduleDirectory, moduleType);
     }
+
+    private IslandModule<Island> createModule(File moduleDirectory, String moduleType) {
+        try {
+            return findProperIslandModuleCreatorFor(moduleType)
+                    .createModule(moduleDirectory);
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            throw new IllegalStateException("Cannot create module " + moduleType + " on path " + moduleDirectory.getPath(), e);
+        }
+    }
+
 
     private IslandModuleCreator<Island> findProperIslandModuleCreatorFor(String type) {
         return islandModuleCreators.stream()

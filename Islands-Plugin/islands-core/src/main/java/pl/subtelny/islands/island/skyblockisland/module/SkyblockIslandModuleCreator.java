@@ -26,6 +26,7 @@ import pl.subtelny.utilities.file.ObjectFileParserStrategy;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -104,9 +105,13 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
 
     private IslandExtendConfiguration createExtendConfiguration(YamlConfiguration configuration, File file, Economy economy) {
         String path = "configuration.extends";
-        List<IslandExtendLevel> extendLevels = ConfigUtil.getSectionKeys(configuration, path)
-                .map(paths -> loadIslandExtendLevels(configuration, file, economy, paths))
-                .orElseGet(ArrayList::new);
+        Set<String> paths = ConfigUtil.getSectionKeys(configuration, path)
+                .stream()
+                .flatMap(Collection::stream)
+                .map(s -> String.join(".", path, s))
+                .collect(Collectors.toSet());
+
+        List<IslandExtendLevel> extendLevels = loadIslandExtendLevels(configuration, file, economy, paths);
         return new IslandExtendConfiguration(extendLevels);
     }
 
