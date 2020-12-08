@@ -1,6 +1,7 @@
 package pl.subtelny.components.core;
 
 import pl.subtelny.components.core.api.ComponentException;
+import pl.subtelny.utilities.log.LogUtil;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -22,7 +23,7 @@ public class ComponentCyclicDependencyValidator {
         }
     }
 
-    public void validateFor(ComponentPrototype toFind, ComponentPrototype checking) {
+    private void validateFor(ComponentPrototype toFind, ComponentPrototype checking) {
         if (toFind.equals(checking)) {
             String toFindName = toFind.getClazz().getName();
             String checkingName = checking.getClazz().getName();
@@ -35,7 +36,7 @@ public class ComponentCyclicDependencyValidator {
         }
     }
 
-    public List<ComponentPrototype> findPrototypesByType(Type type) {
+    private List<ComponentPrototype> findPrototypesByType(Type type) {
         return componentPrototypes.stream()
                 .filter(componentPrototype -> ComponentUtil.classMatchedToType(componentPrototype.getClazz(), type))
                 .collect(Collectors.toList());

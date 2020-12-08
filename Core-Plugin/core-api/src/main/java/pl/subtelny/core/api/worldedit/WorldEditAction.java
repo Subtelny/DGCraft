@@ -10,18 +10,16 @@ import org.primesoft.asyncworldedit.api.worldedit.ICancelabeEditSession;
 
 public abstract class WorldEditAction implements IFuncParamEx<Integer, ICancelabeEditSession, MaxChangedBlocksException> {
 
-    private Operation operation;
-
     @Override
     public Integer execute(ICancelabeEditSession session) throws IllegalStateException {
         session.enableQueue();
         session.setFastMode(true);
 
         try {
-            operation = getOperation(session);
+            Operation operation = getOperation(session);
             Operations.complete(operation);
         } catch (WorldEditException e) {
-            throw new IllegalStateException(e.getMessage());
+            throw new IllegalStateException("Could not end WorldEditAction operation", e);
         } finally {
             session.flushSession();
         }
@@ -29,10 +27,5 @@ public abstract class WorldEditAction implements IFuncParamEx<Integer, ICancelab
     }
 
     protected abstract Operation getOperation(ICancelabeEditSession session);
-
-    public void stopOperation() {
-        Validate.notNull(operation, "Operation is null");
-        operation.cancel();
-    }
 
 }

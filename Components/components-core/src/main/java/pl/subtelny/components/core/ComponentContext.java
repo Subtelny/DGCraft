@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.commands.api.BaseCommand;
+import pl.subtelny.components.core.api.ComponentException;
 import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.components.core.api.plugin.ComponentPlugin;
 import pl.subtelny.components.core.plugin.ComponentPluginsLoader;
@@ -11,6 +12,7 @@ import pl.subtelny.components.core.plugin.DependenciesLoadResults;
 import pl.subtelny.components.core.plugin.DependenciesLoader;
 import pl.subtelny.utilities.log.LogUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,15 @@ public class ComponentContext {
         }
         context = new ComponentContext();
         context.init(plugin);
+    }
+
+    public <T> T createComponent(Class<T> clazz) {
+        ComponentLoader loader = new ComponentLoader(componentsStorage.getComponents());
+        try {
+            return (T) loader.loadComponent(clazz);
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            throw ComponentException.of("Cannot create component for class " + clazz.getName(), e);
+        }
     }
 
     private void init(Plugin plugin) {
@@ -77,4 +88,9 @@ public class ComponentContext {
     public ComponentsStorage getComponentsStorage() {
         return componentsStorage;
     }
+
+    public static ComponentContext getContext() {
+        return context;
+    }
+
 }

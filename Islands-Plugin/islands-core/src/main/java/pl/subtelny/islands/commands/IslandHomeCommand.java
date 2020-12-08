@@ -25,7 +25,9 @@ public class IslandHomeCommand extends BaseCommand {
     public void handleCommand(CommandSender sender, String[] args) {
         Player player = (Player) sender;
         Islander islander = islanderService.getIslander(player);
-        islander.getIslands().stream().findFirst()
+        islander.getIslands()
+                .stream()
+                .findFirst()
                 .ifPresentOrElse(island -> teleportToIsland(player, island), () -> notHaveIsland(player));
     }
 

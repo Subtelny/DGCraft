@@ -27,10 +27,6 @@ public class ComponentPrototype {
         return constructor;
     }
 
-    public boolean isComponentPrototypeClass(Class clazz) {
-        return clazz.isAssignableFrom(this.clazz);
-    }
-
     public static ComponentPrototype from(Class clazz) {
         Constructor[] constructors = clazz.getDeclaredConstructors();
         List<Constructor> autowiredConstructors = Arrays.stream(constructors)
@@ -54,12 +50,11 @@ public class ComponentPrototype {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ComponentPrototype that = (ComponentPrototype) o;
-        return Objects.equals(clazz, that.clazz) &&
-                Objects.equals(constructor, that.constructor);
+        return Objects.equals(clazz, that.clazz);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clazz, constructor);
+        return Objects.hash(clazz);
     }
 }

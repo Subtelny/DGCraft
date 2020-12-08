@@ -16,7 +16,7 @@ public interface PlayerCrateSessionService {
 
     void closeInventory(Player player);
 
-    void openSession(Player player, CrateId crateId);
+    PlayerCrateSession openSession(Player player, CrateId crateId);
 
     void closeAllSessions(Plugin plugin);
 

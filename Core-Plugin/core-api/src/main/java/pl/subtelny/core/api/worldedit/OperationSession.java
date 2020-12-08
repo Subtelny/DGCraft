@@ -10,6 +10,6 @@ public interface OperationSession {
 
     void cancel();
 
-    void setStateListener(Callback<Integer> state);
+    void setStateListener(Callback<OperationStatus> state);
 
 }

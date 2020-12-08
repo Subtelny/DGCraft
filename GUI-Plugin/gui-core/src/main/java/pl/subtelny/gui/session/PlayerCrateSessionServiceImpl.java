@@ -10,7 +10,7 @@ import pl.subtelny.gui.api.crate.session.PlayerCrateSession;
 import pl.subtelny.gui.api.crate.session.PlayerCrateSessionService;
 import pl.subtelny.gui.crate.CrateConditionsService;
 import pl.subtelny.gui.crate.inventory.CrateInventoryCreator;
-import pl.subtelny.gui.crate.model.Crate;
+import pl.subtelny.gui.api.crate.model.Crate;
 import pl.subtelny.gui.crate.repository.CrateRepository;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.exception.ValidationException;
@@ -62,7 +62,7 @@ public class PlayerCrateSessionServiceImpl implements PlayerCrateSessionService 
     }
 
     @Override
-    public void openSession(Player player, CrateId crateId) {
+    public PlayerCrateSession openSession(Player player, CrateId crateId) {
         closeInventory(player);
         Crate crate = getCrate(crateId);
         validatePermissionCrate(player, crate);
@@ -70,10 +70,12 @@ public class PlayerCrateSessionServiceImpl implements PlayerCrateSessionService 
         PlayerCrateSession session = new PlayerCrateSessionImpl(player, crate, inventoryForCrate, conditionsService);
         sessionStorage.put(player, session);
         session.openCrateInventory();
+        return session;
     }
 
     private Crate getCrate(CrateId crateId) {
-        return crateRepository.findCrate(crateId).orElseThrow(() -> ValidationException.of("crate_repository.findCrate.not_found"));
+        return crateRepository.findCrate(crateId)
+                .orElseThrow(() -> ValidationException.of("crate_repository.findCrate.not_found"));
     }
 
     private void validatePermissionCrate(Player player, Crate crate) {

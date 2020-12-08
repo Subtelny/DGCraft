@@ -40,7 +40,7 @@ public class CratesInitializer implements DependencyActivator {
         CrateLoadRequest request = CrateLoadRequest.newBuilder(dir)
                 .setPlugin(GUI.plugin)
                 .build();
-        crateLoader.loadCrates(request);
+        crateLoader.loadCrate(request);
     }
 
 }

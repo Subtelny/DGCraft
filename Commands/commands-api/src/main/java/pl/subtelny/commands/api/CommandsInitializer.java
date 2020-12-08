@@ -1,5 +1,7 @@
 package pl.subtelny.commands.api;
 
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_16_R2.CraftServer;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.utilities.exception.ValidationException;
 
@@ -27,6 +29,8 @@ public class CommandsInitializer {
         List<BaseCommand> subCommands =
                 getCommandsByAndAnnotation(PluginSubCommand.class);
         subCommands.forEach(this::registerAsSubCommand);
+
+        ((CraftServer) Bukkit.getServer()).syncCommands();
     }
 
     private List<BaseCommand> getCommandsByAndAnnotation(Class<? extends Annotation> annotation) {

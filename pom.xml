@@ -18,6 +18,7 @@
         <module>Commands</module>
         <module>GUI-Plugin</module>
         <module>Groups</module>
+        <module>Crate-Plugin</module>
     </modules>
 
     <repositories>

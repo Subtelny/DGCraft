@@ -24,7 +24,7 @@ public final class LocationSerializer {
 		double z = Double.parseDouble(fields[3]);
 		float yaw = Float.parseFloat(fields[4]);
 		float pitch = Float.parseFloat(fields[5]);
-		return new Location(world, x, z, y, yaw, pitch);
+		return new Location(world, x, y, z, yaw, pitch);
 	}
 
 }

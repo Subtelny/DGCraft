@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import pl.subtelny.core.api.repository.Storage;
 import pl.subtelny.islands.island.IslandCoordinates;
 import pl.subtelny.islands.island.IslandId;
+import pl.subtelny.islands.island.model.AbstractIsland;
 import pl.subtelny.islands.island.repository.IslandStorage;
 import pl.subtelny.islands.island.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.utilities.NullObject;
@@ -35,7 +36,7 @@ public class SkyblockIslandStorage extends IslandStorage<SkyblockIsland> {
 
     public NullObject<SkyblockIsland> getCache(IslandCoordinates islandCoordinates,
                                                Function<IslandCoordinates, NullObject<SkyblockIsland>> function) {
-        Function<IslandCoordinates, NullObject<IslandId>> islandFunction = function.andThen(updateIslandCoordinatesFunction(islandCoordinates));
+        Function<IslandCoordinates, NullObject<IslandId>> islandFunction = function.andThen(updateIslandCoordinatesFunction());
         NullObject<IslandId> islandIdCache = islandCoordinatesIslandIdCache.getCache(islandCoordinates, islandFunction);
         return islandIdCache.get()
                 .map(this::getCacheIfPresent)
@@ -44,15 +45,11 @@ public class SkyblockIslandStorage extends IslandStorage<SkyblockIsland> {
                 .orElseGet(NullObject::empty);
     }
 
-    private Function<NullObject<SkyblockIsland>, NullObject<IslandId>> updateIslandCoordinatesFunction(IslandCoordinates islandCoordinates) {
-        return skyblockIslandNullObject -> {
-            skyblockIslandNullObject.get().ifPresent(skyblockIsland -> {
-                IslandId skyblockIslandId = skyblockIsland.getId();
-                islandCoordinatesIslandIdCache.put(islandCoordinates, NullObject.of(skyblockIslandId));
-            });
-            islandCoordinatesIslandIdCache.put(islandCoordinates, NullObject.empty());
-            return NullObject.empty();
-        };
+    private Function<NullObject<SkyblockIsland>, NullObject<IslandId>> updateIslandCoordinatesFunction() {
+        return skyblockIslandNullObject -> skyblockIslandNullObject.get()
+                .map(AbstractIsland::getId)
+                .map(NullObject::of)
+                .orElseGet(NullObject::empty);
     }
 
     private Function<NullObject<SkyblockIsland>, NullObject<SkyblockIsland>> updateIslandCoordinatesFunction(IslandId islandId) {

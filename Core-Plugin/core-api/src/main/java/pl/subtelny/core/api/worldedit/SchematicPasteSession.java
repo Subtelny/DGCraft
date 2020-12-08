@@ -23,7 +23,7 @@ public class SchematicPasteSession extends WorldEditOperationSession {
     }
 
     @Override
-    public void perform() throws IOException, InterruptedException {
+    public void perform() throws IOException {
         ClipboardReader reader = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getReader(new FileInputStream(schematic));
         Clipboard clipboard = reader.read();
         ClipboardHolder holder = new ClipboardHolder(clipboard);

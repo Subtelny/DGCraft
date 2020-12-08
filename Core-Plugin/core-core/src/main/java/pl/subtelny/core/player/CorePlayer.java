@@ -2,7 +2,6 @@ package pl.subtelny.core.player;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import pl.subtelny.components.core.ComponentsContext;
 import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.city.City;
 import pl.subtelny.core.components.CityComponent;
@@ -17,21 +16,27 @@ public class CorePlayer {
 
     private final Account account;
 
-    public CorePlayer(Player player, Account account) {
+    private final CityComponent cityComponent;
+
+    private final LocationsComponent locationsComponent;
+
+    public CorePlayer(Player player, Account account, CityComponent cityComponent, LocationsComponent locationsComponent) {
         this.player = player;
         this.account = account;
+        this.cityComponent = cityComponent;
+        this.locationsComponent = locationsComponent;
     }
 
     public void respawn() {
         Location respawnLoc = account.getCityId()
-                .flatMap(cityId -> ComponentsContext.getBean(CityComponent.class).findCityLocation(cityId))
-                .orElse(ComponentsContext.getBean(LocationsComponent.class).getGlobalSpawn());
+                .flatMap(cityComponent::findCityLocation)
+                .orElse(locationsComponent.getGlobalSpawn());
         player.teleport(respawnLoc);
     }
 
     public Optional<City> getCity() {
         return account.getCityId()
-                .flatMap(cityId -> ComponentsContext.getBean(CityComponent.class).findCity(cityId));
+                .flatMap(cityComponent::findCity);
     }
 
     public Account getAccount() {

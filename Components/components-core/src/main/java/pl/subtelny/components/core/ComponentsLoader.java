@@ -44,10 +44,9 @@ public class ComponentsLoader {
                     .allMatch(initializedObjects::containsKey);
 
             if (canBeInitialized) {
-                Constructor constructor = prototype.getConstructor();
+                ComponentLoader componentLoader = new ComponentLoader(initializedObjects);
                 try {
-                    Object[] parameters = findComponentObjectsForType(constructor.getGenericParameterTypes(), initializedObjects);
-                    Object object = constructor.newInstance(parameters);
+                    Object object = componentLoader.loadComponent(prototype);
                     initializedObjects.put(prototype.getClazz(), object);
                     iterator.remove();
                 } catch (ComponentException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -59,30 +58,6 @@ public class ComponentsLoader {
             return initObjects(initializedObjects, componentsToInitialize);
         }
         return initializedObjects;
-    }
-
-    private Object[] findComponentObjectsForType(Type[] types, Map<Class, Object> initializedObjects) {
-        List<Object> objects = new ArrayList<>();
-        for (Type type : types) {
-            List<Object> foundedObjects = initializedObjects.entrySet()
-                    .stream()
-                    .filter(classObjectEntry -> ComponentUtil.classMatchedToType(classObjectEntry.getKey(), type))
-                    .map(Map.Entry::getValue)
-                    .collect(Collectors.toList());
-
-            if (foundedObjects.size() == 0) {
-                throw ComponentException.of("Not found component object for type " + type.getTypeName());
-            }
-
-            if (ComponentUtil.isCollection(type)) {
-                objects.add(CollectionUtil.streamToCollectionByType(type, foundedObjects.stream()));
-            } else if (foundedObjects.size() > 1) {
-                throw ComponentException.of("Found more than one component for type " + type.getTypeName());
-            } else {
-                objects.add(foundedObjects.get(0));
-            }
-        }
-        return objects.toArray();
     }
 
     private Set<ComponentPrototypeOrder> getComponentPrototypeOrders() {
