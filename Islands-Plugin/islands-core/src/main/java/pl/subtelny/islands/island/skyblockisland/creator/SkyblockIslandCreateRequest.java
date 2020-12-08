@@ -11,9 +11,12 @@ public class SkyblockIslandCreateRequest {
 
     private final File schematicLevel;
 
-    public SkyblockIslandCreateRequest(Islander owner, File schematicLevel) {
+    private final int schematicHeight;
+
+    public SkyblockIslandCreateRequest(Islander owner, File schematicLevel, int schematicHeight) {
         this.owner = owner;
         this.schematicLevel = schematicLevel;
+        this.schematicHeight = schematicHeight;
     }
 
     public Islander getOwner() {
@@ -24,17 +27,22 @@ public class SkyblockIslandCreateRequest {
         return schematicLevel;
     }
 
+    public int getSchematicHeight() {
+        return schematicHeight;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SkyblockIslandCreateRequest request = (SkyblockIslandCreateRequest) o;
-        return Objects.equals(owner, request.owner) &&
-                Objects.equals(schematicLevel, request.schematicLevel);
+        SkyblockIslandCreateRequest that = (SkyblockIslandCreateRequest) o;
+        return schematicHeight == that.schematicHeight &&
+                Objects.equals(owner, that.owner) &&
+                Objects.equals(schematicLevel, that.schematicLevel);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(owner, schematicLevel);
+        return Objects.hash(owner, schematicLevel, schematicHeight);
     }
 }

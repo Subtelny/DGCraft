@@ -11,15 +11,9 @@ import org.primesoft.asyncworldedit.api.playerManager.IPlayerEntry;
 import org.primesoft.asyncworldedit.api.playerManager.IPlayerManager;
 import org.primesoft.asyncworldedit.api.worldedit.IAsyncEditSessionFactory;
 import org.primesoft.asyncworldedit.api.worldedit.IThreadSafeEditSession;
-import pl.subtelny.utilities.job.JobRun;
-import pl.subtelny.utilities.job.JobsProvider;
 import pl.subtelny.utilities.Callback;
-import pl.subtelny.utilities.exception.ValidationException;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 public abstract class WorldEditOperationSession implements OperationSession {
 
@@ -27,9 +21,9 @@ public abstract class WorldEditOperationSession implements OperationSession {
 
     private IPlayerEntry player;
 
-    private Callback<Integer> state;
+    private Callback<OperationStatus> state;
 
-    protected void runOperation(WorldEditAction worldEditAction) throws InterruptedException {
+    protected void runOperation(WorldEditAction worldEditAction) {
         OperationJob operationJob = new OperationJob(createSession(), getFakePlayer(), worldEditAction, state);
         operationJob.execute();
     }
@@ -64,7 +58,7 @@ public abstract class WorldEditOperationSession implements OperationSession {
     }
 
     @Override
-    public void setStateListener(Callback<Integer> state) {
+    public void setStateListener(Callback<OperationStatus> state) {
         this.state = state;
     }
 
@@ -78,20 +72,19 @@ public abstract class WorldEditOperationSession implements OperationSession {
 
         private final WorldEditAction worldEditAction;
 
-        private final Callback<Integer> state;
+        private final Callback<OperationStatus> state;
 
-        private OperationJob(IThreadSafeEditSession session, IPlayerEntry fakePlayer, WorldEditAction worldEditAction, Callback<Integer> state) {
+        private OperationJob(IThreadSafeEditSession session, IPlayerEntry fakePlayer, WorldEditAction worldEditAction, Callback<OperationStatus> state) {
             this.session = session;
             this.fakePlayer = fakePlayer;
             this.worldEditAction = worldEditAction;
             this.state = state;
         }
 
-        public void execute() throws InterruptedException {
+        public void execute() {
             String jobName = fakePlayer.getName();
             BLOCK_PLACER.performAsAsyncJob(session, fakePlayer, jobName, worldEditAction);
             addStateListener();
-            waitTillEnd();
         }
 
         private void addStateListener() {
@@ -99,20 +92,10 @@ public abstract class WorldEditOperationSession implements OperationSession {
                 return;
             }
             IJobEntry job = getJob();
-            job.addStateChangedListener(iJobEntry -> state.done(iJobEntry.getStatus().getSeqNumber()));
-        }
-
-        private void waitTillEnd() throws InterruptedException {
-            IJobEntry job = getJob();
-            if (job != null && !job.isTaskDone()) {
-                CountDownLatch latch = new CountDownLatch(1);
-                job.addStateChangedListener(iJobEntry -> {
-                    if (iJobEntry.isTaskDone()) {
-                        latch.countDown();
-                    }
-                });
-                latch.await(1, TimeUnit.MINUTES);
-            }
+            job.addStateChangedListener(iJobEntry -> {
+                OperationStatus operationStatus = OperationStatus.fromJobStatus(iJobEntry.getStatus());
+                state.done(operationStatus);
+            });
         }
 
         private IJobEntry getJob() {

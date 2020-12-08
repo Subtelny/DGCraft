@@ -4,7 +4,7 @@ import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.gui.api.crate.inventory.CrateInventory;
 import pl.subtelny.gui.api.crate.model.CrateId;
-import pl.subtelny.gui.crate.model.Crate;
+import pl.subtelny.gui.api.crate.model.Crate;
 
 import java.util.HashMap;
 import java.util.List;

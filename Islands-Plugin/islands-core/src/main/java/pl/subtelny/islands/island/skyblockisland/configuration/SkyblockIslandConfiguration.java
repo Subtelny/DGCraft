@@ -1,11 +1,9 @@
 package pl.subtelny.islands.island.skyblockisland.configuration;
 
 import org.bukkit.Location;
-import pl.subtelny.islands.Islands;
 import pl.subtelny.islands.island.IslandCoordinates;
 import pl.subtelny.islands.island.configuration.IslandConfiguration;
 import pl.subtelny.islands.island.configuration.IslandExtendConfiguration;
-import pl.subtelny.utilities.file.FileUtil;
 
 import java.io.File;
 import java.util.Objects;
@@ -20,16 +18,21 @@ public class SkyblockIslandConfiguration extends IslandConfiguration {
 
     private final String schematicFilePath;
 
+    private final int schematicHeight;
+
     public SkyblockIslandConfiguration(String worldName,
                                        boolean createEnabled,
                                        IslandExtendConfiguration extendConfiguration,
                                        int defaultSize,
-                                       int spaceBetweenIslands, String schematicFilePath) {
+                                       int spaceBetweenIslands,
+                                       String schematicFilePath,
+                                       int schematicHeight) {
         super(worldName, createEnabled);
         this.extendConfiguration = extendConfiguration;
         this.defaultSize = defaultSize;
         this.spaceBetweenIslands = spaceBetweenIslands;
         this.schematicFilePath = schematicFilePath;
+        this.schematicHeight = schematicHeight;
     }
 
     public IslandExtendConfiguration getExtendConfiguration() {
@@ -50,7 +53,11 @@ public class SkyblockIslandConfiguration extends IslandConfiguration {
     }
 
     public File getSchematicFile() {
-        return FileUtil.getFile(Islands.plugin, schematicFilePath);
+        return new File(schematicFilePath);
+    }
+
+    public int getSchematicHeight() {
+        return schematicHeight;
     }
 
     public IslandCoordinates toIslandCoords(Location location) {
@@ -70,12 +77,13 @@ public class SkyblockIslandConfiguration extends IslandConfiguration {
         SkyblockIslandConfiguration that = (SkyblockIslandConfiguration) o;
         return defaultSize == that.defaultSize &&
                 spaceBetweenIslands == that.spaceBetweenIslands &&
+                schematicHeight == that.schematicHeight &&
                 Objects.equals(extendConfiguration, that.extendConfiguration) &&
                 Objects.equals(schematicFilePath, that.schematicFilePath);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(extendConfiguration, defaultSize, spaceBetweenIslands, schematicFilePath);
+        return Objects.hash(extendConfiguration, defaultSize, spaceBetweenIslands, schematicFilePath, schematicHeight);
     }
 }

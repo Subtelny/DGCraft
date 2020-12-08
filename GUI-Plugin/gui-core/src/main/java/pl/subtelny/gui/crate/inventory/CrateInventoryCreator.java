@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.gui.api.crate.inventory.CrateInventory;
-import pl.subtelny.gui.crate.model.Crate;
+import pl.subtelny.gui.api.crate.model.Crate;
 import pl.subtelny.gui.crate.repository.CrateRepository;
 import pl.subtelny.utilities.Validation;
 

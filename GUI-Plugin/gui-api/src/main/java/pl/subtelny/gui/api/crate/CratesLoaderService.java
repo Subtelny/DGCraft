@@ -9,6 +9,6 @@ public interface CratesLoaderService {
 
     void unloadCrate(CrateId crateId);
 
-    void loadCrates(CrateLoadRequest request);
+    void loadCrate(CrateLoadRequest request);
 
 }

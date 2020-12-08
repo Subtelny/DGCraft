@@ -4,8 +4,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.gui.api.crate.model.CrateId;
-import pl.subtelny.gui.crate.model.Crate;
-import pl.subtelny.gui.crate.model.ItemCrate;
+import pl.subtelny.gui.api.crate.model.Crate;
+import pl.subtelny.gui.crate.model.CrateImpl2;
+import pl.subtelny.gui.api.crate.model.ItemCrate;
 import pl.subtelny.utilities.ConfigUtil;
 import pl.subtelny.utilities.Saveable;
 import pl.subtelny.utilities.condition.*;
@@ -60,7 +61,7 @@ public class CrateFileParserStrategy extends AbstractFileParserStrategy<Crate> {
         boolean global = configuration.getBoolean("configuration.global");
         String title = configuration.getString("configuration.title");
         String permission = configuration.getString("configuration.permission");
-        return new Crate(crateId, itemCrates, global, title, size, permission);
+        return new CrateImpl2(crateId, itemCrates, global, title, size, permission);
     }
 
     @Override

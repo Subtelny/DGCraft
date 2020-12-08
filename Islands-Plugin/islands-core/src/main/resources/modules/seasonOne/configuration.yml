@@ -10,6 +10,7 @@ configuration:
   default-size: 10
   space-between-islands: 3
   schematic-file-name: basic
+  schematic-height: 80
   #
   # EXTENDS
   #

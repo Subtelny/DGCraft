@@ -35,7 +35,7 @@ public class CrateDevReloadCommand extends BaseCommand {
         CrateLoadRequest request = CrateLoadRequest.newBuilder(dir)
                 .setPlugin(GUI.plugin)
                 .build();
-        cratesLoaderService.loadCrates(request);
+        cratesLoaderService.loadCrate(request);
     }
 
     @Override

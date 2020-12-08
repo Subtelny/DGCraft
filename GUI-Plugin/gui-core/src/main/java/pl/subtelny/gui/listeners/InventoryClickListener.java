@@ -12,10 +12,12 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.gui.crate.inventory.CraftCrateInventory;
 import pl.subtelny.gui.api.crate.session.PlayerCrateSession;
 import pl.subtelny.gui.api.crate.session.PlayerCrateSessionService;
+import pl.subtelny.gui.crate.inventory.CraftCrateInventory;
+import pl.subtelny.gui.messages.CrateMessages;
 import pl.subtelny.gui.util.CrateUtil;
+import pl.subtelny.utilities.exception.ValidationException;
 
 import java.util.Optional;
 
@@ -24,9 +26,12 @@ public class InventoryClickListener implements Listener {
 
     private final PlayerCrateSessionService sessionService;
 
+    private final CrateMessages crateMessages;
+
     @Autowired
-    public InventoryClickListener(PlayerCrateSessionService sessionService) {
+    public InventoryClickListener(PlayerCrateSessionService sessionService, CrateMessages crateMessages) {
         this.sessionService = sessionService;
+        this.crateMessages = crateMessages;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -56,9 +61,17 @@ public class InventoryClickListener implements Listener {
             Inventory clickedInventory = e.getClickedInventory();
             if (e.getSlotType() == InventoryType.SlotType.CONTAINER && clickedInventory != null) {
                 if (clickedInventory.equals(topInventory)) {
-                    session.click(e.getSlot());
+                    click(player, session, e.getSlot());
                 }
             }
+        }
+    }
+
+    private void click(Player player, PlayerCrateSession session, int slot) {
+        try {
+            session.click(slot);
+        } catch (ValidationException e) {
+            crateMessages.sendTo(player, e.getMessage(), e.getValues());
         }
     }
 

@@ -7,11 +7,9 @@ import pl.subtelny.gui.api.crate.CratesLoaderService;
 import pl.subtelny.gui.api.crate.CrateLoadRequest;
 import pl.subtelny.gui.api.crate.model.CrateId;
 import pl.subtelny.gui.api.crate.session.PlayerCrateSessionService;
-import pl.subtelny.gui.crate.model.Crate;
+import pl.subtelny.gui.api.crate.model.Crate;
 import pl.subtelny.gui.crate.repository.CrateRepository;
 import pl.subtelny.utilities.Validation;
-
-import java.util.List;
 
 @Component
 public class CratesLoaderServiceImpl implements CratesLoaderService {
@@ -42,12 +40,10 @@ public class CratesLoaderServiceImpl implements CratesLoaderService {
     }
 
     @Override
-    public void loadCrates(CrateLoadRequest request) {
-        List<Crate> crates = cratesFileLoader.loadCrates(request);
-        crates.forEach(crate -> {
-            validateAlreadyLoaded(crate.getId());
-            crateRepository.addCrate(crate);
-        });
+    public void loadCrate(CrateLoadRequest request) {
+        Crate crate = cratesFileLoader.loadCrate(request);
+        validateAlreadyLoaded(crate.getId());
+        crateRepository.addCrate(crate);
     }
 
     private void validateAlreadyLoaded(CrateId crateId) {

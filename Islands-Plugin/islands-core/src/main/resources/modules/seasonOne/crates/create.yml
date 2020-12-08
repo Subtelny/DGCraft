@@ -7,7 +7,7 @@ content:
   0:
     item: GRASS
     amount: 1
-    name: 'Wyspa podstawowa'
+    name: 'Stworz wyspe'
     lore:
       - 'something'
       - 'something2'
@@ -15,4 +15,16 @@ content:
     onclick:
       rewards:
         0:
-          player-command: w create seasonOne
+          island: create
+  1:
+    item: GRASS
+    amount: 1
+    name: 'Szukaj wyspe'
+    lore:
+      - 'something'
+      - '&6hehe'
+    close-after-click: true
+    onclick:
+      rewards:
+        0:
+          island: search

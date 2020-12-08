@@ -5,6 +5,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import org.bukkit.Location;
 import org.primesoft.asyncworldedit.api.worldedit.ICancelabeEditSession;
+import pl.subtelny.utilities.log.LogUtil;
 
 public class PasteAction extends WorldEditAction {
 

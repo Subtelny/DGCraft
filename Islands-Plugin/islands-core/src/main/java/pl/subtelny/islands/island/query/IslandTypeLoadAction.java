@@ -24,6 +24,7 @@ public class IslandTypeLoadAction implements LoadAction<IslandType> {
     public IslandType perform() {
         String islandTypeRaw = connection
                 .select(Islands.ISLANDS.TYPE)
+                .from(Islands.ISLANDS)
                 .where(Islands.ISLANDS.ID.eq(islandId.getInternal()))
                 .fetchOne(record -> record.get(Islands.ISLANDS.TYPE));
         return new IslandType(islandTypeRaw);

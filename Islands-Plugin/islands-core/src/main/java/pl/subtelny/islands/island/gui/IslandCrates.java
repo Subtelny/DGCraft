@@ -1,10 +1,14 @@
 package pl.subtelny.islands.island.gui;
 
-import pl.subtelny.gui.api.crate.model.CrateId;
+import org.bukkit.entity.Player;
 
 public interface IslandCrates {
 
-    CrateId getMainCrate();
+    void openMainCrate(Player player);
+
+    void openCreateCrate(Player player);
+
+    void openSearchCrate(Player player);
 
     void reloadCrates();
 

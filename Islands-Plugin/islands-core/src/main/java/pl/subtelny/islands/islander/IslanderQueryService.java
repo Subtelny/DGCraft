@@ -24,6 +24,6 @@ public class IslanderQueryService extends IslanderService {
         IslanderId islanderId = getIslanderId(player);
         return islanderRepository
                 .getIslanderIfPresent(islanderId)
-                .orElseThrow(() -> new ValidationException("islander.not_found" + player.getName()));
+                .orElseThrow(() -> ValidationException.of("islander.not_found", player.getName()));
     }
 }

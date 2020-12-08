@@ -8,7 +8,7 @@ import pl.subtelny.core.api.economy.EconomyProvider;
 import pl.subtelny.gui.GUI;
 import pl.subtelny.gui.api.crate.CrateLoadRequest;
 import pl.subtelny.gui.api.crate.session.PlayerCrateSessionService;
-import pl.subtelny.gui.crate.model.Crate;
+import pl.subtelny.gui.api.crate.model.Crate;
 import pl.subtelny.gui.crate.reward.OpenGuiRewardFileParserStrategy;
 import pl.subtelny.gui.crate.settings.CrateFileParserStrategy;
 import pl.subtelny.utilities.condition.Condition;
@@ -28,7 +28,6 @@ import pl.subtelny.utilities.reward.money.MoneyRewardFileParserStrategy;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -46,25 +45,12 @@ public class CratesFileLoader {
         this.playerCrateSessionService = playerCrateSessionService;
     }
 
-    public List<Crate> loadCrates(CrateLoadRequest request) {
+    public Crate loadCrate(CrateLoadRequest request) {
         Plugin plugin = request.getPlugin().orElse(GUI.plugin);
         File file = request.getFile();
         String prefix = request.getPrefix().orElse(null);
         List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers = request.getRewardParsers();
-        if (file.isDirectory()) {
-            return loadCratesFromDir(file, prefix, plugin, rewardParsers);
-        }
-        return Collections.singletonList(loadCrateFromFile(file, prefix, plugin, rewardParsers));
-    }
-
-    private List<Crate> loadCratesFromDir(File dir, String prefix, Plugin plugin, List<PathAbstractFileParserStrategy<? extends Reward>> additionalRewardParsers) {
-        File[] files = dir.listFiles();
-        if (files != null) {
-            return Arrays.stream(files)
-                    .map(file -> loadCrateFromFile(file, prefix, plugin, additionalRewardParsers))
-                    .collect(Collectors.toList());
-        }
-        return Collections.emptyList();
+        return loadCrateFromFile(file, prefix, plugin, rewardParsers);
     }
 
     private Crate loadCrateFromFile(File file, String prefix, Plugin plugin, List<PathAbstractFileParserStrategy<? extends Reward>> additionalRewardParsers) {

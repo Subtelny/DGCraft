@@ -2,22 +2,32 @@ package pl.subtelny.islands.island;
 
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.islands.island.module.IslandModule;
 import pl.subtelny.islands.island.module.IslandModules;
+
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class IslandCommandService extends IslandService {
 
+    private final TransactionProvider transactionProvider;
+
     @Autowired
-    public IslandCommandService(IslandModules islandModules, IslandIdToIslandTypeService islandIdToIslandTypeCache) {
+    public IslandCommandService(IslandModules islandModules,
+                                IslandIdToIslandTypeService islandIdToIslandTypeCache,
+                                TransactionProvider transactionProvider) {
         super(islandModules, islandIdToIslandTypeCache);
+        this.transactionProvider = transactionProvider;
     }
 
-    public Island createIsland(IslandType islandType, IslandCreateRequest request) {
+    public CompletableFuture<Island> createIsland(IslandType islandType, IslandCreateRequest request) {
         IslandModule<Island> islandModule = getIslandModule(islandType);
-        Island island = islandModule.createIsland(request);
-        updateCache(island);
-        return island;
+        return transactionProvider.transactionResultAsync(() -> {
+            Island island = islandModule.createIsland(request);
+            updateCache(island);
+            return island;
+        }).toCompletableFuture();
     }
 
     public void removeIsland(Island island) {

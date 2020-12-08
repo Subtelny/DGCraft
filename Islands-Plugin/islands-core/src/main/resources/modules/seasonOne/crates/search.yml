@@ -1,0 +1,18 @@
+configuration:
+  size: 64
+  title: 'szukaj'
+  global: false
+
+content:
+  0:
+    item: GRASS
+    amount: 1
+    name: 'Powrot'
+    lore:
+      - 'something'
+      - 'something2'
+    close-after-click: true
+    onclick:
+      rewards:
+        0:
+          open-gui: create

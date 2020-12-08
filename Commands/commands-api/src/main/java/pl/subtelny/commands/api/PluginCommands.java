@@ -40,17 +40,7 @@ public class PluginCommands {
     }
 
     private CommandMap getCommandMap() {
-        CommandMap commandMap = null;
-        try {
-            if (Bukkit.getPluginManager() instanceof SimplePluginManager) {
-                Field f = SimplePluginManager.class.getDeclaredField("commandMap");
-                f.setAccessible(true);
-                commandMap = (CommandMap) f.get(Bukkit.getPluginManager());
-            }
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return commandMap;
+        return Bukkit.getCommandMap();
     }
 
 }
