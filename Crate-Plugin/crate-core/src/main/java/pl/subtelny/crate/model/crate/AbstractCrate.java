@@ -1,6 +1,7 @@
 package pl.subtelny.crate.model.crate;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import pl.subtelny.crate.api.Crate;
 import pl.subtelny.crate.api.CrateId;
@@ -37,6 +38,11 @@ public abstract class AbstractCrate implements Crate {
         player.openInventory(inventory);
     }
 
+    @Override
+    public void closeAllSessions() {
+        inventory.getViewers().forEach(humanEntity -> humanEntity.closeInventory(InventoryCloseEvent.Reason.CANT_USE));
+    }
+
     protected void renderInventory() {
         ItemStack[] itemStacks = new ItemStack[getInventory().getSize()];
         getItems().forEach((slot, itemCrate) -> itemStacks[slot] = itemCrate.getItemStack());
@@ -49,6 +55,7 @@ public abstract class AbstractCrate implements Crate {
                 itemCrate -> inventory.setItem(slot, itemCrate.getItemStack()),
                 () -> inventory.clear(slot));
     }
+
     protected void clearAll() {
         inventory.clear();
     }

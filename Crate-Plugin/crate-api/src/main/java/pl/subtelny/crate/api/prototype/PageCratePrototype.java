@@ -15,11 +15,12 @@ public class PageCratePrototype extends CratePrototype {
     public PageCratePrototype(CrateId crateId,
                               CrateType crateType,
                               String title,
+                              String permission,
                               int size,
                               Map<Integer, ItemCratePrototype> items,
                               ItemStack previousPageItemStack,
                               ItemStack nextPageItemStack) {
-        super(crateId, crateType, title, size, items);
+        super(crateId, crateType, title, permission, size, items);
         this.previousPageItemStack = previousPageItemStack;
         this.nextPageItemStack = nextPageItemStack;
     }

@@ -13,6 +13,11 @@ public class ItemStackConditionFileParserStrategy extends PathAbstractFileParser
 
     private final ItemStackFileParserStrategy parserStrategy;
 
+    public ItemStackConditionFileParserStrategy(File file) {
+        super(file);
+        this.parserStrategy = new ItemStackFileParserStrategy(configuration, file);
+    }
+
     public ItemStackConditionFileParserStrategy(YamlConfiguration configuration, File file) {
         super(configuration, file);
         this.parserStrategy = new ItemStackFileParserStrategy(configuration, file);

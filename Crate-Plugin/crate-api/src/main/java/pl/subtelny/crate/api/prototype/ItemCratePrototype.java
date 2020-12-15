@@ -21,7 +21,12 @@ public class ItemCratePrototype {
 
     private final List<Reward> rewards;
 
-    public ItemCratePrototype(ItemStack itemStack, boolean movable, boolean closeAfterClick, List<Condition> conditions, List<CostCondition> costConditions, List<Reward> rewards) {
+    public ItemCratePrototype(ItemStack itemStack,
+                              boolean movable,
+                              boolean closeAfterClick,
+                              List<Condition> conditions,
+                              List<CostCondition> costConditions,
+                              List<Reward> rewards) {
         this.itemStack = itemStack;
         this.movable = movable;
         this.closeAfterClick = closeAfterClick;

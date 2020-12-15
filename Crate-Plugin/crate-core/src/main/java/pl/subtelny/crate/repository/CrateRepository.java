@@ -1,5 +1,6 @@
 package pl.subtelny.crate.repository;
 
+import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.crate.api.Crate;
 import pl.subtelny.crate.api.CrateId;
@@ -38,6 +39,17 @@ public class CrateRepository {
 
     public void removeGlobalCrate(CrateId crateId) {
         cratePrototypes.remove(crateId);
+    }
+
+    public void removeCrates(Plugin plugin) {
+        cratePrototypes.keySet()
+                .stream()
+                .filter(crateId -> crateId.getPluginName().equals(plugin.getName()))
+                .forEach(cratePrototypes::remove);
+        globalCrates.keySet()
+                .stream()
+                .filter(crateId -> crateId.getPluginName().equals(plugin.getName()))
+                .forEach(globalCrates::remove);
     }
 
 }

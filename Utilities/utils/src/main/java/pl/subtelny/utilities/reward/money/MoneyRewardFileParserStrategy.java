@@ -13,6 +13,11 @@ public class MoneyRewardFileParserStrategy extends PathAbstractFileParserStrateg
 
     private final Economy economy;
 
+    public MoneyRewardFileParserStrategy(File file, Economy economy) {
+        super(file);
+        this.economy = economy;
+    }
+
     public MoneyRewardFileParserStrategy(YamlConfiguration configuration, File file, Economy economy) {
         super(configuration, file);
         this.economy = economy;

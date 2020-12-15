@@ -4,6 +4,7 @@ import org.bukkit.craftbukkit.v1_16_R2.inventory.CraftInventoryCustom;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.api.CrateId;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -66,6 +67,10 @@ public class CrateInventory extends CraftInventoryCustom {
         if (hasSession(player)) {
             crate.click(player, slot);
         }
+    }
+
+    public CrateId getCrateId() {
+        return crate.getId();
     }
 
 }

@@ -16,7 +16,7 @@ public class MoneyConditionFileParserStrategy extends PathAbstractFileParserStra
         this.economy = economy;
     }
 
-    protected MoneyConditionFileParserStrategy(File file, Economy economy) {
+    public MoneyConditionFileParserStrategy(File file, Economy economy) {
         super(file);
         this.economy = economy;
     }

@@ -16,7 +16,7 @@ public class MoneyCostConditionFileParserStrategy extends PathAbstractFileParser
         this.parserStrategy = new MoneyConditionFileParserStrategy(configuration, file, economy);
     }
 
-    protected MoneyCostConditionFileParserStrategy(File file, Economy economy) {
+    public MoneyCostConditionFileParserStrategy(File file, Economy economy) {
         super(file);
         this.parserStrategy = new MoneyConditionFileParserStrategy(configuration, file, economy);
     }

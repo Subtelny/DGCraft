@@ -17,7 +17,7 @@ public class ItemStackCostConditionFileParserStrategy extends PathAbstractFilePa
         this.parserStrategy = new ItemStackConditionFileParserStrategy(configuration, file);
     }
 
-    protected ItemStackCostConditionFileParserStrategy(File file) {
+    public ItemStackCostConditionFileParserStrategy(File file) {
         super(file);
         this.parserStrategy = new ItemStackConditionFileParserStrategy(configuration, file);
     }

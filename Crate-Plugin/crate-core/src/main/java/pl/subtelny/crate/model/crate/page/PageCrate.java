@@ -1,5 +1,6 @@
 package pl.subtelny.crate.model.crate.page;
 
+import pl.subtelny.crate.api.CrateType;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.model.crate.personal.PersonalCrate;
 import pl.subtelny.crate.model.item.ItemCrate;
@@ -8,6 +9,8 @@ import pl.subtelny.utilities.exception.ValidationException;
 import java.util.*;
 
 public class PageCrate extends PersonalCrate {
+
+    public static final CrateType PAGE_TYPE = new CrateType("PAGE");
 
     private int currentPage;
 

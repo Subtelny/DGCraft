@@ -13,4 +13,5 @@ public interface Crate {
 
     void cleanIfNeeded();
 
+    void closeAllSessions();
 }

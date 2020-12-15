@@ -9,6 +9,10 @@ import java.io.File;
 
 public class CommandRewardFileParserStrategy extends PathAbstractFileParserStrategy<CommandReward> {
 
+    public CommandRewardFileParserStrategy(File file) {
+        super(file);
+    }
+
     public CommandRewardFileParserStrategy(YamlConfiguration configuration, File file) {
         super(configuration, file);
     }

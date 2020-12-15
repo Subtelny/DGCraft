@@ -12,7 +12,7 @@ public class PermissionConditionFileParserStrategy extends PathAbstractFileParse
         super(configuration, file);
     }
 
-    protected PermissionConditionFileParserStrategy(File file) {
+    public PermissionConditionFileParserStrategy(File file) {
         super(file);
     }
 

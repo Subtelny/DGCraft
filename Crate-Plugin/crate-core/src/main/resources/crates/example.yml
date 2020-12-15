@@ -1,0 +1,22 @@
+type: GLOBAL
+title: '&7HEHE &6LOL'
+size: 64
+permission: 'test'
+
+content:
+  0:
+    item: GRASS
+    amount: 10
+    name: '&8HEHE'
+    lore: '&7Any lore'
+      on-click:
+        open: example2
+        conditions:
+          0:
+            condition: COST
+            money: 1000
+        rewards:
+          0:
+            item: STONE
+            amount: 1
+            name: 'Stone example'

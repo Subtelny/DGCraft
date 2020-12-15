@@ -13,14 +13,17 @@ public class CratePrototype {
 
     private final String title;
 
+    private final String permission;
+
     private final int size;
 
     private final Map<Integer, ItemCratePrototype> items;
 
-    public CratePrototype(CrateId crateId, CrateType crateType, String title, int size, Map<Integer, ItemCratePrototype> items) {
+    public CratePrototype(CrateId crateId, CrateType crateType, String title, String permission, int size, Map<Integer, ItemCratePrototype> items) {
         this.crateId = crateId;
         this.crateType = crateType;
         this.title = title;
+        this.permission = permission;
         this.size = size;
         this.items = items;
     }
@@ -35,6 +38,10 @@ public class CratePrototype {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getPermission() {
+        return permission;
     }
 
     public int getSize() {

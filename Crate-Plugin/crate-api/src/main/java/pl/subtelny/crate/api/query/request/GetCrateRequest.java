@@ -2,6 +2,7 @@ package pl.subtelny.crate.api.query.request;
 
 import pl.subtelny.crate.api.CrateId;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public final class GetCrateRequest {
@@ -13,6 +14,10 @@ public final class GetCrateRequest {
     public GetCrateRequest(CrateId crateId, Map<String, String> data) {
         this.crateId = crateId;
         this.data = data;
+    }
+
+    public static GetCrateRequest of(CrateId crateId) {
+        return new GetCrateRequest(crateId, new HashMap<>());
     }
 
     public CrateId getCrateId() {

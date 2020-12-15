@@ -1,6 +1,0 @@
-name: DG-GUI
-version: 1.0
-author: Subtelny
-main: pl.subtelny.gui.GUI
-depend:
-  - DG-Core
