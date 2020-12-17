@@ -1,10 +1,11 @@
-package pl.subtelny.crate.prototype;
+package pl.subtelny.crate.prototype.page;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.api.prototype.PageCratePrototype;
+import pl.subtelny.crate.prototype.CratePrototypeFileParserStrategy;
 import pl.subtelny.utilities.Saveable;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.condition.CostCondition;

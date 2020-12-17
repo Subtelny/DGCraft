@@ -1,4 +1,5 @@
 configuration:
+  type: GLOBAL
   size: 18
   title: 'sezon 1'
   global: true

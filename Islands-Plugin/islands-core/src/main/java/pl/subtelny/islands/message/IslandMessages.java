@@ -1,6 +1,7 @@
 package pl.subtelny.islands.message;
 
 import org.bukkit.plugin.Plugin;
+import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.islands.Islands;
@@ -13,11 +14,18 @@ import java.io.File;
 @Component
 public class IslandMessages extends Messages implements DependencyActivator {
 
+    private static IslandMessages instance;
+
     private final static String MESSAGES_PATH = "messages";
 
     private final static String MESSAGES_FILE_NAME = "messages.yml";
 
     private final FileMessagesStorage fileMessagesStorage = new FileMessagesStorage(MESSAGES_PATH);
+
+    @Autowired
+    public IslandMessages() {
+        instance = this;
+    }
 
     @Override
     public String getRawMessage(String path) {
@@ -37,5 +45,9 @@ public class IslandMessages extends Messages implements DependencyActivator {
     public void initMessages(Plugin plugin) {
         File file = FileUtil.copyFile(plugin, MESSAGES_FILE_NAME);
         fileMessagesStorage.initialize(file);
+    }
+
+    public static Messages get() {
+        return instance;
     }
 }

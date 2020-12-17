@@ -1,4 +1,4 @@
-package pl.subtelny.islands.island.gui;
+package pl.subtelny.islands.island.crate;
 
 import org.bukkit.entity.Player;
 

@@ -6,11 +6,14 @@ import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.IslandCreateRequest;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.island.gui.IslandCrates;
+import pl.subtelny.islands.island.crate.IslandCrates;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public interface IslandModule<T extends Island> {
+
+    Collection<T> getAllLoadedIslands();
 
     Optional<T> findIsland(IslandId islandId);
 

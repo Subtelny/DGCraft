@@ -2,14 +2,10 @@ package pl.subtelny.islands.island.skyblockisland.model;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import pl.subtelny.islands.island.IslandId;
-import pl.subtelny.islands.island.IslandMember;
-import pl.subtelny.islands.island.IslandMemberId;
-import pl.subtelny.islands.island.IslandType;
+import pl.subtelny.islands.island.*;
 import pl.subtelny.islands.island.membership.IslandMemberQueryService;
 import pl.subtelny.islands.island.model.AbstractIsland;
 import pl.subtelny.islands.island.skyblockisland.IslandExtendCalculator;
-import pl.subtelny.islands.island.IslandCoordinates;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.cuboid.Cuboid;
@@ -45,13 +41,30 @@ public class SkyblockIsland extends AbstractIsland {
 
     @Override
     public void join(IslandMember member) {
-        Validation.isTrue(Islander.ISLAND_MEMBER_TYPE.equals(member.getIslandMemberId().getType()), "skyblockIsland.cannot_join_not_islander");
+        validateIslander(member);
         super.join(member);
+    }
+
+    private void validateIslander(IslandMember member) {
+        Validation.isTrue(Islander.ISLAND_MEMBER_TYPE.equals(member.getIslandMemberId().getType()), "skyblockIsland.cannot_join_not_islander");
+    }
+
+    @Override
+    public void askJoin(IslandMember islandMember) {
+        validateIslander(islandMember);
+        super.askJoin(islandMember);
     }
 
     @Override
     public World getWorld() {
         return cuboid.getWorld();
+    }
+
+    @Override
+    public String getName() {
+        return getOwner()
+                .map(IslandMember::getName)
+                .orElse("");
     }
 
     public IslandCoordinates getIslandCoordinates() {
@@ -67,4 +80,5 @@ public class SkyblockIsland extends AbstractIsland {
         updateCuboid(extendedCuboid);
         this.extendLevel = extendLevel;
     }
+
 }

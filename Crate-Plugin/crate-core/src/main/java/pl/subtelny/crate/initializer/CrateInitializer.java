@@ -6,6 +6,7 @@ import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.crate.Crate;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.api.query.CrateQueryService;
+import pl.subtelny.crate.api.query.request.GetCratePrototypeRequest;
 import pl.subtelny.crate.repository.CrateRepository;
 import pl.subtelny.utilities.file.FileUtil;
 
@@ -37,7 +38,8 @@ public class CrateInitializer implements DependencyActivator {
 
     private void initializeCrate(File file) {
         if (file.getName().contains(".yml")) {
-            CratePrototype cratePrototype = crateQueryService.getCratePrototype(file);
+            GetCratePrototypeRequest request = GetCratePrototypeRequest.builder(file).build();
+            CratePrototype cratePrototype = crateQueryService.getCratePrototype(request);
             crateRepository.addCratePrototype(cratePrototype.getCrateId(), cratePrototype);
         }
     }

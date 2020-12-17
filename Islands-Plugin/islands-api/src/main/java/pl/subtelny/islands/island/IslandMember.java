@@ -15,4 +15,6 @@ public interface IslandMember {
 
     boolean hasIsland(IslandType islandType);
 
+    String getName();
+
 }

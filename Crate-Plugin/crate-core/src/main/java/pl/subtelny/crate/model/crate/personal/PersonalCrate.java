@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import pl.subtelny.crate.Crate;
+import pl.subtelny.crate.api.CrateType;
 import pl.subtelny.crate.model.crate.AbstractCrate;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.model.item.ItemCrate;
@@ -13,6 +14,8 @@ import pl.subtelny.crate.model.item.ItemCrateClickResult;
 import java.util.*;
 
 public class PersonalCrate extends AbstractCrate {
+
+    public static final CrateType PERSONAL_TYPE = new CrateType("PERSONAL");
 
     private final Map<Integer, ItemCrate> items;
 

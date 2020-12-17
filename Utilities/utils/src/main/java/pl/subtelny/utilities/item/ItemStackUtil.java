@@ -1,4 +1,4 @@
-package pl.subtelny.crate.factory;
+package pl.subtelny.utilities.item;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -7,21 +7,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public abstract class AbstractCrateCreator {
+public final class ItemStackUtil {
 
-    ItemStack prepareItemStack(ItemStack itemStack, Map<String, String> data) {
+    public static ItemStack prepareItemStack(ItemStack itemStack, Map<String, String> data) {
         if (data.isEmpty()) {
             return itemStack;
         }
         if (itemStack.hasItemMeta()) {
             ItemMeta itemMeta = itemStack.getItemMeta();
 
-            if (itemMeta.hasLore()) {
-                List<String> lore = itemMeta.getLore()
+            List<String> lore = itemMeta.getLore();
+            if (lore != null) {
+                List<String> newLore = lore
                         .stream()
                         .map(s -> replaceAllData(s, data))
                         .collect(Collectors.toList());
-                itemMeta.setLore(lore);
+                itemMeta.setLore(newLore);
             }
 
             if (itemMeta.hasDisplayName()) {
@@ -35,7 +36,7 @@ public abstract class AbstractCrateCreator {
         return itemStack;
     }
 
-    private String replaceAllData(String value, Map<String, String> data) {
+    private static String replaceAllData(String value, Map<String, String> data) {
         for (Map.Entry<String, String> entry : data.entrySet()) {
             value = value.replaceAll(entry.getKey(), entry.getValue());
         }

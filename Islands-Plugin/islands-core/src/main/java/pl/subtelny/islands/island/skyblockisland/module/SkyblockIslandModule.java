@@ -3,10 +3,11 @@ package pl.subtelny.islands.island.skyblockisland.module;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import pl.subtelny.gui.api.crate.session.PlayerCrateSessionService;
+import pl.subtelny.crate.api.command.CrateCommandService;
+import pl.subtelny.crate.api.query.CrateQueryService;
 import pl.subtelny.islands.island.*;
 import pl.subtelny.islands.island.configuration.ConfigurationReloadable;
-import pl.subtelny.islands.island.gui.IslandCrates;
+import pl.subtelny.islands.island.crate.IslandCrates;
 import pl.subtelny.islands.island.membership.IslandMembershipCommandService;
 import pl.subtelny.islands.island.membership.model.IslandMembership;
 import pl.subtelny.islands.island.module.IslandModule;
@@ -21,6 +22,7 @@ import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.utilities.exception.ValidationException;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -45,13 +47,19 @@ public class SkyblockIslandModule implements IslandModule<SkyblockIsland> {
                                 SkyblockIslandRepository repository,
                                 SkyblockIslandCreator islandCreator,
                                 IslandMembershipCommandService islandMembershipCommandService,
-                                PlayerCrateSessionService playerCrateSessionService) {
+                                CrateCommandService crateCommandService,
+                                CrateQueryService crateQueryService) {
         this.islandType = islandType;
         this.configuration = configuration;
-        this.islandCrates = new SkyblockIslandCrates(playerCrateSessionService, islandCrates, this);
+        this.islandCrates = new SkyblockIslandCrates(crateCommandService, crateQueryService, islandCrates, this);
         this.repository = repository;
         this.islandCreator = islandCreator;
         this.islandMembershipCommandService = islandMembershipCommandService;
+    }
+
+    @Override
+    public Collection<SkyblockIsland> getAllLoadedIslands() {
+        return repository.getAllLoadedIslands();
     }
 
     @Override

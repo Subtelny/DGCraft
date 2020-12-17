@@ -1,56 +1,54 @@
 package pl.subtelny.islands.island.skyblockisland.crates;
 
-import pl.subtelny.gui.api.crate.CrateLoadRequest;
-import pl.subtelny.gui.api.crate.CratesLoaderService;
-import pl.subtelny.gui.api.crate.model.CrateId;
-import pl.subtelny.islands.Islands;
+import pl.subtelny.crate.api.command.CrateCommandService;
+import pl.subtelny.crate.api.prototype.CratePrototype;
+import pl.subtelny.crate.api.query.CrateQueryService;
+import pl.subtelny.crate.api.query.request.GetCratePrototypeRequest;
 import pl.subtelny.islands.crates.IslandRewardFileParserStrategyFactory;
 import pl.subtelny.islands.crates.IslandRewardsFileParserStrategy;
 import pl.subtelny.islands.island.Island;
-import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.island.module.IslandModule;
 
 import java.io.File;
-import java.util.List;
+import java.util.Collections;
 
 public class SkyblockIslandCratesLoader {
 
     private final IslandRewardFileParserStrategyFactory strategyFactory;
 
-    private final CratesLoaderService cratesLoaderService;
+    private final CrateQueryService crateQueryService;
+
+    private final CrateCommandService crateCommandService;
 
     private final File cratesDir;
 
     public SkyblockIslandCratesLoader(IslandRewardFileParserStrategyFactory strategyFactory,
-                                      CratesLoaderService cratesLoaderService,
+                                      CrateQueryService crateQueryService,
+                                      CrateCommandService crateCommandService,
                                       File cratesDir) {
         this.strategyFactory = strategyFactory;
-        this.cratesLoaderService = cratesLoaderService;
+        this.crateQueryService = crateQueryService;
+        this.crateCommandService = crateCommandService;
         this.cratesDir = cratesDir;
     }
 
     public void loadCrates(IslandModule<? extends Island> islandModule) {
-        IslandType islandType = islandModule.getType();
         File[] files = cratesDir.listFiles();
         if (files != null) {
             for (File file : files) {
-                loadCrate(islandModule, islandType, file);
+                loadCrate(islandModule, file);
             }
         }
     }
 
-    private void loadCrate(IslandModule<? extends Island> islandModule, IslandType islandType, File file) {
+    private void loadCrate(IslandModule<? extends Island> islandModule, File file) {
         IslandRewardsFileParserStrategy strategy = strategyFactory.getStrategy(islandModule, file);
-        CrateLoadRequest request = CrateLoadRequest.newBuilder(file)
-                .setPlugin(Islands.plugin)
-                .setPrefix(islandType.getInternal())
-                .addRewardParser(strategy)
+        GetCratePrototypeRequest request = GetCratePrototypeRequest.builder(file)
+                .rewardParsers(Collections.singletonList(strategy))
                 .build();
-        cratesLoaderService.loadCrate(request);
-    }
 
-    public void unloadCrates(List<CrateId> crateIds) {
-        crateIds.forEach(cratesLoaderService::unloadCrate);
+        CratePrototype cratePrototype = crateQueryService.getCratePrototype(request);
+        crateCommandService.register(cratePrototype);
     }
 
 }

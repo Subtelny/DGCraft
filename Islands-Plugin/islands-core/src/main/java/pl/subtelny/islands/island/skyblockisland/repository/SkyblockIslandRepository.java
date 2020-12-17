@@ -18,7 +18,9 @@ import pl.subtelny.islands.island.skyblockisland.repository.load.SkyblockIslandL
 import pl.subtelny.islands.island.skyblockisland.repository.update.SkyblockIslandAnemiaUpdateAction;
 import pl.subtelny.utilities.NullObject;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class SkyblockIslandRepository {
 
@@ -53,6 +55,15 @@ public class SkyblockIslandRepository {
                 .where(islandCoordinates)
                 .build();
         return islandStorage.getCache(islandCoordinates, islandCoordinates1 -> islandLoader.load(request)).get();
+    }
+
+    public Collection<SkyblockIsland> getAllLoadedIslands() {
+        return islandStorage.getAllCache().values()
+                .stream()
+                .map(NullObject::get)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     public void removeIsland(SkyblockIsland island) {

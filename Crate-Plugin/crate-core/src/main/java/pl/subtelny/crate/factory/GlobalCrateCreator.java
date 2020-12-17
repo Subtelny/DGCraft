@@ -1,18 +1,22 @@
 package pl.subtelny.crate.factory;
 
 import org.bukkit.inventory.ItemStack;
+import pl.subtelny.components.core.api.Component;
 import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.api.factory.CrateCreator;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.api.CrateType;
 import pl.subtelny.crate.model.crate.global.GlobalCrate;
 import pl.subtelny.crate.model.item.BasicItemCrate;
 import pl.subtelny.crate.model.item.ItemCrate;
 import pl.subtelny.crate.api.prototype.ItemCratePrototype;
+import pl.subtelny.utilities.item.ItemStackUtil;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GlobalCrateCreator extends AbstractCrateCreator implements CrateCreator<CratePrototype> {
+@Component
+public class GlobalCrateCreator implements CrateCreator<CratePrototype> {
 
     @Override
     public Crate create(CratePrototype prototype, Map<String, String> data) {
@@ -28,12 +32,12 @@ public class GlobalCrateCreator extends AbstractCrateCreator implements CrateCre
 
     private ItemCrate toItemCrate(ItemCratePrototype prototype, Map<String, String> data) {
         ItemStack itemStack = prototype.getItemStack();
-        ItemStack preparedItemStack = prepareItemStack(itemStack, data);
+        ItemStack preparedItemStack = ItemStackUtil.prepareItemStack(itemStack, data);
         return new BasicItemCrate(preparedItemStack, prototype);
     }
 
     @Override
     public CrateType getType() {
-        return new CrateType("GLOBAL");
+        return GlobalCrate.GLOBAL_TYPE;
     }
 }

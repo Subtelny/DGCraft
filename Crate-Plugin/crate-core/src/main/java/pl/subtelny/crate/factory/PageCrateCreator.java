@@ -3,6 +3,7 @@ package pl.subtelny.crate.factory;
 import org.bukkit.inventory.ItemStack;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.crate.api.factory.CrateCreator;
 import pl.subtelny.crate.messages.CrateMessages;
 import pl.subtelny.crate.api.Crate;
 import pl.subtelny.crate.api.CrateType;
@@ -14,6 +15,7 @@ import pl.subtelny.crate.model.item.BasicItemCrate;
 import pl.subtelny.crate.model.item.ItemCrate;
 import pl.subtelny.crate.api.prototype.ItemCratePrototype;
 import pl.subtelny.crate.model.item.PersonalItemCrate;
+import pl.subtelny.utilities.item.ItemStackUtil;
 import pl.subtelny.utilities.reward.Reward;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class PageCrateCreator extends AbstractCrateCreator implements CrateCreator<PageCratePrototype> {
+public class PageCrateCreator implements CrateCreator<PageCratePrototype> {
 
     private final CrateMessages messages;
 
@@ -66,7 +68,7 @@ public class PageCrateCreator extends AbstractCrateCreator implements CrateCreat
         }
         if (maxPages > page) {
             ItemCrate next = getControllerItemCrate(prototype.getNextPageItemStack(), data, player -> pageCrate.nextPage());
-            itemCrates.put(slotTo - 1, next);
+            itemCrates.put(slotFrom + 8, next);
         }
         return new BasicPage(itemCrates);
     }
@@ -79,7 +81,7 @@ public class PageCrateCreator extends AbstractCrateCreator implements CrateCreat
 
     private ItemCrate toItemCrate(ItemCratePrototype prototype, Map<String, String> data) {
         ItemStack itemStack = prototype.getItemStack();
-        ItemStack preparedItemStack = prepareItemStack(itemStack, data);
+        ItemStack preparedItemStack = ItemStackUtil.prepareItemStack(itemStack, data);
         return new PersonalItemCrate(preparedItemStack, prototype, messages);
     }
 
@@ -92,7 +94,7 @@ public class PageCrateCreator extends AbstractCrateCreator implements CrateCreat
     }
 
     private ItemCrate getControllerItemCrate(ItemStack itemStack, Map<String, String> data, Reward setPage) {
-        ItemStack prepareItemStack = prepareItemStack(itemStack, data);
+        ItemStack prepareItemStack = ItemStackUtil.prepareItemStack(itemStack, data);
         List<Reward> rewards = Collections.singletonList(setPage);
         ItemCratePrototype controllerPrototype = new ItemCratePrototype(prepareItemStack, false, false, Collections.emptyList(), Collections.emptyList(), rewards);
         return new BasicItemCrate(prepareItemStack, controllerPrototype);
@@ -105,7 +107,7 @@ public class PageCrateCreator extends AbstractCrateCreator implements CrateCreat
 
     @Override
     public CrateType getType() {
-        return new CrateType("PAGE");
+        return PageCrate.PAGE_TYPE;
     }
 
 }

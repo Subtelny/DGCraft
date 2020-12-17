@@ -1,7 +1,16 @@
 configuration:
-  size: 64
   title: 'szukaj'
-  global: false
+  type:
+
+search-item:
+  item: GRASS
+  amount: 1
+  name: '&6{NAME}'
+  lore:
+    - 'Wlasciciel: {OWNER} {OWNER-STATUS}'
+    - 'Czlonkowie:'
+    - '  - {MEMBER} {MEMBER-STATUS}'
+    - 'Opis: {DESC}'
 
 content:
   0:

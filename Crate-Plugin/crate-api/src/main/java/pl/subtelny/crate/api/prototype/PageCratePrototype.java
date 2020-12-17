@@ -5,6 +5,7 @@ import pl.subtelny.crate.api.CrateId;
 import pl.subtelny.crate.api.CrateType;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class PageCratePrototype extends CratePrototype {
 
@@ -31,5 +32,20 @@ public class PageCratePrototype extends CratePrototype {
 
     public ItemStack getNextPageItemStack() {
         return nextPageItemStack;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        PageCratePrototype that = (PageCratePrototype) o;
+        return Objects.equals(previousPageItemStack, that.previousPageItemStack) &&
+                Objects.equals(nextPageItemStack, that.nextPageItemStack);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), previousPageItemStack, nextPageItemStack);
     }
 }

@@ -2,6 +2,9 @@ package pl.subtelny.islands.islander.repository;
 
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.core.api.account.Account;
+import pl.subtelny.core.api.account.AccountId;
+import pl.subtelny.core.api.account.Accounts;
 import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.islands.island.IslanderId;
 import pl.subtelny.islands.island.membership.IslandMembershipQueryService;
@@ -11,6 +14,7 @@ import pl.subtelny.islands.islander.repository.storage.IslanderCacheLoader;
 import pl.subtelny.islands.islander.repository.storage.IslanderStorage;
 import pl.subtelny.islands.islander.repository.updater.IslanderUpdater;
 import pl.subtelny.utilities.NullObject;
+import pl.subtelny.utilities.exception.ValidationException;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -24,10 +28,16 @@ public class IslanderRepository {
 
     private final IslandQueryService islandQueryService;
 
+    private final Accounts accounts;
+
     @Autowired
-    public IslanderRepository(ConnectionProvider connectionProvider, IslandQueryService islandQueryService, IslandMembershipQueryService islandMembershipQueryService) {
+    public IslanderRepository(ConnectionProvider connectionProvider,
+                              IslandQueryService islandQueryService,
+                              IslandMembershipQueryService islandMembershipQueryService,
+                              Accounts accounts) {
         this.islandQueryService = islandQueryService;
-        this.islanderStorage = new IslanderStorage(new IslanderCacheLoader(connectionProvider, islandQueryService, islandMembershipQueryService));
+        this.accounts = accounts;
+        this.islanderStorage = new IslanderStorage(new IslanderCacheLoader(connectionProvider, islandQueryService, islandMembershipQueryService, accounts));
         this.islanderUpdater = new IslanderUpdater(connectionProvider);
     }
 
@@ -40,7 +50,9 @@ public class IslanderRepository {
     }
 
     public void createIslander(IslanderId islanderId) {
-        Islander islander = new Islander(islanderId, new ArrayList<>(), islandQueryService);
+        Account account = accounts.findAccount(AccountId.of(islanderId.getInternal()))
+                .orElseThrow(() -> ValidationException.of("islander-repository.account_not_found", islanderId));
+        Islander islander = new Islander(islanderId, new ArrayList<>(), islandQueryService, account);
         updateIslander(islander);
     }
 

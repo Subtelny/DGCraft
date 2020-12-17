@@ -2,6 +2,7 @@ package pl.subtelny.islands.islander.model;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import pl.subtelny.core.api.account.Account;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMemberId;
 import pl.subtelny.islands.island.IslanderId;
@@ -17,9 +18,15 @@ public class Islander extends AbstractIslandMember {
 
     private final IslanderId islanderId;
 
-    public Islander(IslanderId islanderId, List<IslandId> islandIds, IslandQueryService islandQueryService) {
+    private final Account account;
+
+    public Islander(IslanderId islanderId,
+                    List<IslandId> islandIds,
+                    IslandQueryService islandQueryService,
+                    Account account) {
         super(islandIds, islandQueryService);
         this.islanderId = islanderId;
+        this.account = account;
     }
 
     public IslanderId getIslanderId() {
@@ -29,6 +36,15 @@ public class Islander extends AbstractIslandMember {
     @Override
     public IslandMemberId getIslandMemberId() {
         return IslandMemberId.of(ISLAND_MEMBER_TYPE, islanderId.getInternal().toString());
+    }
+
+    @Override
+    public String getName() {
+        return account.getDisplayName();
+    }
+
+    public boolean isOnline() {
+        return getPlayer() != null;
     }
 
     public Player getPlayer() {

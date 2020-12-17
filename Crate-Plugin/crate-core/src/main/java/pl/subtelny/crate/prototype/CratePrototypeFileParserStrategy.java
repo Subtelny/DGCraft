@@ -44,11 +44,11 @@ public class CratePrototypeFileParserStrategy extends AbstractFileParserStrategy
         this.plugin = plugin;
     }
 
-    protected CratePrototypeFileParserStrategy(File file,
-                                               List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers,
-                                               List<PathAbstractFileParserStrategy<? extends CostCondition>> costConditionParsers,
-                                               List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers,
-                                               Plugin plugin) {
+    public CratePrototypeFileParserStrategy(File file,
+                                            List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers,
+                                            List<PathAbstractFileParserStrategy<? extends CostCondition>> costConditionParsers,
+                                            List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers,
+                                            Plugin plugin) {
         super(file);
         this.conditionParsers = conditionParsers;
         this.costConditionParsers = costConditionParsers;
@@ -58,10 +58,10 @@ public class CratePrototypeFileParserStrategy extends AbstractFileParserStrategy
 
     @Override
     public CratePrototype load(String path) {
-        String title = configuration.getString(path + "title");
-        String permission = configuration.getString(path + "permission");
-        int size = configuration.getInt(path + "size");
-        CrateType crateType = new CrateType(configuration.getString(path + "type"));
+        String title = configuration.getString("configuration.title");
+        String permission = configuration.getString( "configuration.permission");
+        int size = configuration.getInt( "configuration.size");
+        CrateType crateType = new CrateType(configuration.getString( "configuration.type"));
         CrateId crateId = getCrateId();
 
         Map<Integer, ItemCratePrototype> content = ConfigUtil.getSectionKeys(configuration, path + "content")

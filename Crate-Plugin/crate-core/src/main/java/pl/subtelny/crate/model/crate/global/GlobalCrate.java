@@ -1,6 +1,7 @@
 package pl.subtelny.crate.model.crate.global;
 
 import org.bukkit.entity.Player;
+import pl.subtelny.crate.api.CrateType;
 import pl.subtelny.crate.model.crate.AbstractCrate;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.model.item.ItemCrate;
@@ -13,6 +14,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class GlobalCrate extends AbstractCrate {
+
+    public static CrateType GLOBAL_TYPE = new CrateType("GLOBAL");
 
     private final Map<Integer, ItemCrate> items;
 

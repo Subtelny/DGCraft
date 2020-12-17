@@ -4,6 +4,9 @@ import com.github.benmanes.caffeine.cache.CacheLoader;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jooq.DSLContext;
+import pl.subtelny.core.api.account.Account;
+import pl.subtelny.core.api.account.AccountId;
+import pl.subtelny.core.api.account.Accounts;
 import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMemberId;
@@ -16,6 +19,7 @@ import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
 import pl.subtelny.islands.islander.repository.loader.IslanderAnemiaLoadAction;
 import pl.subtelny.islands.islander.repository.loader.IslanderLoadRequest;
 import pl.subtelny.utilities.NullObject;
+import pl.subtelny.utilities.exception.ValidationException;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,10 +33,16 @@ public class IslanderCacheLoader implements CacheLoader<IslanderId, NullObject<I
 
     private final IslandMembershipQueryService islandMembershipQueryService;
 
-    public IslanderCacheLoader(ConnectionProvider connectionProvider, IslandQueryService islandQueryService, IslandMembershipQueryService islandMembershipQueryService) {
+    private final Accounts accounts;
+
+    public IslanderCacheLoader(ConnectionProvider connectionProvider,
+                               IslandQueryService islandQueryService,
+                               IslandMembershipQueryService islandMembershipQueryService,
+                               Accounts accounts) {
         this.connectionProvider = connectionProvider;
         this.islandQueryService = islandQueryService;
         this.islandMembershipQueryService = islandMembershipQueryService;
+        this.accounts = accounts;
     }
 
     @Override
@@ -59,7 +69,9 @@ public class IslanderCacheLoader implements CacheLoader<IslanderId, NullObject<I
     private Islander mapAnemiaIntoDomain(IslanderAnemia anemia) {
         IslanderId islanderId = anemia.getIslanderId();
         List<IslandId> islandIds = getIslandIds(islanderId);
-        return new Islander(islanderId, islandIds, islandQueryService);
+        Account account = accounts.findAccount(AccountId.of(islanderId.getInternal()))
+                .orElseThrow(() -> ValidationException.of("islander-cache-loader.account_not_found", islanderId));
+        return new Islander(islanderId, islandIds, islandQueryService, account);
     }
 
     private List<IslandId> getIslandIds(IslanderId islanderId) {

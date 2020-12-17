@@ -2,11 +2,14 @@ package pl.subtelny.islands.island;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
+import pl.subtelny.utilities.configuration.Configuration;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface Island {
 
@@ -14,11 +17,25 @@ public interface Island {
 
     LocalDateTime getCreationDate();
 
-    boolean isMemberOfIsland(IslandMember member);
-
     List<IslandMember> getMembers();
 
     Optional<IslandMember> getOwner();
+
+    Location getSpawn();
+
+    Cuboid getCuboid();
+
+    IslandType getIslandType();
+
+    World getWorld();
+
+    Configuration getConfiguration();
+
+    String getName();
+
+    int getPoints();
+
+    boolean isMemberOfIsland(IslandMember member);
 
     void changeOwner(IslandMember islandMember);
 
@@ -28,18 +45,10 @@ public interface Island {
 
     void changeSpawn(Location spawn);
 
-    Location getSpawn();
-
     void updateCuboid(Cuboid cuboid);
-
-    Cuboid getCuboid();
 
     void setPoints(int points);
 
-    int getPoints();
-
-    IslandType getIslandType();
-
-    World getWorld();
+    void askJoin(IslandMember islandMember);
 
 }
