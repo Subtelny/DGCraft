@@ -31,7 +31,7 @@ public class IslandMembershipRemoveAction implements RemoveAction<IslandMembersh
     private List<Condition> getWhereConditions(IslandMembershipRemoveRequest request) {
         List<Condition> conditions = new ArrayList<>();
         if (request.getIslandId() != null) {
-            conditions.add(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID.eq(request.getIslandId().getInternal()));
+            conditions.add(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID.eq(request.getIslandId().getId()));
         }
         if (request.getIslandMemberId() != null) {
             conditions.add(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_MEMBER_ID.eq(request.getIslandMemberId().getInternal()));

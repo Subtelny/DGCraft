@@ -31,8 +31,9 @@ public class SkyblockIslandAnemiaUpdateAction extends IslandAnemiaUpdateAction<S
     }
 
     private IslandId executeMissingId(SkyblockIslandAnemia islandAnemia) {
-        Record1<Integer> record = getIslandRecordStatement(islandAnemia).returningResult(Islands.ISLANDS.ID).fetchOne();
-        IslandId id = IslandId.of(record.get(Islands.ISLANDS.ID));
+        Record1<Integer> record = getIslandRecordStatement(islandAnemia)
+                .returningResult(Islands.ISLANDS.ID).fetchOne();
+        IslandId id = IslandId.of(record.get(Islands.ISLANDS.ID), islandAnemia.getIslandType());
         islandAnemia.setIslandId(id);
         getSkyblockIslandRecordStatement(islandAnemia).execute();
         return id;
@@ -49,7 +50,7 @@ public class SkyblockIslandAnemiaUpdateAction extends IslandAnemiaUpdateAction<S
 
     private SkyblockIslandsRecord createRecord(SkyblockIslandAnemia islandAnemia) {
         SkyblockIslandsRecord record = connection.newRecord(SkyblockIslands.SKYBLOCK_ISLANDS);
-        record.setIslandId(islandAnemia.getIslandId().getInternal());
+        record.setIslandId(islandAnemia.getIslandId().getId());
         record.setExtendLevel(islandAnemia.getExtendLevel());
         IslandCoordinates islandCoordinates = islandAnemia.getIslandCoordinates();
         record.setX(islandCoordinates.getX());

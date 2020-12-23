@@ -22,9 +22,8 @@ public class Islander extends AbstractIslandMember {
 
     public Islander(IslanderId islanderId,
                     List<IslandId> islandIds,
-                    IslandQueryService islandQueryService,
                     Account account) {
-        super(islandIds, islandQueryService);
+        super(islandIds);
         this.islanderId = islanderId;
         this.account = account;
     }

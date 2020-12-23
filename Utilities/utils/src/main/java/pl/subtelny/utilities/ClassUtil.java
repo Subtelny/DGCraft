@@ -8,6 +8,13 @@ import java.util.Map;
 
 public final class ClassUtil {
 
+    public static String getTypeName(Type type) {
+        if (type instanceof Class<?>) {
+            return ((Class<?>) type).getSimpleName();
+        }
+        return type.getTypeName();
+    }
+
     public static Class<?> getTypeVariableType(Class<?> subClass, TypeVariable<?> typeVariable) {
         Map<TypeVariable<?>, Type> subMap = new HashMap<>();
         Class<?> superClass;

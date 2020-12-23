@@ -26,18 +26,14 @@ public class IslanderRepository {
 
     private final IslanderUpdater islanderUpdater;
 
-    private final IslandQueryService islandQueryService;
-
     private final Accounts accounts;
 
     @Autowired
     public IslanderRepository(ConnectionProvider connectionProvider,
-                              IslandQueryService islandQueryService,
                               IslandMembershipQueryService islandMembershipQueryService,
                               Accounts accounts) {
-        this.islandQueryService = islandQueryService;
         this.accounts = accounts;
-        this.islanderStorage = new IslanderStorage(new IslanderCacheLoader(connectionProvider, islandQueryService, islandMembershipQueryService, accounts));
+        this.islanderStorage = new IslanderStorage(new IslanderCacheLoader(connectionProvider, islandMembershipQueryService, accounts));
         this.islanderUpdater = new IslanderUpdater(connectionProvider);
     }
 
@@ -52,7 +48,7 @@ public class IslanderRepository {
     public void createIslander(IslanderId islanderId) {
         Account account = accounts.findAccount(AccountId.of(islanderId.getInternal()))
                 .orElseThrow(() -> ValidationException.of("islander-repository.account_not_found", islanderId));
-        Islander islander = new Islander(islanderId, new ArrayList<>(), islandQueryService, account);
+        Islander islander = new Islander(islanderId, new ArrayList<>(), account);
         updateIslander(islander);
     }
 

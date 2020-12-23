@@ -7,6 +7,7 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.crate.Crate;
 import pl.subtelny.crate.api.command.CrateCommandService;
 import pl.subtelny.crate.initializer.CrateInitializer;
+import pl.subtelny.crate.messages.CrateMessages;
 import pl.subtelny.utilities.messages.Messages;
 
 @PluginSubCommand(mainCommand = CrateDevCommand.class, command = "reload", permission = "dgcraft.cratedev.reload")
@@ -17,7 +18,7 @@ public class CrateDevReloadCommand extends BaseCommand {
     private final CrateInitializer crateInitializer;
 
     @Autowired
-    public CrateDevReloadCommand(Messages messages,
+    public CrateDevReloadCommand(CrateMessages messages,
                                  CrateCommandService crateCommandService,
                                  CrateInitializer crateInitializer) {
         super(messages);

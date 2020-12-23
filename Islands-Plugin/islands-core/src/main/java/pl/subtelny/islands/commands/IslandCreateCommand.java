@@ -33,7 +33,6 @@ public class IslandCreateCommand extends BaseCommand {
         if (islander.hasIsland(actualSeasonIslandType)) {
             throw ValidationException.of("command.island.create.out_of_island_type_size");
         }
-
     }
 
     @Override

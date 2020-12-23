@@ -29,18 +29,14 @@ public class IslanderCacheLoader implements CacheLoader<IslanderId, NullObject<I
 
     private final ConnectionProvider connectionProvider;
 
-    private final IslandQueryService islandQueryService;
-
     private final IslandMembershipQueryService islandMembershipQueryService;
 
     private final Accounts accounts;
 
     public IslanderCacheLoader(ConnectionProvider connectionProvider,
-                               IslandQueryService islandQueryService,
                                IslandMembershipQueryService islandMembershipQueryService,
                                Accounts accounts) {
         this.connectionProvider = connectionProvider;
-        this.islandQueryService = islandQueryService;
         this.islandMembershipQueryService = islandMembershipQueryService;
         this.accounts = accounts;
     }
@@ -71,7 +67,7 @@ public class IslanderCacheLoader implements CacheLoader<IslanderId, NullObject<I
         List<IslandId> islandIds = getIslandIds(islanderId);
         Account account = accounts.findAccount(AccountId.of(islanderId.getInternal()))
                 .orElseThrow(() -> ValidationException.of("islander-cache-loader.account_not_found", islanderId));
-        return new Islander(islanderId, islandIds, islandQueryService, account);
+        return new Islander(islanderId, islandIds, account);
     }
 
     private List<IslandId> getIslandIds(IslanderId islanderId) {

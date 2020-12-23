@@ -6,19 +6,29 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.islands.island.Island;
+import pl.subtelny.islands.island.IslandId;
+import pl.subtelny.islands.island.IslandType;
+import pl.subtelny.islands.island.module.IslandModules;
+import pl.subtelny.islands.island.query.IslandQueryService;
 import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.message.IslandMessages;
+import pl.subtelny.utilities.exception.ValidationException;
 
 @PluginSubCommand(command = "dom", aliases = "home", mainCommand = IslandCommand.class)
 public class IslandHomeCommand extends BaseCommand {
 
     private final IslanderQueryService islanderService;
 
+    private final IslandQueryService islandQueryService;
+
     @Autowired
-    public IslandHomeCommand(IslandMessages messages, IslanderQueryService islanderService) {
+    public IslandHomeCommand(IslandMessages messages,
+                             IslanderQueryService islanderService,
+                             IslandQueryService islandQueryService) {
         super(messages);
         this.islanderService = islanderService;
+        this.islandQueryService = islandQueryService;
     }
 
     @Override
@@ -28,15 +38,21 @@ public class IslandHomeCommand extends BaseCommand {
         islander.getIslands()
                 .stream()
                 .findFirst()
-                .ifPresentOrElse(island -> teleportToIsland(player, island), () -> notHaveIsland(player));
+                .ifPresentOrElse(islandId -> teleportToIsland(player, islandId), () -> notHaveIsland(player));
     }
 
     private void notHaveIsland(Player player) {
         getMessages().sendTo(player, "command.island.home.not_have_island");
     }
 
-    private void teleportToIsland(Player player, Island island) {
+    private void teleportToIsland(Player player, IslandId islandId) {
+        Island island = getIsland(islandId);
         player.teleport(island.getSpawn());
+    }
+
+    private Island getIsland(IslandId islandId) {
+        return islandQueryService.findIsland(islandId)
+                .orElseThrow(() -> ValidationException.of("command.island.home.island_not_found", islandId));
     }
 
     @Override

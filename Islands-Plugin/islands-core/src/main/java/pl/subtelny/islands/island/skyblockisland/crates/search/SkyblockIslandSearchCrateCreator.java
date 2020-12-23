@@ -4,7 +4,6 @@ import org.bukkit.inventory.ItemStack;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.crate.api.Crate;
-import pl.subtelny.crate.api.CrateType;
 import pl.subtelny.crate.api.factory.CrateCreator;
 import pl.subtelny.crate.api.prototype.ItemCratePrototype;
 import pl.subtelny.crate.api.prototype.PageCratePrototype;
@@ -14,6 +13,8 @@ import pl.subtelny.islands.island.module.IslandModule;
 import pl.subtelny.islands.island.module.IslandModules;
 import pl.subtelny.islands.island.skyblockisland.crates.search.prototype.IslandSearchCratePrototype;
 import pl.subtelny.islands.island.skyblockisland.crates.search.prototype.SearchItemCratePrototypeFactory;
+import pl.subtelny.islands.island.skyblockisland.model.SkyblockIsland;
+import pl.subtelny.islands.island.skyblockisland.module.SkyblockIslandModule;
 import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.islands.message.IslandMessages;
 import pl.subtelny.utilities.configuration.ConfigurationKey;
@@ -23,32 +24,24 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-public class SkyblockIslandSearchCrateCreator implements CrateCreator<IslandSearchCratePrototype> {
+public class SkyblockIslandSearchCrateCreator {
 
     private final ConfigurationKey SEARCH_MEMBERS = new ConfigurationKey("SEARCH_MEMBERS");
-
-    private final IslandModules islandModules;
 
     private final CrateCreator<PageCratePrototype> crateCreator;
 
     private final IslanderQueryService islanderQueryService;
 
-    private final IslandMessages messages;
-
     @Autowired
-    public SkyblockIslandSearchCrateCreator(IslandModules islandModules,
-                                            CrateCreator<PageCratePrototype> crateCreator,
-                                            IslanderQueryService islanderQueryService,
-                                            IslandMessages messages) {
-        this.islandModules = islandModules;
+    public SkyblockIslandSearchCrateCreator(IslanderQueryService islanderQueryService,
+                                            CrateCreator<PageCratePrototype> crateCreator) {
         this.crateCreator = crateCreator;
         this.islanderQueryService = islanderQueryService;
-        this.messages = messages;
     }
 
-    @Override
-    public Crate create(IslandSearchCratePrototype prototype, Map<String, String> data) {
-        IslandModule<Island> islandModule = getIslandModule(prototype.getIslandType());
+    public Crate create(IslandSearchCratePrototype prototype,
+                        Map<String, String> data,
+                        SkyblockIslandModule islandModule) {
         Collection<Island> islands = getInviteOpenedIslands(islandModule);
 
         Map<Integer, ItemCratePrototype> itemCratePrototypes = getItemCratePrototypes(prototype, islands);
@@ -62,12 +55,7 @@ public class SkyblockIslandSearchCrateCreator implements CrateCreator<IslandSear
                 itemCratePrototypes,
                 prototype.getPreviousPageItemStack(),
                 prototype.getNextPageItemStack());
-        return crateCreator.create(pageCratePrototype, new HashMap<>());
-    }
-
-    @Override
-    public CrateType getType() {
-        return IslandSearchCratePrototype.SEARCH_CRATE_TYPE;
+        return crateCreator.create(pageCratePrototype, data);
     }
 
     private Map<Integer, ItemCratePrototype> getItemCratePrototypes(IslandSearchCratePrototype prototype, Collection<Island> islands) {
@@ -91,16 +79,11 @@ public class SkyblockIslandSearchCrateCreator implements CrateCreator<IslandSear
     }
 
     private SearchItemCratePrototypeFactory getSearchItemCratePrototype(ItemStack searchSampleItemStack, Island island) {
-        return new SearchItemCratePrototypeFactory(searchSampleItemStack, island, islanderQueryService, messages);
+        return new SearchItemCratePrototypeFactory(searchSampleItemStack, island, islanderQueryService);
     }
 
-    private IslandModule<Island> getIslandModule(IslandType islandType) {
-        return islandModules.findIslandModule(islandType)
-                .orElseThrow(() -> ValidationException.of("island-search.creator.island_module_not_found", islandType));
-    }
-
-    private Collection<Island> getInviteOpenedIslands(IslandModule<Island> islandModule) {
-        Collection<Island> loadedIslands = islandModule.getAllLoadedIslands();
+    private Collection<Island> getInviteOpenedIslands(SkyblockIslandModule islandModule) {
+        Collection<SkyblockIsland> loadedIslands = islandModule.getAllLoadedIslands();
         return loadedIslands.stream()
                 .filter(island -> island.getConfiguration().getValue(SEARCH_MEMBERS))
                 .collect(Collectors.toList());

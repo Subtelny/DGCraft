@@ -19,4 +19,6 @@ public interface CrateQueryService {
 
     CratePrototype getCratePrototype(CrateId crateId);
 
+    Optional<CratePrototype> findCratePrototype(CrateId crateId);
+
 }

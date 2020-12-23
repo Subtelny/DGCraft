@@ -7,14 +7,16 @@ public interface IslandMember {
 
     IslandMemberId getIslandMemberId();
 
-    void addIsland(Island island);
+    List<IslandId> getIslands();
 
-    List<Island> getIslands();
+    List<IslandId> getIslands(IslandType islandType);
 
-    Optional<Island> findIsland(IslandType islandType);
+    String getName();
 
     boolean hasIsland(IslandType islandType);
 
-    String getName();
+    void addIsland(Island island);
+
+    void removeIsland(Island island);
 
 }

@@ -9,6 +9,7 @@ import pl.subtelny.crate.Crate;
 import pl.subtelny.crate.api.CrateId;
 import pl.subtelny.crate.api.query.CrateQueryService;
 import pl.subtelny.crate.api.query.request.GetCrateRequest;
+import pl.subtelny.crate.messages.CrateMessages;
 import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.messages.Messages;
 
@@ -18,7 +19,7 @@ public class CrateCommand extends BaseCommand {
     private final CrateQueryService crateQueryService;
 
     @Autowired
-    public CrateCommand(Messages messages, CrateQueryService crateQueryService) {
+    public CrateCommand(CrateMessages messages, CrateQueryService crateQueryService) {
         super(messages);
         this.crateQueryService = crateQueryService;
     }

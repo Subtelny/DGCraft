@@ -8,6 +8,8 @@ import java.util.stream.IntStream;
 
 public final class ComponentUtil {
 
+    private ComponentUtil() { }
+
     public static boolean classMatchedToType(Class clazz, Type type) {
         if (type instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) type;
@@ -25,10 +27,16 @@ public final class ComponentUtil {
     }
 
     public static boolean isCollection(Type type) {
-        if (type instanceof ParameterizedType) {
-            return isCollection(((ParameterizedType) type).getRawType());
+        try {
+            if (type instanceof ParameterizedType) {
+                return isCollection(((ParameterizedType) type).getRawType());
+            }
+            return type instanceof Class<?> && Collection.class.isAssignableFrom((Class<?>) type);
+        } catch (StackOverflowError e) {
+            System.out.println("StackOverflow: " + type.getTypeName() + " | "+ type);
+            e.printStackTrace();
+            return false;
         }
-        return type instanceof Class<?> && Collection.class.isAssignableFrom((Class<?>) type);
     }
 
     private static boolean assignableTypes(Type type, Type typeSecond) {

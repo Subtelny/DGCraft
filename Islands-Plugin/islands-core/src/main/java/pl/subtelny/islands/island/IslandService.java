@@ -10,23 +10,8 @@ public abstract class IslandService {
 
     private final IslandModules islandModules;
 
-    private final IslandIdToIslandTypeService islandIdToIslandTypeCache;
-
-    protected IslandService(IslandModules islandModules, IslandIdToIslandTypeService islandIdToIslandTypeCache) {
+    protected IslandService(IslandModules islandModules) {
         this.islandModules = islandModules;
-        this.islandIdToIslandTypeCache = islandIdToIslandTypeCache;
-    }
-
-    public IslandType getIslandType(IslandId islandId) {
-        return islandIdToIslandTypeCache.getIslandType(islandId);
-    }
-
-    protected void invalidateCache(IslandId islandId) {
-        islandIdToIslandTypeCache.invalidate(islandId);
-    }
-
-    protected void updateCache(Island island) {
-        islandIdToIslandTypeCache.update(island);
     }
 
     protected Optional<IslandModule<Island>> findIslandModule(IslandType islandType) {

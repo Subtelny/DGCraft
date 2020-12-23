@@ -7,4 +7,9 @@ public class IslandType extends BasicIdentity<String> {
     public IslandType(String id) {
         super(id);
     }
+
+    public static IslandType of(String islandType) {
+        return new IslandType(islandType);
+    }
+
 }

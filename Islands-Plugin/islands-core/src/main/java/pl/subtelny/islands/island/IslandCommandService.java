@@ -15,25 +15,19 @@ public class IslandCommandService extends IslandService {
 
     @Autowired
     public IslandCommandService(IslandModules islandModules,
-                                IslandIdToIslandTypeService islandIdToIslandTypeCache,
                                 TransactionProvider transactionProvider) {
-        super(islandModules, islandIdToIslandTypeCache);
+        super(islandModules);
         this.transactionProvider = transactionProvider;
     }
 
     public CompletableFuture<Island> createIsland(IslandType islandType, IslandCreateRequest request) {
         IslandModule<Island> islandModule = getIslandModule(islandType);
-        return transactionProvider.transactionResultAsync(() -> {
-            Island island = islandModule.createIsland(request);
-            updateCache(island);
-            return island;
-        }).toCompletableFuture();
+        return transactionProvider.transactionResultAsync(() -> islandModule.createIsland(request)).toCompletableFuture();
     }
 
     public void removeIsland(Island island) {
         IslandModule<Island> islandModule = getIslandModule(island);
         islandModule.removeIsland(island);
-        invalidateCache(island.getId());
     }
 
     public void saveIsland(Island island) {

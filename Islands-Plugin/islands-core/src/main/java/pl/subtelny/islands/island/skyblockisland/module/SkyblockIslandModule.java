@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import pl.subtelny.crate.api.command.CrateCommandService;
-import pl.subtelny.crate.api.query.CrateQueryService;
 import pl.subtelny.islands.island.*;
 import pl.subtelny.islands.island.configuration.ConfigurationReloadable;
 import pl.subtelny.islands.island.crate.IslandCrates;
@@ -12,10 +11,11 @@ import pl.subtelny.islands.island.membership.IslandMembershipCommandService;
 import pl.subtelny.islands.island.membership.model.IslandMembership;
 import pl.subtelny.islands.island.module.IslandModule;
 import pl.subtelny.islands.island.skyblockisland.configuration.SkyblockIslandConfiguration;
+import pl.subtelny.islands.island.skyblockisland.crates.SkyblockIslandCrateQueryService;
 import pl.subtelny.islands.island.skyblockisland.crates.SkyblockIslandCrates;
+import pl.subtelny.islands.island.skyblockisland.crates.SkyblockIslandCratesLoader;
 import pl.subtelny.islands.island.skyblockisland.creator.SkyblockIslandCreateRequest;
 import pl.subtelny.islands.island.skyblockisland.creator.SkyblockIslandCreator;
-import pl.subtelny.islands.island.skyblockisland.crates.SkyblockIslandCratesLoader;
 import pl.subtelny.islands.island.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.island.skyblockisland.repository.SkyblockIslandRepository;
 import pl.subtelny.islands.islander.model.Islander;
@@ -48,7 +48,7 @@ public class SkyblockIslandModule implements IslandModule<SkyblockIsland> {
                                 SkyblockIslandCreator islandCreator,
                                 IslandMembershipCommandService islandMembershipCommandService,
                                 CrateCommandService crateCommandService,
-                                CrateQueryService crateQueryService) {
+                                SkyblockIslandCrateQueryService crateQueryService) {
         this.islandType = islandType;
         this.configuration = configuration;
         this.islandCrates = new SkyblockIslandCrates(crateCommandService, crateQueryService, islandCrates, this);

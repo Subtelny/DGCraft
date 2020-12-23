@@ -41,7 +41,7 @@ public class IslandMembershipLoadAction implements LoadAction<IslandMembershipAn
 
     private List<Condition> getWhereConditions() {
         List<Condition> conditions = new ArrayList<>();
-        request.getIslandId().ifPresent(islandId -> conditions.add(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID.eq(islandId.getInternal())));
+        request.getIslandId().ifPresent(islandId -> conditions.add(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID.eq(islandId.getId())));
         request.getIslandMemberId().ifPresent(islandMemberId -> conditions.add(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_MEMBER_ID.eq(islandMemberId.getInternal())));
         return conditions;
     }
@@ -50,7 +50,7 @@ public class IslandMembershipLoadAction implements LoadAction<IslandMembershipAn
         Integer islandIdRaw = record.get(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID);
         String islandMemberIdRaw = record.get(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_MEMBER_ID);
         Boolean isOwner = record.get(IslandMemberships.ISLAND_MEMBERSHIPS.OWNER);
-        IslandId islandId = IslandId.of(islandIdRaw);
+        IslandId islandId = IslandId.of(islandIdRaw, null);
         IslandMemberId islandMemberId = IslandMemberId.of(islandMemberIdRaw);
         return new IslandMembershipAnemia(islandId, islandMemberId, isOwner);
     }

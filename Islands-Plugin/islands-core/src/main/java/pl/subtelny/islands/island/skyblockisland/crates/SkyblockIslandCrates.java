@@ -3,27 +3,24 @@ package pl.subtelny.islands.island.skyblockisland.crates;
 import org.bukkit.entity.Player;
 import pl.subtelny.crate.api.CrateId;
 import pl.subtelny.crate.api.command.CrateCommandService;
-import pl.subtelny.crate.api.query.CrateQueryService;
-import pl.subtelny.crate.api.query.request.GetCrateRequest;
 import pl.subtelny.islands.Islands;
-import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.crate.IslandCrates;
-import pl.subtelny.islands.island.module.IslandModule;
+import pl.subtelny.islands.island.skyblockisland.module.SkyblockIslandModule;
 
 public class SkyblockIslandCrates implements IslandCrates {
 
     private final CrateCommandService crateCommandService;
 
-    private final CrateQueryService crateQueryService;
+    private final SkyblockIslandCrateQueryService crateQueryService;
 
     private final SkyblockIslandCratesLoader islandCrates;
 
-    private final IslandModule<? extends Island> islandModule;
+    private final SkyblockIslandModule islandModule;
 
     public SkyblockIslandCrates(CrateCommandService crateCommandService,
-                                CrateQueryService crateQueryService,
+                                SkyblockIslandCrateQueryService crateQueryService,
                                 SkyblockIslandCratesLoader islandCrates,
-                                IslandModule<? extends Island> islandModule) {
+                                SkyblockIslandModule islandModule) {
         this.crateCommandService = crateCommandService;
         this.crateQueryService = crateQueryService;
         this.islandCrates = islandCrates;
@@ -33,19 +30,19 @@ public class SkyblockIslandCrates implements IslandCrates {
     @Override
     public void openMainCrate(Player player) {
         CrateId main = buildCrateId("main");
-        crateQueryService.getCrate(GetCrateRequest.of(main)).open(player);
+        crateQueryService.getCrate(GetSkyblockCrateRequest.of(main, islandModule)).open(player);
     }
 
     @Override
     public void openCreateCrate(Player player) {
         CrateId create = buildCrateId("create");
-        crateQueryService.getCrate(GetCrateRequest.of(create)).open(player);
+        crateQueryService.getCrate(GetSkyblockCrateRequest.of(create, islandModule)).open(player);
     }
 
     @Override
     public void openSearchCrate(Player player) {
         CrateId search = buildCrateId("search");
-        crateQueryService.getCrate(GetCrateRequest.of(search)).open(player);
+        crateQueryService.getCrate(GetSkyblockCrateRequest.of(search, islandModule)).open(player);
     }
 
     private CrateId buildCrateId(String value) {

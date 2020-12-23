@@ -18,6 +18,7 @@ import pl.subtelny.islands.island.module.IslandModule;
 import pl.subtelny.islands.island.module.IslandModuleCreator;
 import pl.subtelny.islands.island.skyblockisland.IslandExtendCalculator;
 import pl.subtelny.islands.island.skyblockisland.configuration.SkyblockIslandConfiguration;
+import pl.subtelny.islands.island.skyblockisland.crates.SkyblockIslandCrateQueryService;
 import pl.subtelny.islands.island.skyblockisland.crates.SkyblockIslandCratesLoader;
 import pl.subtelny.islands.island.skyblockisland.creator.SkyblockIslandCreator;
 import pl.subtelny.islands.island.skyblockisland.model.SkyblockIsland;
@@ -47,6 +48,8 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
 
     private final CrateCommandService crateCommandService;
 
+    private final SkyblockIslandCrateQueryService skyblockIslandCrateQueryService;
+
     private final CrateQueryService crateQueryService;
 
     @Autowired
@@ -58,6 +61,7 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
                                        IslandMessages islandMessages,
                                        IslandRewardFileParserStrategyFactory strategyFactory,
                                        CrateCommandService crateCommandService,
+                                       SkyblockIslandCrateQueryService skyblockIslandCrateQueryService,
                                        CrateQueryService crateQueryService) {
         this.economyProvider = economyProvider;
         this.connectionProvider = connectionProvider;
@@ -67,6 +71,7 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
         this.islandMessages = islandMessages;
         this.strategyFactory = strategyFactory;
         this.crateCommandService = crateCommandService;
+        this.skyblockIslandCrateQueryService = skyblockIslandCrateQueryService;
         this.crateQueryService = crateQueryService;
     }
 
@@ -84,7 +89,7 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
                 getIslandCreator(repository, islandType, extendCalculator),
                 islandMembershipCommandService,
                 crateCommandService,
-                crateQueryService);
+                skyblockIslandCrateQueryService);
         skyblockIslandModule.getIslandCrates().reloadCrates();
         return skyblockIslandModule;
     }

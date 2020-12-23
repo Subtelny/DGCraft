@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginCommand;
 import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.crate.messages.CrateMessages;
 import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.messages.Messages;
 
@@ -11,7 +12,7 @@ import pl.subtelny.utilities.messages.Messages;
 public class CrateDevCommand extends BaseCommand {
 
     @Autowired
-    public CrateDevCommand(Messages messages) {
+    public CrateDevCommand(CrateMessages messages) {
         super(messages);
     }
 

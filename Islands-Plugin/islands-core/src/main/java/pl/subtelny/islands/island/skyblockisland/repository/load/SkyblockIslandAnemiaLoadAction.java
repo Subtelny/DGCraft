@@ -36,7 +36,7 @@ public class SkyblockIslandAnemiaLoadAction extends IslandAnemiaLoadAction<Skybl
                         .and(SkyblockIslands.SKYBLOCK_ISLANDS.Z.eq(islandCoordinates.getZ()))));
 
         Optional<IslandId> islandIdOpt = request.getIslandId();
-        islandIdOpt.ifPresent(islandId -> conditions.add(Islands.ISLANDS.ID.eq(islandId.getInternal())));
+        islandIdOpt.ifPresent(islandId -> conditions.add(Islands.ISLANDS.ID.eq(islandId.getId())));
         return conditions;
     }
 
@@ -55,13 +55,13 @@ public class SkyblockIslandAnemiaLoadAction extends IslandAnemiaLoadAction<Skybl
     private SkyblockIslandAnemia mapRecordToAnemia(Record record) {
         LocalDateTime createdDate = record.get(Islands.ISLANDS.CREATED_DATE).toLocalDateTime();
         Location spawn = LocationSerializer.deserializeMinimalistic(record.get(Islands.ISLANDS.SPAWN));
-        IslandId islandId = new IslandId(record.get(Islands.ISLANDS.ID));
+        IslandType islandType = new IslandType(record.get(Islands.ISLANDS.TYPE));
+        IslandId islandId = IslandId.of(record.get(Islands.ISLANDS.ID), islandType);
         int points = record.get(Islands.ISLANDS.POINTS);
         int x = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.X);
         int z = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.Z);
         IslandCoordinates islandCoordinates = new IslandCoordinates(x, z);
         int extendLevel = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.EXTEND_LEVEL);
-        IslandType islandType = new IslandType(record.get(Islands.ISLANDS.TYPE));
         return new SkyblockIslandAnemia(
                 islandId,
                 createdDate,

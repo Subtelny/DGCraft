@@ -26,8 +26,7 @@ public class SearchItemCratePrototypeFactory {
 
     public SearchItemCratePrototypeFactory(ItemStack sampleItem,
                                            Island island,
-                                           IslanderQueryService islanderQueryService,
-                                           IslandMessages messages) {
+                                           IslanderQueryService islanderQueryService) {
         this.sampleItem = sampleItem;
         this.island = island;
         this.islanderQueryService = islanderQueryService;

@@ -9,7 +9,7 @@ import pl.subtelny.crate.api.query.CrateQueryService;
 import pl.subtelny.crate.api.query.request.GetCratePrototypeRequest;
 import pl.subtelny.crate.api.query.request.GetCrateRequest;
 import pl.subtelny.crate.api.query.request.GetPredefinedCrateRequest;
-import pl.subtelny.crate.factory.CrateFactory;
+import pl.subtelny.crate.api.factory.CrateFactory;
 import pl.subtelny.crate.prototype.CratePrototypeFactory;
 import pl.subtelny.crate.repository.CrateRepository;
 import pl.subtelny.utilities.exception.ValidationException;
@@ -44,9 +44,7 @@ public class CrateQueryServiceImpl implements CrateQueryService {
             return globalCrateOpt.get();
         }
 
-        CratePrototype cratePrototype = crateRepository.findCratePrototype(request.getCrateId())
-                .orElseThrow(() -> ValidationException.of("crate.not_found", request.getCrateId()));
-
+        CratePrototype cratePrototype = getCratePrototype(request.getCrateId());
         return crateFactory.prepareCrate(cratePrototype, request.getData());
     }
 
@@ -57,8 +55,13 @@ public class CrateQueryServiceImpl implements CrateQueryService {
 
     @Override
     public CratePrototype getCratePrototype(CrateId crateId) {
-        return crateRepository.findCratePrototype(crateId)
+        return findCratePrototype(crateId)
                 .orElseThrow(() -> ValidationException.of("crate.not_found", crateId));
+    }
+
+    @Override
+    public Optional<CratePrototype> findCratePrototype(CrateId crateId) {
+        return crateRepository.findCratePrototype(crateId);
     }
 
 }

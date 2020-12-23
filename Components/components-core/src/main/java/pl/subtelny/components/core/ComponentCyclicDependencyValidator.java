@@ -1,7 +1,7 @@
 package pl.subtelny.components.core;
 
 import pl.subtelny.components.core.api.ComponentException;
-import pl.subtelny.utilities.log.LogUtil;
+import pl.subtelny.utilities.ClassUtil;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -17,22 +17,33 @@ public class ComponentCyclicDependencyValidator {
     }
 
     public void validate(ComponentPrototype componentPrototype) {
+        String startPath = componentPrototype.getClazz().getSimpleName();
+
         Type[] parameters = componentPrototype.getConstructor().getGenericParameterTypes();
         for (Type parameter : parameters) {
-            findPrototypesByType(parameter).forEach(prototype -> validateFor(componentPrototype, prototype));
+            try {
+                String newPath = startPath + " -> " + ClassUtil.getTypeName(parameter);
+                findPrototypesByType(parameter).forEach(prototype -> validateFor(componentPrototype, prototype, newPath));
+            } catch (ComponentException | StackOverflowError e) {
+                String componentClazz = componentPrototype.getClazz().getSimpleName();
+                String parameterName = ClassUtil.getTypeName(parameter);
+                throw ComponentException.of("Found cyclic dependency in component " + componentClazz + ". Parameter: " + parameterName, e);
+            }
         }
     }
 
-    private void validateFor(ComponentPrototype toFind, ComponentPrototype checking) {
+    private void validateFor(ComponentPrototype toFind, ComponentPrototype checking, String path) {
         if (toFind.equals(checking)) {
-            String toFindName = toFind.getClazz().getName();
-            String checkingName = checking.getClazz().getName();
-            throw ComponentException.of("Found cyclic dependency: " + toFindName + " - " + checkingName);
+            String toFindName = toFind.getClazz().getSimpleName();
+            String newPath = path + " -> " + toFindName;
+            throw ComponentException.of("Validate failure at path: " + newPath);
         }
 
         Type[] parameters = checking.getConstructor().getGenericParameterTypes();
         for (Type parameter : parameters) {
-            findPrototypesByType(parameter).forEach(prototype -> validateFor(toFind, prototype));
+            String newPath = path + " -> " + ClassUtil.getTypeName(parameter);
+            findPrototypesByType(parameter)
+                    .forEach(prototype -> validateFor(toFind, prototype, newPath));
         }
     }
 

@@ -5,7 +5,7 @@ import pl.subtelny.crate.api.CrateId;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class GetCrateRequest {
+public class GetCrateRequest {
 
     private final CrateId crateId;
 
