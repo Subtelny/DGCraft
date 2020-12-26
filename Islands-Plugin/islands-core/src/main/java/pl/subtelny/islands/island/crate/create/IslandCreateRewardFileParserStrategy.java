@@ -1,13 +1,10 @@
-package pl.subtelny.islands.crates.create;
+package pl.subtelny.islands.island.crate.create;
 
 import pl.subtelny.components.core.api.ComponentProvider;
-import pl.subtelny.islands.crates.IslandReward;
-import pl.subtelny.islands.crates.IslandRewardFileParserStrategy;
-import pl.subtelny.islands.island.IslandCommandService;
+import pl.subtelny.islands.island.crate.IslandReward;
+import pl.subtelny.islands.island.crate.IslandRewardFileParserStrategy;
 import pl.subtelny.islands.island.IslandCreateService;
 import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.islander.IslanderQueryService;
-import pl.subtelny.islands.message.IslandMessages;
 import pl.subtelny.utilities.Saveable;
 
 import java.io.File;

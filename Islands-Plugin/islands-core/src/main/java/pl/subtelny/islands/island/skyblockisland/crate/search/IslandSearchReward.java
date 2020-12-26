@@ -1,4 +1,4 @@
-package pl.subtelny.islands.island.skyblockisland.crates.search;
+package pl.subtelny.islands.island.skyblockisland.crate.search;
 
 import org.bukkit.entity.Player;
 import pl.subtelny.islands.island.Island;
@@ -7,14 +7,14 @@ import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.message.IslandMessages;
 import pl.subtelny.utilities.reward.Reward;
 
-public class SkyblockIslandSearchReward implements Reward {
+public class IslandSearchReward implements Reward {
 
     private final IslanderQueryService islanderQueryService;
 
     private final Island island;
 
-    public SkyblockIslandSearchReward(IslanderQueryService islanderQueryService,
-                                      Island island) {
+    public IslandSearchReward(IslanderQueryService islanderQueryService,
+                              Island island) {
         this.islanderQueryService = islanderQueryService;
         this.island = island;
     }

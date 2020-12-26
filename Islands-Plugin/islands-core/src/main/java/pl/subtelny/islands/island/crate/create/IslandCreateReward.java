@@ -1,7 +1,7 @@
-package pl.subtelny.islands.crates.create;
+package pl.subtelny.islands.island.crate.create;
 
 import org.bukkit.entity.Player;
-import pl.subtelny.islands.crates.IslandReward;
+import pl.subtelny.islands.island.crate.IslandReward;
 import pl.subtelny.islands.island.IslandCreateService;
 import pl.subtelny.islands.island.IslandType;
 

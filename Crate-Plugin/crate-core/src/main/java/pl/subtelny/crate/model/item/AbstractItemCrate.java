@@ -45,6 +45,11 @@ public abstract class AbstractItemCrate implements ItemCrate {
     }
 
     @Override
+    public boolean isCloseAfterClick() {
+        return prototype.isCloseAfterClick();
+    }
+
+    @Override
     public ItemStack getItemStack() {
         return itemStack;
     }

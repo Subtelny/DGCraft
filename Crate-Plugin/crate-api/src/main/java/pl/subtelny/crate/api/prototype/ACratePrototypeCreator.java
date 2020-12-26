@@ -1,4 +1,4 @@
-package pl.subtelny.crate.prototype;
+package pl.subtelny.crate.api.prototype;
 
 import pl.subtelny.core.api.condition.GlobalConditionStrategies;
 import pl.subtelny.core.api.condition.GlobalRewardStrategies;

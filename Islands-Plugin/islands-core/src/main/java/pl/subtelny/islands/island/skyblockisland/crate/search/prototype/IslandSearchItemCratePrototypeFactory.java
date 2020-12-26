@@ -1,14 +1,13 @@
-package pl.subtelny.islands.island.skyblockisland.crates.search.prototype;
+package pl.subtelny.islands.island.skyblockisland.crate.search.prototype;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import pl.subtelny.crate.api.prototype.ItemCratePrototype;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.IslandMember;
-import pl.subtelny.islands.island.skyblockisland.crates.search.SkyblockIslandSearchReward;
+import pl.subtelny.islands.island.skyblockisland.crate.search.IslandSearchReward;
 import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.message.IslandMessages;
 import pl.subtelny.utilities.configuration.ConfigurationKey;
 import pl.subtelny.utilities.item.ItemStackUtil;
 import pl.subtelny.utilities.reward.Reward;
@@ -16,7 +15,7 @@ import pl.subtelny.utilities.reward.Reward;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SearchItemCratePrototypeFactory {
+public class IslandSearchItemCratePrototypeFactory {
 
     private final ItemStack sampleItem;
 
@@ -24,9 +23,9 @@ public class SearchItemCratePrototypeFactory {
 
     private final IslanderQueryService islanderQueryService;
 
-    public SearchItemCratePrototypeFactory(ItemStack sampleItem,
-                                           Island island,
-                                           IslanderQueryService islanderQueryService) {
+    public IslandSearchItemCratePrototypeFactory(ItemStack sampleItem,
+                                                 Island island,
+                                                 IslanderQueryService islanderQueryService) {
         this.sampleItem = sampleItem;
         this.island = island;
         this.islanderQueryService = islanderQueryService;
@@ -44,7 +43,7 @@ public class SearchItemCratePrototypeFactory {
     }
 
     private Reward getReward() {
-        return new SkyblockIslandSearchReward(islanderQueryService, island);
+        return new IslandSearchReward(islanderQueryService, island);
     }
 
     private Map<String, String> getData() {

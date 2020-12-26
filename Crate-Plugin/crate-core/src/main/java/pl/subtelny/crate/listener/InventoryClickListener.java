@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.crate.api.CrateClickResult;
 import pl.subtelny.crate.inventory.CrateInventory;
 
 @Component
@@ -19,33 +20,49 @@ public class InventoryClickListener implements Listener {
     public void onInventoryClick(InventoryClickEvent e) {
         Inventory inv = e.getInventory();
         Inventory clickedInv = e.getClickedInventory();
-        if (isCrateInv(inv) || isCrateInv(clickedInv)) {
+        if (isAnyCrateInv(inv, clickedInv)) {
             e.setCancelled(true);
 
             Player whoClicked = (Player) e.getWhoClicked();
-            if (!(checkPermissions(inv, whoClicked) || checkPermissions(clickedInv, whoClicked))) {
+            if (!hasPermissionToUse(whoClicked.getPlayer(), inv, clickedInv)) {
                 whoClicked.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
                 return;
             }
             if (e.getSlotType() == InventoryType.SlotType.OUTSIDE) {
                 return;
             }
-            if (e.getAction() == InventoryAction.PICKUP_ONE) {
+            if (e.getAction() == InventoryAction.PICKUP_ALL) {
                 if (isCrateInv(clickedInv)) {
                     CrateInventory clickedInventory = (CrateInventory) clickedInv;
-                    clickedInventory.click(whoClicked, e.getSlot());
+                    CrateClickResult clickResult = clickedInventory.click(whoClicked, e.getSlot());
+                    handleClickResult(whoClicked, clickedInventory, clickResult);
                 }
             }
 
         }
     }
 
-    private boolean checkPermissions(Inventory inventory, Player player) {
+    private void handleClickResult(Player player, CrateInventory crateInventory, CrateClickResult result) {
+        if (result == CrateClickResult.CLOSE_INV) {
+            crateInventory.removeSession(player);
+            player.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
+        }
+    }
+
+    private boolean hasPermissionToUse(Player player, Inventory clickedInv, Inventory inv) {
+        return hasPermissionToUse(player, clickedInv) || hasPermissionToUse(player, inv);
+    }
+
+    private boolean hasPermissionToUse(Player player, Inventory inventory) {
         if (isCrateInv(inventory)) {
             CrateInventory inv = (CrateInventory) inventory;
             return inv.hasSession(player);
         }
         return true;
+    }
+
+    private boolean isAnyCrateInv(Inventory clickedInv, Inventory inv) {
+        return isCrateInv(clickedInv) || isCrateInv(inv);
     }
 
     private boolean isCrateInv(Inventory inventory) {

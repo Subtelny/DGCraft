@@ -10,6 +10,8 @@ public interface IslandCrates {
 
     void openSearchCrate(Player player);
 
+    void openCrate(Player player, String rawCrateId);
+
     void reloadCrates();
 
 }

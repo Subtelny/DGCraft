@@ -1,4 +1,4 @@
-package pl.subtelny.crate.prototype;
+package pl.subtelny.crate.api.prototype;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +15,7 @@ import pl.subtelny.utilities.reward.RewardFileParserStrategy;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ItemCratePrototypeFileParserStrategy extends AbstractFileParserStrategy<ItemCratePrototype> {
@@ -50,13 +51,13 @@ public class ItemCratePrototypeFileParserStrategy extends AbstractFileParserStra
     private List<Reward> getRewards(String path) {
         RewardFileParserStrategy strategy = new RewardFileParserStrategy(configuration, file, rewardParsers);
         return ConfigUtil.getSectionKeys(configuration, path)
-                .map(strings -> getRewards(strategy, strings))
+                .map(strings -> getRewards(strategy, path, strings))
                 .orElseGet(ArrayList::new);
     }
 
-    private List<Reward> getRewards(RewardFileParserStrategy strategy, java.util.Set<String> strings) {
-        return strings.stream()
-                .map(strategy::load)
+    private List<Reward> getRewards(RewardFileParserStrategy strategy, String path, Set<String> sectionPaths) {
+        return sectionPaths.stream()
+                .map(sectionPath -> strategy.load(path + "." + sectionPath))
                 .collect(Collectors.toList());
     }
 

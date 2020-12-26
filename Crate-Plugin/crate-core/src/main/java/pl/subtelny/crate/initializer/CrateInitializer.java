@@ -28,6 +28,10 @@ public class CrateInitializer implements DependencyActivator {
     @Override
     public void activate() {
         File cratesDir = FileUtil.getFile(Crate.plugin, "crates");
+        if (!cratesDir.exists()) {
+            FileUtil.copyFile(Crate.plugin, "crates/example.yml");
+        }
+
         File[] files = cratesDir.listFiles();
         if (files != null) {
             for (File file : files) {

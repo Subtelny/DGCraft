@@ -1,4 +1,4 @@
-package pl.subtelny.islands.island.skyblockisland.crates;
+package pl.subtelny.islands.island.skyblockisland.crate;
 
 import org.bukkit.entity.Player;
 import pl.subtelny.crate.api.CrateId;
@@ -30,23 +30,25 @@ public class SkyblockIslandCrates implements IslandCrates {
     @Override
     public void openMainCrate(Player player) {
         CrateId main = buildCrateId("main");
-        crateQueryService.getCrate(GetSkyblockCrateRequest.of(main, islandModule)).open(player);
+        openCrate(player, main);
     }
 
     @Override
     public void openCreateCrate(Player player) {
         CrateId create = buildCrateId("create");
-        crateQueryService.getCrate(GetSkyblockCrateRequest.of(create, islandModule)).open(player);
+        openCrate(player, create);
     }
 
     @Override
     public void openSearchCrate(Player player) {
         CrateId search = buildCrateId("search");
-        crateQueryService.getCrate(GetSkyblockCrateRequest.of(search, islandModule)).open(player);
+        openCrate(player, search);
     }
 
-    private CrateId buildCrateId(String value) {
-        return CrateId.of(Islands.plugin, islandModule.getType().getInternal() + "-" + value);
+    @Override
+    public void openCrate(Player player, String rawCrateId) {
+        CrateId crateId = buildCrateId(rawCrateId);
+        openCrate(player, crateId);
     }
 
     @Override
@@ -55,5 +57,13 @@ public class SkyblockIslandCrates implements IslandCrates {
         crateCommandService.unregister(buildCrateId("create"));
         crateCommandService.unregister(buildCrateId("search"));
         islandCrates.loadCrates(islandModule);
+    }
+
+    private void openCrate(Player player, CrateId search) {
+        crateQueryService.getCrate(GetSkyblockCrateRequest.of(search, islandModule)).open(player);
+    }
+
+    private CrateId buildCrateId(String value) {
+        return CrateId.of(Islands.plugin, islandModule.getType().getInternal() + "-" + value);
     }
 }

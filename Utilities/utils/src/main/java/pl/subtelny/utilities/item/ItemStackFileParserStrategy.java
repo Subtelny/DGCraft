@@ -42,7 +42,7 @@ public class ItemStackFileParserStrategy extends PathAbstractFileParserStrategy<
 
     @Override
     public Saveable set(String path, ItemStack value) {
-        throw new UnsupportedOperationException("Saving itemstack is not implemented yet");
+        throw new UnsupportedOperationException("Saving ItemStack is not implemented yet");
     }
 
     private ItemStack createItemStack(String path) {

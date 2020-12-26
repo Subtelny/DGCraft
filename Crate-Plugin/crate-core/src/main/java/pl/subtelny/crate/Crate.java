@@ -7,6 +7,11 @@ public class Crate extends ComponentPlugin {
     public static Crate plugin;
 
     @Override
+    public void onLoad() {
+        plugin = this;
+    }
+
+    @Override
     public void onInitialize() {
 
     }

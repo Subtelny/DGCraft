@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.api.CrateClickResult;
 import pl.subtelny.crate.api.CrateId;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.inventory.CrateInventory;
@@ -25,11 +26,10 @@ public abstract class AbstractCrate implements Crate {
     }
 
     @Override
-    public boolean click(Player player, int slot) {
+    public CrateClickResult click(Player player, int slot) {
         return getItemCrateAtSlot(slot)
-                .map(itemCrate -> itemCrate.click(player))
-                .map(ItemCrateClickResult::isSuccessful)
-                .orElse(false);
+                .map(itemCrate -> click(player, itemCrate))
+                .orElse(CrateClickResult.ERROR);
     }
 
     @Override
@@ -41,6 +41,26 @@ public abstract class AbstractCrate implements Crate {
     @Override
     public void closeAllSessions() {
         inventory.getViewers().forEach(humanEntity -> humanEntity.closeInventory(InventoryCloseEvent.Reason.CANT_USE));
+    }
+
+    public CratePrototype getPrototype() {
+        return prototype;
+    }
+
+    public CrateInventory getInventory() {
+        return inventory;
+    }
+
+    protected CrateClickResult click(Player player, ItemCrate itemCrate) {
+        ItemCrateClickResult result = itemCrate.click(player);
+        return getCrateClickResult(itemCrate, result);
+    }
+
+    protected CrateClickResult getCrateClickResult(ItemCrate itemCrate, ItemCrateClickResult result) {
+        if (result.isSuccessful()) {
+            return itemCrate.isCloseAfterClick() ? CrateClickResult.CLOSE_INV : CrateClickResult.OK;
+        }
+        return CrateClickResult.ERROR;
     }
 
     protected void renderInventory() {
@@ -58,14 +78,6 @@ public abstract class AbstractCrate implements Crate {
 
     protected void clearAll() {
         inventory.clear();
-    }
-
-    public CratePrototype getPrototype() {
-        return prototype;
-    }
-
-    public CrateInventory getInventory() {
-        return inventory;
     }
 
     protected abstract Map<Integer, ItemCrate> getItems();

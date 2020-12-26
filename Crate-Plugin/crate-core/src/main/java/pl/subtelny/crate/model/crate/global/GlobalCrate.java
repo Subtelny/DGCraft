@@ -1,11 +1,13 @@
 package pl.subtelny.crate.model.crate.global;
 
 import org.bukkit.entity.Player;
+import pl.subtelny.crate.api.CrateClickResult;
 import pl.subtelny.crate.api.CrateType;
 import pl.subtelny.crate.model.crate.AbstractCrate;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.model.item.ItemCrate;
 import pl.subtelny.crate.model.item.ItemCrateClickResult;
+import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.messages.MessageKey;
 
@@ -25,18 +27,15 @@ public class GlobalCrate extends AbstractCrate {
     }
 
     @Override
-    public boolean click(Player player, int slot) {
-        Optional<ItemCrateClickResult> result = getItemCrateAtSlot(slot)
-                .map(itemCrate -> itemCrate.click(player));
-        result.ifPresent(this::throwConditions);
-        return result
-                .map(ItemCrateClickResult::isSuccessful)
-                .orElse(false);
+    public void cleanIfNeeded() {
+        //noop - global crates does not need to clean
     }
 
     @Override
-    public void cleanIfNeeded() {
-        //noop - global crates does not need to clean
+    protected CrateClickResult click(Player player, ItemCrate itemCrate) {
+        ItemCrateClickResult clickResult = itemCrate.click(player);
+        handleNotSatisfiedClick(clickResult);
+        return getCrateClickResult(itemCrate, clickResult);
     }
 
     @Override
@@ -55,13 +54,13 @@ public class GlobalCrate extends AbstractCrate {
         items.clear();
     }
 
-    private void throwConditions(ItemCrateClickResult itemCrateClickResult) {
+    private void handleNotSatisfiedClick(ItemCrateClickResult itemCrateClickResult) {
         itemCrateClickResult
                 .getNotSatisfiedConditions()
-                .forEach(this::throwCondition);
+                .forEach(this::handleNotSatisfiedClick);
     }
 
-    private void throwCondition(pl.subtelny.utilities.condition.Condition condition) {
+    private void handleNotSatisfiedClick(Condition condition) {
         MessageKey messageKey = condition.getMessageKey();
         throw ValidationException.of(messageKey.getKey(), messageKey.getObjects());
     }

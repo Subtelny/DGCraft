@@ -9,6 +9,8 @@ public interface ItemCrate {
 
     boolean isMovable();
 
+    boolean isCloseAfterClick();
+
     ItemStack getItemStack();
 
 }

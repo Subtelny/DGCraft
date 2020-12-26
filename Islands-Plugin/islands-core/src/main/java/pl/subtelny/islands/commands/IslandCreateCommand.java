@@ -6,6 +6,8 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.islands.configuration.IslandsConfiguration;
+import pl.subtelny.islands.island.IslandCommandService;
+import pl.subtelny.islands.island.IslandCreateService;
 import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.islands.islander.model.Islander;
@@ -15,24 +17,24 @@ import pl.subtelny.utilities.exception.ValidationException;
 @PluginSubCommand(command = "create", aliases = "stworz", mainCommand = IslandCommand.class)
 public class IslandCreateCommand extends BaseCommand {
 
-    private final IslanderQueryService islanderService;
+    private final IslandCreateService islandCreateService;
 
     @Autowired
     public IslandCreateCommand(IslandMessages messages,
-                               IslanderQueryService islanderService) {
+                               IslandCreateService islandCreateService) {
         super(messages);
-        this.islanderService = islanderService;
+        this.islandCreateService = islandCreateService;
     }
 
     @Override
     public void handleCommand(CommandSender sender, String[] args) {
         Player player = (Player) sender;
-        Islander islander = islanderService.getIslander(player);
+        createIsland(player);
+    }
 
+    private void createIsland(Player player) {
         IslandType actualSeasonIslandType = IslandsConfiguration.ACTUAL_SEASON_ISLAND_TYPE;
-        if (islander.hasIsland(actualSeasonIslandType)) {
-            throw ValidationException.of("command.island.create.out_of_island_type_size");
-        }
+        islandCreateService.createIsland(player, actualSeasonIslandType);
     }
 
     @Override

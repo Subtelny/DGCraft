@@ -26,13 +26,14 @@ public abstract class AbstractIslandMember implements IslandMember {
 
     @Override
     public void addIsland(Island island) {
-        Validation.isTrue(island.isMemberOfIsland(this), "islandMember.cannot_add_island_not_member");
+        Validation.isTrue(island.isMemberOfIsland(this), "islandMember.not_added_to_island");
         islandIds.add(island.getId());
     }
 
     @Override
     public void removeIsland(Island island) {
-        //todo
+        Validation.isFalse(island.isMemberOfIsland(this), "islandMember.not_removed_from_island");
+        islandIds.remove(island.getId());
     }
 
     @Override

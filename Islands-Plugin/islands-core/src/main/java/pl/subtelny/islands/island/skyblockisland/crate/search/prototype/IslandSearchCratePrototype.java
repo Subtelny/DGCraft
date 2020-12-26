@@ -1,4 +1,4 @@
-package pl.subtelny.islands.island.skyblockisland.crates.search.prototype;
+package pl.subtelny.islands.island.skyblockisland.crate.search.prototype;
 
 import org.bukkit.inventory.ItemStack;
 import pl.subtelny.crate.api.CrateId;
@@ -26,7 +26,8 @@ public class IslandSearchCratePrototype extends PageCratePrototype {
                                       String title,
                                       Map<Integer, ItemCratePrototype> items,
                                       ItemStack previousPageItemStack,
-                                      ItemStack nextPageItemStack, ItemStack searchSampleItemStack,
+                                      ItemStack nextPageItemStack,
+                                      ItemStack searchSampleItemStack,
                                       IslandType islandType) {
         super(crateId, SEARCH_CRATE_TYPE, title, SEARCH_INV_PERMISSION, SEARCH_INV_SIZE, items, previousPageItemStack, nextPageItemStack);
         this.searchSampleItemStack = searchSampleItemStack;

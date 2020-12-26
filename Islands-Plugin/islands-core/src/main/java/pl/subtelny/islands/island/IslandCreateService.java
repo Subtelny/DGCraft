@@ -34,7 +34,7 @@ public class IslandCreateService {
                 .setOwner(islander)
                 .build();
 
-        islandCommandService.createIsland(islandType, request)
+        islandCommandService.createIsland(request)
                 .whenComplete((island, throwable) -> {
                     if (throwable != null) {
                         islandFailureCreate(player, throwable);
@@ -47,13 +47,13 @@ public class IslandCreateService {
     private void islandFailureCreate(Player player, Throwable throwable) {
         LogUtil.warning("Error while creating island: " + throwable.getMessage());
         throwable.printStackTrace();
-        messages.sendTo(player, "command.island.create.internal_error");
+        messages.sendTo(player, "islandCreate.internal_error");
     }
 
     private void islandSucessfullyCreated(Player player, Island island) {
         JobsProvider.runSync(Islands.plugin, () -> {
             player.teleport(island.getSpawn());
-            messages.sendTo(player, "command.island.create.island_created");
+            messages.sendTo(player, "islandCreate.island_created");
         });
     }
 

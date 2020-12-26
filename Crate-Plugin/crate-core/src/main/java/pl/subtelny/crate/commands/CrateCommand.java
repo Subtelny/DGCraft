@@ -11,7 +11,6 @@ import pl.subtelny.crate.api.query.CrateQueryService;
 import pl.subtelny.crate.api.query.request.GetCrateRequest;
 import pl.subtelny.crate.messages.CrateMessages;
 import pl.subtelny.utilities.exception.ValidationException;
-import pl.subtelny.utilities.messages.Messages;
 
 @PluginCommand(command = "crate")
 public class CrateCommand extends BaseCommand {

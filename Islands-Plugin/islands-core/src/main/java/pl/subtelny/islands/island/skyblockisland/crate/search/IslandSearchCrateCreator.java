@@ -1,4 +1,4 @@
-package pl.subtelny.islands.island.skyblockisland.crates.search;
+package pl.subtelny.islands.island.skyblockisland.crate.search;
 
 import org.bukkit.inventory.ItemStack;
 import pl.subtelny.components.core.api.Autowired;
@@ -8,23 +8,18 @@ import pl.subtelny.crate.api.factory.CrateCreator;
 import pl.subtelny.crate.api.prototype.ItemCratePrototype;
 import pl.subtelny.crate.api.prototype.PageCratePrototype;
 import pl.subtelny.islands.island.Island;
-import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.island.module.IslandModule;
-import pl.subtelny.islands.island.module.IslandModules;
-import pl.subtelny.islands.island.skyblockisland.crates.search.prototype.IslandSearchCratePrototype;
-import pl.subtelny.islands.island.skyblockisland.crates.search.prototype.SearchItemCratePrototypeFactory;
+import pl.subtelny.islands.island.skyblockisland.crate.search.prototype.IslandSearchCratePrototype;
+import pl.subtelny.islands.island.skyblockisland.crate.search.prototype.IslandSearchItemCratePrototypeFactory;
 import pl.subtelny.islands.island.skyblockisland.model.SkyblockIsland;
 import pl.subtelny.islands.island.skyblockisland.module.SkyblockIslandModule;
 import pl.subtelny.islands.islander.IslanderQueryService;
-import pl.subtelny.islands.message.IslandMessages;
 import pl.subtelny.utilities.configuration.ConfigurationKey;
-import pl.subtelny.utilities.exception.ValidationException;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-public class SkyblockIslandSearchCrateCreator {
+public class IslandSearchCrateCreator {
 
     private final ConfigurationKey SEARCH_MEMBERS = new ConfigurationKey("SEARCH_MEMBERS");
 
@@ -33,8 +28,8 @@ public class SkyblockIslandSearchCrateCreator {
     private final IslanderQueryService islanderQueryService;
 
     @Autowired
-    public SkyblockIslandSearchCrateCreator(IslanderQueryService islanderQueryService,
-                                            CrateCreator<PageCratePrototype> crateCreator) {
+    public IslandSearchCrateCreator(IslanderQueryService islanderQueryService,
+                                    CrateCreator<PageCratePrototype> crateCreator) {
         this.crateCreator = crateCreator;
         this.islanderQueryService = islanderQueryService;
     }
@@ -78,8 +73,8 @@ public class SkyblockIslandSearchCrateCreator {
         return itemCratePrototypes;
     }
 
-    private SearchItemCratePrototypeFactory getSearchItemCratePrototype(ItemStack searchSampleItemStack, Island island) {
-        return new SearchItemCratePrototypeFactory(searchSampleItemStack, island, islanderQueryService);
+    private IslandSearchItemCratePrototypeFactory getSearchItemCratePrototype(ItemStack searchSampleItemStack, Island island) {
+        return new IslandSearchItemCratePrototypeFactory(searchSampleItemStack, island, islanderQueryService);
     }
 
     private Collection<Island> getInviteOpenedIslands(SkyblockIslandModule islandModule) {

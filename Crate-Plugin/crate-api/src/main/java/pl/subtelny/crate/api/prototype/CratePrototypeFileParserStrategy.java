@@ -1,11 +1,9 @@
-package pl.subtelny.crate.prototype;
+package pl.subtelny.crate.api.prototype;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.crate.api.CrateId;
 import pl.subtelny.crate.api.CrateType;
-import pl.subtelny.crate.api.prototype.CratePrototype;
-import pl.subtelny.crate.api.prototype.ItemCratePrototype;
 import pl.subtelny.utilities.ConfigUtil;
 import pl.subtelny.utilities.Saveable;
 import pl.subtelny.utilities.condition.Condition;
@@ -64,17 +62,16 @@ public class CratePrototypeFileParserStrategy extends AbstractFileParserStrategy
         CrateType crateType = new CrateType(configuration.getString( "configuration.type"));
         CrateId crateId = getCrateId();
 
-        Map<Integer, ItemCratePrototype> content = ConfigUtil.getSectionKeys(configuration, path + "content")
-                .map(strings -> getContent(path, strings))
+        Map<Integer, ItemCratePrototype> content = ConfigUtil.getSectionKeys(configuration, "content")
+                .map(strings -> getContent(strings))
                 .orElse(new HashMap<>());
         return new CratePrototype(crateId, crateType, title, permission, size, content);
     }
 
-    private Map<Integer, ItemCratePrototype> getContent(String path, Set<String> strings) {
+    private Map<Integer, ItemCratePrototype> getContent(Set<String> strings) {
         ItemCratePrototypeFileParserStrategy strategy = new ItemCratePrototypeFileParserStrategy(configuration, file, conditionParsers, costConditionParsers, rewardParsers);
         return strings.stream()
-                .map(s -> path + ".content." + s)
-                .collect(Collectors.toMap(Integer::parseInt, strategy::load));
+                .collect(Collectors.toMap(Integer::parseInt, s -> strategy.load("content" + "." + s)));
     }
 
     private CrateId getCrateId() {

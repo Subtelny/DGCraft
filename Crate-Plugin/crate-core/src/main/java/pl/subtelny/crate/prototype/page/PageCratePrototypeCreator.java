@@ -8,8 +8,8 @@ import pl.subtelny.crate.Crate;
 import pl.subtelny.crate.api.CrateType;
 import pl.subtelny.crate.api.query.request.GetCratePrototypeRequest;
 import pl.subtelny.crate.model.crate.page.PageCrate;
-import pl.subtelny.crate.prototype.ACratePrototypeCreator;
-import pl.subtelny.crate.prototype.CratePrototypeFileParserStrategy;
+import pl.subtelny.crate.api.prototype.ACratePrototypeCreator;
+import pl.subtelny.crate.api.prototype.CratePrototypeFileParserStrategy;
 
 import java.io.File;
 

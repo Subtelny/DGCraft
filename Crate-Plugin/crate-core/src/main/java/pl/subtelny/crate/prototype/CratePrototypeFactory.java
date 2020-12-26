@@ -32,11 +32,11 @@ public class CratePrototypeFactory {
         return cratePrototypeCreators.stream()
                 .filter(cratePrototypeCreator -> cratePrototypeCreator.getType().equals(crateType))
                 .findFirst()
-                .orElseThrow(() -> ValidationException.of("crate_prototype.creator_not_found", crateType));
+                .orElseThrow(() -> ValidationException.of("cratePrototype_factory.creator_not_found", crateType));
     }
 
     protected CrateType getType(File file) {
-        String type = YamlConfiguration.loadConfiguration(file).getString("type");
+        String type = YamlConfiguration.loadConfiguration(file).getString("configuration.type");
         return new CrateType(type);
     }
 

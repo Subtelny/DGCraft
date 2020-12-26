@@ -5,6 +5,7 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.islands.island.module.IslandModule;
 import pl.subtelny.islands.island.module.IslandModules;
+import pl.subtelny.utilities.Validation;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -20,9 +21,17 @@ public class IslandCommandService extends IslandService {
         this.transactionProvider = transactionProvider;
     }
 
-    public CompletableFuture<Island> createIsland(IslandType islandType, IslandCreateRequest request) {
-        IslandModule<Island> islandModule = getIslandModule(islandType);
+    public CompletableFuture<Island> createIsland(IslandCreateRequest request) {
+        validateIslandCreate(request);
+        IslandModule<Island> islandModule = getIslandModule(request.getIslandType());
         return transactionProvider.transactionResultAsync(() -> islandModule.createIsland(request)).toCompletableFuture();
+    }
+
+    private void validateIslandCreate(IslandCreateRequest request) {
+        Boolean hasIsland = request.getOwner().
+                map(islandMember -> islandMember.hasIsland(request.getIslandType()))
+                .orElse(false);
+        Validation.isFalse(hasIsland, "islandCommand.createIsland.already_has_island", request.getIslandType());
     }
 
     public void removeIsland(Island island) {

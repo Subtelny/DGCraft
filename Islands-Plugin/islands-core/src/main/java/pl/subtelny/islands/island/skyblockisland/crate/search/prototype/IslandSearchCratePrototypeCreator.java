@@ -1,24 +1,23 @@
-package pl.subtelny.crate.prototype.personal;
+package pl.subtelny.islands.island.skyblockisland.crate.search.prototype;
 
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.condition.GlobalConditionStrategies;
 import pl.subtelny.core.api.condition.GlobalRewardStrategies;
-import pl.subtelny.crate.Crate;
 import pl.subtelny.crate.api.CrateType;
-import pl.subtelny.crate.api.query.request.GetCratePrototypeRequest;
-import pl.subtelny.crate.model.crate.personal.PersonalCrate;
 import pl.subtelny.crate.api.prototype.ACratePrototypeCreator;
 import pl.subtelny.crate.api.prototype.CratePrototypeFileParserStrategy;
+import pl.subtelny.crate.api.query.request.GetCratePrototypeRequest;
+import pl.subtelny.islands.Islands;
 
 import java.io.File;
 
 @Component
-public class PersonalCratePrototypeCreator extends ACratePrototypeCreator {
+public class IslandSearchCratePrototypeCreator extends ACratePrototypeCreator {
 
     @Autowired
-    public PersonalCratePrototypeCreator(GlobalConditionStrategies conditionStrategies,
-                                         GlobalRewardStrategies rewardStrategies) {
+    public IslandSearchCratePrototypeCreator(GlobalConditionStrategies conditionStrategies,
+                                       GlobalRewardStrategies rewardStrategies) {
         super(conditionStrategies, rewardStrategies);
     }
 
@@ -29,11 +28,11 @@ public class PersonalCratePrototypeCreator extends ACratePrototypeCreator {
                 getConditionStrategy(file, request.getConditionParsers()),
                 getCostConditionStrategy(file, request.getCostConditionParsers()),
                 getRewardParsers(file, request.getRewardParsers()),
-                Crate.plugin);
+                Islands.plugin);
     }
 
     @Override
     public CrateType getType() {
-        return PersonalCrate.PERSONAL_TYPE;
+        return IslandSearchCratePrototype.SEARCH_CRATE_TYPE;
     }
 }

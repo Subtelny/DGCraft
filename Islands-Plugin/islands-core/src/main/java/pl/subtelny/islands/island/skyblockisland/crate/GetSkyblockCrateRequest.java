@@ -1,4 +1,4 @@
-package pl.subtelny.islands.island.skyblockisland.crates;
+package pl.subtelny.islands.island.skyblockisland.crate;
 
 import pl.subtelny.crate.api.CrateId;
 import pl.subtelny.crate.api.query.request.GetCrateRequest;

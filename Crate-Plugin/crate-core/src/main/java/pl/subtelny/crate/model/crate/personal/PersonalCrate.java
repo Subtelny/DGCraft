@@ -5,9 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import pl.subtelny.crate.Crate;
+import pl.subtelny.crate.api.CrateClickResult;
 import pl.subtelny.crate.api.CrateType;
-import pl.subtelny.crate.model.crate.AbstractCrate;
 import pl.subtelny.crate.api.prototype.CratePrototype;
+import pl.subtelny.crate.model.crate.AbstractCrate;
 import pl.subtelny.crate.model.item.ItemCrate;
 import pl.subtelny.crate.model.item.ItemCrateClickResult;
 
@@ -27,14 +28,28 @@ public class PersonalCrate extends AbstractCrate {
     }
 
     @Override
-    public boolean click(Player player, int slot) {
-        Optional<ItemCrateClickResult> result = getItemCrateAtSlot(slot)
-                .map(itemCrate -> itemCrate.click(player));
-        result.flatMap(ItemCrateClickResult::getNewItemStack)
-                .ifPresent(itemStack -> handleNotSatisfiedClick(itemStack, slot));
-        return result
-                .map(ItemCrateClickResult::isSuccessful)
-                .orElse(false);
+    protected CrateClickResult click(Player player, ItemCrate itemCrate) {
+        ItemCrateClickResult result = itemCrate.click(player);
+        handleNotSatisfiedClick(itemCrate, result);
+        return getCrateClickResult(itemCrate, result);
+    }
+
+    private void handleNotSatisfiedClick(ItemCrate itemCrate, ItemCrateClickResult result) {
+        Optional<Integer> slotOpt = items.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(itemCrate))
+                .map(Map.Entry::getKey)
+                .findFirst();
+
+        Optional<ItemStack> itemStackToReplaceOpt = result.getNewItemStack();
+        if (slotOpt.isPresent() && itemStackToReplaceOpt.isPresent()) {
+            handleNotSatisfiedClick(slotOpt.get(), itemStackToReplaceOpt.get());
+        }
+    }
+
+    private void handleNotSatisfiedClick(int slot, ItemStack itemStackToReplace) {
+        getInventory().setItem(slot, itemStackToReplace);
+        BukkitTask task = Bukkit.getScheduler().runTaskLater(Crate.plugin, () -> refreshSlot(slot), 20L * 5);
+        tasks.add(task);
     }
 
     @Override
@@ -42,11 +57,6 @@ public class PersonalCrate extends AbstractCrate {
         if (getInventory().getViewers().isEmpty()) {
             clearAll();
         }
-    }
-
-    private void handleNotSatisfiedClick(ItemStack itemStack, int slot) {
-        getInventory().setItem(slot, itemStack);
-        Bukkit.getScheduler().runTaskLater(Crate.plugin, () -> refreshSlot(slot), 20L * 5);
     }
 
     @Override

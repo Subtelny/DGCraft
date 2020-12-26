@@ -14,11 +14,11 @@ content:
     movable: false
     on-click:
       conditions:
-         0:
+        0:
           condition: COST
           money: 1000
-       rewards:
+      rewards:
         0:
-           item: STONE
-           amount: 1
+          item: STONE
+          amount: 1
           name: 'Stone example'

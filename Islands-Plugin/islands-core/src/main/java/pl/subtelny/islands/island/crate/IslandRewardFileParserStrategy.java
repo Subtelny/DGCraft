@@ -1,4 +1,4 @@
-package pl.subtelny.islands.crates;
+package pl.subtelny.islands.island.crate;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import pl.subtelny.utilities.file.PathAbstractFileParserStrategy;

@@ -1,6 +1,5 @@
 package pl.subtelny.crate.listener;
 
-import org.bukkit.craftbukkit.v1_16_R2.inventory.CraftInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,7 +13,7 @@ public class InventoryCloseListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onInventoryClose(InventoryCloseEvent e) {
-        if (e.getInventory() instanceof CraftInventory) {
+        if (e.getInventory() instanceof CrateInventory) {
             Player player = (Player) e.getPlayer();
             CrateInventory crateInventory = (CrateInventory) e.getInventory();
             crateInventory.removeSession(player);
