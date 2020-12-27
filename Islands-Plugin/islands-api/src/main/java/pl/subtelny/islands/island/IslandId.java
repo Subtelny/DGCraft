@@ -8,12 +8,20 @@ public class IslandId extends CompoundIdentity {
 
 	private static final int ISLAND_TYPE_POSITION = 1;
 
+    private IslandId(String values) {
+        super(values);
+    }
+
     public IslandId(Integer id, IslandType islandType) {
         super(id + "@" + islandType.getInternal());
     }
 
     public static IslandId of(Integer id, IslandType islandType) {
         return new IslandId(id, islandType);
+    }
+
+    public static IslandId of(String internal) {
+        return new IslandId(internal);
     }
 
     public Integer getId() {

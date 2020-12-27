@@ -1,5 +1,6 @@
 package pl.subtelny.crate.api.query.request;
 
+import org.bukkit.plugin.Plugin;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.condition.CostCondition;
 import pl.subtelny.utilities.file.PathAbstractFileParserStrategy;
@@ -11,7 +12,11 @@ import java.util.List;
 
 public class GetCratePrototypeRequest {
 
+    private final Plugin plugin;
+
     private final File file;
+
+    private final String cratePrefix;
 
     private final List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers;
 
@@ -19,18 +24,29 @@ public class GetCratePrototypeRequest {
 
     private final List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers;
 
-    public GetCratePrototypeRequest(File file,
-                                    List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers,
+    public GetCratePrototypeRequest(Plugin plugin,
+                                    File file,
+                                    String cratePrefix, List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers,
                                     List<PathAbstractFileParserStrategy<? extends CostCondition>> costConditionParsers,
                                     List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers) {
+        this.plugin = plugin;
         this.file = file;
+        this.cratePrefix = cratePrefix;
         this.conditionParsers = conditionParsers;
         this.costConditionParsers = costConditionParsers;
         this.rewardParsers = rewardParsers;
     }
 
+    public Plugin getPlugin() {
+        return plugin;
+    }
+
     public File getFile() {
         return file;
+    }
+
+    public String getCratePrefix() {
+        return cratePrefix;
     }
 
     public List<PathAbstractFileParserStrategy<? extends Condition>> getConditionParsers() {
@@ -45,13 +61,17 @@ public class GetCratePrototypeRequest {
         return rewardParsers;
     }
 
-    public static Builder builder(File file) {
-        return new Builder(file);
+    public static Builder builder(Plugin plugin, File file) {
+        return new Builder(plugin, file);
     }
 
     public static class Builder {
 
+        private final Plugin plugin;
+
         private final File file;
+
+        private String cratePrefix;
 
         private List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers = new ArrayList<>();
 
@@ -59,8 +79,14 @@ public class GetCratePrototypeRequest {
 
         private List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers = new ArrayList<>();
 
-        public Builder(File file) {
+        public Builder(Plugin plugin, File file) {
+            this.plugin = plugin;
             this.file = file;
+        }
+
+        public Builder cratePrefix(String cratePrefix) {
+            this.cratePrefix = cratePrefix;
+            return this;
         }
 
         public Builder conditionParsers(List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers) {
@@ -79,7 +105,7 @@ public class GetCratePrototypeRequest {
         }
 
         public GetCratePrototypeRequest build() {
-            return new GetCratePrototypeRequest(file, conditionParsers, costConditionParsers, rewardParsers);
+            return new GetCratePrototypeRequest(plugin, file, cratePrefix, conditionParsers, costConditionParsers, rewardParsers);
         }
 
     }

@@ -19,7 +19,6 @@ import pl.subtelny.generated.tables.tables.Accounts;
 import pl.subtelny.generated.tables.tables.IslandMemberships;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.Islands;
-import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.generated.tables.tables.SkyblockIslands;
 
 
@@ -36,7 +35,7 @@ import pl.subtelny.generated.tables.tables.SkyblockIslands;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = -1091363949;
+    private static final long serialVersionUID = -768913327;
 
     /**
      * The reference instance of <code>public</code>
@@ -62,11 +61,6 @@ public class Public extends SchemaImpl {
      * The table <code>public.islands</code>.
      */
     public final Islands ISLANDS = pl.subtelny.generated.tables.tables.Islands.ISLANDS;
-
-    /**
-     * The table <code>public.login_histories</code>.
-     */
-    public final LoginHistories LOGIN_HISTORIES = pl.subtelny.generated.tables.tables.LoginHistories.LOGIN_HISTORIES;
 
     /**
      * The table <code>public.skyblock_islands</code>.
@@ -112,7 +106,6 @@ public class Public extends SchemaImpl {
             IslandMemberships.ISLAND_MEMBERSHIPS,
             Islanders.ISLANDERS,
             Islands.ISLANDS,
-            LoginHistories.LOGIN_HISTORIES,
             SkyblockIslands.SKYBLOCK_ISLANDS);
     }
 }

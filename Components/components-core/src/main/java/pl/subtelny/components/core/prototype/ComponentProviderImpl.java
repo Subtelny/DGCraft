@@ -1,5 +1,6 @@
-package pl.subtelny.components.core;
+package pl.subtelny.components.core.prototype;
 
+import pl.subtelny.components.core.ComponentContext;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.ComponentProvider;
 
@@ -10,7 +11,7 @@ public class ComponentProviderImpl implements ComponentProvider {
 
     @Override
     public <T> T createComponent(Class<T> clazz) {
-        return ComponentContext.getContext().createComponent(clazz);
+        return ComponentContext.getContext().createComponent(null, clazz);
     }
 
     @Override

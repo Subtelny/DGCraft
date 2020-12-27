@@ -4,12 +4,13 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.crate.api.Crate;
 import pl.subtelny.crate.api.CrateId;
+import pl.subtelny.crate.api.factory.CrateFactory;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.api.query.CrateQueryService;
 import pl.subtelny.crate.api.query.request.GetCratePrototypeRequest;
 import pl.subtelny.crate.api.query.request.GetCrateRequest;
 import pl.subtelny.crate.api.query.request.GetPredefinedCrateRequest;
-import pl.subtelny.crate.api.factory.CrateFactory;
+import pl.subtelny.crate.model.crate.global.GlobalCrate;
 import pl.subtelny.crate.prototype.CratePrototypeFactory;
 import pl.subtelny.crate.repository.CrateRepository;
 import pl.subtelny.utilities.exception.ValidationException;
@@ -45,7 +46,11 @@ public class CrateQueryServiceImpl implements CrateQueryService {
         }
 
         CratePrototype cratePrototype = getCratePrototype(request.getCrateId());
-        return crateFactory.prepareCrate(cratePrototype, request.getData());
+        Crate crate = crateFactory.prepareCrate(cratePrototype, request.getData());
+        if (cratePrototype.getCrateType().equals(GlobalCrate.GLOBAL_TYPE)) {
+            crateRepository.addGlobalCrate(crate);
+        }
+        return crate;
     }
 
     @Override

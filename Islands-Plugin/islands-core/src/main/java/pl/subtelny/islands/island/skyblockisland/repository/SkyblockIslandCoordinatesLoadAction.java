@@ -23,21 +23,21 @@ public class SkyblockIslandCoordinatesLoadAction implements LoadAction<IslandCoo
 
     @Override
     public IslandCoordinates perform() {
-        return connection.select(SkyblockIslands.SKYBLOCK_ISLANDS.X, SkyblockIslands.SKYBLOCK_ISLANDS.Z, Islands.ISLANDS.TYPE)
+        return connection.select(SkyblockIslands.SKYBLOCK_ISLANDS.X, SkyblockIslands.SKYBLOCK_ISLANDS.Z)
                 .from(SkyblockIslands.SKYBLOCK_ISLANDS)
                 .join(Islands.ISLANDS)
                 .on(Islands.ISLANDS.ID.eq(SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID))
-                .where(Islands.ISLANDS.TYPE.eq(islandType.getInternal()))
+                .where(Islands.ISLANDS.TECH_UNIQUENESS.contains(islandType.getInternal()))
                 .fetchOne(this::toIslandCoordinates);
     }
 
     @Override
     public List<IslandCoordinates> performList() {
-        return connection.select(SkyblockIslands.SKYBLOCK_ISLANDS.X, SkyblockIslands.SKYBLOCK_ISLANDS.Z, Islands.ISLANDS.TYPE)
+        return connection.select(SkyblockIslands.SKYBLOCK_ISLANDS.X, SkyblockIslands.SKYBLOCK_ISLANDS.Z)
                 .from(SkyblockIslands.SKYBLOCK_ISLANDS)
                 .join(Islands.ISLANDS)
                 .on(Islands.ISLANDS.ID.eq(SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID))
-                .where(Islands.ISLANDS.TYPE.eq(islandType.getInternal()))
+                .where(Islands.ISLANDS.TECH_UNIQUENESS.contains(islandType.getInternal()))
                 .fetch(this::toIslandCoordinates);
     }
 

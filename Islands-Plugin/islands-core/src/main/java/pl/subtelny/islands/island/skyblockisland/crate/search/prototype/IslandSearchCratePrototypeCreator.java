@@ -28,7 +28,8 @@ public class IslandSearchCratePrototypeCreator extends ACratePrototypeCreator {
                 getConditionStrategy(file, request.getConditionParsers()),
                 getCostConditionStrategy(file, request.getCostConditionParsers()),
                 getRewardParsers(file, request.getRewardParsers()),
-                Islands.plugin);
+                request.getCratePrefix(),
+                request.getPlugin());
     }
 
     @Override

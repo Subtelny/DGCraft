@@ -41,7 +41,7 @@ import pl.subtelny.generated.tables.tables.records.IslandMembershipsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class IslandMemberships extends TableImpl<IslandMembershipsRecord> {
 
-    private static final long serialVersionUID = 537163305;
+    private static final long serialVersionUID = -220451692;
 
     /**
      * The reference instance of <code>public.island_memberships</code>
@@ -59,7 +59,7 @@ public class IslandMemberships extends TableImpl<IslandMembershipsRecord> {
     /**
      * The column <code>public.island_memberships.island_id</code>.
      */
-    public final TableField<IslandMembershipsRecord, Integer> ISLAND_ID = createField(DSL.name("island_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<IslandMembershipsRecord, String> ISLAND_ID = createField(DSL.name("island_id"), org.jooq.impl.SQLDataType.VARCHAR(30).nullable(false), this, "");
 
     /**
      * The column <code>public.island_memberships.island_member_id</code>.
@@ -164,7 +164,7 @@ public class IslandMemberships extends TableImpl<IslandMembershipsRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<Integer, String, Boolean> fieldsRow() {
+    public Row3<String, String, Boolean> fieldsRow() {
         return (Row3) super.fieldsRow();
     }
 }

@@ -30,7 +30,7 @@ import pl.subtelny.generated.tables.tables.Islands;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class IslandsRecord extends UpdatableRecordImpl<IslandsRecord> implements Record5<Integer, String, String, Timestamp, Integer> {
 
-    private static final long serialVersionUID = -874650769;
+    private static final long serialVersionUID = 1854602816;
 
     /**
      * Setter for <code>public.islands.id</code>.
@@ -47,16 +47,16 @@ public class IslandsRecord extends UpdatableRecordImpl<IslandsRecord> implements
     }
 
     /**
-     * Setter for <code>public.islands.type</code>.
+     * Setter for <code>public.islands.tech_uniqueness</code>.
      */
-    public void setType(String value) {
+    public void setTechUniqueness(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>public.islands.type</code>.
+     * Getter for <code>public.islands.tech_uniqueness</code>.
      */
-    public String getType() {
+    public String getTechUniqueness() {
         return (String) get(1);
     }
 
@@ -132,7 +132,7 @@ public class IslandsRecord extends UpdatableRecordImpl<IslandsRecord> implements
 
     @Override
     public Field<String> field2() {
-        return Islands.ISLANDS.TYPE;
+        return Islands.ISLANDS.TECH_UNIQUENESS;
     }
 
     @Override
@@ -157,7 +157,7 @@ public class IslandsRecord extends UpdatableRecordImpl<IslandsRecord> implements
 
     @Override
     public String component2() {
-        return getType();
+        return getTechUniqueness();
     }
 
     @Override
@@ -182,7 +182,7 @@ public class IslandsRecord extends UpdatableRecordImpl<IslandsRecord> implements
 
     @Override
     public String value2() {
-        return getType();
+        return getTechUniqueness();
     }
 
     @Override
@@ -208,7 +208,7 @@ public class IslandsRecord extends UpdatableRecordImpl<IslandsRecord> implements
 
     @Override
     public IslandsRecord value2(String value) {
-        setType(value);
+        setTechUniqueness(value);
         return this;
     }
 
@@ -254,11 +254,11 @@ public class IslandsRecord extends UpdatableRecordImpl<IslandsRecord> implements
     /**
      * Create a detached, initialised IslandsRecord
      */
-    public IslandsRecord(Integer id, String type, String spawn, Timestamp createdDate, Integer points) {
+    public IslandsRecord(Integer id, String techUniqueness, String spawn, Timestamp createdDate, Integer points) {
         super(Islands.ISLANDS);
 
         set(0, id);
-        set(1, type);
+        set(1, techUniqueness);
         set(2, spawn);
         set(3, createdDate);
         set(4, points);

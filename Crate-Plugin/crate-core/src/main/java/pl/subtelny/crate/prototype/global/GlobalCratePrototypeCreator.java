@@ -29,7 +29,8 @@ public class GlobalCratePrototypeCreator extends ACratePrototypeCreator {
                 getConditionStrategy(file, request.getConditionParsers()),
                 getCostConditionStrategy(file, request.getCostConditionParsers()),
                 getRewardParsers(file, request.getRewardParsers()),
-                Crate.plugin);
+                request.getCratePrefix(),
+                request.getPlugin());
     }
 
     @Override

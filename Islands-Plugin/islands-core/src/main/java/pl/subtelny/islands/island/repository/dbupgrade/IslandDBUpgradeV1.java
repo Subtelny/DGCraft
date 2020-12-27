@@ -24,13 +24,14 @@ public class IslandDBUpgradeV1 implements DatabaseUpgrade {
         DSL.using(databaseConnection.getConfiguration())
                 .createTableIfNotExists("islands")
                 .column("id", SQLDataType.INTEGER.nullable(false).identity(true))
-                .column("type", SQLDataType.VARCHAR.nullable(false))
+                .column("tech_uniqueness", SQLDataType.VARCHAR(30).nullable(false))
                 .column("spawn", SQLDataType.VARCHAR)
                 .column("created_date", SQLDataType.LOCALDATETIME.nullable(false).defaultValue(DSL.field("CURRENT_TIMESTAMP", SQLDataType.LOCALDATETIME)))
                 .column("points", SQLDataType.INTEGER.defaultValue(0).nullable(false))
                 .constraints(
                         constraint("islands_id_pk").primaryKey("id"),
-                        constraint("islands_id_uq").unique("id")
+                        constraint("islands_id_uq").unique("id"),
+                        constraint("tech_uniqueness_uq").unique("tech_uniqueness")
                 )
                 .execute();
     }

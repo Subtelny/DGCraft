@@ -1,4 +1,6 @@
-package pl.subtelny.components.core;
+package pl.subtelny.components.core.prototype;
+
+import pl.subtelny.components.core.ComponentUtil;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;

@@ -34,6 +34,7 @@ public abstract class AbstractCrate implements Crate {
 
     @Override
     public void open(Player player) {
+        renderInventory();
         inventory.addSession(player);
         player.openInventory(inventory);
     }

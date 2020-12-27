@@ -1,6 +1,5 @@
 package pl.subtelny.crate.api.prototype;
 
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.crate.api.CrateId;
 import pl.subtelny.crate.api.CrateType;
@@ -27,43 +26,34 @@ public class CratePrototypeFileParserStrategy extends AbstractFileParserStrategy
 
     private final List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers;
 
-    private final Plugin plugin;
+    private final String cratePrefix;
 
-    public CratePrototypeFileParserStrategy(YamlConfiguration configuration,
-                                            File file,
-                                            List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers,
-                                            List<PathAbstractFileParserStrategy<? extends CostCondition>> costConditionParsers,
-                                            List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers,
-                                            Plugin plugin) {
-        super(configuration, file);
-        this.conditionParsers = conditionParsers;
-        this.costConditionParsers = costConditionParsers;
-        this.rewardParsers = rewardParsers;
-        this.plugin = plugin;
-    }
+    private final Plugin plugin;
 
     public CratePrototypeFileParserStrategy(File file,
                                             List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers,
                                             List<PathAbstractFileParserStrategy<? extends CostCondition>> costConditionParsers,
                                             List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers,
+                                            String cratePrefix,
                                             Plugin plugin) {
         super(file);
         this.conditionParsers = conditionParsers;
         this.costConditionParsers = costConditionParsers;
         this.rewardParsers = rewardParsers;
+        this.cratePrefix = cratePrefix;
         this.plugin = plugin;
     }
 
     @Override
     public CratePrototype load(String path) {
         String title = configuration.getString("configuration.title");
-        String permission = configuration.getString( "configuration.permission");
-        int size = configuration.getInt( "configuration.size");
-        CrateType crateType = new CrateType(configuration.getString( "configuration.type"));
+        String permission = configuration.getString("configuration.permission");
+        int size = configuration.getInt("configuration.size");
+        CrateType crateType = new CrateType(configuration.getString("configuration.type"));
         CrateId crateId = getCrateId();
 
         Map<Integer, ItemCratePrototype> content = ConfigUtil.getSectionKeys(configuration, "content")
-                .map(strings -> getContent(strings))
+                .map(this::getContent)
                 .orElse(new HashMap<>());
         return new CratePrototype(crateId, crateType, title, permission, size, content);
     }
@@ -75,7 +65,9 @@ public class CratePrototypeFileParserStrategy extends AbstractFileParserStrategy
     }
 
     private CrateId getCrateId() {
-        return new CrateId(plugin, file.getName().replace(".yml", ""));
+        String crateName = file.getName().replace(".yml", "");
+        String rawCrateId = cratePrefix != null ? String.join("-", cratePrefix, crateName) : crateName;
+        return new CrateId(plugin, rawCrateId);
     }
 
     @Override

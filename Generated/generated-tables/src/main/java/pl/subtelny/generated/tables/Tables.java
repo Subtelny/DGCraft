@@ -10,7 +10,6 @@ import pl.subtelny.generated.tables.tables.Accounts;
 import pl.subtelny.generated.tables.tables.IslandMemberships;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.Islands;
-import pl.subtelny.generated.tables.tables.LoginHistories;
 import pl.subtelny.generated.tables.tables.SkyblockIslands;
 
 
@@ -46,11 +45,6 @@ public class Tables {
      * The table <code>public.islands</code>.
      */
     public static final Islands ISLANDS = Islands.ISLANDS;
-
-    /**
-     * The table <code>public.login_histories</code>.
-     */
-    public static final LoginHistories LOGIN_HISTORIES = LoginHistories.LOGIN_HISTORIES;
 
     /**
      * The table <code>public.skyblock_islands</code>.

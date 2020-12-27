@@ -1,38 +1,40 @@
-package pl.subtelny.components.core;
+package pl.subtelny.components.core.loader;
 
+import pl.subtelny.components.core.ComponentClassLoaderInfo;
 import pl.subtelny.components.core.api.ComponentException;
+import pl.subtelny.components.core.prototype.ComponentPrototype;
+import pl.subtelny.components.core.prototype.ComponentPrototypeOrder;
 import pl.subtelny.components.core.reflections.ComponentReflections;
 import pl.subtelny.components.core.reflections.ComponentScanner;
-import pl.subtelny.utilities.collection.CollectionUtil;
+import pl.subtelny.components.core.validation.ComponentCyclicDependencyValidator;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ComponentsLoader {
 
-    private final List<ClassLoader> classLoaders;
+    private final List<ComponentClassLoaderInfo> classLoaders;
 
     private final String PATH_TO_SCAN;
 
-    public ComponentsLoader(List<ClassLoader> classLoaders, String path_to_scan) {
+    public ComponentsLoader(List<ComponentClassLoaderInfo> classLoaders, String path_to_scan) {
         this.classLoaders = classLoaders;
         PATH_TO_SCAN = path_to_scan;
     }
 
-    public Map<Class, Object> loadComponents() {
+    public Map<Class, ComponentObjectInfo> loadComponents() {
         Set<ComponentPrototypeOrder> prototypes = getComponentPrototypeOrders();
         return initObjects(prototypes);
     }
 
-    private Map<Class, Object> initObjects(Set<ComponentPrototypeOrder> componentPrototypes) {
-        Map<Class, Object> initializedObjects = new HashMap<>();
+    private Map<Class, ComponentObjectInfo> initObjects(Set<ComponentPrototypeOrder> componentPrototypes) {
+        Map<Class, ComponentObjectInfo> initializedObjects = new HashMap<>();
         return initObjects(initializedObjects, componentPrototypes);
     }
 
-    private Map<Class, Object> initObjects(Map<Class, Object> initializedObjects, Set<ComponentPrototypeOrder> componentsToInitialize) {
+    private Map<Class, ComponentObjectInfo> initObjects(Map<Class, ComponentObjectInfo> initializedObjects,
+                                                        Set<ComponentPrototypeOrder> componentsToInitialize) {
         Iterator<ComponentPrototypeOrder> iterator = componentsToInitialize.iterator();
         while (iterator.hasNext()) {
             ComponentPrototypeOrder next = iterator.next();
@@ -46,8 +48,8 @@ public class ComponentsLoader {
             if (canBeInitialized) {
                 ComponentLoader componentLoader = new ComponentLoader(initializedObjects);
                 try {
-                    Object object = componentLoader.loadComponent(prototype);
-                    initializedObjects.put(prototype.getClazz(), object);
+                    ComponentObjectInfo objectInfo = componentLoader.loadComponent(prototype);
+                    initializedObjects.put(prototype.getClazz(), objectInfo);
                     iterator.remove();
                 } catch (ComponentException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                     throw ComponentException.of(String.format("Cannot create instance of component %s", prototype.getClazz().getName()), e);
@@ -61,7 +63,9 @@ public class ComponentsLoader {
     }
 
     private Set<ComponentPrototypeOrder> getComponentPrototypeOrders() {
-        Set<ComponentPrototype> componentPrototypes = getComponentPrototypes();
+        Set<ComponentPrototype> componentPrototypes = classLoaders.stream()
+                .flatMap(componentClassLoaderInfo -> getComponentPrototypes(componentClassLoaderInfo).stream())
+                .collect(Collectors.toSet());
 
         ComponentCyclicDependencyValidator validator = new ComponentCyclicDependencyValidator(componentPrototypes);
         componentPrototypes.forEach(validator::validate);
@@ -71,15 +75,16 @@ public class ComponentsLoader {
                 .collect(Collectors.toSet());
     }
 
-    private Set<ComponentPrototype> getComponentPrototypes() {
-        return getComponentTypes().stream()
+    private Set<ComponentPrototype> getComponentPrototypes(ComponentClassLoaderInfo classLoaderInfo) {
+        return getComponentTypes(classLoaderInfo).stream()
                 .filter(aClass -> !aClass.isInterface())
-                .map(ComponentPrototype::from)
+                .map(aClass -> ComponentPrototype.from(aClass, classLoaderInfo.getComponentPlugin()))
                 .collect(Collectors.toSet());
     }
 
-    private Set<Class<?>> getComponentTypes() {
-        List<Object> objects = new ArrayList<>(classLoaders);
+    private Set<Class<?>> getComponentTypes(ComponentClassLoaderInfo classLoaderInfo) {
+        List<Object> objects = new ArrayList<>();
+        objects.add(classLoaderInfo.getClassLoader());
         objects.add(PATH_TO_SCAN);
         objects.add(new ComponentScanner());
         return new ComponentReflections(objects).getComponentTypes();

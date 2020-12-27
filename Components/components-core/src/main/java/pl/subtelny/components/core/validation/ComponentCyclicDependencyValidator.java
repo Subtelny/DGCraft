@@ -1,6 +1,8 @@
-package pl.subtelny.components.core;
+package pl.subtelny.components.core.validation;
 
+import pl.subtelny.components.core.ComponentUtil;
 import pl.subtelny.components.core.api.ComponentException;
+import pl.subtelny.components.core.prototype.ComponentPrototype;
 import pl.subtelny.utilities.ClassUtil;
 
 import java.lang.reflect.Type;

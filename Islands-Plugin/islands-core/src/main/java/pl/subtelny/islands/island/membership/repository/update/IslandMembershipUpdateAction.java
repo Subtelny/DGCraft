@@ -35,7 +35,7 @@ public class IslandMembershipUpdateAction implements UpdateAction<IslandMembersh
 
     private IslandMembershipsRecord createRecord(IslandMembershipAnemia request) {
         IslandMembershipsRecord record = connection.newRecord(IslandMemberships.ISLAND_MEMBERSHIPS);
-        record.setIslandId(request.getIslandId().getId());
+        record.setIslandId(request.getIslandId().getInternal());
         record.setIslandMemberId(request.getIslandMemberId().getInternal());
         record.setOwner(request.isOwner());
         return record;

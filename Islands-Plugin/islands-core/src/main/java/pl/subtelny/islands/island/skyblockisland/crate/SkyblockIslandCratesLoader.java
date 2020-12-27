@@ -3,6 +3,7 @@ package pl.subtelny.islands.island.skyblockisland.crate;
 import pl.subtelny.crate.api.command.CrateCommandService;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.api.query.request.GetCratePrototypeRequest;
+import pl.subtelny.islands.Islands;
 import pl.subtelny.islands.island.crate.IslandRewardFileParserStrategyFactory;
 import pl.subtelny.islands.island.crate.IslandRewardsFileParserStrategy;
 import pl.subtelny.islands.island.Island;
@@ -46,8 +47,9 @@ public class SkyblockIslandCratesLoader {
 
     private void loadCrate(IslandModule<? extends Island> islandModule, File file) {
         List<PathAbstractFileParserStrategy<? extends Reward>> strategies = getStrategies(islandModule, file);
-        GetCratePrototypeRequest request = GetCratePrototypeRequest.builder(file)
+        GetCratePrototypeRequest request = GetCratePrototypeRequest.builder(Islands.plugin, file)
                 .rewardParsers(strategies)
+                .cratePrefix(islandModule.getType().getInternal())
                 .build();
         CratePrototype cratePrototype = islandCrateQueryService.getCratePrototype(request);
         crateCommandService.register(cratePrototype);

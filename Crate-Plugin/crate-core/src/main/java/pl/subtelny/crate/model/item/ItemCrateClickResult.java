@@ -3,12 +3,14 @@ package pl.subtelny.crate.model.item;
 import org.bukkit.inventory.ItemStack;
 import pl.subtelny.utilities.condition.Condition;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 public class ItemCrateClickResult {
 
-    public static final ItemCrateClickResult SUCCESSFUL = new ItemCrateClickResult(null, null, true);
+    public static final ItemCrateClickResult SUCCESSFUL = new ItemCrateClickResult(Collections.emptyList(), null, true);
 
     private final List<Condition> notSatisfiedConditions;
 
@@ -23,7 +25,7 @@ public class ItemCrateClickResult {
     }
 
     public List<Condition> getNotSatisfiedConditions() {
-        return notSatisfiedConditions;
+        return new ArrayList<>(notSatisfiedConditions);
     }
 
     public Optional<ItemStack> getNewItemStack() {

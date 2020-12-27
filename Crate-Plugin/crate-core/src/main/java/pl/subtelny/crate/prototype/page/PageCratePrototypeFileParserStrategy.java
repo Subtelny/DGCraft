@@ -1,11 +1,10 @@
 package pl.subtelny.crate.prototype.page;
 
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.crate.api.prototype.CratePrototype;
-import pl.subtelny.crate.api.prototype.PageCratePrototype;
 import pl.subtelny.crate.api.prototype.CratePrototypeFileParserStrategy;
+import pl.subtelny.crate.api.prototype.PageCratePrototype;
 import pl.subtelny.utilities.Saveable;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.condition.CostCondition;
@@ -18,21 +17,13 @@ import java.util.List;
 
 public class PageCratePrototypeFileParserStrategy extends CratePrototypeFileParserStrategy {
 
-    public PageCratePrototypeFileParserStrategy(YamlConfiguration configuration,
-                                                File file,
+    public PageCratePrototypeFileParserStrategy(File file,
                                                 List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers,
                                                 List<PathAbstractFileParserStrategy<? extends CostCondition>> costConditionParsers,
                                                 List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers,
+                                                String cratePrefix,
                                                 Plugin plugin) {
-        super(configuration, file, conditionParsers, costConditionParsers, rewardParsers, plugin);
-    }
-
-    public PageCratePrototypeFileParserStrategy(File file,
-                                                   List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers,
-                                                   List<PathAbstractFileParserStrategy<? extends CostCondition>> costConditionParsers,
-                                                   List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers,
-                                                   Plugin plugin) {
-        super(file, conditionParsers, costConditionParsers, rewardParsers, plugin);
+        super(file, conditionParsers, costConditionParsers, rewardParsers, cratePrefix, plugin);
     }
 
     @Override

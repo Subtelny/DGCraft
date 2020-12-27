@@ -9,94 +9,81 @@ import java.util.Objects;
 
 public abstract class IslandAnemia {
 
-	private IslandId islandId;
+    private IslandId islandId;
 
-	private IslandType islandType;
+    private IslandType islandType;
 
-	private LocalDateTime createdDate;
+    private LocalDateTime createdDate;
 
-	private Location spawn;
+    private Location spawn;
 
-	private int points;
+    private int points;
 
-	private String type;
+    public IslandAnemia() {
+    }
 
-	public IslandAnemia() {
-	}
+    public IslandAnemia(IslandId islandId, LocalDateTime createdDate, Location spawn, int points) {
+        this.islandId = islandId;
+        this.createdDate = createdDate;
+        this.spawn = spawn;
+        this.points = points;
+    }
 
-	public IslandAnemia(IslandId islandId, IslandType islandType, LocalDateTime createdDate, Location spawn, int points, String type) {
-		this.islandId = islandId;
-		this.islandType = islandType;
-		this.createdDate = createdDate;
-		this.spawn = spawn;
-		this.points = points;
-		this.type = type;
-	}
+    public IslandId getIslandId() {
+        return islandId;
+    }
 
-	public IslandId getIslandId() {
-		return islandId;
-	}
+    public void setIslandId(IslandId islandId) {
+        this.islandId = islandId;
+    }
 
-	public void setIslandId(IslandId islandId) {
-		this.islandId = islandId;
-	}
+    public IslandType getIslandType() {
+        return islandType;
+    }
 
-	public IslandType getIslandType() {
-		return islandType;
-	}
+    public void setIslandType(IslandType islandType) {
+        this.islandType = islandType;
+    }
 
-	public void setIslandType(IslandType islandType) {
-		this.islandType = islandType;
-	}
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
 
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
-	}
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
-	}
+    public Location getSpawn() {
+        return spawn;
+    }
 
-	public Location getSpawn() {
-		return spawn;
-	}
+    public void setSpawn(Location spawn) {
+        this.spawn = spawn;
+    }
 
-	public void setSpawn(Location spawn) {
-		this.spawn = spawn;
-	}
+    public int getPoints() {
+        return points;
+    }
 
-	public int getPoints() {
-		return points;
-	}
+    public void setPoints(int points) {
+        this.points = points;
+    }
 
-	public void setPoints(int points) {
-		this.points = points;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IslandAnemia that = (IslandAnemia) o;
+        return points == that.points &&
+                Objects.equals(islandId, that.islandId) &&
+                Objects.equals(islandType, that.islandType) &&
+                Objects.equals(createdDate, that.createdDate) &&
+                Objects.equals(spawn, that.spawn);
+    }
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		IslandAnemia that = (IslandAnemia) o;
-		return points == that.points &&
-				Objects.equals(islandId, that.islandId) &&
-				Objects.equals(islandType, that.islandType) &&
-				Objects.equals(createdDate, that.createdDate) &&
-				Objects.equals(spawn, that.spawn) &&
-				Objects.equals(type, that.type);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(islandId, islandType, createdDate, spawn, points, type);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(islandId, islandType, createdDate, spawn, points);
+    }
 
 }

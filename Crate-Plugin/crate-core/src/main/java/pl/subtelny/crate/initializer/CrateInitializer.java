@@ -42,7 +42,7 @@ public class CrateInitializer implements DependencyActivator {
 
     private void initializeCrate(File file) {
         if (file.getName().contains(".yml")) {
-            GetCratePrototypeRequest request = GetCratePrototypeRequest.builder(file).build();
+            GetCratePrototypeRequest request = GetCratePrototypeRequest.builder(Crate.plugin, file).build();
             CratePrototype cratePrototype = crateQueryService.getCratePrototype(request);
             crateRepository.addCratePrototype(cratePrototype.getCrateId(), cratePrototype);
         }

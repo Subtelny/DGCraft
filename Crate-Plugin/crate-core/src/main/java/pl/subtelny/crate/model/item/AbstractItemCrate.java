@@ -24,7 +24,12 @@ public abstract class AbstractItemCrate implements ItemCrate {
 
     @Override
     public ItemCrateClickResult click(Player player) {
-        return null;
+        List<Condition> notSatisfiedConditions = getNotSatisfiedConditions(player);
+        if (notSatisfiedConditions.isEmpty()) {
+            satisfyItemCrate(player);
+            return ItemCrateClickResult.SUCCESSFUL;
+        }
+        return new ItemCrateClickResult(notSatisfiedConditions, null, false);
     }
 
     protected void satisfyItemCrate(Player player) {

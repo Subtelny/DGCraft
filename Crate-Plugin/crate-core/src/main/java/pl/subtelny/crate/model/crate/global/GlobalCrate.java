@@ -3,8 +3,8 @@ package pl.subtelny.crate.model.crate.global;
 import org.bukkit.entity.Player;
 import pl.subtelny.crate.api.CrateClickResult;
 import pl.subtelny.crate.api.CrateType;
-import pl.subtelny.crate.model.crate.AbstractCrate;
 import pl.subtelny.crate.api.prototype.CratePrototype;
+import pl.subtelny.crate.model.crate.AbstractCrate;
 import pl.subtelny.crate.model.item.ItemCrate;
 import pl.subtelny.crate.model.item.ItemCrateClickResult;
 import pl.subtelny.utilities.condition.Condition;
@@ -21,6 +21,8 @@ public class GlobalCrate extends AbstractCrate {
 
     private final Map<Integer, ItemCrate> items;
 
+    private boolean invRendered;
+
     public GlobalCrate(CratePrototype prototype, Map<Integer, ItemCrate> items) {
         super(prototype);
         this.items = items;
@@ -36,6 +38,14 @@ public class GlobalCrate extends AbstractCrate {
         ItemCrateClickResult clickResult = itemCrate.click(player);
         handleNotSatisfiedClick(clickResult);
         return getCrateClickResult(itemCrate, clickResult);
+    }
+
+    @Override
+    protected void renderInventory() {
+        if (!invRendered) {
+            invRendered = true;
+            super.renderInventory();
+        }
     }
 
     @Override

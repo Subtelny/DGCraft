@@ -12,6 +12,8 @@ import org.bukkit.inventory.Inventory;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.crate.api.CrateClickResult;
 import pl.subtelny.crate.inventory.CrateInventory;
+import pl.subtelny.crate.messages.CrateMessages;
+import pl.subtelny.utilities.exception.ValidationException;
 
 @Component
 public class InventoryClickListener implements Listener {
@@ -34,11 +36,18 @@ public class InventoryClickListener implements Listener {
             if (e.getAction() == InventoryAction.PICKUP_ALL) {
                 if (isCrateInv(clickedInv)) {
                     CrateInventory clickedInventory = (CrateInventory) clickedInv;
-                    CrateClickResult clickResult = clickedInventory.click(whoClicked, e.getSlot());
-                    handleClickResult(whoClicked, clickedInventory, clickResult);
+                    click(whoClicked, clickedInventory, e.getSlot());
                 }
             }
+        }
+    }
 
+    private void click(Player player, CrateInventory crateInventory, int slot) {
+        try {
+            CrateClickResult clickResult = crateInventory.click(player, slot);
+            handleClickResult(player, crateInventory, clickResult);
+        } catch (ValidationException e) {
+            CrateMessages.get().sendTo(player, e.getMessage(), e.getValues());
         }
     }
 
