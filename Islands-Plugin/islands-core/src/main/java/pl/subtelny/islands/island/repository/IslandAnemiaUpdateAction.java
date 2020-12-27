@@ -31,6 +31,7 @@ public abstract class IslandAnemiaUpdateAction<T extends IslandAnemia, R> implem
         IslandsRecord islandsRecord = connection.newRecord(Islands.ISLANDS);
         Timestamp createdDate = Timestamp.valueOf(islandAnemia.getCreatedDate());
         islandsRecord.setCreatedDate(createdDate);
+        islandsRecord.setType(islandAnemia.getIslandType().getInternal());
 
         String serializedSpawn = LocationSerializer.serializeMinimalistic(islandAnemia.getSpawn());
         islandsRecord.setSpawn(serializedSpawn);

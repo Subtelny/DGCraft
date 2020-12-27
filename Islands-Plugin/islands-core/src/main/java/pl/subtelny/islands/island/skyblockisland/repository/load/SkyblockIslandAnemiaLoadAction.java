@@ -55,7 +55,9 @@ public class SkyblockIslandAnemiaLoadAction extends IslandAnemiaLoadAction<Skybl
     private SkyblockIslandAnemia mapRecordToAnemia(Record record) {
         LocalDateTime createdDate = record.get(Islands.ISLANDS.CREATED_DATE).toLocalDateTime();
         Location spawn = LocationSerializer.deserializeMinimalistic(record.get(Islands.ISLANDS.SPAWN));
-        IslandId islandId = IslandId.of(record.get(Islands.ISLANDS.TECH_UNIQUENESS));
+        IslandType islandType = IslandType.of(record.get(Islands.ISLANDS.TYPE));
+        Integer id = record.get(Islands.ISLANDS.ID);
+        IslandId islandId = IslandId.of(id, islandType);
         int points = record.get(Islands.ISLANDS.POINTS);
         int x = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.X);
         int z = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.Z);
@@ -67,7 +69,8 @@ public class SkyblockIslandAnemiaLoadAction extends IslandAnemiaLoadAction<Skybl
                 spawn,
                 islandCoordinates,
                 extendLevel,
-                points);
+                points,
+                islandType);
     }
 
 }

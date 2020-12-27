@@ -27,7 +27,7 @@ public class SkyblockIslandCoordinatesLoadAction implements LoadAction<IslandCoo
                 .from(SkyblockIslands.SKYBLOCK_ISLANDS)
                 .join(Islands.ISLANDS)
                 .on(Islands.ISLANDS.ID.eq(SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID))
-                .where(Islands.ISLANDS.TECH_UNIQUENESS.contains(islandType.getInternal()))
+                .where(Islands.ISLANDS.TYPE.eq(islandType.getInternal()))
                 .fetchOne(this::toIslandCoordinates);
     }
 
@@ -37,7 +37,7 @@ public class SkyblockIslandCoordinatesLoadAction implements LoadAction<IslandCoo
                 .from(SkyblockIslands.SKYBLOCK_ISLANDS)
                 .join(Islands.ISLANDS)
                 .on(Islands.ISLANDS.ID.eq(SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID))
-                .where(Islands.ISLANDS.TECH_UNIQUENESS.contains(islandType.getInternal()))
+                .where(Islands.ISLANDS.TYPE.contains(islandType.getInternal()))
                 .fetch(this::toIslandCoordinates);
     }
 

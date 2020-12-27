@@ -41,7 +41,7 @@ import pl.subtelny.generated.tables.tables.records.IslandMembershipsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class IslandMemberships extends TableImpl<IslandMembershipsRecord> {
 
-    private static final long serialVersionUID = -220451692;
+    private static final long serialVersionUID = -1386913828;
 
     /**
      * The reference instance of <code>public.island_memberships</code>
@@ -122,15 +122,6 @@ public class IslandMemberships extends TableImpl<IslandMembershipsRecord> {
     @Override
     public List<UniqueKey<IslandMembershipsRecord>> getKeys() {
         return Arrays.<UniqueKey<IslandMembershipsRecord>>asList(Keys.ISLAND_MEMBERSHIP_ID);
-    }
-
-    @Override
-    public List<ForeignKey<IslandMembershipsRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<IslandMembershipsRecord, ?>>asList(Keys.ISLAND_MEMBERSHIPS__ISLAND_ID_FK);
-    }
-
-    public Islands islands() {
-        return new Islands(this, Keys.ISLAND_MEMBERSHIPS__ISLAND_ID_FK);
     }
 
     @Override

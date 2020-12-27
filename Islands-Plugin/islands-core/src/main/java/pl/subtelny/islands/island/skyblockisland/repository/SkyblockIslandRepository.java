@@ -78,9 +78,9 @@ public class SkyblockIslandRepository {
         return saveIsland(anemia);
     }
 
-    public IslandId saveIsland(SkyblockIsland island) {
+    public void saveIsland(SkyblockIsland island) {
         SkyblockIslandAnemia anemia = SkyblockIslandAnemiaFactory.toAnemia(island);
-        return saveIsland(anemia);
+        saveIsland(anemia);
     }
 
     private IslandId saveIsland(SkyblockIslandAnemia anemia) {

@@ -43,7 +43,7 @@ import pl.subtelny.generated.tables.tables.records.IslandsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Islands extends TableImpl<IslandsRecord> {
 
-    private static final long serialVersionUID = 713587998;
+    private static final long serialVersionUID = 2130831050;
 
     /**
      * The reference instance of <code>public.islands</code>
@@ -64,9 +64,9 @@ public class Islands extends TableImpl<IslandsRecord> {
     public final TableField<IslandsRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('islands_id_seq'::regclass)", org.jooq.impl.SQLDataType.INTEGER)), this, "");
 
     /**
-     * The column <code>public.islands.tech_uniqueness</code>.
+     * The column <code>public.islands.type</code>.
      */
-    public final TableField<IslandsRecord, String> TECH_UNIQUENESS = createField(DSL.name("tech_uniqueness"), org.jooq.impl.SQLDataType.VARCHAR(30).nullable(false), this, "");
+    public final TableField<IslandsRecord, String> TYPE = createField(DSL.name("type"), org.jooq.impl.SQLDataType.VARCHAR(15).nullable(false), this, "");
 
     /**
      * The column <code>public.islands.spawn</code>.
@@ -123,7 +123,7 @@ public class Islands extends TableImpl<IslandsRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.ISLANDS_ID_PK, Indexes.TECH_UNIQUENESS_UQ);
+        return Arrays.<Index>asList(Indexes.ISLANDS_ID_PK);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class Islands extends TableImpl<IslandsRecord> {
 
     @Override
     public List<UniqueKey<IslandsRecord>> getKeys() {
-        return Arrays.<UniqueKey<IslandsRecord>>asList(Keys.ISLANDS_ID_PK, Keys.TECH_UNIQUENESS_UQ);
+        return Arrays.<UniqueKey<IslandsRecord>>asList(Keys.ISLANDS_ID_PK);
     }
 
     @Override

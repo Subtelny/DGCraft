@@ -39,7 +39,6 @@ public class Indexes {
     public static final Index ISLAND_MEMBERSHIP_ID = Indexes0.ISLAND_MEMBERSHIP_ID;
     public static final Index ISLANDERS_ID_PK = Indexes0.ISLANDERS_ID_PK;
     public static final Index ISLANDS_ID_PK = Indexes0.ISLANDS_ID_PK;
-    public static final Index TECH_UNIQUENESS_UQ = Indexes0.TECH_UNIQUENESS_UQ;
     public static final Index SKYBLOCK_ISLAND_X_Z_PK = Indexes0.SKYBLOCK_ISLAND_X_Z_PK;
     public static final Index SKYBLOCK_ISLANDS_ID_PK = Indexes0.SKYBLOCK_ISLANDS_ID_PK;
 
@@ -53,7 +52,6 @@ public class Indexes {
         public static Index ISLAND_MEMBERSHIP_ID = Internal.createIndex("island_membership_id", IslandMemberships.ISLAND_MEMBERSHIPS, new OrderField[] { IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID, IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_MEMBER_ID }, true);
         public static Index ISLANDERS_ID_PK = Internal.createIndex("islanders_id_pk", Islanders.ISLANDERS, new OrderField[] { Islanders.ISLANDERS.ID }, true);
         public static Index ISLANDS_ID_PK = Internal.createIndex("islands_id_pk", Islands.ISLANDS, new OrderField[] { Islands.ISLANDS.ID }, true);
-        public static Index TECH_UNIQUENESS_UQ = Internal.createIndex("tech_uniqueness_uq", Islands.ISLANDS, new OrderField[] { Islands.ISLANDS.TECH_UNIQUENESS }, true);
         public static Index SKYBLOCK_ISLAND_X_Z_PK = Internal.createIndex("skyblock_island_x_z_pk", SkyblockIslands.SKYBLOCK_ISLANDS, new OrderField[] { SkyblockIslands.SKYBLOCK_ISLANDS.X, SkyblockIslands.SKYBLOCK_ISLANDS.Z }, true);
         public static Index SKYBLOCK_ISLANDS_ID_PK = Internal.createIndex("skyblock_islands_id_pk", SkyblockIslands.SKYBLOCK_ISLANDS, new OrderField[] { SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID }, true);
     }

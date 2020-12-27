@@ -22,11 +22,12 @@ public abstract class IslandAnemia {
     public IslandAnemia() {
     }
 
-    public IslandAnemia(IslandId islandId, LocalDateTime createdDate, Location spawn, int points) {
+    public IslandAnemia(IslandId islandId, LocalDateTime createdDate, Location spawn, int points, IslandType islandType) {
         this.islandId = islandId;
         this.createdDate = createdDate;
         this.spawn = spawn;
         this.points = points;
+        this.islandType = islandType;
     }
 
     public IslandId getIslandId() {

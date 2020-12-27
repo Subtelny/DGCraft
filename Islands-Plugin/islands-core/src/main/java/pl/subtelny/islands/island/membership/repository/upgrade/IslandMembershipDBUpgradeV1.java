@@ -29,9 +29,6 @@ public class IslandMembershipDBUpgradeV1 implements DatabaseUpgrade {
                 .constraints(
                         constraint("island_membership_id")
                                 .primaryKey("island_id", "island_member_id"),
-                        constraint("island_id_fk")
-                                .foreignKey("island_id")
-                                .references("islands", "tech_uniqueness"),
                         constraint("island_memberships_uq")
                                 .unique("island_id", "island_member_id")
                 )
