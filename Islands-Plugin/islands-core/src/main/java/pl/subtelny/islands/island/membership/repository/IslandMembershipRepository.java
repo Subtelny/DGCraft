@@ -35,6 +35,13 @@ public class IslandMembershipRepository {
         action.perform(request);
     }
 
+    public void removeIslandMemberships(IslandId islandId) {
+        DSLContext currentConnection = connectionProvider.getCurrentConnection();
+        IslandMembershipRemoveAction action = new IslandMembershipRemoveAction(currentConnection);
+        IslandMembershipRemoveRequest request = IslandMembershipRemoveRequest.request(islandId);
+        action.perform(request);
+    }
+
     public void removeIslandMembership(IslandMembership islandMembership) {
         IslandMembershipRemoveRequest request = IslandMembershipRemoveRequest.request(
                 islandMembership.getIslandId(), islandMembership.getIslandMemberId());

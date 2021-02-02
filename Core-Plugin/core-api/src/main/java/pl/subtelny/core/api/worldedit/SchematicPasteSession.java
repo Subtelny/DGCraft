@@ -9,6 +9,7 @@ import org.bukkit.World;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class SchematicPasteSession extends WorldEditOperationSession {
@@ -23,13 +24,37 @@ public class SchematicPasteSession extends WorldEditOperationSession {
     }
 
     @Override
-    public void perform() throws IOException {
-        ClipboardReader reader = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getReader(new FileInputStream(schematic));
-        Clipboard clipboard = reader.read();
+    public void perform() {
+        ClipboardReader reader = getReader();
+        Clipboard clipboard = getRead(reader);
         ClipboardHolder holder = new ClipboardHolder(clipboard);
 
         PasteAction pasteAction = new PasteAction(holder, location);
         runOperation(pasteAction);
+    }
+
+    private ClipboardReader getReader() {
+        try {
+            return BuiltInClipboardFormat.SPONGE_SCHEMATIC.getReader(getInputStream());
+        } catch (IOException e) {
+            throw new IllegalStateException("Error while reading from schematic", e);
+        }
+    }
+
+    private FileInputStream getInputStream() {
+        try {
+            return new FileInputStream(schematic);
+        } catch (FileNotFoundException e) {
+            throw new IllegalStateException("Not found schematic file", e);
+        }
+    }
+
+    private Clipboard getRead(ClipboardReader reader) {
+        try {
+            return reader.read();
+        } catch (IOException e) {
+            throw new IllegalStateException("Error while reading schematic clipboard", e);
+        }
     }
 
     @Override

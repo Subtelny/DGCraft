@@ -2,8 +2,8 @@ package pl.subtelny.islands.island.crate.create;
 
 import pl.subtelny.components.core.api.ComponentProvider;
 import pl.subtelny.islands.island.crate.IslandReward;
-import pl.subtelny.islands.island.crate.IslandRewardFileParserStrategy;
-import pl.subtelny.islands.island.IslandCreateService;
+import pl.subtelny.islands.island.crate.parser.IslandRewardFileParserStrategy;
+import pl.subtelny.islands.island.cqrs.command.IslandCreateService;
 import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.utilities.Saveable;
 

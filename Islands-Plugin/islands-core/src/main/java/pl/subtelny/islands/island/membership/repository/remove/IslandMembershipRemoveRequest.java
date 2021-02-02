@@ -27,6 +27,10 @@ public class IslandMembershipRemoveRequest {
         return new IslandMembershipRemoveRequest(islandId, islandMemberId);
     }
 
+    public static IslandMembershipRemoveRequest request(IslandId islandId) {
+        return new IslandMembershipRemoveRequest(islandId, null);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

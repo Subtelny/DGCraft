@@ -1,10 +1,12 @@
 package pl.subtelny.components.core.api;
 
+import pl.subtelny.components.core.api.plugin.ComponentPlugin;
+
 import java.util.List;
 
 public interface ComponentProvider {
 
-    <T> T createComponent(Class<T> clazz);
+    <T> T createComponent(ComponentPlugin componentPlugin, Class<T> clazz);
 
     <T> T getComponent(Class<T> clazz);
 

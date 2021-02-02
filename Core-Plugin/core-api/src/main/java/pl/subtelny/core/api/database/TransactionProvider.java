@@ -8,9 +8,9 @@ import java.util.concurrent.CompletionStage;
 
 public interface TransactionProvider {
 
-    void transaction(Callable<Void> runnable);
+    void transaction(Runnable runnable);
 
-    void transactionAsync(Callable<Void> runnable);
+    void transactionAsync(Runnable runnable);
 
     <T> T transactionResult(Callable<T> runnable);
 

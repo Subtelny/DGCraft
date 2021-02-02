@@ -9,6 +9,8 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionStage;
@@ -26,20 +28,20 @@ public class TransactionProviderImpl implements TransactionProvider {
     }
 
     @Override
-    public void transaction(Callable<Void> callable) {
+    public void transaction(Runnable callable) {
         DSL.using(databaseConnection.getConfiguration())
                 .transaction(configuration -> {
                     currentTransaction.set(configuration);
-                    callable.call();
+                    callable.run();
                 });
     }
 
     @Override
-    public void transactionAsync(Callable<Void> callable) {
+    public void transactionAsync(Runnable callable) {
         DSL.using(databaseConnection.getConfiguration())
                 .transactionAsync(configuration -> {
                     currentTransaction.set(configuration);
-                    callable.call();
+                    callable.run();
                 });
     }
 

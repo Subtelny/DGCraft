@@ -1,6 +1,7 @@
 configuration:
   title: 'szukaj'
-  type:
+  type: ISLAND_SEARCH
+  size: 54
 
 search-item:
   item: GRASS
@@ -11,6 +12,17 @@ search-item:
     - 'Czlonkowie:'
     - '  - {MEMBER} {MEMBER-STATUS}'
     - 'Opis: {DESC}'
+
+controls:
+  next:
+    item: STONE
+    amount: 1
+    name: 'NEXT'
+  previous:
+    item: STONE
+    amount: 1
+    name: 'PREVIOUS'
+
 
 content:
   0:

@@ -6,13 +6,9 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.islands.configuration.IslandsConfiguration;
-import pl.subtelny.islands.island.IslandCommandService;
-import pl.subtelny.islands.island.IslandCreateService;
+import pl.subtelny.islands.island.cqrs.command.IslandCreateService;
 import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.islander.IslanderQueryService;
-import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.message.IslandMessages;
-import pl.subtelny.utilities.exception.ValidationException;
 
 @PluginSubCommand(command = "create", aliases = "stworz", mainCommand = IslandCommand.class)
 public class IslandCreateCommand extends BaseCommand {

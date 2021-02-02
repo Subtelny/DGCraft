@@ -22,13 +22,11 @@
             <groupId>pl.subtelny</groupId>
             <artifactId>crate-api</artifactId>
             <version>1</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.subtelny</groupId>
             <artifactId>core-api</artifactId>
             <version>1</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

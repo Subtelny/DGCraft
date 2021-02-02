@@ -13,7 +13,6 @@ import pl.subtelny.islands.island.IslandMemberId;
 import pl.subtelny.islands.island.IslanderId;
 import pl.subtelny.islands.island.membership.IslandMembershipQueryService;
 import pl.subtelny.islands.island.membership.model.IslandMembership;
-import pl.subtelny.islands.island.query.IslandQueryService;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
 import pl.subtelny.islands.islander.repository.loader.IslanderAnemiaLoadAction;
@@ -71,7 +70,7 @@ public class IslanderCacheLoader implements CacheLoader<IslanderId, NullObject<I
     }
 
     private List<IslandId> getIslandIds(IslanderId islanderId) {
-        IslandMemberId islandMemberId = IslandMemberId.of(Islander.ISLAND_MEMBER_TYPE, islanderId.getInternal().toString());
+        IslandMemberId islandMemberId = IslandMemberId.of(Islander.ISLAND_MEMBER_TYPE.getInternal(), islanderId.getInternal().toString());
         return islandMembershipQueryService.loadIslandMemberships(islandMemberId)
                 .stream()
                 .map(IslandMembership::getIslandId)

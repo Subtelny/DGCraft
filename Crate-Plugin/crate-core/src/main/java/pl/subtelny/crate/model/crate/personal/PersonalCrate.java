@@ -35,7 +35,7 @@ public class PersonalCrate extends AbstractCrate {
     }
 
     private void handleNotSatisfiedClick(ItemCrate itemCrate, ItemCrateClickResult result) {
-        Optional<Integer> slotOpt = items.entrySet().stream()
+        Optional<Integer> slotOpt = getItems().entrySet().stream()
                 .filter(entry -> entry.getValue().equals(itemCrate))
                 .map(Map.Entry::getKey)
                 .findFirst();

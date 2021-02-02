@@ -1,6 +1,8 @@
 package pl.subtelny.islands.island.crate.open;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import pl.subtelny.islands.Islands;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.crate.IslandCrates;
 import pl.subtelny.islands.island.module.IslandModule;
@@ -19,6 +21,14 @@ public class IslandOpenCrateReward implements Reward {
 
     @Override
     public void admitReward(Player player) {
+        runTickLater(() -> openCrate(player));
+    }
+
+    private void runTickLater(Runnable runnable) {
+        Bukkit.getScheduler().runTaskLater(Islands.plugin, runnable, 1L);
+    }
+
+    private void openCrate(Player player) {
         IslandCrates islandCrates = islandModule.getIslandCrates();
         islandCrates.openCrate(player, rawCrateId);
     }

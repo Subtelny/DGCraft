@@ -31,7 +31,7 @@ public abstract class AbstractIslandMember implements IslandMember {
     }
 
     @Override
-    public void removeIsland(Island island) {
+    public void leaveIsland(Island island) {
         Validation.isFalse(island.isMemberOfIsland(this), "islandMember.not_removed_from_island");
         islandIds.remove(island.getId());
     }

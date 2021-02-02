@@ -23,8 +23,4 @@ public class IslandMembershipQueryService {
         return islandMembershipRepository.loadIslandMemberships(islandMemberId);
     }
 
-    public List<IslandMembership> loadIslandMemberships(IslandId islandId) {
-        return islandMembershipRepository.loadIslandMemberships(islandId);
-    }
-
 }

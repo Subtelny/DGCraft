@@ -4,30 +4,30 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import pl.subtelny.crate.api.command.CrateCommandService;
-import pl.subtelny.islands.island.*;
+import pl.subtelny.islands.island.IslandCoordinates;
+import pl.subtelny.islands.island.IslandId;
+import pl.subtelny.islands.island.IslandMember;
+import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.island.configuration.ConfigurationReloadable;
+import pl.subtelny.islands.island.cqrs.command.IslandCreateRequest;
+import pl.subtelny.islands.island.crate.IslandCrateQueryService;
 import pl.subtelny.islands.island.crate.IslandCrates;
-import pl.subtelny.islands.island.membership.IslandMembershipCommandService;
-import pl.subtelny.islands.island.membership.model.IslandMembership;
-import pl.subtelny.islands.island.module.IslandModule;
+import pl.subtelny.islands.island.module.IslandModuleInitable;
 import pl.subtelny.islands.island.skyblockisland.configuration.SkyblockIslandConfiguration;
-import pl.subtelny.islands.island.skyblockisland.crate.SkyblockIslandCrateQueryService;
 import pl.subtelny.islands.island.skyblockisland.crate.SkyblockIslandCrates;
 import pl.subtelny.islands.island.skyblockisland.crate.SkyblockIslandCratesLoader;
-import pl.subtelny.islands.island.skyblockisland.creator.SkyblockIslandCreateRequest;
 import pl.subtelny.islands.island.skyblockisland.creator.SkyblockIslandCreator;
 import pl.subtelny.islands.island.skyblockisland.model.SkyblockIsland;
+import pl.subtelny.islands.island.skyblockisland.remover.SkyblockIslandRemover;
 import pl.subtelny.islands.island.skyblockisland.repository.SkyblockIslandRepository;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.utilities.exception.ValidationException;
 
-import java.io.File;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class SkyblockIslandModule implements IslandModule<SkyblockIsland> {
+public class SkyblockIslandModule implements IslandModuleInitable<SkyblockIsland> {
 
     private final IslandType islandType;
 
@@ -37,24 +37,29 @@ public class SkyblockIslandModule implements IslandModule<SkyblockIsland> {
 
     private final SkyblockIslandCreator islandCreator;
 
-    private final ConfigurationReloadable<SkyblockIslandConfiguration> configuration;
+    private final SkyblockIslandRemover islandRemover;
 
-    private final IslandMembershipCommandService islandMembershipCommandService;
+    private final ConfigurationReloadable<SkyblockIslandConfiguration> configuration;
 
     public SkyblockIslandModule(IslandType islandType,
                                 ConfigurationReloadable<SkyblockIslandConfiguration> configuration,
                                 SkyblockIslandCratesLoader islandCrates,
                                 SkyblockIslandRepository repository,
                                 SkyblockIslandCreator islandCreator,
-                                IslandMembershipCommandService islandMembershipCommandService,
+                                SkyblockIslandRemover islandRemover,
                                 CrateCommandService crateCommandService,
-                                SkyblockIslandCrateQueryService crateQueryService) {
+                                IslandCrateQueryService islandCrateQueryService) {
         this.islandType = islandType;
         this.configuration = configuration;
-        this.islandCrates = new SkyblockIslandCrates(crateCommandService, crateQueryService, islandCrates, this);
+        this.islandRemover = islandRemover;
         this.repository = repository;
         this.islandCreator = islandCreator;
-        this.islandMembershipCommandService = islandMembershipCommandService;
+        this.islandCrates = new SkyblockIslandCrates(crateCommandService, islandCrateQueryService, islandCrates, this);
+    }
+
+    @Override
+    public void initialize() {
+        islandCrates.reloadCrates();
     }
 
     @Override
@@ -89,13 +94,16 @@ public class SkyblockIslandModule implements IslandModule<SkyblockIsland> {
             throw ValidationException.of("skyblockIslandModule.create_island_disabled");
         }
 
-        SkyblockIslandCreateRequest skyblockRequest = toSkyblockCreateRequest(request);
-        IslandId islandId = islandCreator.createIsland(skyblockRequest);
-        SkyblockIsland island = findIsland(islandId)
+        IslandMember owner = request.getOwner()
+                .orElseThrow(() -> ValidationException.of("skyblockIslandModule.create_island_null_owner"));
+
+        if (!owner.getIslandMemberId().getType().equals(Islander.ISLAND_MEMBER_TYPE)) {
+            throw ValidationException.of("skyblockIslandModule.create_island_owner_only_islander");
+        }
+
+        IslandId islandId = islandCreator.createIsland((Islander) owner);
+        return findIsland(islandId)
                 .orElseThrow(() -> ValidationException.of("skyblockIslandModule.not_found_island_after_create"));
-        request.getOwner()
-                .ifPresent(islandMember -> islandMember.addIsland(island));
-        return island;
     }
 
     @Override
@@ -106,50 +114,16 @@ public class SkyblockIslandModule implements IslandModule<SkyblockIsland> {
     @Override
     public void saveIsland(SkyblockIsland island) {
         repository.saveIsland(island);
-        saveIslandMembers(island);
     }
 
     @Override
     public void removeIsland(SkyblockIsland island) {
-        repository.removeIsland(island);
+        islandRemover.removeIsland(island);
     }
 
     @Override
     public void reloadConfiguration() {
         configuration.reloadConfiguration();
-    }
-
-    private SkyblockIslandCreateRequest toSkyblockCreateRequest(IslandCreateRequest request) {
-        IslandMember owner = request.getOwner()
-                .orElseThrow(() -> ValidationException.of("skyblockIslandModule.create_island_null_owner"));
-
-        if (!owner.getIslandMemberId().getType().equals(Islander.ISLAND_MEMBER_TYPE)) {
-            throw ValidationException.of("skyblockIslandModule.create_island_owner_only_islander");
-        }
-
-        SkyblockIslandConfiguration configuration = this.configuration.get();
-        File schematicFile = configuration.getSchematicFile();
-        int schematicHeight = configuration.getSchematicHeight();
-        Islander islander = (Islander) owner;
-        return new SkyblockIslandCreateRequest(islander, schematicFile, schematicHeight);
-    }
-
-    private void saveIslandMembers(SkyblockIsland island) {
-        List<IslandMemberChangedRequest> requests = island.getIslandMembersChangesRequests();
-        requests.forEach(request -> updateIslandMember(island, request));
-    }
-
-    private void updateIslandMember(SkyblockIsland island, IslandMemberChangedRequest request) {
-        IslandMembership member = new IslandMembership(request.getIslandMember(), island.getId(), request.isOwner());
-        switch (request.getType()) {
-            case ADDED:
-            case UPDATE_OWNER:
-                islandMembershipCommandService.saveIslandMembership(member);
-                break;
-            case REMOVED:
-                islandMembershipCommandService.removeIslandMembership(member);
-                break;
-        }
     }
 
     @Override

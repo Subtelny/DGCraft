@@ -8,6 +8,7 @@ import pl.subtelny.islands.island.IslandMemberId;
 import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.island.membership.IslandMembershipQueryService;
 import pl.subtelny.islands.island.membership.model.IslandMembership;
+import pl.subtelny.islands.island.membership.repository.IslandMembershipRepository;
 import pl.subtelny.islands.island.skyblockisland.IslandExtendCalculator;
 import pl.subtelny.islands.island.skyblockisland.repository.anemia.SkyblockIslandAnemia;
 import pl.subtelny.islands.island.IslandCoordinates;
@@ -25,19 +26,15 @@ public class SkyblockIslandLoader {
 
     private final ConnectionProvider connectionProvider;
 
-    private final IslandMemberQueryService islandMemberQueryService;
-
-    private final IslandMembershipQueryService islandMembershipLoader;
+    private final IslandMembershipRepository membershipRepository;
 
     private final IslandExtendCalculator extendCalculator;
 
     public SkyblockIslandLoader(ConnectionProvider connectionProvider,
-                                IslandMemberQueryService islandMemberQueryService,
-                                IslandMembershipQueryService islandMembershipLoader,
+                                IslandMembershipRepository membershipRepository,
                                 IslandExtendCalculator extendCalculator) {
         this.connectionProvider = connectionProvider;
-        this.islandMemberQueryService = islandMemberQueryService;
-        this.islandMembershipLoader = islandMembershipLoader;
+        this.membershipRepository = membershipRepository;
         this.extendCalculator = extendCalculator;
     }
 
@@ -66,11 +63,10 @@ public class SkyblockIslandLoader {
         int points = anemia.getPoints();
         Cuboid cuboid = calculateCuboid(islandCoordinates, extendLevel);
 
-        List<IslandMembership> islandMemberships = islandMembershipLoader.loadIslandMemberships(islandId);
+        List<IslandMembership> islandMemberships = membershipRepository.loadIslandMemberships(islandId);
         List<IslandMemberId> members = getMembers(islandMemberships);
         IslandMemberId owner = getOwner(islandMemberships);
         return new SkyblockIsland(extendCalculator,
-                islandMemberQueryService,
                 islandId,
                 islandType,
                 creationDate,

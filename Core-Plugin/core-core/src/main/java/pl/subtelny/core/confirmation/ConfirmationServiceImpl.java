@@ -5,15 +5,21 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import pl.subtelny.commands.api.PluginCommand;
+import pl.subtelny.commands.api.util.CommandUtil;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.confirmation.ConfirmContextId;
 import pl.subtelny.core.api.confirmation.ConfirmationRequest;
 import pl.subtelny.core.api.confirmation.ConfirmationService;
+import pl.subtelny.core.commands.ConfirmCommand;
+import pl.subtelny.core.commands.RejectCommand;
 import pl.subtelny.core.configuration.CoreMessages;
 import pl.subtelny.utilities.Validation;
 
+import javax.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -49,7 +55,7 @@ public class ConfirmationServiceImpl implements ConfirmationService {
         confirmation.notifyListener(state);
     }
 
-    private void basicValidation(Player player, Confirmation confirmation) {
+    private void basicValidation(Player player, @Nullable Confirmation confirmation) {
         Validation.isTrue(confirmation != null, "confirmation.not_found");
         Validation.isTrue(confirmation.canConfirm(player), "confirmation.cant_confirm");
     }
@@ -95,14 +101,16 @@ public class ConfirmationServiceImpl implements ConfirmationService {
     }
 
     private TextComponent getRejectComponent(ConfirmContextId confirmContextId) {
-        String rejectCommand = "/reject " + confirmContextId.getInternal();
+        String rawRejectCommand = CommandUtil.getCommandPath(RejectCommand.class);
+        String rejectCommand = rawRejectCommand + " " + confirmContextId.getInternal();
         String rejectHover = messages.getRawMessage("confirmation.reject_hover");
         String rejectButton = messages.getColoredMessage("confirmation.reject_button");
         return getControlComponent(rejectButton, rejectCommand, rejectHover);
     }
 
     private TextComponent getConfirmComponent(ConfirmContextId confirmContextId) {
-        String confirmCommand = "/confirm " + confirmContextId.getInternal();
+        String rawConfirmCommand = CommandUtil.getCommandPath(ConfirmCommand.class);
+        String confirmCommand = rawConfirmCommand + " " + confirmContextId.getInternal();
         String confirmHover = messages.getRawMessage("confirmation.confirm_hover");
         String confirmButton = messages.getColoredMessage("confirmation.confirm_button");
         return getControlComponent(confirmButton, confirmCommand, confirmHover);

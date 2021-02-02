@@ -17,6 +17,6 @@ public interface IslandMember {
 
     void addIsland(Island island);
 
-    void removeIsland(Island island);
+    void leaveIsland(Island island);
 
 }

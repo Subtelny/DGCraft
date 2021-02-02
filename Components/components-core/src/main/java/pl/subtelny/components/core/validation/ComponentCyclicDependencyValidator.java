@@ -42,10 +42,14 @@ public class ComponentCyclicDependencyValidator {
         }
 
         Type[] parameters = checking.getConstructor().getGenericParameterTypes();
-        for (Type parameter : parameters) {
-            String newPath = path + " -> " + ClassUtil.getTypeName(parameter);
-            findPrototypesByType(parameter)
-                    .forEach(prototype -> validateFor(toFind, prototype, newPath));
+        try {
+            for (Type parameter : parameters) {
+                String newPath = path + " -> " + ClassUtil.getTypeName(parameter);
+                findPrototypesByType(parameter)
+                        .forEach(prototype -> validateFor(toFind, prototype, newPath));
+            }
+        } catch (StackOverflowError ignore) {
+
         }
     }
 

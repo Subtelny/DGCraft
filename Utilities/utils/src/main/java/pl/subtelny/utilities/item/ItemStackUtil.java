@@ -2,6 +2,7 @@ package pl.subtelny.utilities.item;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import pl.subtelny.utilities.ColorUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -20,14 +21,15 @@ public final class ItemStackUtil {
             if (lore != null) {
                 List<String> newLore = lore
                         .stream()
-                        .map(s -> replaceAllData(s, data))
+                        .map(line -> replaceWithData(line, data))
+                        .map(ColorUtil::color)
                         .collect(Collectors.toList());
                 itemMeta.setLore(newLore);
             }
 
             if (itemMeta.hasDisplayName()) {
                 String displayName = itemMeta.getDisplayName();
-                displayName = replaceAllData(displayName, data);
+                displayName = replaceWithData(displayName, data);
                 itemMeta.setDisplayName(displayName);
             }
 
@@ -36,9 +38,9 @@ public final class ItemStackUtil {
         return itemStack;
     }
 
-    private static String replaceAllData(String value, Map<String, String> data) {
+    private static String replaceWithData(String value, Map<String, String> data) {
         for (Map.Entry<String, String> entry : data.entrySet()) {
-            value = value.replaceAll(entry.getKey(), entry.getValue());
+            value = value.replace(entry.getKey(), entry.getValue());
         }
         return value;
     }

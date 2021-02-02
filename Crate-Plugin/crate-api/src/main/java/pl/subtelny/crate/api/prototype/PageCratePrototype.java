@@ -13,6 +13,8 @@ public class PageCratePrototype extends CratePrototype {
 
     private final ItemStack nextPageItemStack;
 
+    private final Map<Integer, ItemCratePrototype> staticItems;
+
     public PageCratePrototype(CrateId crateId,
                               CrateType crateType,
                               String title,
@@ -20,10 +22,12 @@ public class PageCratePrototype extends CratePrototype {
                               int size,
                               Map<Integer, ItemCratePrototype> items,
                               ItemStack previousPageItemStack,
-                              ItemStack nextPageItemStack) {
+                              ItemStack nextPageItemStack,
+                              Map<Integer, ItemCratePrototype> staticItems) {
         super(crateId, crateType, title, permission, size, items);
         this.previousPageItemStack = previousPageItemStack;
         this.nextPageItemStack = nextPageItemStack;
+        this.staticItems = staticItems;
     }
 
     public ItemStack getPreviousPageItemStack() {
@@ -34,6 +38,10 @@ public class PageCratePrototype extends CratePrototype {
         return nextPageItemStack;
     }
 
+    public Map<Integer, ItemCratePrototype> getStaticItems() {
+        return staticItems;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -41,11 +49,12 @@ public class PageCratePrototype extends CratePrototype {
         if (!super.equals(o)) return false;
         PageCratePrototype that = (PageCratePrototype) o;
         return Objects.equals(previousPageItemStack, that.previousPageItemStack) &&
-                Objects.equals(nextPageItemStack, that.nextPageItemStack);
+                Objects.equals(nextPageItemStack, that.nextPageItemStack) &&
+                Objects.equals(staticItems, that.staticItems);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), previousPageItemStack, nextPageItemStack);
+        return Objects.hash(super.hashCode(), previousPageItemStack, nextPageItemStack, staticItems);
     }
 }

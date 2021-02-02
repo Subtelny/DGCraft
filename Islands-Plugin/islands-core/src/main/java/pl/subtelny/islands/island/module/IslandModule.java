@@ -3,7 +3,7 @@ package pl.subtelny.islands.island.module;
 import org.bukkit.Location;
 import org.bukkit.World;
 import pl.subtelny.islands.island.Island;
-import pl.subtelny.islands.island.IslandCreateRequest;
+import pl.subtelny.islands.island.cqrs.command.IslandCreateRequest;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.island.crate.IslandCrates;

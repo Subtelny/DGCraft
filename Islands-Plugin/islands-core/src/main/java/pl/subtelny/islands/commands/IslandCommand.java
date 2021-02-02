@@ -15,6 +15,8 @@ import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.message.IslandMessages;
 import pl.subtelny.utilities.exception.ValidationException;
 
+import java.time.ZoneId;
+
 @PluginCommand(command = "island", aliases = {"wyspa", "w", "is"})
 public class IslandCommand extends BaseCommand {
 
@@ -38,8 +40,8 @@ public class IslandCommand extends BaseCommand {
         IslandType seasonIslandType = IslandsConfiguration.ACTUAL_SEASON_ISLAND_TYPE;
 
         if (islander.hasIsland(seasonIslandType)) {
-            openMainCrate(player);
-            return;
+            //openMainCrate(player);
+            //return;
         }
 
         openCreateCrate(player);

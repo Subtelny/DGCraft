@@ -5,11 +5,10 @@ import org.bukkit.entity.Player;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.islands.configuration.IslandsConfiguration;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.IslandId;
-import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.island.module.IslandModules;
-import pl.subtelny.islands.island.query.IslandQueryService;
+import pl.subtelny.islands.island.cqrs.query.IslandQueryService;
 import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.message.IslandMessages;
@@ -35,7 +34,7 @@ public class IslandHomeCommand extends BaseCommand {
     public void handleCommand(CommandSender sender, String[] args) {
         Player player = (Player) sender;
         Islander islander = islanderService.getIslander(player);
-        islander.getIslands()
+        islander.getIslands(IslandsConfiguration.ACTUAL_SEASON_ISLAND_TYPE)
                 .stream()
                 .findFirst()
                 .ifPresentOrElse(islandId -> teleportToIsland(player, islandId), () -> notHaveIsland(player));

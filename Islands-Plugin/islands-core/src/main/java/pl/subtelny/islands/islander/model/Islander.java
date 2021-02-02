@@ -3,18 +3,16 @@ package pl.subtelny.islands.islander.model;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import pl.subtelny.core.api.account.Account;
-import pl.subtelny.islands.island.IslandId;
-import pl.subtelny.islands.island.IslandMemberId;
-import pl.subtelny.islands.island.IslanderId;
+import pl.subtelny.islands.configuration.IslandsConfiguration;
+import pl.subtelny.islands.island.*;
 import pl.subtelny.islands.island.membership.model.AbstractIslandMember;
-import pl.subtelny.islands.island.query.IslandQueryService;
 
 import java.util.List;
 import java.util.Objects;
 
 public class Islander extends AbstractIslandMember {
 
-    public final static String ISLAND_MEMBER_TYPE = "ISLANDER";
+    public final static IslandMemberType ISLAND_MEMBER_TYPE = new IslandMemberType("ISLANDER");
 
     private final IslanderId islanderId;
 
@@ -28,18 +26,33 @@ public class Islander extends AbstractIslandMember {
         this.account = account;
     }
 
-    public IslanderId getIslanderId() {
-        return islanderId;
+    @Override
+    public void leaveIsland(Island island) {
+        super.leaveIsland(island);
+        teleportToSpawn(island);
+    }
+
+    private void teleportToSpawn(Island island) {
+        Player player = getPlayer();
+        if (player.isOnline()) {
+            if (island.getCuboid().contains(player.getLocation())) {
+                player.teleport(IslandsConfiguration.MAIN_WORLD.getSpawnLocation());
+            }
+        }
     }
 
     @Override
     public IslandMemberId getIslandMemberId() {
-        return IslandMemberId.of(ISLAND_MEMBER_TYPE, islanderId.getInternal().toString());
+        return IslandMemberId.of(ISLAND_MEMBER_TYPE.getInternal(), islanderId.getInternal().toString());
     }
 
     @Override
     public String getName() {
         return account.getDisplayName();
+    }
+
+    public IslanderId getIslanderId() {
+        return islanderId;
     }
 
     public boolean isOnline() {

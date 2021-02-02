@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Component
 public @interface PluginSubCommand {
 
-    Class mainCommand();
+    Class<? extends BaseCommand> mainCommand();
 
     String command();
 

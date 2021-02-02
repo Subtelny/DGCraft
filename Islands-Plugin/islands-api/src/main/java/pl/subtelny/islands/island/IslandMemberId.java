@@ -16,8 +16,8 @@ public class IslandMemberId extends CompoundIdentity {
         return new IslandMemberId(internal.split(CompoundIdentity.SEPARATOR));
     }
 
-    public String getType() {
-        return getAtPosition(0);
+    public IslandMemberType getType() {
+        return new IslandMemberType(getAtPosition(0));
     }
 
     public String getValue() {

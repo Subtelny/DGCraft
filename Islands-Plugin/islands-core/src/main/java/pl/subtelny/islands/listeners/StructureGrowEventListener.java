@@ -9,8 +9,8 @@ import org.bukkit.event.world.StructureGrowEvent;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.island.Island;
-import pl.subtelny.islands.island.query.IslandFindResult;
-import pl.subtelny.islands.island.query.IslandQueryService;
+import pl.subtelny.islands.island.cqrs.query.IslandFindResult;
+import pl.subtelny.islands.island.cqrs.query.IslandQueryService;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.util.List;

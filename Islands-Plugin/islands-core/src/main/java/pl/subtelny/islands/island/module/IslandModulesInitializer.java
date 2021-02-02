@@ -37,12 +37,14 @@ public class IslandModulesInitializer {
         }
 
         String moduleType = new ObjectFileParserStrategy<String>(configFile).load("module.type");
-        return createModule(moduleDirectory, moduleType);
+        IslandModuleInitable<Island> module = createModule(moduleDirectory, moduleType);
+        module.initialize();
+        return module;
     }
 
-    private IslandModule<Island> createModule(File moduleDirectory, String moduleType) {
+    private IslandModuleInitable<Island> createModule(File moduleDirectory, String moduleType) {
         try {
-            return findProperIslandModuleCreatorFor(moduleType)
+            return getProperIslandModuleCreatorFor(moduleType)
                     .createModule(moduleDirectory);
         } catch (IllegalStateException | IllegalArgumentException e) {
             throw new IllegalStateException("Cannot create module " + moduleType + " on path " + moduleDirectory.getPath(), e);
@@ -50,7 +52,7 @@ public class IslandModulesInitializer {
     }
 
 
-    private IslandModuleCreator<Island> findProperIslandModuleCreatorFor(String type) {
+    private IslandModuleCreator<Island> getProperIslandModuleCreatorFor(String type) {
         return islandModuleCreators.stream()
                 .filter(islandModuleCreator -> islandModuleCreator.getModuleType().equals(type))
                 .findFirst()

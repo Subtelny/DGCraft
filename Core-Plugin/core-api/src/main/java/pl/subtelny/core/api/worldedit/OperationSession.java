@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public interface OperationSession {
 
-    void perform() throws IOException, InterruptedException;
+    void perform() throws InterruptedException;
 
     void cancel();
 

@@ -5,18 +5,13 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import pl.subtelny.islands.island.*;
-import pl.subtelny.islands.island.membership.IslandMemberQueryService;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.configuration.Configuration;
 import pl.subtelny.utilities.cuboid.Cuboid;
-import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.location.LocationUtil;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractIsland implements Island {
@@ -26,8 +21,6 @@ public abstract class AbstractIsland implements Island {
             .build();
 
     private final List<IslandMemberChangedRequest> islandMembersChangesRequests = new ArrayList<>();
-
-    private final IslandMemberQueryService islandMemberQueryService;
 
     private final IslandId islandId;
 
@@ -47,8 +40,7 @@ public abstract class AbstractIsland implements Island {
 
     private int points;
 
-    public AbstractIsland(IslandMemberQueryService islandMemberQueryService,
-                          IslandId islandId,
+    public AbstractIsland(IslandId islandId,
                           IslandType islandType,
                           LocalDateTime creationDate,
                           Cuboid cuboid,
@@ -60,7 +52,6 @@ public abstract class AbstractIsland implements Island {
             Validate.isTrue(islandMemberIds.contains(owner), "Not found owner in list of members");
         }
         this.islandType = islandType;
-        this.islandMemberQueryService = islandMemberQueryService;
         this.islandId = islandId;
         this.creationDate = creationDate;
         this.cuboid = cuboid;
@@ -96,13 +87,18 @@ public abstract class AbstractIsland implements Island {
     }
 
     @Override
-    public List<IslandMember> getMembers() {
-        return Collections.unmodifiableList(islandMemberQueryService.getIslandMembers(islandMemberIds));
+    public List<IslandMemberId> getMembers() {
+        return new ArrayList<>(islandMemberIds);
     }
 
     @Override
-    public Optional<IslandMember> getOwner() {
-        return islandMemberQueryService.findIslandMember(owner);
+    public Map<IslandMember, Long> getPendingJoinRequests() {
+        return new HashMap<>(pendingJoinRequests.asMap());
+    }
+
+    @Override
+    public Optional<IslandMemberId> getOwner() {
+        return Optional.ofNullable(owner);
     }
 
     @Override
@@ -118,6 +114,11 @@ public abstract class AbstractIsland implements Island {
     @Override
     public boolean isMemberOfIsland(IslandMember member) {
         return islandMemberIds.contains(member.getIslandMemberId());
+    }
+
+    @Override
+    public boolean isOwner(IslandMember islandMember) {
+        return islandMember.getIslandMemberId().equals(owner);
     }
 
     @Override
@@ -154,21 +155,35 @@ public abstract class AbstractIsland implements Island {
         Validation.isFalse(islandMemberIds.contains(member.getIslandMemberId()), "island.member_already_added");
         islandMemberIds.add(member.getIslandMemberId());
         islandMembersChangesRequests.add(IslandMemberChangedRequest.added(member));
+        member.addIsland(this);
     }
 
     @Override
-    public void exit(IslandMember member) {
+    public void leave(IslandMember member) {
         Validation.isTrue(islandMemberIds.contains(member.getIslandMemberId()), "island.member_not_added");
         islandMemberIds.remove(member.getIslandMemberId());
         islandMembersChangesRequests.add(IslandMemberChangedRequest.removed(member));
+        member.leaveIsland(this);
     }
 
     @Override
     public void askJoin(IslandMember islandMember) {
-        if (pendingJoinRequests.getIfPresent(islandMember) != null) {
-            throw ValidationException.of("island.ask_join.already_asked", getName());
-        }
+        Validation.isTrue(pendingJoinRequests.getIfPresent(islandMember) == null, "island.ask_join.already_added");
+        Validation.isFalse(islandMemberIds.contains(islandMember.getIslandMemberId()), "island.ask_join.already_added");
         pendingJoinRequests.put(islandMember, System.currentTimeMillis());
+    }
+
+    @Override
+    public boolean canAskJoin(IslandMember islandMember) {
+        return pendingJoinRequests.getIfPresent(islandMember) == null
+                && !islandMemberIds.contains(islandMember.getIslandMemberId());
+    }
+
+    @Override
+    public void acceptAskJoin(IslandMember islandMember) {
+        Validation.isFalse(pendingJoinRequests.getIfPresent(islandMember) == null, "island.ask_join.request_not_found");
+        pendingJoinRequests.invalidate(islandMember);
+        join(islandMember);
     }
 
     public List<IslandMemberChangedRequest> getIslandMembersChangesRequests() {

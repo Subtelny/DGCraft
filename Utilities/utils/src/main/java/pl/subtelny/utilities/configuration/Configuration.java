@@ -1,25 +1,27 @@
 package pl.subtelny.utilities.configuration;
 
-import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class Configuration {
 
     private final Map<ConfigurationKey, ConfigurationValue<?>> configuration = new HashMap<>();
 
-    @Nullable
-    public <T extends Serializable> T getValue(ConfigurationKey key) {
+    public <T> Optional<T> findValue(ConfigurationKey key, Class<T> clazz) {
         ConfigurationValue<?> configurationValue = configuration.get(key);
         if (configurationValue != null) {
-            return (T) configurationValue.get();
+            T value = clazz.cast(configurationValue.get());
+            return Optional.of(value);
         }
-        return null;
+        return Optional.empty();
     }
 
     public void updateValue(ConfigurationKey key, ConfigurationValue value) {
         configuration.put(key, value);
     }
 
+    public Map<ConfigurationKey, ConfigurationValue<?>> getConfiguration() {
+        return new HashMap<>(configuration);
+    }
 }

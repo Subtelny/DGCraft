@@ -19,6 +19,14 @@ public class IslandMembership {
         this.owner = owner;
     }
 
+    public static IslandMembership member(IslandMemberId islandMemberId, IslandId islandId) {
+        return new IslandMembership(islandMemberId, islandId, false);
+    }
+
+    public static IslandMembership owner(IslandMemberId islandMemberId, IslandId islandId) {
+        return new IslandMembership(islandMemberId, islandId, true);
+    }
+
     public IslandMemberId getIslandMemberId() {
         return islandMemberId;
     }

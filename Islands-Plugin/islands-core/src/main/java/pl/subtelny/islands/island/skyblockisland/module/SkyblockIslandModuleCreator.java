@@ -4,23 +4,24 @@ import net.milkbowl.vault.economy.Economy;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.ConnectionProvider;
+import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.core.api.economy.EconomyProvider;
 import pl.subtelny.crate.api.command.CrateCommandService;
-import pl.subtelny.islands.island.crate.IslandRewardFileParserStrategyFactory;
 import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.island.configuration.ConfigurationReloadable;
 import pl.subtelny.islands.island.configuration.ConfigurationReloadableImpl;
-import pl.subtelny.islands.island.membership.IslandMemberQueryService;
-import pl.subtelny.islands.island.membership.IslandMembershipCommandService;
-import pl.subtelny.islands.island.membership.IslandMembershipQueryService;
-import pl.subtelny.islands.island.module.IslandModule;
+import pl.subtelny.islands.island.crate.IslandCrateQueryService;
+import pl.subtelny.islands.island.crate.parser.IslandRewardFileParserStrategyFactory;
+import pl.subtelny.islands.island.membership.repository.IslandMembershipRepository;
 import pl.subtelny.islands.island.module.IslandModuleCreator;
+import pl.subtelny.islands.island.module.IslandModuleInitable;
 import pl.subtelny.islands.island.skyblockisland.IslandExtendCalculator;
 import pl.subtelny.islands.island.skyblockisland.configuration.SkyblockIslandConfiguration;
-import pl.subtelny.islands.island.skyblockisland.crate.SkyblockIslandCrateQueryService;
 import pl.subtelny.islands.island.skyblockisland.crate.SkyblockIslandCratesLoader;
 import pl.subtelny.islands.island.skyblockisland.creator.SkyblockIslandCreator;
 import pl.subtelny.islands.island.skyblockisland.model.SkyblockIsland;
+import pl.subtelny.islands.island.skyblockisland.organizer.SkyblockIslandOrganizer;
+import pl.subtelny.islands.island.skyblockisland.remover.SkyblockIslandRemover;
 import pl.subtelny.islands.island.skyblockisland.repository.SkyblockIslandRepository;
 import pl.subtelny.islands.message.IslandMessages;
 
@@ -35,11 +36,7 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
 
     private final ConnectionProvider connectionProvider;
 
-    private final IslandMemberQueryService islandMemberQueryService;
-
-    private final IslandMembershipQueryService islandMembershipQueryService;
-
-    private final IslandMembershipCommandService islandMembershipCommandService;
+    private final IslandMembershipRepository islandMembershipRepository;
 
     private final IslandMessages islandMessages;
 
@@ -47,46 +44,47 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
 
     private final CrateCommandService crateCommandService;
 
-    private final SkyblockIslandCrateQueryService skyblockIslandCrateQueryService;
+    private final IslandCrateQueryService islandCrateQueryService;
 
     @Autowired
     public SkyblockIslandModuleCreator(EconomyProvider economyProvider,
                                        ConnectionProvider connectionProvider,
-                                       IslandMemberQueryService islandMemberQueryService,
-                                       IslandMembershipQueryService islandMembershipQueryService,
-                                       IslandMembershipCommandService islandMembershipCommandService,
+                                       IslandMembershipRepository islandMembershipRepository,
                                        IslandMessages islandMessages,
                                        IslandRewardFileParserStrategyFactory strategyFactory,
                                        CrateCommandService crateCommandService,
-                                       SkyblockIslandCrateQueryService skyblockIslandCrateQueryService) {
+                                       IslandCrateQueryService islandCrateQueryService) {
         this.economyProvider = economyProvider;
         this.connectionProvider = connectionProvider;
-        this.islandMemberQueryService = islandMemberQueryService;
-        this.islandMembershipQueryService = islandMembershipQueryService;
-        this.islandMembershipCommandService = islandMembershipCommandService;
+        this.islandMembershipRepository = islandMembershipRepository;
         this.islandMessages = islandMessages;
         this.strategyFactory = strategyFactory;
         this.crateCommandService = crateCommandService;
-        this.skyblockIslandCrateQueryService = skyblockIslandCrateQueryService;
+        this.islandCrateQueryService = islandCrateQueryService;
     }
 
     @Override
-    public IslandModule<SkyblockIsland> createModule(File moduleDir) {
+    public IslandModuleInitable<SkyblockIsland> createModule(File moduleDir) {
         IslandType islandType = new IslandType(moduleDir.getName());
         ConfigurationReloadable<SkyblockIslandConfiguration> configuration = getConfiguration(moduleDir);
 
+        SkyblockIslandOrganizer islandOrganizer = new SkyblockIslandOrganizer(configuration, islandType);
+        islandOrganizer.initialize(connectionProvider);
+
         IslandExtendCalculator extendCalculator = new IslandExtendCalculator(configuration);
         SkyblockIslandRepository repository = getRepository(islandType, extendCalculator);
-        SkyblockIslandModule skyblockIslandModule = new SkyblockIslandModule(islandType,
+        return new SkyblockIslandModule(islandType,
                 configuration,
                 getIslandCrates(moduleDir),
                 repository,
-                getIslandCreator(repository, islandType, extendCalculator),
-                islandMembershipCommandService,
+                getIslandCreator(repository, islandOrganizer),
+                getIslandRemover(islandOrganizer, repository),
                 crateCommandService,
-                skyblockIslandCrateQueryService);
-        skyblockIslandModule.getIslandCrates().reloadCrates();
-        return skyblockIslandModule;
+                islandCrateQueryService);
+    }
+
+    private SkyblockIslandRemover getIslandRemover(SkyblockIslandOrganizer islandOrganizer, SkyblockIslandRepository repository) {
+        return new SkyblockIslandRemover(repository, islandOrganizer);
     }
 
     @Override
@@ -102,25 +100,21 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
 
     private SkyblockIslandCratesLoader getIslandCrates(File moduleDir) {
         File cratesDir = new File(moduleDir, "crates");
-        return new SkyblockIslandCratesLoader(strategyFactory, skyblockIslandCrateQueryService, crateCommandService, cratesDir);
+        return new SkyblockIslandCratesLoader(strategyFactory, islandCrateQueryService, crateCommandService, cratesDir);
     }
 
     private SkyblockIslandRepository getRepository(IslandType islandType, IslandExtendCalculator extendCalculator) {
         return new SkyblockIslandRepository(islandType,
                 connectionProvider,
-                islandMemberQueryService,
-                islandMembershipQueryService,
-                extendCalculator);
+                extendCalculator,
+                islandMembershipRepository);
     }
 
     private SkyblockIslandCreator getIslandCreator(SkyblockIslandRepository repository,
-                                                   IslandType islandType,
-                                                   IslandExtendCalculator extendCalculator) {
-        return new SkyblockIslandCreator(connectionProvider,
+                                                   SkyblockIslandOrganizer islandOrganizer) {
+        return new SkyblockIslandCreator(
                 repository,
-                islandType,
-                islandMembershipCommandService,
-                extendCalculator,
+                islandOrganizer,
                 islandMessages);
     }
 

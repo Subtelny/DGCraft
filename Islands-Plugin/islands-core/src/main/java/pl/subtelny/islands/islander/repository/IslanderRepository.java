@@ -8,7 +8,6 @@ import pl.subtelny.core.api.account.Accounts;
 import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.islands.island.IslanderId;
 import pl.subtelny.islands.island.membership.IslandMembershipQueryService;
-import pl.subtelny.islands.island.query.IslandQueryService;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.islander.repository.storage.IslanderCacheLoader;
 import pl.subtelny.islands.islander.repository.storage.IslanderStorage;

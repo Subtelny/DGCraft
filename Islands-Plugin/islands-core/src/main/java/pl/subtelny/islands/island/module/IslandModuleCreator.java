@@ -6,7 +6,7 @@ import java.io.File;
 
 public interface IslandModuleCreator<T extends Island> {
 
-    IslandModule<T> createModule(File moduleDir);
+    IslandModuleInitable<T> createModule(File moduleDir);
 
     String getModuleType();
 

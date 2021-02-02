@@ -3,7 +3,6 @@ package pl.subtelny.islands.island.skyblockisland.model;
 import org.bukkit.Location;
 import org.bukkit.World;
 import pl.subtelny.islands.island.*;
-import pl.subtelny.islands.island.membership.IslandMemberQueryService;
 import pl.subtelny.islands.island.model.AbstractIsland;
 import pl.subtelny.islands.island.skyblockisland.IslandExtendCalculator;
 import pl.subtelny.islands.islander.model.Islander;
@@ -22,7 +21,6 @@ public class SkyblockIsland extends AbstractIsland {
     private int extendLevel;
 
     public SkyblockIsland(IslandExtendCalculator extendCalculator,
-                          IslandMemberQueryService islandMemberQueryService,
                           IslandId islandId,
                           IslandType islandType,
                           LocalDateTime creationDate,
@@ -33,7 +31,8 @@ public class SkyblockIsland extends AbstractIsland {
                           IslandMemberId owner,
                           IslandCoordinates islandCoordinates,
                           int extendLevel) {
-        super(islandMemberQueryService, islandId, islandType, creationDate, cuboid, spawn, points, islandMemberIds, owner);
+        super(islandId, islandType, creationDate, cuboid, spawn, points, islandMemberIds, owner);
+        Validation.isTrue(islandMemberIds.stream().allMatch(this::isIslander), "Not every islandMember is Islander!");
         this.extendCalculator = extendCalculator;
         this.islandCoordinates = islandCoordinates;
         this.extendLevel = extendLevel;
@@ -46,7 +45,11 @@ public class SkyblockIsland extends AbstractIsland {
     }
 
     private void validateIslander(IslandMember member) {
-        Validation.isTrue(Islander.ISLAND_MEMBER_TYPE.equals(member.getIslandMemberId().getType()), "skyblockIsland.cannot_join_not_islander");
+        Validation.isTrue(isIslander(member.getIslandMemberId()), "skyblockIsland.cannot_join_not_islander");
+    }
+
+    private boolean isIslander(IslandMemberId islandMemberId) {
+        return Islander.ISLAND_MEMBER_TYPE.equals(islandMemberId.getType());
     }
 
     @Override
@@ -62,9 +65,7 @@ public class SkyblockIsland extends AbstractIsland {
 
     @Override
     public String getName() {
-        return getOwner()
-                .map(IslandMember::getName)
-                .orElse("");
+        return "TODO name";
     }
 
     public IslandCoordinates getIslandCoordinates() {

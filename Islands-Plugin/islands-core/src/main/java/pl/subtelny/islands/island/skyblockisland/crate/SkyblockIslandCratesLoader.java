@@ -4,8 +4,9 @@ import pl.subtelny.crate.api.command.CrateCommandService;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.api.query.request.GetCratePrototypeRequest;
 import pl.subtelny.islands.Islands;
-import pl.subtelny.islands.island.crate.IslandRewardFileParserStrategyFactory;
-import pl.subtelny.islands.island.crate.IslandRewardsFileParserStrategy;
+import pl.subtelny.islands.island.crate.IslandCrateQueryService;
+import pl.subtelny.islands.island.crate.parser.IslandRewardFileParserStrategyFactory;
+import pl.subtelny.islands.island.crate.parser.IslandRewardsFileParserStrategy;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.crate.open.IslandOpenCrateRewardFileParserStrategy;
 import pl.subtelny.islands.island.module.IslandModule;
@@ -20,14 +21,14 @@ public class SkyblockIslandCratesLoader {
 
     private final IslandRewardFileParserStrategyFactory strategyFactory;
 
-    private final SkyblockIslandCrateQueryService islandCrateQueryService;
+    private final IslandCrateQueryService islandCrateQueryService;
 
     private final CrateCommandService crateCommandService;
 
     private final File cratesDir;
 
     public SkyblockIslandCratesLoader(IslandRewardFileParserStrategyFactory strategyFactory,
-                                      SkyblockIslandCrateQueryService islandCrateQueryService,
+                                      IslandCrateQueryService islandCrateQueryService,
                                       CrateCommandService crateCommandService,
                                       File cratesDir) {
         this.strategyFactory = strategyFactory;

@@ -8,6 +8,7 @@ import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,9 +18,11 @@ public interface Island {
 
     LocalDateTime getCreationDate();
 
-    List<IslandMember> getMembers();
+    List<IslandMemberId> getMembers();
 
-    Optional<IslandMember> getOwner();
+    Optional<IslandMemberId> getOwner();
+
+    boolean isOwner(IslandMember islandMember);
 
     Location getSpawn();
 
@@ -41,7 +44,7 @@ public interface Island {
 
     void join(IslandMember member);
 
-    void exit(IslandMember member);
+    void leave(IslandMember member);
 
     void changeSpawn(Location spawn);
 
@@ -50,5 +53,11 @@ public interface Island {
     void setPoints(int points);
 
     void askJoin(IslandMember islandMember);
+
+    void acceptAskJoin(IslandMember islandMember);
+
+    boolean canAskJoin(IslandMember islandMember);
+
+    Map<IslandMember, Long> getPendingJoinRequests();
 
 }
