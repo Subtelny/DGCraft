@@ -3,70 +3,50 @@ package pl.subtelny.islands.island.crate;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.api.CrateType;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.api.query.CrateQueryService;
 import pl.subtelny.crate.api.query.request.GetCratePrototypeRequest;
-import pl.subtelny.islands.island.Island;
-import pl.subtelny.islands.island.crate.invites.IslandInvitesCrateCreator;
-import pl.subtelny.islands.island.crate.invites.prototype.IslandInvitesCratePrototype;
-import pl.subtelny.islands.island.crate.search.IslandSearchCrateCreator;
-import pl.subtelny.islands.island.crate.search.prototype.IslandSearchCratePrototype;
 import pl.subtelny.islands.island.skyblockisland.crate.GetIslandCrateRequest;
 
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class IslandCrateQueryService {
-
-    private final IslandSearchCrateCreator searchCrateCreator;
-
-    private final IslandInvitesCrateCreator invitesCrateCreator;
 
     private final IslandCratePrototypeFactory cratePrototypeFactory;
 
     private final CrateQueryService crateQueryService;
 
+    private final List<IslandCrateCreator<CratePrototype>> crateCreators;
+
     @Autowired
-    public IslandCrateQueryService(IslandSearchCrateCreator searchCrateCreator,
-                                   IslandInvitesCrateCreator invitesCrateCreator,
-                                   IslandCratePrototypeFactory cratePrototypeFactory,
-                                   CrateQueryService crateQueryService) {
-        this.searchCrateCreator = searchCrateCreator;
-        this.invitesCrateCreator = invitesCrateCreator;
+    public IslandCrateQueryService(IslandCratePrototypeFactory cratePrototypeFactory,
+                                   CrateQueryService crateQueryService,
+                                   List<IslandCrateCreator<CratePrototype>> crateCreators) {
         this.cratePrototypeFactory = cratePrototypeFactory;
         this.crateQueryService = crateQueryService;
+        this.crateCreators = crateCreators;
     }
 
     public CratePrototype getCratePrototype(GetCratePrototypeRequest request) {
         return cratePrototypeFactory.createCratePrototype(request)
-                .orElseGet(() -> crateQueryService.getCratePrototype(request));
+                .orElseGet(() -> crateQueryService.constructCratePrototype(request));
     }
 
     public Crate getCrate(GetIslandCrateRequest request) {
         CratePrototype cratePrototype = crateQueryService.getCratePrototype(request.getCrateId());
-        if (isIslandSearchCrate(cratePrototype)) {
-            return createIslandSearchCrate((IslandSearchCratePrototype) cratePrototype, request.getData());
-        }
-        if (isIslandInvitesCrate(cratePrototype)) {
-            return createIslandInvitesCrate((IslandInvitesCratePrototype) cratePrototype, request.getData(), request.getIsland());
-        }
-        return crateQueryService.getCrate(request);
+        Optional<IslandCrateCreator<CratePrototype>> islandCrateCreator = findIslandCrateCreator(cratePrototype.getCrateType());
+        return islandCrateCreator
+                .map(crateCreator -> crateCreator.create(cratePrototype, request.getData(), request.getIsland()))
+                .orElseGet(() -> crateQueryService.getCrate(request));
     }
 
-    private boolean isIslandSearchCrate(CratePrototype cratePrototype) {
-        return IslandSearchCratePrototype.SEARCH_CRATE_TYPE.equals(cratePrototype.getCrateType());
-    }
-
-    private boolean isIslandInvitesCrate(CratePrototype cratePrototype) {
-        return IslandInvitesCratePrototype.ISLAND_CRATE_TYPE.equals(cratePrototype.getCrateType());
-    }
-
-    private Crate createIslandSearchCrate(IslandSearchCratePrototype cratePrototype, Map<String, String> data) {
-        return searchCrateCreator.create(cratePrototype, data);
-    }
-
-    private Crate createIslandInvitesCrate(IslandInvitesCratePrototype prototype, Map<String, String> data, Island island) {
-        return invitesCrateCreator.create(prototype, data, island);
+    private Optional<IslandCrateCreator<CratePrototype>> findIslandCrateCreator(CrateType crateType) {
+        return crateCreators.stream()
+                .filter(cratePrototypeIslandCrateCreator -> cratePrototypeIslandCrateCreator.getType().equals(crateType))
+                .findFirst();
     }
 
 }

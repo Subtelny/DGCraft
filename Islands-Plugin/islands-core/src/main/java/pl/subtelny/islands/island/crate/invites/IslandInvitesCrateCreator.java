@@ -3,16 +3,19 @@ package pl.subtelny.islands.island.crate.invites;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.api.CrateType;
 import pl.subtelny.crate.api.factory.CrateCreator;
 import pl.subtelny.crate.api.prototype.ItemCratePrototype;
 import pl.subtelny.crate.api.prototype.PageCratePrototype;
 import pl.subtelny.islands.island.Island;
+import pl.subtelny.islands.island.crate.IslandCrateCreator;
 import pl.subtelny.islands.island.crate.invites.prototype.IslandInvitesCratePrototype;
+import pl.subtelny.islands.island.crate.search.prototype.IslandSearchCratePrototype;
 
 import java.util.Map;
 
 @Component
-public class IslandInvitesCrateCreator {
+public class IslandInvitesCrateCreator implements IslandCrateCreator<IslandInvitesCratePrototype> {
 
     private final CrateCreator<PageCratePrototype> crateCreator;
 
@@ -21,6 +24,7 @@ public class IslandInvitesCrateCreator {
         this.crateCreator = crateCreator;
     }
 
+    @Override
     public Crate create(IslandInvitesCratePrototype prototype,
                         Map<String, String> data,
                         Island island) {
@@ -39,4 +43,8 @@ public class IslandInvitesCrateCreator {
         return crateCreator.create(pageCratePrototype, data);
     }
 
+    @Override
+    public CrateType getType() {
+        return IslandInvitesCratePrototype.ISLAND_CRATE_TYPE;
+    }
 }

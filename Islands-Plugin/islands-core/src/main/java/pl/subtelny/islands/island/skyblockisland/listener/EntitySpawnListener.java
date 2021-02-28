@@ -21,7 +21,7 @@ public class EntitySpawnListener implements Listener {
 
     private static final ConfigurationKey SPAWN_AGGRESSIVE_MOB_DISABLED_KEY = new ConfigurationKey("SPAWN_AGGRESSIVE_MOB_DISABLED");
 
-    private static final ConfigurationKey SPAWN_PASSIVE_MOB_DISABLED_KEY = new ConfigurationKey("SPAWN_PASSIVE_MOB_DISABLED_KEY");
+    private static final ConfigurationKey SPAWN_PASSIVE_MOB_DISABLED_KEY = new ConfigurationKey("SPAWN_PASSIVE_MOB_DISABLED");
 
     private final IslandQueryService islandQueryService;
 

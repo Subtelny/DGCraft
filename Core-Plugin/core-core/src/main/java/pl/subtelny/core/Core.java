@@ -14,10 +14,4 @@ public class Core extends ComponentPlugin {
         ComponentContext.initialize(this);
     }
 
-    @Override
-    public void onInitialize() {
-
-    }
-
-
 }

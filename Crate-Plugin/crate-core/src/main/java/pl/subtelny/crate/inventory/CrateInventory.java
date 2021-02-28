@@ -1,61 +1,225 @@
 package pl.subtelny.crate.inventory;
 
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftInventoryCustom;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import pl.subtelny.crate.api.Crate;
-import pl.subtelny.crate.api.CrateClickResult;
-import pl.subtelny.crate.api.CrateId;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import pl.subtelny.crate.AbstractCrate;
+import pl.subtelny.crate.Crate;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
-public class CrateInventory extends CraftInventoryCustom {
+public class CrateInventory implements Inventory {
 
-    private final Crate crate;
+    private AbstractCrate crate;
 
-    private final List<Player> sessions = new ArrayList<>();
+    private final Inventory inventory;
 
-    public CrateInventory(int size, String title, Crate crate) {
-        super(null, size, title);
+    public CrateInventory(AbstractCrate crate, Inventory inventory) {
         this.crate = crate;
+        this.inventory = inventory;
+    }
+
+    public boolean isViewer(Player player) {
+        return crate.isViewer(player);
+    }
+
+    public void close(Player player) {
+        crate.removeViewer(player);
+        if (!crate.hasViewers()) {
+            crate = null;
+        }
+    }
+
+    public Crate getCrate() {
+        return crate;
+    }
+
+    @Override
+    public int getSize() {
+        return inventory.getSize();
+    }
+
+    @Override
+    public int getMaxStackSize() {
+        return inventory.getMaxStackSize();
+    }
+
+    @Override
+    public void setMaxStackSize(int i) {
+        inventory.setMaxStackSize(i);
+    }
+
+    @Override
+    public ItemStack getItem(int i) {
+        return inventory.getItem(i);
+    }
+
+    @Override
+    public void setItem(int i, ItemStack itemStack) {
+        inventory.setItem(i, itemStack);
+    }
+
+    @Override
+    public HashMap<Integer, ItemStack> addItem(ItemStack... itemStacks) throws IllegalArgumentException {
+        return inventory.addItem(itemStacks);
+    }
+
+    @Override
+    public HashMap<Integer, ItemStack> removeItem(ItemStack... itemStacks) throws IllegalArgumentException {
+        return inventory.removeItem(itemStacks);
+    }
+
+    @Override
+    public HashMap<Integer, ItemStack> removeItemAnySlot(ItemStack... itemStacks) throws IllegalArgumentException {
+        return inventory.removeItemAnySlot(itemStacks);
+    }
+
+    @Override
+    public ItemStack[] getContents() {
+        return inventory.getContents();
+    }
+
+    @Override
+    public void setContents(ItemStack[] itemStacks) throws IllegalArgumentException {
+        inventory.setContents(itemStacks);
+    }
+
+    @Override
+    public ItemStack[] getStorageContents() {
+        return inventory.getStorageContents();
+    }
+
+    @Override
+    public void setStorageContents(ItemStack[] itemStacks) throws IllegalArgumentException {
+        inventory.setStorageContents(itemStacks);
+    }
+
+    @Override
+    public boolean contains(Material material) throws IllegalArgumentException {
+        return inventory.contains(material);
+    }
+
+    @Override
+    public boolean contains(ItemStack itemStack) {
+        return inventory.contains(itemStack);
+    }
+
+    @Override
+    public boolean contains(Material material, int i) throws IllegalArgumentException {
+        return inventory.contains(material, i);
+    }
+
+    @Override
+    public boolean contains(ItemStack itemStack, int i) {
+        return inventory.contains(itemStack, i);
+    }
+
+    @Override
+    public boolean containsAtLeast(ItemStack itemStack, int i) {
+        return inventory.containsAtLeast(itemStack, i);
+    }
+
+    @Override
+    public HashMap<Integer, ? extends ItemStack> all(Material material) throws IllegalArgumentException {
+        return inventory.all(material);
+    }
+
+    @Override
+    public HashMap<Integer, ? extends ItemStack> all(ItemStack itemStack) {
+        return inventory.all(itemStack);
+    }
+
+    @Override
+    public int first(Material material) throws IllegalArgumentException {
+        return inventory.first(material);
+    }
+
+    @Override
+    public int first(ItemStack itemStack) {
+        return inventory.first(itemStack);
+    }
+
+    @Override
+    public int firstEmpty() {
+        return inventory.firstEmpty();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return inventory.isEmpty();
+    }
+
+    @Override
+    public void remove(Material material) throws IllegalArgumentException {
+        inventory.remove(material);
+    }
+
+    @Override
+    public void remove(ItemStack itemStack) {
+        inventory.remove(itemStack);
+    }
+
+    @Override
+    public void clear(int i) {
+        inventory.clear(i);
     }
 
     @Override
     public void clear() {
-        super.clear();
-        getViewers().forEach(humanEntity -> humanEntity.closeInventory(InventoryCloseEvent.Reason.CANT_USE));
-        sessions.clear();
+        inventory.clear();
     }
 
-    public void addSession(Player player) {
-        sessions.add(player);
+    @Override
+    public List<HumanEntity> getViewers() {
+        return inventory.getViewers();
     }
 
-    public void removeSession(Player player) {
-        sessions.remove(player);
+    @Override
+    public InventoryType getType() {
+        return inventory.getType();
     }
 
-    public boolean hasSession(Player player) {
-        return sessions.contains(player);
+    @Override
+    public InventoryHolder getHolder() {
+        return inventory.getHolder();
     }
 
-    public void cleanIfNeeded() {
-        if (getViewers().isEmpty()) {
-            sessions.clear();
-        }
-        crate.cleanIfNeeded();
+    @Override
+    public InventoryHolder getHolder(boolean b) {
+        return inventory.getHolder(b);
     }
 
-    public CrateClickResult click(Player player, int slot) {
-        if (hasSession(player)) {
-            return crate.click(player, slot);
-        }
-        return CrateClickResult.CLOSE_INV;
+    @Override
+    public ListIterator<ItemStack> iterator() {
+        return inventory.iterator();
     }
 
-    public CrateId getCrateId() {
-        return crate.getId();
+    @Override
+    public void forEach(Consumer<? super ItemStack> action) {
+        inventory.forEach(action);
     }
 
+    @Override
+    public Spliterator<ItemStack> spliterator() {
+        return inventory.spliterator();
+    }
+
+    @Override
+    public ListIterator<ItemStack> iterator(int i) {
+        return inventory.iterator(i);
+    }
+
+    @Override
+    public Location getLocation() {
+        return inventory.getLocation();
+    }
 }

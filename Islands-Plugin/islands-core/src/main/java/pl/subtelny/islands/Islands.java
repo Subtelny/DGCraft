@@ -13,8 +13,4 @@ public class Islands extends ComponentPlugin {
         IslandsConfiguration.init(this);
     }
 
-    @Override
-    public void onInitialize() {
-
-    }
 }

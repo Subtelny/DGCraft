@@ -17,6 +17,11 @@ public class RewardFileParserStrategy extends AbstractFileParserStrategy<Reward>
         this.rewardParsers = rewardParsers;
     }
 
+    public RewardFileParserStrategy(File file, List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers) {
+        super(file);
+        this.rewardParsers = rewardParsers;
+    }
+
     @Override
     public Reward load(String path) {
         return rewardParsers.stream()

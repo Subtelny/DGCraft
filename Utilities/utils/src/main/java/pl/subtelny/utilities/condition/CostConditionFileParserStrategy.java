@@ -18,7 +18,7 @@ public class CostConditionFileParserStrategy extends AbstractFileParserStrategy<
         this.conditionParsers = conditionParsers;
     }
 
-    protected CostConditionFileParserStrategy(File file, List<PathAbstractFileParserStrategy<? extends CostCondition>> conditionParsers) {
+    public CostConditionFileParserStrategy(File file, List<PathAbstractFileParserStrategy<? extends CostCondition>> conditionParsers) {
         super(file);
         this.conditionParsers = conditionParsers;
     }

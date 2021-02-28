@@ -1,0 +1,34 @@
+# LIST OF SETTING KEYS:
+# - SPAWNERS_DISABLED
+# - SPAWN_AGGRESSIVE_MOB_DISABLED
+# - SPAWN_PASSIVE_MOB_DISABLED
+
+
+configuration:
+  type: ISLAND_SETTINGS
+  size: 18
+  title: 'Ustawienia'
+
+content:
+  0:
+    item: GRASS
+    amount: 1
+    name: 'Stworz wyspe'
+    lore:
+      - 'something'
+      - 'something2'
+    onclick:
+      rewards:
+        0:
+          island: create
+  1:
+    item: GRASS
+    amount: 1
+    name: 'Szukaj wyspe'
+    lore:
+      - 'something'
+      - '&6hehe'
+    onclick:
+      rewards:
+        0:
+          island: search

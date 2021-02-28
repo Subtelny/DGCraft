@@ -18,6 +18,11 @@ public class ConditionFileParserStrategy extends AbstractFileParserStrategy<Cond
         this.conditionParsers = conditionParsers;
     }
 
+    public ConditionFileParserStrategy(File file, List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers) {
+        super(file);
+        this.conditionParsers = conditionParsers;
+    }
+
     @Override
     public Condition load(String path) {
         return conditionParsers.stream()

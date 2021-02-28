@@ -1,19 +1,13 @@
 package pl.subtelny.crate;
 
-import pl.subtelny.components.core.api.plugin.ComponentPlugin;
+import org.bukkit.entity.Player;
 
-public class Crate extends ComponentPlugin {
+public interface Crate {
 
-    public static Crate plugin;
+    CrateKey getKey();
 
-    @Override
-    public void onLoad() {
-        plugin = this;
-    }
+    CrateClickResult click(Player player, int slot);
 
-    @Override
-    public void onInitialize() {
-
-    }
+    void open(Player player);
 
 }

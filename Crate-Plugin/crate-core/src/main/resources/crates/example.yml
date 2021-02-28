@@ -10,13 +10,15 @@ content:
     amount: 10
     name: '&8HEHE'
     lore: '&7Any lore'
-    close-after-click: true
+    close-on-click: true
     movable: false
     on-click:
+      cost-conditions:
+        0:
+          money: 1000
       conditions:
         0:
-          condition: COST
-          money: 1000
+          permission: 1000
       rewards:
         0:
           item: STONE

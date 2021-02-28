@@ -3,6 +3,7 @@ package pl.subtelny.components.core;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.ComponentException;
+import pl.subtelny.components.core.api.ComponentProvider;
 import pl.subtelny.components.core.api.plugin.ComponentPlugin;
 import pl.subtelny.components.core.loader.ComponentBukkitDependenciesLoader;
 import pl.subtelny.components.core.loader.ComponentLoader;
@@ -73,10 +74,11 @@ public class ComponentContext {
     }
 
     private void informPlugins() {
+        ComponentProvider provider = getComponentsStorage().getComponent(ComponentProvider.class);
         getComponentsStorage().getComponents().values().stream()
                 .map(ComponentObjectInfo::getComponentPlugin)
                 .collect(Collectors.toList())
-                .forEach(ComponentPlugin::onInitialize);
+                .forEach(componentPlugin -> componentPlugin.onInitialize(provider));
     }
 
     public ComponentsStorage getComponentsStorage() {

@@ -2,49 +2,38 @@ package pl.subtelny.crate.initializer;
 
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.components.core.api.DependencyActivator;
-import pl.subtelny.crate.Crate;
-import pl.subtelny.crate.api.prototype.CratePrototype;
-import pl.subtelny.crate.api.query.CrateQueryService;
-import pl.subtelny.crate.api.query.request.GetCratePrototypeRequest;
-import pl.subtelny.crate.repository.CrateRepository;
-import pl.subtelny.utilities.file.FileUtil;
+import pl.subtelny.crate.service.CrateRegistrationService;
+import pl.subtelny.crate.service.RegisterCratePrototypeRequest;
 
 import java.io.File;
+import java.util.Arrays;
 
 @Component
-public class CrateInitializer implements DependencyActivator {
+public class CrateInitializer {
 
-    private final CrateQueryService crateQueryService;
-
-    private final CrateRepository crateRepository;
+    private final CrateRegistrationService crateRegistrationService;
 
     @Autowired
-    public CrateInitializer(CrateQueryService crateQueryService, CrateRepository crateRepository) {
-        this.crateQueryService = crateQueryService;
-        this.crateRepository = crateRepository;
+    public CrateInitializer(CrateRegistrationService crateRegistrationService) {
+        this.crateRegistrationService = crateRegistrationService;
     }
 
-    @Override
-    public void activate() {
-        File cratesDir = FileUtil.getFile(Crate.plugin, "crates");
-        if (!cratesDir.exists()) {
-            FileUtil.copyFile(Crate.plugin, "crates/example.yml");
-        }
-
-        File[] files = cratesDir.listFiles();
+    public void initializeFromDir(File dir) {
+        validateFile(dir);
+        File[] files = dir.listFiles();
         if (files != null) {
-            for (File file : files) {
-                initializeCrate(file);
-            }
+            Arrays.stream(files).forEach(this::initializeFromFile);
         }
     }
 
-    private void initializeCrate(File file) {
-        if (file.getName().contains(".yml")) {
-            GetCratePrototypeRequest request = GetCratePrototypeRequest.builder(Crate.plugin, file).build();
-            CratePrototype cratePrototype = crateQueryService.getCratePrototype(request);
-            crateRepository.addCratePrototype(cratePrototype.getCrateId(), cratePrototype);
+    private void initializeFromFile(File file) {
+        crateRegistrationService.registerCratePrototype(RegisterCratePrototypeRequest.of(file));
+    }
+
+    private void validateFile(File file) {
+        if (!file.isDirectory()) {
+            throw new IllegalStateException("File is not directory");
         }
     }
+
 }

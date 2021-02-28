@@ -4,11 +4,24 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import pl.subtelny.utilities.ColorUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class ItemStackUtil {
+
+    public static ItemStack addLore(ItemStack itemStack, List<String> lore) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        List<String> newLore = new ArrayList<>();
+        if (itemMeta.getLore() != null) {
+            newLore = itemMeta.getLore();
+        }
+        newLore.addAll(lore);
+        itemMeta.setLore(newLore);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
 
     public static ItemStack prepareItemStack(ItemStack itemStack, Map<String, String> data) {
         if (data.isEmpty()) {

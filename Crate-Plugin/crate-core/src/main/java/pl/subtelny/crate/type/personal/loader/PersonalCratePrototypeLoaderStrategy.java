@@ -1,0 +1,69 @@
+package pl.subtelny.crate.type.personal.loader;
+
+import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.components.core.api.Component;
+import pl.subtelny.crate.CrateType;
+import pl.subtelny.crate.ItemCrate;
+import pl.subtelny.crate.loader.CratePrototypeLoadRequest;
+import pl.subtelny.crate.loader.CratePrototypeLoaderStrategy;
+import pl.subtelny.crate.messages.CrateMessages;
+import pl.subtelny.crate.parser.BasicItemCrateParserStrategy;
+import pl.subtelny.crate.parser.CratePrototypeParserStrategy;
+import pl.subtelny.crate.parser.ItemCrateParserStrategy;
+import pl.subtelny.crate.prototype.CratePrototype;
+import pl.subtelny.crate.type.personal.PersonalItemCrate;
+
+import java.io.File;
+
+@Component
+public class PersonalCratePrototypeLoaderStrategy implements CratePrototypeLoaderStrategy {
+
+    private final CrateMessages messages;
+
+    @Autowired
+    public PersonalCratePrototypeLoaderStrategy(CrateMessages messages) {
+        this.messages = messages;
+    }
+
+    @Override
+    public CratePrototype load(CratePrototypeLoadRequest request) {
+        File file = request.getFile();
+        ItemCrateParserStrategy itemCrateStrategy = getItemCrateParserStrategy(request);
+        return new CratePrototypeParserStrategy(file, request.getCrateKeyPrefix(), itemCrateStrategy).load("");
+    }
+
+    @Override
+    public CrateType getType() {
+        return PersonalItemCrate.TYPE;
+    }
+
+    private ItemCrateParserStrategy getItemCrateParserStrategy(CratePrototypeLoadRequest request) {
+        BasicItemCrateParserStrategy basicItemCrate = getBasicItemCrate(request);
+        return new PersonalItemCrateStrategy(basicItemCrate);
+    }
+
+    private BasicItemCrateParserStrategy getBasicItemCrate(CratePrototypeLoadRequest request) {
+        return new BasicItemCrateParserStrategy(
+                request.getFile(),
+                request.getCostConditionFileParserStrategy(),
+                request.getConditionFileParserStrategy(),
+                request.getRewardFileParserStrategy()
+        );
+    }
+
+    private class PersonalItemCrateStrategy implements ItemCrateParserStrategy {
+
+        private final ItemCrateParserStrategy itemCrateParserStrategy;
+
+        private PersonalItemCrateStrategy(ItemCrateParserStrategy itemCrateParserStrategy) {
+            this.itemCrateParserStrategy = itemCrateParserStrategy;
+        }
+
+        @Override
+        public ItemCrate load(String path) {
+            ItemCrate itemCrate = itemCrateParserStrategy.load(path);
+            return new PersonalItemCrate(messages, itemCrate);
+        }
+    }
+
+}

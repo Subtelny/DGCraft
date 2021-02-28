@@ -55,7 +55,7 @@
         </dependency>
         <dependency>
             <groupId>pl.subtelny</groupId>
-            <artifactId>crate-api</artifactId>
+            <artifactId>crate-api-legacy</artifactId>
             <version>1</version>
             <scope>compile</scope>
         </dependency>
