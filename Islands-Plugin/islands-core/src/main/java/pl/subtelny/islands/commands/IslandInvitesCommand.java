@@ -11,8 +11,6 @@ import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.island.cqrs.query.IslandQueryService;
 import pl.subtelny.islands.island.crate.IslandCrates;
-import pl.subtelny.islands.island.module.IslandModule;
-import pl.subtelny.islands.island.module.IslandModules;
 import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.message.IslandMessages;
@@ -22,18 +20,15 @@ import pl.subtelny.utilities.exception.ValidationException;
 @PluginSubCommand(command = "zaproszenia", aliases = {"invites", "invs"}, mainCommand = IslandCommand.class)
 public class IslandInvitesCommand extends BaseCommand {
 
-    private final IslandModules islandModules;
-
     private final IslanderQueryService islanderQueryService;
 
     private final IslandQueryService islandQueryService;
 
     @Autowired
-    public IslandInvitesCommand(IslandMessages messages, IslandModules islandModules,
+    public IslandInvitesCommand(IslandMessages messages,
                                 IslanderQueryService islanderQueryService,
                                 IslandQueryService islandQueryService) {
         super(messages);
-        this.islandModules = islandModules;
         this.islanderQueryService = islanderQueryService;
         this.islandQueryService = islandQueryService;
     }
@@ -48,10 +43,8 @@ public class IslandInvitesCommand extends BaseCommand {
     private void openInvitesCrate(IslandType seasonIslandType, Player player) {
         Islander islander = getIslander(player);
         Island island = getIsland(islander, seasonIslandType);
-
-        IslandModule<Island> islandModule = getIslandModule(seasonIslandType);
-        IslandCrates islandCrates = islandModule.getIslandCrates();
-        islandCrates.openInvitesCrate(player, island);
+        IslandCrates islandCrates = islandQueryService.getIslandCrates(island);
+        islandCrates.openInvites(player, island);
     }
 
     private Island getIsland(Islander islander, IslandType islandType) {
@@ -63,11 +56,6 @@ public class IslandInvitesCommand extends BaseCommand {
 
     private Islander getIslander(Player player) {
         return islanderQueryService.getIslander(player);
-    }
-
-    private IslandModule<Island> getIslandModule(IslandType seasonIslandType) {
-        return islandModules.findIslandModule(seasonIslandType)
-                .orElseThrow(() -> ValidationException.of("command.island.island_module_not_found", seasonIslandType));
     }
 
     @Override

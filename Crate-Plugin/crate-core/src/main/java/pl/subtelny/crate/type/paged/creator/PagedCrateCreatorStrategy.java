@@ -1,14 +1,14 @@
 package pl.subtelny.crate.type.paged.creator;
 
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.Inventory;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.crate.AbstractCrate;
-import pl.subtelny.crate.Crate;
-import pl.subtelny.crate.CrateType;
+import pl.subtelny.crate.api.AbstractCrate;
+import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.api.CrateType;
+import pl.subtelny.crate.api.InventoryInfo;
+import pl.subtelny.crate.api.creator.CrateCreatorStrategy;
+import pl.subtelny.crate.api.type.paged.PagedCratePrototype;
+import pl.subtelny.crate.api.type.paged.creator.PagedCrateCreatorRequest;
 import pl.subtelny.crate.type.paged.PagedCrate;
-import pl.subtelny.crate.creator.CrateCreatorStrategy;
-import pl.subtelny.utilities.ColorUtil;
 
 @Component
 public class PagedCrateCreatorStrategy implements CrateCreatorStrategy<PagedCrateCreatorRequest> {
@@ -20,19 +20,18 @@ public class PagedCrateCreatorStrategy implements CrateCreatorStrategy<PagedCrat
 
     @Override
     public CrateType getType() {
-        return PagedCrate.TYPE;
+        return PagedCratePrototype.TYPE;
     }
 
     private PagedCrate constructPagedCrate(PagedCrateCreatorRequest request) {
-        PagedCrate pagedCrate = new PagedCrate(request.getCrateKey(), createInventory(request));
+        PagedCrate pagedCrate = new PagedCrate(request.getCrateKey(), request.getPermission(), createInventory(request));
         AbstractCrate[] pages = getPages(pagedCrate, request);
         pagedCrate.setPages(pages);
         return pagedCrate;
     }
 
-    private Inventory createInventory(PagedCrateCreatorRequest request) {
-        String title = ColorUtil.color(request.getTitle());
-        return Bukkit.createInventory(null, request.getInventorySize(), title);
+    private InventoryInfo createInventory(PagedCrateCreatorRequest request) {
+        return InventoryInfo.of(request.getTitle(), request.getInventorySize());
     }
 
     private AbstractCrate[] getPages(PagedCrate pagedCrate, PagedCrateCreatorRequest request) {

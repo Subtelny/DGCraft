@@ -41,9 +41,6 @@ public class IslandActionGuard {
 
     public IslandActionGuardResult accessToEnter(Player player, Location location) {
         if (player.hasPermission(ENTER_BYPASS_PERMISSION)) {
-            if (!islandQueryService.isIslandWorld(location.getWorld())) {
-                return IslandActionGuardResult.NOT_ISLAND_WORLD;
-            }
             return IslandActionGuardResult.ACTION_PERMITED;
         }
         return playerHasAccessToLocation(player, location);

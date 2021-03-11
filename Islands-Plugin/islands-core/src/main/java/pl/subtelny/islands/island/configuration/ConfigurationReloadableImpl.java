@@ -2,7 +2,7 @@ package pl.subtelny.islands.island.configuration;
 
 import java.util.function.Supplier;
 
-public class ConfigurationReloadableImpl<T extends IslandConfiguration> implements ConfigurationReloadable<T> {
+public class ConfigurationReloadableImpl<T extends IslandConfiguration> implements ReloadableConfiguration<T> {
 
     private final Supplier<T> supplier;
 

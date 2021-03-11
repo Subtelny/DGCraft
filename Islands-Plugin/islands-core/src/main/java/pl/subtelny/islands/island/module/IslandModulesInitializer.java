@@ -37,12 +37,12 @@ public class IslandModulesInitializer {
         }
 
         String moduleType = new ObjectFileParserStrategy<String>(configFile).load("module.type");
-        IslandModuleInitable<Island> module = createModule(moduleDirectory, moduleType);
+        islandModuleInitable<Island> module = createModule(moduleDirectory, moduleType);
         module.initialize();
         return module;
     }
 
-    private IslandModuleInitable<Island> createModule(File moduleDirectory, String moduleType) {
+    private islandModuleInitable<Island> createModule(File moduleDirectory, String moduleType) {
         try {
             return getProperIslandModuleCreatorFor(moduleType)
                     .createModule(moduleDirectory);

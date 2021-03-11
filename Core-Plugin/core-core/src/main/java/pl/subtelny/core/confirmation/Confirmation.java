@@ -2,6 +2,7 @@ package pl.subtelny.core.confirmation;
 
 import org.bukkit.entity.Player;
 import pl.subtelny.core.api.confirmation.ConfirmContextId;
+import pl.subtelny.core.api.confirmation.Confirmable;
 import pl.subtelny.utilities.Callback;
 
 import java.util.Objects;
@@ -10,18 +11,18 @@ public class Confirmation {
 
     private final ConfirmContextId contextId;
 
-    private final Player player;
+    private final Confirmable canConfirm;
 
     private final Callback<Boolean> listener;
 
-    public Confirmation(ConfirmContextId contextId, Player player, Callback<Boolean> listener) {
+    public Confirmation(ConfirmContextId contextId, Confirmable canConfirm, Callback<Boolean> listener) {
         this.contextId = contextId;
-        this.player = player;
+        this.canConfirm = canConfirm;
         this.listener = listener;
     }
 
     public boolean canConfirm(Player player) {
-        return this.player.equals(player);
+        return canConfirm.canConfirm(player);
     }
 
     public void notifyListener(boolean result) {

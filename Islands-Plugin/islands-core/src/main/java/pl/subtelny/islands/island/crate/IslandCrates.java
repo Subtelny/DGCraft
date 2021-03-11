@@ -5,16 +5,14 @@ import pl.subtelny.islands.island.Island;
 
 public interface IslandCrates {
 
-    void openMainCrate(Player player);
+    void openInvites(Player player, Island island);
 
-    void openCreateCrate(Player player);
+    void openSettings(Player player, Island island);
 
-    void openInvitesCrate(Player player, Island island);
+    void openCreateIsland(Player player);
 
-    void openSearchCrate(Player player);
+    void openMain(Player player);
 
-    void openCrate(Player player, String rawCrateId);
-
-    void reloadCrates();
+    void reload();
 
 }

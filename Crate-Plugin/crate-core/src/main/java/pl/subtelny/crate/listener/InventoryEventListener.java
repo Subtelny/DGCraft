@@ -7,9 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.crate.Crate;
-import pl.subtelny.crate.CrateClickResult;
-import pl.subtelny.crate.inventory.CrateInventory;
+import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.api.CrateClickResult;
+import pl.subtelny.crate.api.CrateInventory;
 
 @Component
 public class InventoryEventListener implements Listener {

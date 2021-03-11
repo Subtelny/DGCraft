@@ -2,16 +2,16 @@ package pl.subtelny.crate.type.global.loader;
 
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.crate.CrateType;
-import pl.subtelny.crate.ItemCrate;
-import pl.subtelny.crate.loader.CratePrototypeLoadRequest;
-import pl.subtelny.crate.loader.CratePrototypeLoaderStrategy;
+import pl.subtelny.crate.api.CrateType;
+import pl.subtelny.crate.api.ItemCrate;
+import pl.subtelny.crate.api.loader.CratePrototypeLoadRequest;
+import pl.subtelny.crate.api.loader.CratePrototypeLoaderStrategy;
 import pl.subtelny.crate.messages.CrateMessages;
-import pl.subtelny.crate.parser.BasicItemCrateParserStrategy;
-import pl.subtelny.crate.parser.CratePrototypeParserStrategy;
-import pl.subtelny.crate.parser.ItemCrateParserStrategy;
-import pl.subtelny.crate.prototype.CratePrototype;
-import pl.subtelny.crate.type.global.GlobalCrateType;
+import pl.subtelny.crate.api.parser.BasicItemCrateParserStrategy;
+import pl.subtelny.crate.api.parser.CratePrototypeParserStrategy;
+import pl.subtelny.crate.api.parser.ItemCrateParserStrategy;
+import pl.subtelny.crate.api.prototype.CratePrototype;
+import pl.subtelny.crate.api.type.global.GlobalCrateType;
 import pl.subtelny.crate.type.global.GlobalItemCrate;
 
 import java.io.File;
@@ -30,7 +30,7 @@ public class GlobalCratePrototypeLoaderStrategy implements CratePrototypeLoaderS
     public CratePrototype load(CratePrototypeLoadRequest request) {
         File file = request.getFile();
         ItemCrateParserStrategy itemCrateStrategy = getItemCrateParserStrategy(request);
-        return new CratePrototypeParserStrategy(file, request.getCrateKeyPrefix(), itemCrateStrategy).load("");
+        return new CratePrototypeParserStrategy(file, request.getPlugin(), request.getCrateKeyPrefix(), itemCrateStrategy).load("");
     }
 
     @Override

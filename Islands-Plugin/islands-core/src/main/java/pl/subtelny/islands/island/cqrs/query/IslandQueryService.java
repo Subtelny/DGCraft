@@ -6,6 +6,7 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.island.*;
 import pl.subtelny.islands.island.cqrs.IslandService;
+import pl.subtelny.islands.island.crate.IslandCrates;
 import pl.subtelny.islands.island.module.IslandModule;
 import pl.subtelny.islands.island.module.IslandModules;
 import pl.subtelny.utilities.exception.ValidationException;
@@ -22,6 +23,11 @@ public class IslandQueryService extends IslandService {
         super(islandModules);
     }
 
+    public IslandCrates getIslandCrates(Island island) {
+        IslandModule<Island> islandModule = getIslandModule(island.getIslandType());
+        return islandModule.getIslandCrates();
+    }
+
     public List<Island> getIslands(List<IslandId> islandIds) {
         return islandIds.stream()
                 .flatMap(islandId -> findIsland(islandId).stream())
@@ -30,7 +36,7 @@ public class IslandQueryService extends IslandService {
 
     public Optional<Island> findIsland(IslandId islandId) {
         IslandType islandType = islandId.getIslandType();
-        return getIslandIslandModule(islandType)
+        return getIslandModule(islandType)
                 .findIsland(islandId);
     }
 
@@ -46,7 +52,7 @@ public class IslandQueryService extends IslandService {
         return findIslandModule(world).isPresent();
     }
 
-    private IslandModule<Island> getIslandIslandModule(IslandType islandType) {
+    private IslandModule<Island> getIslandModule(IslandType islandType) {
         return findIslandModule(islandType)
                 .orElseThrow(() -> ValidationException.of("island.query.island_module_not_found", islandType));
     }

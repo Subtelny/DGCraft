@@ -8,6 +8,7 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.core.api.confirmation.ConfirmContextId;
 import pl.subtelny.core.api.confirmation.ConfirmationRequest;
 import pl.subtelny.core.api.confirmation.ConfirmationService;
+import pl.subtelny.core.api.confirmation.PlayerConfirmable;
 import pl.subtelny.islands.configuration.IslandsConfiguration;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.IslandId;
@@ -79,8 +80,7 @@ public class IslandDeleteCommand extends BaseCommand {
         String contextIdRaw = String.join("@", "island.remove", player.getName());
         String title = getMessages().getColoredFormattedMessage("command.island.delete.confirmation_title", island.getIslandType().getInternal());
 
-        ConfirmContextId confirmContextId = ConfirmContextId.of(contextIdRaw);
-        ConfirmationRequest request = ConfirmationRequest.builder(confirmContextId, player)
+        ConfirmationRequest request = ConfirmationRequest.builder(contextIdRaw, player, new PlayerConfirmable(player))
                 .stateListener(getListener(player, island))
                 .title(title)
                 .build();

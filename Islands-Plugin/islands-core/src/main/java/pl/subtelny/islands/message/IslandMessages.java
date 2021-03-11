@@ -39,7 +39,7 @@ public class IslandMessages extends Messages implements DependencyActivator {
 
     @Override
     public void activate() {
-        initMessages(Islands.plugin);
+        initMessages(Islands.PLUGIN);
     }
 
     public void initMessages(Plugin plugin) {

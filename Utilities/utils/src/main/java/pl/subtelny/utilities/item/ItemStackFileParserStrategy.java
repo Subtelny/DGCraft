@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import pl.subtelny.utilities.ColorUtil;
 import pl.subtelny.utilities.Pair;
 import pl.subtelny.utilities.Saveable;
+import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.file.PathAbstractFileParserStrategy;
 
 import java.io.File;
@@ -26,10 +27,6 @@ public class ItemStackFileParserStrategy extends PathAbstractFileParserStrategy<
         super(configuration, file);
     }
 
-    public ItemStackFileParserStrategy(File file) {
-        super(file);
-    }
-
     @Override
     public String getPath() {
         return "item";
@@ -37,7 +34,11 @@ public class ItemStackFileParserStrategy extends PathAbstractFileParserStrategy<
 
     @Override
     public ItemStack load(String path) {
-        return createItemStack(path);
+        try {
+            return createItemStack(path);
+        } catch (NullPointerException e) {
+            throw ValidationException.of("NPE while creating ItemStack, path " + path + ", " + file.getName(), e);
+        }
     }
 
     @Override

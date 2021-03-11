@@ -1,11 +1,6 @@
 package pl.subtelny.crate.type.basic;
 
-import org.bukkit.inventory.Inventory;
-import pl.subtelny.crate.ContentCrate;
-import pl.subtelny.crate.CrateKey;
-import pl.subtelny.crate.CrateType;
-import pl.subtelny.crate.ItemCrate;
-import pl.subtelny.utilities.Validation;
+import pl.subtelny.crate.api.*;
 
 import java.util.Map;
 
@@ -16,9 +11,8 @@ public class BasicCrate extends ContentCrate {
     public BasicCrate(CrateKey crateKey,
                       String permission,
                       Map<Integer, ItemCrate> content,
-                      Inventory inventory) {
+                      InventoryInfo inventory) {
         super(crateKey, permission, inventory, content);
-        Validation.isTrue(TYPE.equals(crateKey.getType()), "CrateKey type is not BASIC");
     }
 
 }

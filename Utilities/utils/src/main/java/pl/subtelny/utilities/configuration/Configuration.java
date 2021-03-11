@@ -17,6 +17,10 @@ public class Configuration {
         return Optional.empty();
     }
 
+    public Optional<ConfigurationValue> findConfigurationValue(ConfigurationKey key) {
+        return Optional.ofNullable(configuration.get(key));
+    }
+
     public void updateValue(ConfigurationKey key, ConfigurationValue value) {
         configuration.put(key, value);
     }

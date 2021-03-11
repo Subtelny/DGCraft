@@ -4,9 +4,11 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
-import pl.subtelny.crate.AbstractCrate;
-import pl.subtelny.crate.ContentCrate;
-import pl.subtelny.crate.ItemCrate;
+import pl.subtelny.crate.api.AbstractCrate;
+import pl.subtelny.crate.api.ContentCrate;
+import pl.subtelny.crate.api.InventoryInfo;
+import pl.subtelny.crate.api.ItemCrate;
+import pl.subtelny.crate.api.type.paged.creator.PagedCrateCreatorRequest;
 import pl.subtelny.crate.type.paged.PageSwitcherItemCrate;
 import pl.subtelny.crate.type.paged.PagedCrate;
 
@@ -57,7 +59,7 @@ public class PagesInitializer {
 
     private AbstractCrate initializePage(int page) {
         Map<Integer, ItemCrate> content = getItemCrates(page);
-        Inventory inventory = createInventory(request);
+        InventoryInfo inventory = createInventory(request);
         return new ContentCrate(request.getCrateKey(), request.getPermission(), inventory, content);
     }
 
@@ -92,8 +94,8 @@ public class PagesInitializer {
         return new PageSwitcherItemCrate(request.getPreviousItemStack(), pagedCrate::previousPage);
     }
 
-    private Inventory createInventory(PagedCrateCreatorRequest request) {
-        return Bukkit.createInventory(null, request.getInventorySize());
+    private InventoryInfo createInventory(PagedCrateCreatorRequest request) {
+        return InventoryInfo.of(request.getTitle(), request.getInventorySize());
     }
 
 }

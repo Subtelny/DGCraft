@@ -49,12 +49,12 @@ public class IslandCommand extends BaseCommand {
 
     private void openMainCrate(Player sender) {
         IslandCrates islandCrates = getIslandCrates();
-        islandCrates.openMainCrate(sender);
+        islandCrates.openMain(sender);
     }
 
     private void openCreateCrate(Player sender) {
         IslandCrates islandCrates = getIslandCrates();
-        islandCrates.openCreateCrate(sender);
+        islandCrates.openCreateIsland(sender);
     }
 
     private IslandCrates getIslandCrates() {

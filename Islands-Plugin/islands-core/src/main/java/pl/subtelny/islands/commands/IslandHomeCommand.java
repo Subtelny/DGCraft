@@ -2,6 +2,7 @@ package pl.subtelny.islands.commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
@@ -46,6 +47,8 @@ public class IslandHomeCommand extends BaseCommand {
 
     private void teleportToIsland(Player player, IslandId islandId) {
         Island island = getIsland(islandId);
+        player.setVelocity(new Vector());
+        player.setFallDistance(0);
         player.teleport(island.getSpawn());
     }
 

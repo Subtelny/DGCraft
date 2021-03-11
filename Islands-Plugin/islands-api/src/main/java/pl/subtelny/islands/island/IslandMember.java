@@ -11,6 +11,10 @@ public interface IslandMember {
 
     List<IslandId> getIslands(IslandType islandType);
 
+    default Optional<IslandId> getIsland(IslandType islandType) {
+        return getIslands(islandType).stream().findFirst();
+    }
+
     String getName();
 
     boolean hasIsland(IslandType islandType);

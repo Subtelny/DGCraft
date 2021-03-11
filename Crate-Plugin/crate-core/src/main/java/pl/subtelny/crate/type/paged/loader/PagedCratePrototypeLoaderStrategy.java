@@ -2,17 +2,17 @@ package pl.subtelny.crate.type.paged.loader;
 
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.crate.CrateType;
-import pl.subtelny.crate.ItemCrate;
-import pl.subtelny.crate.loader.CratePrototypeLoadRequest;
-import pl.subtelny.crate.loader.CratePrototypeLoaderStrategy;
+import pl.subtelny.crate.api.CrateType;
+import pl.subtelny.crate.api.ItemCrate;
+import pl.subtelny.crate.api.prototype.CratePrototype;
+import pl.subtelny.crate.api.type.paged.PagedCratePrototype;
+import pl.subtelny.crate.api.loader.CratePrototypeLoadRequest;
+import pl.subtelny.crate.api.loader.CratePrototypeLoaderStrategy;
 import pl.subtelny.crate.messages.CrateMessages;
-import pl.subtelny.crate.parser.BasicItemCrateParserStrategy;
-import pl.subtelny.crate.parser.ItemCrateParserStrategy;
-import pl.subtelny.crate.prototype.CratePrototype;
-import pl.subtelny.crate.type.paged.PagedCrate;
+import pl.subtelny.crate.api.parser.BasicItemCrateParserStrategy;
+import pl.subtelny.crate.api.parser.ItemCrateParserStrategy;
 import pl.subtelny.crate.type.paged.parser.PagedCratePrototypeParserStrategy;
-import pl.subtelny.crate.type.personal.PersonalItemCrate;
+import pl.subtelny.crate.api.type.personal.PersonalItemCrate;
 
 @Component
 public class PagedCratePrototypeLoaderStrategy implements CratePrototypeLoaderStrategy {
@@ -32,12 +32,12 @@ public class PagedCratePrototypeLoaderStrategy implements CratePrototypeLoaderSt
 
     @Override
     public CrateType getType() {
-        return PagedCrate.TYPE;
+        return PagedCratePrototype.TYPE;
     }
 
     private PagedCratePrototypeParserStrategy getPagedCrateStrategy(CratePrototypeLoadRequest request) {
         ItemCrateParserStrategy itemCrateStrategy = getItemCrateStrategy(request);
-        return new PagedCratePrototypeParserStrategy(request.getFile(), itemCrateStrategy, request.getCrateKeyPrefix());
+        return new PagedCratePrototypeParserStrategy(request.getFile(), request.getPlugin(), itemCrateStrategy, request.getCrateKeyPrefix());
     }
 
     private ItemCrateParserStrategy getItemCrateStrategy(CratePrototypeLoadRequest request) {

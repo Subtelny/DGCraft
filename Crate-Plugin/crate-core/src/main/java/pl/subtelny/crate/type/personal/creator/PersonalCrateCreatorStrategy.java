@@ -1,29 +1,27 @@
 package pl.subtelny.crate.type.personal.creator;
 
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.Inventory;
-import pl.subtelny.crate.Crate;
-import pl.subtelny.crate.CrateType;
-import pl.subtelny.crate.creator.CrateCreatorStrategy;
-import pl.subtelny.crate.type.personal.PersonalCrate;
-import pl.subtelny.utilities.ColorUtil;
+import pl.subtelny.crate.api.ContentCrate;
+import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.api.CrateType;
+import pl.subtelny.crate.api.InventoryInfo;
+import pl.subtelny.crate.api.creator.CrateCreatorStrategy;
+import pl.subtelny.crate.type.personal.PersonalCratePrototype;
 
 public class PersonalCrateCreatorStrategy implements CrateCreatorStrategy<PersonalCrateCreatorRequest> {
 
     @Override
     public Crate create(PersonalCrateCreatorRequest request) {
-        Inventory inventory = createInventory(request);
-        return new PersonalCrate(request.getCrateKey(), request.getPermission(), inventory, request.getContent());
+        InventoryInfo inventory = createInventory(request);
+        return new ContentCrate(request.getCrateKey(), request.getPermission(), inventory, request.getContent());
     }
 
     @Override
     public CrateType getType() {
-        return PersonalCrate.TYPE;
+        return PersonalCratePrototype.TYPE;
     }
 
-    private Inventory createInventory(PersonalCrateCreatorRequest request) {
-        String title = ColorUtil.color(request.getTitle());
-        return Bukkit.createInventory(null, request.getInventorySize(), title);
+    private InventoryInfo createInventory(PersonalCrateCreatorRequest request) {
+        return InventoryInfo.of(request.getTitle(), request.getInventorySize());
     }
 
 }

@@ -1,6 +1,7 @@
 package pl.subtelny.crate.type.paged.creator;
 
-import pl.subtelny.crate.ItemCrate;
+import pl.subtelny.crate.api.ItemCrate;
+import pl.subtelny.crate.api.type.paged.creator.PagedCrateCreatorRequest;
 
 import java.util.Set;
 

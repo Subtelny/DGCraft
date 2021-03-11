@@ -2,11 +2,13 @@ package pl.subtelny.crate.service;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.crate.loader.CratePrototypeLoadRequest;
+import pl.subtelny.crate.api.CrateKey;
+import pl.subtelny.crate.api.loader.CratePrototypeLoadRequest;
 import pl.subtelny.crate.loader.CratePrototypeLoader;
 import pl.subtelny.crate.parser.DefaultCrateParsers;
-import pl.subtelny.crate.prototype.CratePrototype;
+import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.storage.CrateStorage;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.condition.CostCondition;
@@ -24,6 +26,7 @@ public class CrateRegistrationService {
 
     private final CrateStorage storage;
 
+    @Autowired
     public CrateRegistrationService(DefaultCrateParsers defaultCrateParsers,
                                     CratePrototypeLoader cratePrototypeLoader,
                                     CrateStorage storage) {
@@ -32,10 +35,16 @@ public class CrateRegistrationService {
         this.storage = storage;
     }
 
-    public void registerCratePrototype(RegisterCratePrototypeRequest request) {
+    public void unregisterCratePrototype(CrateKey crateKey) {
+        storage.removeCratePrototype(crateKey);
+        storage.removeGlobalCrate(crateKey);
+    }
+
+    public CrateKey registerCratePrototype(RegisterCratePrototypeRequest request) {
         CratePrototypeLoadRequest cratePrototypeLoadRequest = getCratePrototypeLoadRequest(request);
         CratePrototype prototype = cratePrototypeLoader.load(cratePrototypeLoadRequest);
         storage.addCratePrototype(prototype);
+        return prototype.getCrateKey();
     }
 
     private CratePrototypeLoadRequest getCratePrototypeLoadRequest(RegisterCratePrototypeRequest request) {
@@ -46,6 +55,7 @@ public class CrateRegistrationService {
         return CratePrototypeLoadRequest.of(
                 file,
                 request.getCrateKeyPrefix(),
+                request.getPlugin(),
                 Lists.newArrayList(conditions),
                 Lists.newArrayList(costConditions),
                 Lists.newArrayList(rewards)

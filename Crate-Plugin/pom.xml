@@ -14,9 +14,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>crate-api-legacy</module>
         <module>crate-core</module>
-        <module>crate-core-legacy</module>
+        <module>crate-api</module>
     </modules>
 
 </project>

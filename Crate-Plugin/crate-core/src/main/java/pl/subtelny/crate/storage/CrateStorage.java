@@ -1,15 +1,15 @@
 package pl.subtelny.crate.storage;
 
-import pl.subtelny.crate.Crate;
-import pl.subtelny.crate.CrateKey;
-import pl.subtelny.crate.type.global.GlobalCrateType;
-import pl.subtelny.crate.prototype.CratePrototype;
-import pl.subtelny.utilities.Validation;
+import pl.subtelny.components.core.api.Component;
+import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.api.CrateKey;
+import pl.subtelny.crate.api.prototype.CratePrototype;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Component
 public class CrateStorage {
 
     private final Map<CrateKey, Crate> globalCrates = new HashMap<>();
@@ -18,7 +18,6 @@ public class CrateStorage {
 
     public void addGlobalCrate(Crate crate) {
         CrateKey key = crate.getKey();
-        Validation.isTrue(GlobalCrateType.isGlobal(key), "Cannot add non global crate into global crates list");
         globalCrates.put(key, crate);
     }
 

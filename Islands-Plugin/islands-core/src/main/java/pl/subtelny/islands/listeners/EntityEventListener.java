@@ -1,20 +1,18 @@
 package pl.subtelny.islands.listeners;
 
-import pl.subtelny.components.core.api.Autowired;
-import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.guard.IslandActionGuard;
-import pl.subtelny.islands.guard.IslandActionGuardResult;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.entity.AnimalTamer;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.projectiles.ProjectileSource;
+import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.components.core.api.Component;
+import pl.subtelny.islands.guard.IslandActionGuard;
+import pl.subtelny.islands.guard.IslandActionGuardResult;
 
 import java.util.List;
 
@@ -28,11 +26,8 @@ public class EntityEventListener implements Listener {
         this.islandActionGuard = islandActionGuard;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent e) {
-        if (e.isCancelled()) {
-            return;
-        }
         Location source = e.getLocation();
         List<Block> blocks = e.blockList();
         IslandActionGuardResult result = islandActionGuard.accessToExplodeAndValidateBlocks(source, blocks);
@@ -41,24 +36,21 @@ public class EntityEventListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
-        if (e.isCancelled()) {
-            return;
-        }
         Entity entity = e.getEntity();
-        Entity attacker = e.getDamager();
-        IslandActionGuardResult result = islandActionGuard.accessToHit(attacker, entity);
+        Entity damager = getRealDamagerEntity(e.getDamager());
+        IslandActionGuardResult result = islandActionGuard.accessToHit(damager, entity);
         if (isAccessToActionRejected(result)) {
             e.setDamage(0);
             e.setCancelled(true);
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onEntityTame(EntityTameEvent e) {
         AnimalTamer owner = e.getOwner();
-        if (e.isCancelled() || !(owner instanceof Player)) {
+        if (!(owner instanceof Player)) {
             return;
         }
         Player player = (Player) owner;
@@ -68,6 +60,16 @@ public class EntityEventListener implements Listener {
         if (isAccessToActionRejected(result)) {
             e.setCancelled(true);
         }
+    }
+
+    private Entity getRealDamagerEntity(Entity entity) {
+        if (entity instanceof Projectile) {
+            ProjectileSource shooter = ((Projectile) entity).getShooter();
+            if (shooter instanceof Entity) {
+                return (Entity) shooter;
+            }
+        }
+        return entity;
     }
 
     private boolean isAccessToActionRejected(IslandActionGuardResult result) {

@@ -2,8 +2,8 @@ package pl.subtelny.crate.type.paged;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import pl.subtelny.crate.ItemCrate;
-import pl.subtelny.crate.ItemCrateClickResult;
+import pl.subtelny.crate.api.ItemCrate;
+import pl.subtelny.crate.api.ItemCrateClickResult;
 import pl.subtelny.utilities.Notification;
 
 import java.util.Objects;

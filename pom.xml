@@ -18,6 +18,7 @@
         <module>Commands</module>
         <module>Groups</module>
         <module>Crate-Plugin</module>
+        <module>Islands-Plugin/islands-modules</module>
     </modules>
 
     <repositories>

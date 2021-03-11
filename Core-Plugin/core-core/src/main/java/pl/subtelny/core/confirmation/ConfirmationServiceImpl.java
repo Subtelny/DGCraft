@@ -5,9 +5,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import pl.subtelny.commands.api.PluginCommand;
 import pl.subtelny.commands.api.util.CommandUtil;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
@@ -28,7 +26,7 @@ public class ConfirmationServiceImpl implements ConfirmationService {
     private final CoreMessages messages;
 
     private final Cache<ConfirmContextId, Confirmation> confirmationCache = Caffeine.newBuilder()
-            .expireAfterWrite(3, TimeUnit.MINUTES)
+            .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
 
     @Autowired
@@ -61,12 +59,14 @@ public class ConfirmationServiceImpl implements ConfirmationService {
     }
 
     @Override
-    public void makeConfirmation(ConfirmationRequest request) {
-        ConfirmContextId confirmContextId = request.getConfirmContextId();
+    public ConfirmContextId makeConfirmation(ConfirmationRequest request) {
+        String rawConfirmContextId = request.getRawConfirmContextId();
+        ConfirmContextId confirmContextId = ConfirmContextId.of(rawConfirmContextId);
         Validation.isTrue(confirmationCache.getIfPresent(confirmContextId) == null, "confirmation.already_exists");
         Player player = request.getPlayer();
-        confirmationCache.put(confirmContextId, new Confirmation(confirmContextId, player, request.getState()));
+        confirmationCache.put(confirmContextId, new Confirmation(confirmContextId, request.getCanConfirm(), request.getState()));
         sendMessage(player, request.getTitle(), confirmContextId);
+        return confirmContextId;
     }
 
     private void sendMessage(Player player, String title, ConfirmContextId confirmContextId) {

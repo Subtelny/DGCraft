@@ -28,7 +28,7 @@ public class RewardFileParserStrategy extends AbstractFileParserStrategy<Reward>
                 .filter(parserStrategy -> configuration.contains(path + "." + parserStrategy.getPath()))
                 .findAny()
                 .map(parserStrategy -> parserStrategy.load(path))
-                .orElseThrow(() -> new IllegalStateException("Not found any reward at path " + path));
+                .orElseThrow(() -> new IllegalStateException("Not found any reward at path " + path + ", " + file.getName()));
     }
 
     @Override

@@ -53,7 +53,7 @@ public class IslandCreateService {
     }
 
     private void islandSucessfullyCreated(Player player, Island island) {
-        JobsProvider.runSync(Islands.plugin, () -> {
+        JobsProvider.runSync(Islands.PLUGIN, () -> {
             player.teleport(island.getSpawn());
             messages.sendTo(player, "islandCreate.island_created");
         });

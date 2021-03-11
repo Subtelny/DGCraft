@@ -1,11 +1,10 @@
 package pl.subtelny.crate.type.paged;
 
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import pl.subtelny.crate.AbstractCrate;
-import pl.subtelny.crate.CrateKey;
-import pl.subtelny.crate.CrateType;
-import pl.subtelny.crate.ItemCrate;
+import pl.subtelny.crate.api.AbstractCrate;
+import pl.subtelny.crate.api.CrateKey;
+import pl.subtelny.crate.api.InventoryInfo;
+import pl.subtelny.crate.api.ItemCrate;
 import pl.subtelny.utilities.Validation;
 
 import java.util.HashSet;
@@ -14,15 +13,12 @@ import java.util.Optional;
 
 public class PagedCrate extends AbstractCrate {
 
-    public static CrateType TYPE = CrateType.of("PAGED");
-
     private AbstractCrate[] pages;
 
     private int currentPage = 0;
 
-    public PagedCrate(CrateKey crateKey, Inventory inventory) {
+    public PagedCrate(CrateKey crateKey, String permission, InventoryInfo inventory) {
         super(crateKey, permission, new HashSet<>(), inventory);
-        Validation.isTrue(TYPE.equals(crateKey.getType()), "");
     }
 
     @Override

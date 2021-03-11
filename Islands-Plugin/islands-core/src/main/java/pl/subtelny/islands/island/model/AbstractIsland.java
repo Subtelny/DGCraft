@@ -1,9 +1,9 @@
 package pl.subtelny.islands.island.model;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.collect.MapMaker;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
+import pl.subtelny.core.api.confirmation.ConfirmContextId;
 import pl.subtelny.islands.island.*;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.configuration.Configuration;
@@ -12,15 +12,10 @@ import pl.subtelny.utilities.location.LocationUtil;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractIsland implements Island {
 
-    private final Cache<IslandMember, Long> pendingJoinRequests = Caffeine.newBuilder()
-            .expireAfterWrite(5, TimeUnit.MINUTES)
-            .build();
-
-    private final List<IslandMemberChangedRequest> islandMembersChangesRequests = new ArrayList<>();
+    private final Map<IslandMember, ConfirmContextId> pendingJoinRequests = new MapMaker().weakValues().makeMap();
 
     private final IslandId islandId;
 
@@ -92,11 +87,6 @@ public abstract class AbstractIsland implements Island {
     }
 
     @Override
-    public Map<IslandMember, Long> getPendingJoinRequests() {
-        return new HashMap<>(pendingJoinRequests.asMap());
-    }
-
-    @Override
     public Optional<IslandMemberId> getOwner() {
         return Optional.ofNullable(owner);
     }
@@ -117,8 +107,8 @@ public abstract class AbstractIsland implements Island {
     }
 
     @Override
-    public boolean isOwner(IslandMember islandMember) {
-        return islandMember.getIslandMemberId().equals(owner);
+    public boolean isOwner(IslandMemberId islandMemberId) {
+        return islandMemberId.equals(owner);
     }
 
     @Override
@@ -143,10 +133,6 @@ public abstract class AbstractIsland implements Island {
     public void changeOwner(IslandMember islandMember) {
         IslandMemberId newOwner = islandMember.getIslandMemberId();
         Validation.isTrue(islandMemberIds.contains(newOwner), "island.member_not_added_to_owner");
-        if (owner != null) {
-            islandMembersChangesRequests.add(IslandMemberChangedRequest.update(owner, false));
-        }
-        islandMembersChangesRequests.add(IslandMemberChangedRequest.update(newOwner, true));
         this.owner = newOwner;
     }
 
@@ -154,7 +140,6 @@ public abstract class AbstractIsland implements Island {
     public void join(IslandMember member) {
         Validation.isFalse(islandMemberIds.contains(member.getIslandMemberId()), "island.member_already_added");
         islandMemberIds.add(member.getIslandMemberId());
-        islandMembersChangesRequests.add(IslandMemberChangedRequest.added(member));
         member.addIsland(this);
     }
 
@@ -162,32 +147,16 @@ public abstract class AbstractIsland implements Island {
     public void leave(IslandMember member) {
         Validation.isTrue(islandMemberIds.contains(member.getIslandMemberId()), "island.member_not_added");
         islandMemberIds.remove(member.getIslandMemberId());
-        islandMembersChangesRequests.add(IslandMemberChangedRequest.removed(member));
         member.leaveIsland(this);
     }
 
-    @Override
-    public void askJoin(IslandMember islandMember) {
-        Validation.isTrue(pendingJoinRequests.getIfPresent(islandMember) == null, "island.ask_join.already_added");
-        Validation.isFalse(islandMemberIds.contains(islandMember.getIslandMemberId()), "island.ask_join.already_added");
-        pendingJoinRequests.put(islandMember, System.currentTimeMillis());
+    public Map<IslandMember, ConfirmContextId> getPendingJoinRequests() {
+        return new HashMap<>(pendingJoinRequests);
     }
 
-    @Override
-    public boolean canAskJoin(IslandMember islandMember) {
-        return pendingJoinRequests.getIfPresent(islandMember) == null
-                && !islandMemberIds.contains(islandMember.getIslandMemberId());
-    }
-
-    @Override
-    public void acceptAskJoin(IslandMember islandMember) {
-        Validation.isFalse(pendingJoinRequests.getIfPresent(islandMember) == null, "island.ask_join.request_not_found");
-        pendingJoinRequests.invalidate(islandMember);
-        join(islandMember);
-    }
-
-    public List<IslandMemberChangedRequest> getIslandMembersChangesRequests() {
-        return islandMembersChangesRequests;
+    public void addPendingJoinRequest(IslandMember islandMember, ConfirmContextId confirmContextId) {
+        Validation.isFalse(islandMemberIds.contains(islandMember.getIslandMemberId()), "IslandMember already added");
+        pendingJoinRequests.put(islandMember, confirmContextId);
     }
 
 }

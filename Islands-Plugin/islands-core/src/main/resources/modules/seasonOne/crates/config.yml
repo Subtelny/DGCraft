@@ -1,0 +1,32 @@
+# LIST OF SETTING KEYS:
+# - SPAWNERS_DISABLED
+# - SPAWN_AGGRESSIVE_MOB_DISABLED
+# - SPAWN_PASSIVE_MOB_DISABLED
+
+
+configuration:
+  type: CONFIG
+  size: 18
+  title: 'Ustawienia'
+
+content:
+  0:
+    item: GRASS
+    amount: 1
+    name: 'Stworz wyspe'
+    lore:
+      - 'something'
+      - 'something2'
+  1:
+    item: GRASS
+    amount: 1
+    name: 'Szukaj wyspe'
+    lore:
+      - 'something'
+      - '[OPTION0] Wlaczone'
+      - '[OPTION1] Wylaczone'
+    configuration:
+      key: SPAWNERS_DISABLED
+      options:
+        - true
+        - false

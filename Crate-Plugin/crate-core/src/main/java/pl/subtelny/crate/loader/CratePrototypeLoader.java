@@ -2,12 +2,15 @@ package pl.subtelny.crate.loader;
 
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.crate.CrateType;
-import pl.subtelny.crate.prototype.CratePrototype;
+import pl.subtelny.crate.api.CrateType;
+import pl.subtelny.crate.api.loader.CratePrototypeLoadRequest;
+import pl.subtelny.crate.api.loader.CratePrototypeLoaderStrategy;
+import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.utilities.file.ObjectFileParserStrategy;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class CratePrototypeLoader {
@@ -26,14 +29,14 @@ public class CratePrototypeLoader {
 
     private CratePrototypeLoaderStrategy findStrategy(File file) {
         String rawType = new ObjectFileParserStrategy<String>(file).load("configuration.type");
-        return findStrategy(CrateType.of(rawType));
+        return findStrategy(CrateType.of(rawType))
+                .orElseThrow(() -> new IllegalStateException("Not found strategy for type " + rawType + ", " + file.getName()));
     }
 
-    private CratePrototypeLoaderStrategy findStrategy(CrateType crateType) {
+    private Optional<CratePrototypeLoaderStrategy> findStrategy(CrateType crateType) {
         return loaderStrategies.stream()
                 .filter(strategy -> strategy.getType().equals(crateType))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Not found strategy for type " + crateType.getType()));
+                .findFirst();
     }
 
 }

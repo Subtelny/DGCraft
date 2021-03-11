@@ -5,11 +5,11 @@ import pl.subtelny.islands.configuration.IslandsConfiguration;
 
 public class Islands extends ComponentPlugin {
 
-    public static Islands plugin;
+    public static Islands PLUGIN;
 
     @Override
     public void onEnable() {
-        plugin = this;
+        PLUGIN = this;
         IslandsConfiguration.init(this);
     }
 

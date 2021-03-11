@@ -54,7 +54,7 @@ public class IslandModulesImpl implements DependencyActivator, IslandModules {
 
     private List<IslandModule<Island>> getIslandModules(IslandModulesInitializer modulesInitializer) {
         try {
-            return modulesInitializer.initializeModules(Islands.plugin);
+            return modulesInitializer.initializeModules(Islands.PLUGIN);
         } catch (Exception e) {
             Bukkit.getServer().shutdown();
             throw e;

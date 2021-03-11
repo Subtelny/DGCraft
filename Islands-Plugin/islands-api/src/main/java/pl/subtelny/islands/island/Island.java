@@ -2,7 +2,7 @@ package pl.subtelny.islands.island;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
+import pl.subtelny.core.api.confirmation.ConfirmContextId;
 import pl.subtelny.utilities.configuration.Configuration;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface Island {
 
@@ -22,7 +21,11 @@ public interface Island {
 
     Optional<IslandMemberId> getOwner();
 
-    boolean isOwner(IslandMember islandMember);
+    default boolean isOwner(IslandMember islandMember) {
+        return isOwner(islandMember.getIslandMemberId());
+    }
+
+    boolean isOwner(IslandMemberId islandMemberId);
 
     Location getSpawn();
 
@@ -51,13 +54,5 @@ public interface Island {
     void updateCuboid(Cuboid cuboid);
 
     void setPoints(int points);
-
-    void askJoin(IslandMember islandMember);
-
-    void acceptAskJoin(IslandMember islandMember);
-
-    boolean canAskJoin(IslandMember islandMember);
-
-    Map<IslandMember, Long> getPendingJoinRequests();
 
 }

@@ -25,7 +25,7 @@ public class PlayerLoginListener implements Listener {
         this.corePlayerService = corePlayerService;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         disableFlyingForPlayer(player);

@@ -8,6 +8,6 @@ public interface ConfirmationService {
 
     void reject(Player player, ConfirmContextId confirmContextId);
 
-    void makeConfirmation(ConfirmationRequest request);
+    ConfirmContextId makeConfirmation(ConfirmationRequest request);
 
 }
