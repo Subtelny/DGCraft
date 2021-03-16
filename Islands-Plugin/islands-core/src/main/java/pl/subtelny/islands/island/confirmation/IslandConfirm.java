@@ -6,11 +6,11 @@ import pl.subtelny.islands.island.Island;
 
 import java.util.Objects;
 
-public class IslandConfirmable implements Confirmable {
+public class IslandConfirm implements Confirmable {
 
     private final Island island;
 
-    public IslandConfirmable(Island island) {
+    public IslandConfirm(Island island) {
         this.island = island;
     }
 
@@ -28,7 +28,7 @@ public class IslandConfirmable implements Confirmable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IslandConfirmable that = (IslandConfirmable) o;
+        IslandConfirm that = (IslandConfirm) o;
         return Objects.equals(island, that.island);
     }
 

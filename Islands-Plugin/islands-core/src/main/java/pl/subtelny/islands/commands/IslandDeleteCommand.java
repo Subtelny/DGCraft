@@ -19,6 +19,7 @@ import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.message.IslandMessages;
 import pl.subtelny.utilities.Callback;
+import pl.subtelny.utilities.ImprovedPlayer;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.exception.ValidationException;
 
@@ -80,7 +81,7 @@ public class IslandDeleteCommand extends BaseCommand {
         String contextIdRaw = String.join("@", "island.remove", player.getName());
         String title = getMessages().getColoredFormattedMessage("command.island.delete.confirmation_title", island.getIslandType().getInternal());
 
-        ConfirmationRequest request = ConfirmationRequest.builder(contextIdRaw, player, new PlayerConfirmable(player))
+        ConfirmationRequest request = ConfirmationRequest.builder(contextIdRaw, ImprovedPlayer.of(player), new PlayerConfirmable(player))
                 .stateListener(getListener(player, island))
                 .title(title)
                 .build();

@@ -1,4 +1,4 @@
-package pl.subtelny.islands.island.cqrs.command;
+package pl.subtelny.islands.island.membership;
 
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMember;

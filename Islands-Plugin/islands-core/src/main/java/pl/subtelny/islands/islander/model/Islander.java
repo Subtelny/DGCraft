@@ -1,5 +1,6 @@
 package pl.subtelny.islands.islander.model;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import pl.subtelny.core.api.account.Account;
@@ -32,15 +33,6 @@ public class Islander extends AbstractIslandMember {
         teleportToSpawn(island);
     }
 
-    private void teleportToSpawn(Island island) {
-        Player player = getPlayer();
-        if (player.isOnline()) {
-            if (island.getCuboid().contains(player.getLocation())) {
-                player.teleport(IslandsConfiguration.MAIN_WORLD.getSpawnLocation());
-            }
-        }
-    }
-
     @Override
     public IslandMemberId getIslandMemberId() {
         return IslandMemberId.of(ISLAND_MEMBER_TYPE.getInternal(), islanderId.getInternal().toString());
@@ -55,12 +47,32 @@ public class Islander extends AbstractIslandMember {
         return islanderId;
     }
 
+    @Override
     public boolean isOnline() {
         return getPlayer() != null;
     }
 
+    @Override
+    public void sendMessage(String message) {
+        getPlayer().sendMessage(message);
+    }
+
+    @Override
+    public void sendMessage(BaseComponent component) {
+        getPlayer().sendMessage(component);
+    }
+
     public Player getPlayer() {
         return Bukkit.getPlayer(islanderId.getInternal());
+    }
+
+    private void teleportToSpawn(Island island) {
+        Player player = getPlayer();
+        if (player.isOnline()) {
+            if (island.getCuboid().contains(player.getLocation())) {
+                player.teleport(IslandsConfiguration.MAIN_WORLD.getSpawnLocation());
+            }
+        }
     }
 
     @Override
@@ -75,5 +87,4 @@ public class Islander extends AbstractIslandMember {
     public int hashCode() {
         return Objects.hash(islanderId);
     }
-
 }

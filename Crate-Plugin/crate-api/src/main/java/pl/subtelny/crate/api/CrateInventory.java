@@ -18,6 +18,7 @@ public class CrateInventory extends CraftInventoryCustom {
     }
 
     public void close(Player player) {
+        crate.close();
         crate.removeViewer(player);
         if (!crate.hasViewers()) {
             crate = null;

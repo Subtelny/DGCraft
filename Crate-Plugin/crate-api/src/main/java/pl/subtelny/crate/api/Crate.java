@@ -10,4 +10,8 @@ public interface Crate {
 
     void open(Player player);
 
+    default void close() {
+        //Noop
+    }
+
 }

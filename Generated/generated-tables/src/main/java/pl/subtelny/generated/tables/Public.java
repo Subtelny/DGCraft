@@ -16,6 +16,7 @@ import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
 import pl.subtelny.generated.tables.tables.Accounts;
+import pl.subtelny.generated.tables.tables.IslandConfigurations;
 import pl.subtelny.generated.tables.tables.IslandMemberships;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.Islands;
@@ -35,7 +36,7 @@ import pl.subtelny.generated.tables.tables.SkyblockIslands;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = -768913327;
+    private static final long serialVersionUID = -1392862040;
 
     /**
      * The reference instance of <code>public</code>
@@ -46,6 +47,11 @@ public class Public extends SchemaImpl {
      * The table <code>public.accounts</code>.
      */
     public final Accounts ACCOUNTS = pl.subtelny.generated.tables.tables.Accounts.ACCOUNTS;
+
+    /**
+     * The table <code>public.island_configurations</code>.
+     */
+    public final IslandConfigurations ISLAND_CONFIGURATIONS = pl.subtelny.generated.tables.tables.IslandConfigurations.ISLAND_CONFIGURATIONS;
 
     /**
      * The table <code>public.island_memberships</code>.
@@ -89,6 +95,7 @@ public class Public extends SchemaImpl {
 
     private final List<Sequence<?>> getSequences0() {
         return Arrays.<Sequence<?>>asList(
+            Sequences.ISLAND_CONFIGURATIONS_ISLAND_ID_SEQ,
             Sequences.ISLANDS_ID_SEQ,
             Sequences.SKYBLOCK_ISLANDS_ISLAND_ID_SEQ);
     }
@@ -103,6 +110,7 @@ public class Public extends SchemaImpl {
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
             Accounts.ACCOUNTS,
+            IslandConfigurations.ISLAND_CONFIGURATIONS,
             IslandMemberships.ISLAND_MEMBERSHIPS,
             Islanders.ISLANDERS,
             Islands.ISLANDS,

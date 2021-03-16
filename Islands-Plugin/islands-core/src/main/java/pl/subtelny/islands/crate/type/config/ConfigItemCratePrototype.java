@@ -1,8 +1,7 @@
 package pl.subtelny.islands.crate.type.config;
 
 import pl.subtelny.crate.api.ItemCrate;
-import pl.subtelny.utilities.configuration.ConfigurationKey;
-import pl.subtelny.utilities.configuration.ConfigurationValue;
+import pl.subtelny.utilities.Validation;
 
 import java.util.List;
 import java.util.Objects;
@@ -11,11 +10,13 @@ public class ConfigItemCratePrototype {
 
     private final ItemCrate itemCrate;
 
-    private final ConfigurationKey configurationKey;
+    private final String configurationKey;
 
-    private final List<ConfigurationValue> configurationOptions;
+    private final List<String> configurationOptions;
 
-    public ConfigItemCratePrototype(ItemCrate itemCrate, ConfigurationKey configurationKey, List<ConfigurationValue> configurationOptions) {
+    public ConfigItemCratePrototype(ItemCrate itemCrate, String configurationKey, List<String> configurationOptions) {
+        Validation.isFalse(configurationKey == null, "ConfigurationKey cannot be null");
+        Validation.isFalse(configurationOptions.isEmpty(), "Configuration options cannot be null");
         this.itemCrate = itemCrate;
         this.configurationKey = configurationKey;
         this.configurationOptions = configurationOptions;
@@ -25,11 +26,11 @@ public class ConfigItemCratePrototype {
         return itemCrate;
     }
 
-    public ConfigurationKey getConfigurationKey() {
+    public String getConfigurationKey() {
         return configurationKey;
     }
 
-    public List<ConfigurationValue> getConfigurationOptions() {
+    public List<String> getConfigurationOptions() {
         return configurationOptions;
     }
 

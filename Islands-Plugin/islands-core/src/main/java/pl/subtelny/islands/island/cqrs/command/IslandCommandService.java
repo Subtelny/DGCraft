@@ -4,17 +4,12 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.islands.island.Island;
-import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMember;
-import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.island.cqrs.IslandService;
 import pl.subtelny.islands.island.membership.IslandMemberQueryService;
-import pl.subtelny.islands.island.membership.IslandMembershipCommandService;
-import pl.subtelny.islands.island.membership.model.IslandMembership;
 import pl.subtelny.islands.island.module.IslandModule;
 import pl.subtelny.islands.island.module.IslandModules;
 import pl.subtelny.utilities.Validation;
-import pl.subtelny.utilities.exception.ValidationException;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -26,17 +21,13 @@ public class IslandCommandService extends IslandService {
 
     private final IslandMemberQueryService islandMemberQueryService;
 
-    private final IslandMembershipCommandService islandMembershipCommandService;
-
     @Autowired
     public IslandCommandService(IslandModules islandModules,
                                 TransactionProvider transactionProvider,
-                                IslandMemberQueryService islandMemberQueryService,
-                                IslandMembershipCommandService islandMembershipCommandService) {
+                                IslandMemberQueryService islandMemberQueryService) {
         super(islandModules);
         this.transactionProvider = transactionProvider;
         this.islandMemberQueryService = islandMemberQueryService;
-        this.islandMembershipCommandService = islandMembershipCommandService;
     }
 
     public CompletableFuture<Island> createIsland(IslandCreateRequest request) {
@@ -59,27 +50,6 @@ public class IslandCommandService extends IslandService {
         }).toCompletableFuture();
     }
 
-    public void membershipIsland(IslandMembershipRequest request) {
-        IslandId islandId = request.getIslandId();
-        IslandMember islandMember = request.getIslandMember();
-
-        Island island = getIsland(islandId);
-        island.leave(islandMember);
-
-        IslandMembership member = IslandMembership.member(islandMember.getIslandMemberId(), islandId);
-        if (request.isJoin()) {
-            islandMembershipCommandService.saveIslandMembership(member);
-        } else {
-            islandMembershipCommandService.removeIslandMembership(member);
-        }
-    }
-
-    private Island getIsland(IslandId islandId) {
-        IslandModule<Island> islandModule = getIslandModule(islandId.getIslandType());
-        return islandModule.findIsland(islandId)
-                .orElseThrow(() -> ValidationException.of("islandCommand.island.not_found", islandId.getIslandType().getInternal()));
-    }
-
     private void leaveMembersFromIsland(Island island) {
         List<IslandMember> islandMembers = islandMemberQueryService.getIslandMembers(island.getMembers());
         islandMembers.forEach(island::leave);
@@ -90,11 +60,6 @@ public class IslandCommandService extends IslandService {
                 map(islandMember -> islandMember.hasIsland(request.getIslandType()))
                 .orElse(false);
         Validation.isFalse(hasIsland, "islandCommand.createIsland.already_has_island", request.getIslandType());
-    }
-
-    private IslandModule<Island> getIslandModule(IslandType islandType) {
-        return findIslandModule(islandType)
-                .orElseThrow(() -> new IllegalStateException("Not found IslandModule for type " + islandType.getInternal()));
     }
 
 }

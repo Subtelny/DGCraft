@@ -3,6 +3,7 @@ package pl.subtelny.islands.island.skyblockisland.repository;
 import org.bukkit.Location;
 import org.jooq.DSLContext;
 import pl.subtelny.core.api.database.ConnectionProvider;
+import pl.subtelny.islands.island.repository.IslandConfigurationRepository;
 import pl.subtelny.islands.island.skyblockisland.IslandCoordinates;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandType;
@@ -38,12 +39,13 @@ public class SkyblockIslandRepository {
     public SkyblockIslandRepository(IslandType islandType,
                                     ConnectionProvider connectionProvider,
                                     IslandExtendCalculator extendCalculator,
-                                    IslandMembershipRepository membershipRepository) {
+                                    IslandMembershipRepository membershipRepository,
+                                    IslandConfigurationRepository islandConfigurationRepository) {
         this.islandType = islandType;
         this.connectionProvider = connectionProvider;
         this.membershipRepository = membershipRepository;
         this.islandStorage = new SkyblockIslandStorage();
-        this.islandLoader = new SkyblockIslandLoader(connectionProvider, membershipRepository, extendCalculator);
+        this.islandLoader = new SkyblockIslandLoader(connectionProvider, membershipRepository, islandConfigurationRepository, extendCalculator);
     }
 
     public Optional<SkyblockIsland> findIsland(IslandId islandId) {

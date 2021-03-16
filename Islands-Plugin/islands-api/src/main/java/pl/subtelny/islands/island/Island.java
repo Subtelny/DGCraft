@@ -2,6 +2,7 @@ package pl.subtelny.islands.island;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import pl.subtelny.core.api.confirmation.ConfirmContextId;
 import pl.subtelny.utilities.configuration.Configuration;
 import pl.subtelny.utilities.cuboid.Cuboid;
@@ -35,13 +36,17 @@ public interface Island {
 
     World getWorld();
 
-    Configuration getConfiguration();
+    IslandConfiguration getConfiguration();
 
     String getName();
 
     int getPoints();
 
-    boolean isMemberOfIsland(IslandMember member);
+    default boolean isMember(IslandMember member) {
+        return isMember(member.getIslandMemberId());
+    }
+
+    boolean isMember(IslandMemberId islandMemberId);
 
     void changeOwner(IslandMember islandMember);
 
@@ -55,4 +60,9 @@ public interface Island {
 
     void setPoints(int points);
 
+    void changeBiome(Biome biome);
+
+    void addAskRequest(IslandMember islandMember, ConfirmContextId confirmContextId);
+
+    Map<IslandMember, ConfirmContextId> getAskRequests();
 }

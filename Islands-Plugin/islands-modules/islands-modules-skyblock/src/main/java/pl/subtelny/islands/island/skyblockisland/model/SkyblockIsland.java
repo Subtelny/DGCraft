@@ -2,6 +2,8 @@ package pl.subtelny.islands.island.skyblockisland.model;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
+import pl.subtelny.islands.island.IslandConfiguration;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMember;
 import pl.subtelny.islands.island.IslandMemberId;
@@ -34,8 +36,9 @@ public class SkyblockIsland extends AbstractIsland {
                           List<IslandMemberId> islandMemberIds,
                           IslandMemberId owner,
                           IslandCoordinates islandCoordinates,
-                          int extendLevel) {
-        super(islandId, islandType, creationDate, cuboid, spawn, points, islandMemberIds, owner);
+                          int extendLevel,
+                          IslandConfiguration configuration) {
+        super(islandId, islandType, creationDate, cuboid, spawn, points, islandMemberIds, owner, configuration);
         Validation.isTrue(islandMemberIds.stream().allMatch(this::isIslander), "Not every islandMember is Islander!");
         this.extendCalculator = extendCalculator;
         this.islandCoordinates = islandCoordinates;
@@ -48,12 +51,22 @@ public class SkyblockIsland extends AbstractIsland {
         super.join(member);
     }
 
-    private void validateIslander(IslandMember member) {
-        Validation.isTrue(isIslander(member.getIslandMemberId()), "skyblockIsland.cannot_join_not_islander");
-    }
-
-    private boolean isIslander(IslandMemberId islandMemberId) {
-        return Islander.ISLAND_MEMBER_TYPE.equals(islandMemberId.getType());
+    @Override
+    public void changeBiome(Biome biome) {
+        World world = cuboid.getWorld();
+        int maxY = cuboid.getUpperY();
+        int minY = cuboid.getLowerY();
+        int maxX = cuboid.getUpperX();
+        int minX = cuboid.getLowerX();
+        int maxZ = cuboid.getUpperZ();
+        int minZ = cuboid.getLowerZ();
+        for (int y = minY; y < maxY; y++) {
+            for (int x = minX; x < maxX; x++) {
+                for (int z = minZ; z < maxZ; z++) {
+                    world.setBiome(x, y, z, biome);
+                }
+            }
+        }
     }
 
     @Override
@@ -78,6 +91,14 @@ public class SkyblockIsland extends AbstractIsland {
         Cuboid extendedCuboid = extendCalculator.calculateExtendedCuboid(getIslandCoordinates(), extendLevel);
         updateCuboid(extendedCuboid);
         this.extendLevel = extendLevel;
+    }
+
+    private void validateIslander(IslandMember member) {
+        Validation.isTrue(isIslander(member.getIslandMemberId()), "skyblockIsland.cannot_join_not_islander");
+    }
+
+    private boolean isIslander(IslandMemberId islandMemberId) {
+        return Islander.ISLAND_MEMBER_TYPE.equals(islandMemberId.getType());
     }
 
 }

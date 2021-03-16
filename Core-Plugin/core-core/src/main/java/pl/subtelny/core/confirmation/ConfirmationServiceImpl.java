@@ -15,6 +15,7 @@ import pl.subtelny.core.api.confirmation.ConfirmationService;
 import pl.subtelny.core.commands.ConfirmCommand;
 import pl.subtelny.core.commands.RejectCommand;
 import pl.subtelny.core.configuration.CoreMessages;
+import pl.subtelny.utilities.messages.Messageable;
 import pl.subtelny.utilities.Validation;
 
 import javax.annotation.Nullable;
@@ -63,20 +64,20 @@ public class ConfirmationServiceImpl implements ConfirmationService {
         String rawConfirmContextId = request.getRawConfirmContextId();
         ConfirmContextId confirmContextId = ConfirmContextId.of(rawConfirmContextId);
         Validation.isTrue(confirmationCache.getIfPresent(confirmContextId) == null, "confirmation.already_exists");
-        Player player = request.getPlayer();
+        Messageable messageable = request.getMessageable();
         confirmationCache.put(confirmContextId, new Confirmation(confirmContextId, request.getCanConfirm(), request.getState()));
-        sendMessage(player, request.getTitle(), confirmContextId);
+        sendMessage(messageable, request.getTitle(), confirmContextId);
         return confirmContextId;
     }
 
-    private void sendMessage(Player player, String title, ConfirmContextId confirmContextId) {
+    private void sendMessage(Messageable messageable, String title, ConfirmContextId confirmContextId) {
         String message = messages.getColoredFormattedMessage("confirmation.message", title);
         TextComponent controls = getControls(confirmContextId);
         TextComponent component = new TextComponent(new ComponentBuilder()
                 .append(message)
                 .append(controls)
                 .create());
-        player.sendMessage(component);
+        messageable.sendMessage(component);
     }
 
     private TextComponent getControls(ConfirmContextId confirmContextId) {

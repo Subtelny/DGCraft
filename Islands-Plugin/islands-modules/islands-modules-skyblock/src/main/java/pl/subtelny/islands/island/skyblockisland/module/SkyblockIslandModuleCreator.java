@@ -12,6 +12,7 @@ import pl.subtelny.islands.island.configuration.ReloadableConfiguration;
 import pl.subtelny.islands.island.membership.repository.IslandMembershipRepository;
 import pl.subtelny.islands.island.module.IslandModuleCreator;
 import pl.subtelny.islands.island.module.islandModuleInitable;
+import pl.subtelny.islands.island.repository.IslandConfigurationRepository;
 import pl.subtelny.islands.island.skyblockisland.IslandExtendCalculator;
 import pl.subtelny.islands.island.skyblockisland.configuration.SkyblockIslandConfiguration;
 import pl.subtelny.islands.island.skyblockisland.creator.SkyblockIslandCreator;
@@ -34,6 +35,8 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
 
     private final IslandMembershipRepository islandMembershipRepository;
 
+    private final IslandConfigurationRepository islandConfigurationRepository;
+
     private final IslandMessages islandMessages;
 
     private final CrateService crateService;
@@ -42,11 +45,13 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
     public SkyblockIslandModuleCreator(EconomyProvider economyProvider,
                                        ConnectionProvider connectionProvider,
                                        IslandMembershipRepository islandMembershipRepository,
+                                       IslandConfigurationRepository islandConfigurationRepository,
                                        IslandMessages islandMessages,
                                        CrateService crateService) {
         this.economyProvider = economyProvider;
         this.connectionProvider = connectionProvider;
         this.islandMembershipRepository = islandMembershipRepository;
+        this.islandConfigurationRepository = islandConfigurationRepository;
         this.islandMessages = islandMessages;
         this.crateService = crateService;
     }
@@ -89,7 +94,8 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
         return new SkyblockIslandRepository(islandType,
                 connectionProvider,
                 extendCalculator,
-                islandMembershipRepository);
+                islandMembershipRepository,
+                islandConfigurationRepository);
     }
 
     private SkyblockIslandCreator getIslandCreator(SkyblockIslandRepository repository,

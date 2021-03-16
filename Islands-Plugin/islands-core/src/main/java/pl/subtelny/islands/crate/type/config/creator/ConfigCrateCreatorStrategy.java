@@ -1,16 +1,17 @@
 package pl.subtelny.islands.crate.type.config.creator;
 
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.Inventory;
+import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.crate.api.*;
+import pl.subtelny.components.core.api.ComponentProvider;
+import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.api.CrateType;
+import pl.subtelny.crate.api.InventoryInfo;
+import pl.subtelny.crate.api.ItemCrate;
 import pl.subtelny.crate.api.creator.CrateCreatorStrategy;
-import pl.subtelny.islands.crate.type.config.ConfigCrateCreatorRequest;
-import pl.subtelny.islands.crate.type.config.ConfigCratePrototype;
-import pl.subtelny.islands.crate.type.config.ConfigItemCrate;
-import pl.subtelny.islands.crate.type.config.ConfigItemCratePrototype;
+import pl.subtelny.islands.crate.type.config.*;
 import pl.subtelny.islands.island.Island;
-import pl.subtelny.utilities.ColorUtil;
+import pl.subtelny.islands.island.IslandConfiguration;
+import pl.subtelny.islands.island.cqrs.command.IslandCommandService;
 import pl.subtelny.utilities.configuration.Configuration;
 
 import java.util.HashMap;
@@ -20,15 +21,23 @@ import java.util.stream.Collectors;
 @Component
 public class ConfigCrateCreatorStrategy implements CrateCreatorStrategy<ConfigCrateCreatorRequest> {
 
+    private final ComponentProvider componentProvider;
+
+    @Autowired
+    public ConfigCrateCreatorStrategy(ComponentProvider componentProvider) {
+        this.componentProvider = componentProvider;
+    }
+
     @Override
     public Crate create(ConfigCrateCreatorRequest request) {
         InventoryInfo inventory = createInventory(request);
-        return new ContentCrate(
+        return new ConfigContentCrate(
                 request.getCrateKey(),
                 request.getPermission(),
                 inventory,
-                prepareContent(request)
-        );
+                prepareContent(request),
+                componentProvider,
+                request.getIsland());
     }
 
     @Override
@@ -39,20 +48,20 @@ public class ConfigCrateCreatorStrategy implements CrateCreatorStrategy<ConfigCr
     private Map<Integer, ItemCrate> prepareContent(ConfigCrateCreatorRequest request) {
         Map<Integer, ItemCrate> content = new HashMap<>(request.getContent());
         Island island = request.getIsland();
-        Configuration configuration = island.getConfiguration();
+        IslandConfiguration configuration = island.getConfiguration();
         Map<Integer, ItemCrate> configContent = toConfigContent(request, configuration);
         content.putAll(configContent);
         return content;
     }
 
-    private Map<Integer, ItemCrate> toConfigContent(ConfigCrateCreatorRequest request, Configuration configuration) {
+    private Map<Integer, ItemCrate> toConfigContent(ConfigCrateCreatorRequest request, IslandConfiguration configuration) {
         return request.getConfigContent()
                 .entrySet()
                 .stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> toItemCrate(entry.getValue(), configuration)));
     }
 
-    private ItemCrate toItemCrate(ConfigItemCratePrototype prototype, Configuration configuration) {
+    private ItemCrate toItemCrate(ConfigItemCratePrototype prototype, IslandConfiguration configuration) {
         return new ConfigItemCrate(
                 prototype.getItemCrate(),
                 prototype.getConfigurationKey(),

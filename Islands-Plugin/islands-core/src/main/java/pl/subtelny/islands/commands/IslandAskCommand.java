@@ -13,16 +13,16 @@ import pl.subtelny.utilities.messages.Messages;
 
 import java.util.Optional;
 
-@PluginSubCommand(command = "dolacz", aliases = "join", mainCommand = IslandCommand.class)
-public class IslandJoinCommand extends BaseCommand {
+@PluginSubCommand(command = "popros", aliases = "ask", mainCommand = IslandCommand.class)
+public class IslandAskCommand extends BaseCommand {
 
     private final IslandInviteService islandInviteService;
 
     private final Messages messages;
 
     @Autowired
-    public IslandJoinCommand(IslandMessages messages,
-                             IslandInviteService islandInviteService) {
+    public IslandAskCommand(IslandMessages messages,
+                            IslandInviteService islandInviteService) {
         super(messages);
         this.messages = messages;
         this.islandInviteService = islandInviteService;
@@ -35,7 +35,7 @@ public class IslandJoinCommand extends BaseCommand {
         } else {
             Player player = (Player) sender;
             Player playerToJoin = getPlayer(args[0]);
-            islandInviteService.askJoinToPlayerIsland(player, playerToJoin);
+            islandInviteService.ask(player, playerToJoin);
         }
     }
 
@@ -46,7 +46,7 @@ public class IslandJoinCommand extends BaseCommand {
     }
 
     private void usage(CommandSender sender) {
-        messages.sendTo(sender, "command.island.join.usage");
+        messages.sendTo(sender, "command.island.ask.usage");
     }
 
     @Override

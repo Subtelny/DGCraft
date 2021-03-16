@@ -2,12 +2,12 @@ package pl.subtelny.islands.guard;
 
 public enum IslandActionGuardResult {
 
-    ACTION_PERMITED,
+    ACTION_PERMITTED,
     ACTION_PROHIBITED,
     NOT_ISLAND_WORLD;
 
-    public boolean isActionPermited() {
-        return ACTION_PERMITED == this;
+    public boolean isActionPermitted() {
+        return ACTION_PERMITTED == this;
     }
 
     public boolean isActionProhibited() {

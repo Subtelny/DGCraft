@@ -8,16 +8,9 @@ import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.islands.crate.type.config.ConfigCratePrototype;
 import pl.subtelny.islands.crate.type.config.ConfigItemCratePrototype;
 import pl.subtelny.utilities.ConfigUtil;
-import pl.subtelny.utilities.configuration.BooleanConfigurationValue;
-import pl.subtelny.utilities.configuration.ConfigurationKey;
-import pl.subtelny.utilities.configuration.ConfigurationValue;
-import pl.subtelny.utilities.exception.ValidationException;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConfigCratePrototypeParserStrategy extends CratePrototypeParserStrategy {
@@ -32,7 +25,7 @@ public class ConfigCratePrototypeParserStrategy extends CratePrototypeParserStra
     @Override
     public CratePrototype load(String path) {
         BasicInformation basicInformation = loadBasicInformation("configuration");
-        Map<Integer, ItemCrate> content = loadContent( "content");
+        Map<Integer, ItemCrate> content = loadContent("content");
         Map<Integer, ConfigItemCratePrototype> configContent = loadConfigContent();
         return new ConfigCratePrototype(
                 basicInformation.crateKey,
@@ -63,25 +56,18 @@ public class ConfigCratePrototypeParserStrategy extends CratePrototypeParserStra
 
     private ConfigItemCratePrototype loadConfigItemCratePrototype(String path) {
         ItemCrate itemCrate = loadItemCrate(path);
-        ConfigurationKey configurationKey = loadConfigurationKey(path + ".configuration.key");
-        List<ConfigurationValue> options = loadConfigurationOptions(path + ".configuration.options");
+        String configurationKey = loadConfigurationKey(path + ".configuration.key");
+        List<String> options = loadConfigurationOptions(path + ".configuration.options");
         return new ConfigItemCratePrototype(itemCrate, configurationKey, options);
     }
 
-    private ConfigurationKey loadConfigurationKey(String path) {
-        String rawConfigurationKey = configuration.getString(path + ".configuration.key");
-        return new ConfigurationKey(rawConfigurationKey);
+    private String loadConfigurationKey(String path) {
+        return configuration.getString(path);
     }
 
-    private List<ConfigurationValue> loadConfigurationOptions(String path) {
+    private List<String> loadConfigurationOptions(String path) {
         List<String> optionKeys = configuration.getStringList(path);
-        return optionKeys.stream()
-                .map(this::loadConfigurationOption)
-                .collect(Collectors.toList());
-    }
-
-    private ConfigurationValue loadConfigurationOption(String key) {
-        return new BooleanConfigurationValue(Boolean.parseBoolean(key));
+        return new ArrayList<>(optionKeys);
     }
 
 }

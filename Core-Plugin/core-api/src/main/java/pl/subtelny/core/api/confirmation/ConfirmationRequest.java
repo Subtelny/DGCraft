@@ -1,8 +1,7 @@
 package pl.subtelny.core.api.confirmation;
 
-import org.bukkit.entity.Player;
 import pl.subtelny.utilities.Callback;
-import pl.subtelny.utilities.thread.CallbackReturn;
+import pl.subtelny.utilities.messages.Messageable;
 
 import java.util.Objects;
 
@@ -10,7 +9,7 @@ public final class ConfirmationRequest {
 
     private final String rawConfirmContextId;
 
-    private final Player player;
+    private final Messageable messageable;
 
     private final Confirmable canConfirm;
 
@@ -18,16 +17,20 @@ public final class ConfirmationRequest {
 
     private final String title;
 
-    private ConfirmationRequest(String rawConfirmContextId, Player player, Confirmable canConfirm, Callback<Boolean> state, String title) {
+    private ConfirmationRequest(String rawConfirmContextId,
+                                Messageable messageable,
+                                Confirmable canConfirm,
+                                Callback<Boolean> state,
+                                String title) {
         this.rawConfirmContextId = rawConfirmContextId;
-        this.player = player;
+        this.messageable = messageable;
         this.canConfirm = canConfirm;
         this.state = state;
         this.title = title;
     }
 
-    public static Builder builder(String rawConfirmContextId, Player player, Confirmable canConfirm) {
-        return new Builder(rawConfirmContextId, player, canConfirm);
+    public static Builder builder(String rawConfirmContextId, Messageable messageable, Confirmable canConfirm) {
+        return new Builder(rawConfirmContextId, messageable, canConfirm);
     }
 
     public Confirmable getCanConfirm() {
@@ -38,8 +41,8 @@ public final class ConfirmationRequest {
         return rawConfirmContextId;
     }
 
-    public Player getPlayer() {
-        return player;
+    public Messageable getMessageable() {
+        return messageable;
     }
 
     public Callback<Boolean> getState() {
@@ -54,7 +57,7 @@ public final class ConfirmationRequest {
 
         private final String rawConfirmContextId;
 
-        private final Player player;
+        private final Messageable messageable;
 
         private final Confirmable canConfirm;
 
@@ -62,9 +65,9 @@ public final class ConfirmationRequest {
 
         private String title;
 
-        public Builder(String rawConfirmContextId, Player player, Confirmable canConfirm) {
+        public Builder(String rawConfirmContextId, Messageable messageable, Confirmable canConfirm) {
             this.rawConfirmContextId = rawConfirmContextId;
-            this.player = player;
+            this.messageable = messageable;
             this.canConfirm = canConfirm;
         }
 
@@ -79,7 +82,7 @@ public final class ConfirmationRequest {
         }
 
         public ConfirmationRequest build() {
-            return new ConfirmationRequest(rawConfirmContextId, player, canConfirm, state, title);
+            return new ConfirmationRequest(rawConfirmContextId, messageable, canConfirm, state, title);
         }
 
     }
@@ -89,11 +92,15 @@ public final class ConfirmationRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ConfirmationRequest that = (ConfirmationRequest) o;
-        return Objects.equals(rawConfirmContextId, that.rawConfirmContextId) && Objects.equals(player, that.player) && Objects.equals(canConfirm, that.canConfirm) && Objects.equals(state, that.state) && Objects.equals(title, that.title);
+        return Objects.equals(rawConfirmContextId, that.rawConfirmContextId)
+                && Objects.equals(messageable, that.messageable)
+                && Objects.equals(canConfirm, that.canConfirm)
+                && Objects.equals(state, that.state)
+                && Objects.equals(title, that.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rawConfirmContextId, player, canConfirm, state, title);
+        return Objects.hash(rawConfirmContextId, messageable, canConfirm, state, title);
     }
 }

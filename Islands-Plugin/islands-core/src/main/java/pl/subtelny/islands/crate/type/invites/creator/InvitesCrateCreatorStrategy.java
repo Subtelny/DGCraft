@@ -1,9 +1,7 @@
 package pl.subtelny.islands.crate.type.invites.creator;
 
 import com.google.common.collect.Queues;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
@@ -18,7 +16,6 @@ import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.IslandMember;
 import pl.subtelny.islands.island.model.AbstractIsland;
 import pl.subtelny.islands.message.IslandMessages;
-import pl.subtelny.utilities.ColorUtil;
 import pl.subtelny.utilities.item.ItemStackUtil;
 
 import java.util.*;
@@ -66,7 +63,7 @@ public class InvitesCrateCreatorStrategy implements CrateCreatorStrategy<Invites
 
     private List<ItemCrate> getInviteItemCrates(ItemStack itemStack, Island island) {
         AbstractIsland abstractIsland = (AbstractIsland) island;
-        Map<IslandMember, ConfirmContextId> pendingRequests = abstractIsland.getPendingJoinRequests();
+        Map<IslandMember, ConfirmContextId> pendingRequests = abstractIsland.getAskRequests();
         return pendingRequests.entrySet().stream()
                 .map(entry -> getInviteItemCrate(itemStack, entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());

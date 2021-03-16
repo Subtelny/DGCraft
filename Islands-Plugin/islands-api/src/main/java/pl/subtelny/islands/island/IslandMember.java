@@ -1,9 +1,12 @@
 package pl.subtelny.islands.island;
 
+import pl.subtelny.core.api.confirmation.Confirmable;
+import pl.subtelny.utilities.messages.Messageable;
+
 import java.util.List;
 import java.util.Optional;
 
-public interface IslandMember {
+public interface IslandMember extends Messageable {
 
     IslandMemberId getIslandMemberId();
 
@@ -18,6 +21,8 @@ public interface IslandMember {
     String getName();
 
     boolean hasIsland(IslandType islandType);
+
+    boolean isOnline();
 
     void addIsland(Island island);
 

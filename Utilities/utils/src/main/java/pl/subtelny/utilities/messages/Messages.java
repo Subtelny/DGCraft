@@ -15,9 +15,13 @@ public abstract class Messages {
     }
 
     public String getColoredFormattedMessage(String messageKey, Object... format) {
-        String message = getRawMessage(messageKey);
-        String formattedMessage = String.format(message, format);
+        String formattedMessage = getFormattedMessage(messageKey, format);
         return getColoredMessage(formattedMessage);
+    }
+
+    public String getFormattedMessage(String messageKey, Object... format) {
+        String message = getRawMessage(messageKey);
+        return String.format(message, format);
     }
 
     public String getColoredMessage(String messageKey) {

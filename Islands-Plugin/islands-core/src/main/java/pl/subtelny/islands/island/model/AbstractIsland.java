@@ -4,9 +4,9 @@ import com.google.common.collect.MapMaker;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import pl.subtelny.core.api.confirmation.ConfirmContextId;
+import pl.subtelny.islands.island.IslandConfiguration;
 import pl.subtelny.islands.island.*;
 import pl.subtelny.utilities.Validation;
-import pl.subtelny.utilities.configuration.Configuration;
 import pl.subtelny.utilities.cuboid.Cuboid;
 import pl.subtelny.utilities.location.LocationUtil;
 
@@ -25,7 +25,7 @@ public abstract class AbstractIsland implements Island {
 
     private final List<IslandMemberId> islandMemberIds;
 
-    private final Configuration configuration = new Configuration();
+    private final IslandConfiguration configuration;
 
     protected Cuboid cuboid;
 
@@ -42,7 +42,8 @@ public abstract class AbstractIsland implements Island {
                           Location spawn,
                           int points,
                           List<IslandMemberId> islandMemberIds,
-                          IslandMemberId owner) {
+                          IslandMemberId owner,
+                          IslandConfiguration configuration) {
         if (owner != null) {
             Validate.isTrue(islandMemberIds.contains(owner), "Not found owner in list of members");
         }
@@ -54,6 +55,7 @@ public abstract class AbstractIsland implements Island {
         this.points = points;
         this.islandMemberIds = islandMemberIds;
         this.owner = owner;
+        this.configuration = configuration;
     }
 
     @Override
@@ -92,7 +94,7 @@ public abstract class AbstractIsland implements Island {
     }
 
     @Override
-    public Configuration getConfiguration() {
+    public IslandConfiguration getConfiguration() {
         return configuration;
     }
 
@@ -102,8 +104,8 @@ public abstract class AbstractIsland implements Island {
     }
 
     @Override
-    public boolean isMemberOfIsland(IslandMember member) {
-        return islandMemberIds.contains(member.getIslandMemberId());
+    public boolean isMember(IslandMemberId islandMemberId) {
+        return islandMemberIds.contains(islandMemberId);
     }
 
     @Override
@@ -150,13 +152,15 @@ public abstract class AbstractIsland implements Island {
         member.leaveIsland(this);
     }
 
-    public Map<IslandMember, ConfirmContextId> getPendingJoinRequests() {
-        return new HashMap<>(pendingJoinRequests);
-    }
-
-    public void addPendingJoinRequest(IslandMember islandMember, ConfirmContextId confirmContextId) {
+    @Override
+    public void addAskRequest(IslandMember islandMember, ConfirmContextId confirmContextId) {
         Validation.isFalse(islandMemberIds.contains(islandMember.getIslandMemberId()), "IslandMember already added");
         pendingJoinRequests.put(islandMember, confirmContextId);
+    }
+
+    @Override
+    public Map<IslandMember, ConfirmContextId> getAskRequests() {
+        return new HashMap<>(pendingJoinRequests);
     }
 
 }

@@ -7,11 +7,11 @@ import pl.subtelny.islands.island.IslandMemberType;
 import java.util.List;
 import java.util.Optional;
 
-public interface IslandMemberLoader<T extends IslandMember> {
+public interface IslandMemberLoader {
 
-    Optional<T> findIslandMember(IslandMemberId islandMemberId);
+    Optional<IslandMember> findIslandMember(IslandMemberId islandMemberId);
 
-    List<T> getIslandMembers(List<IslandMemberId> islandMemberIds);
+    List<IslandMember> getIslandMembers(List<IslandMemberId> islandMemberIds);
 
     IslandMemberType getType();
 

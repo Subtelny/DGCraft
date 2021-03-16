@@ -3,7 +3,10 @@ package pl.subtelny.islands.islander;
 import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.island.*;
+import pl.subtelny.islands.island.IslandMember;
+import pl.subtelny.islands.island.IslandMemberId;
+import pl.subtelny.islands.island.IslandMemberType;
+import pl.subtelny.islands.island.IslanderId;
 import pl.subtelny.islands.island.membership.IslandMemberLoader;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.islander.repository.IslanderRepository;
@@ -15,7 +18,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
-public class IslanderQueryService extends IslanderService implements IslandMemberLoader<Islander> {
+public class IslanderQueryService extends IslanderService implements IslandMemberLoader {
 
     private final IslanderRepository islanderRepository;
 
@@ -40,14 +43,15 @@ public class IslanderQueryService extends IslanderService implements IslandMembe
     }
 
     @Override
-    public Optional<Islander> findIslandMember(IslandMemberId islandMemberId) {
+    public Optional<IslandMember> findIslandMember(IslandMemberId islandMemberId) {
         IslanderId islanderId = toIslanderId(islandMemberId);
         return islanderRepository
-                .getIslanderIfPresent(islanderId);
+                .getIslanderIfPresent(islanderId)
+                .map(islander -> islander);
     }
 
     @Override
-    public List<Islander> getIslandMembers(List<IslandMemberId> islandMemberIds) {
+    public List<IslandMember> getIslandMembers(List<IslandMemberId> islandMemberIds) {
         return islandMemberIds.stream()
                 .map(this::toIslanderId)
                 .map(islanderRepository::findIslander)

@@ -3,11 +3,14 @@ package pl.subtelny.islands.listeners;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.islands.guard.IslandActionGuard;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.cqrs.query.IslandFindResult;
 import pl.subtelny.islands.island.cqrs.query.IslandQueryService;
@@ -25,9 +28,21 @@ public class StructureGrowEventListener implements Listener {
         this.islandService = islandService;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockFertilize(BlockFertilizeEvent e) {
+        Player player = e.getPlayer();
+        if (player != null && player.hasPermission(IslandActionGuard.BUILD_BYPASS_PERMISSION)) {
+            return;
+        }
+        Location location = e.getBlock().getLocation();
+        IslandFindResult result = islandService.findIsland(location);
+        result.getResult().ifPresent(island -> removeBlocksWhenNotInIsland(e.getBlocks(), island));
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void onStructureGrow(StructureGrowEvent e) {
-        if (e.isCancelled()) {
+        Player player = e.getPlayer();
+        if (player != null && player.hasPermission(IslandActionGuard.BUILD_BYPASS_PERMISSION)) {
             return;
         }
         Location location = e.getLocation();

@@ -11,6 +11,7 @@ import org.jooq.OrderField;
 import org.jooq.impl.Internal;
 
 import pl.subtelny.generated.tables.tables.Accounts;
+import pl.subtelny.generated.tables.tables.IslandConfigurations;
 import pl.subtelny.generated.tables.tables.IslandMemberships;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.Islands;
@@ -36,6 +37,7 @@ public class Indexes {
 
     public static final Index ACCOUNTS_ID_PK = Indexes0.ACCOUNTS_ID_PK;
     public static final Index ACCOUNTS_NAME_UQ = Indexes0.ACCOUNTS_NAME_UQ;
+    public static final Index ISLAND_ID_PK = Indexes0.ISLAND_ID_PK;
     public static final Index ISLAND_MEMBERSHIP_ID = Indexes0.ISLAND_MEMBERSHIP_ID;
     public static final Index ISLANDERS_ID_PK = Indexes0.ISLANDERS_ID_PK;
     public static final Index ISLANDS_ID_PK = Indexes0.ISLANDS_ID_PK;
@@ -49,6 +51,7 @@ public class Indexes {
     private static class Indexes0 {
         public static Index ACCOUNTS_ID_PK = Internal.createIndex("accounts_id_pk", Accounts.ACCOUNTS, new OrderField[] { Accounts.ACCOUNTS.ID }, true);
         public static Index ACCOUNTS_NAME_UQ = Internal.createIndex("accounts_name_uq", Accounts.ACCOUNTS, new OrderField[] { Accounts.ACCOUNTS.NAME }, true);
+        public static Index ISLAND_ID_PK = Internal.createIndex("island_id_pk", IslandConfigurations.ISLAND_CONFIGURATIONS, new OrderField[] { IslandConfigurations.ISLAND_CONFIGURATIONS.ISLAND_ID }, true);
         public static Index ISLAND_MEMBERSHIP_ID = Internal.createIndex("island_membership_id", IslandMemberships.ISLAND_MEMBERSHIPS, new OrderField[] { IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID, IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_MEMBER_ID }, true);
         public static Index ISLANDERS_ID_PK = Internal.createIndex("islanders_id_pk", Islanders.ISLANDERS, new OrderField[] { Islanders.ISLANDERS.ID }, true);
         public static Index ISLANDS_ID_PK = Internal.createIndex("islands_id_pk", Islands.ISLANDS, new OrderField[] { Islands.ISLANDS.ID }, true);

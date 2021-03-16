@@ -2,81 +2,62 @@ package pl.subtelny.islands.listeners;
 
 import com.destroystokyo.paper.event.entity.PreSpawnerSpawnEvent;
 import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.islands.guard.IslandActionGuard;
+import pl.subtelny.islands.guard.IslandActionGuardResult;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.cqrs.query.IslandFindResult;
 import pl.subtelny.islands.island.cqrs.query.IslandQueryService;
-import pl.subtelny.utilities.configuration.ConfigurationKey;
-import pl.subtelny.utilities.entity.EntityTypeUtils;
+import pl.subtelny.utilities.configuration.datatype.BooleanDataType;
 
 @Component
 public class EntitySpawnEventListener implements Listener {
 
-    private static final ConfigurationKey SPAWNERS_DISABLED_KEY = new ConfigurationKey("SPAWNERS_DISABLED");
-
-    private static final ConfigurationKey SPAWN_AGGRESSIVE_MOB_DISABLED_KEY = new ConfigurationKey("SPAWN_AGGRESSIVE_MOB_DISABLED");
-
-    private static final ConfigurationKey SPAWN_PASSIVE_MOB_DISABLED_KEY = new ConfigurationKey("SPAWN_PASSIVE_MOB_DISABLED");
+    private static final String SPAWNERS_DISABLED_KEY = "SPAWNERS_DISABLED";
 
     private final IslandQueryService islandQueryService;
 
+    private final IslandActionGuard islandActionGuard;
+
     @Autowired
-    public EntitySpawnEventListener(IslandQueryService islandQueryService) {
+    public EntitySpawnEventListener(IslandQueryService islandQueryService, IslandActionGuard islandActionGuard) {
         this.islandQueryService = islandQueryService;
+        this.islandActionGuard = islandActionGuard;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onCreatureSpawnEvent(CreatureSpawnEvent e) {
         if (e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) {
             return;
         }
-        IslandFindResult islandFindResult = islandQueryService.findIsland(e.getLocation());
-        islandFindResult.getResult().ifPresent(island -> handleCreatureSpawn(e, island));
+        IslandActionGuardResult result = islandActionGuard.accessToSpawn(e.getEntity(), e.getLocation());
+        e.setCancelled(result.isActionProhibited());
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPreSpawnerSpawn(PreSpawnerSpawnEvent e) {
         Location spawnerLocation = e.getSpawnerLocation();
+        Location spawnLocation = e.getSpawnLocation();
         IslandFindResult islandFindResult = islandQueryService.findIsland(spawnerLocation);
-        islandFindResult.getResult().ifPresent(island -> handlePreSpawnerSpawn(e, island));
-    }
 
-    private void handleCreatureSpawn(CreatureSpawnEvent e, Island island) {
-        if (isSpawnEntityDisabled(island, e.getEntityType())) {
-            e.setCancelled(true);
-        }
-    }
+        boolean cancelEvent = islandFindResult.getResult()
+                .map(island -> cancelPreSpawnerSpawnEvent(spawnLocation, island))
+                .orElse(false);
 
-    private void handlePreSpawnerSpawn(PreSpawnerSpawnEvent e, Island island) {
-        boolean cancelEvent = needToCancelPreSpawnerSpawnEvent(island, e.getSpawnLocation());
         e.setCancelled(cancelEvent);
         e.setShouldAbortSpawn(cancelEvent);
     }
 
-    private boolean needToCancelPreSpawnerSpawnEvent(Island island, Location spawnLoc) {
-        if (!island.getCuboid().contains(spawnLoc)) {
-            return true;
-        }
-        return isSpawnersDisabled(island);
-    }
-
-    private boolean isSpawnEntityDisabled(Island island, EntityType entityType) {
-        if (EntityTypeUtils.isAggressive(entityType)) {
-            return island.getConfiguration().findValue(SPAWN_AGGRESSIVE_MOB_DISABLED_KEY, Boolean.class).orElse(false);
-        }
-        if (EntityTypeUtils.isPassive(entityType)) {
-            return island.getConfiguration().findValue(SPAWN_PASSIVE_MOB_DISABLED_KEY, Boolean.class).orElse(false);
-        }
-        return false;
+    private boolean cancelPreSpawnerSpawnEvent(Location spawnLoc, Island island) {
+        return island.getCuboid().contains(spawnLoc) && isSpawnersDisabled(island);
     }
 
     private boolean isSpawnersDisabled(Island island) {
-        return island.getConfiguration().findValue(SPAWNERS_DISABLED_KEY, Boolean.class).orElse(false);
+        return island.getConfiguration().getValue(SPAWNERS_DISABLED_KEY, BooleanDataType.TYPE);
     }
 
 }

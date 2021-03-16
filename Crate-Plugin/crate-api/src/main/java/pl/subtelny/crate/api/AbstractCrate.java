@@ -50,6 +50,11 @@ public abstract class AbstractCrate implements Crate {
                 .orElse(CrateClickResult.NOTHING);
     }
 
+    public void render() {
+        Map<Integer, ItemCrate> itemCrates = getContent();
+        itemCrates.forEach((slot, itemCrate) -> inventory.setItem(slot, itemCrate.getItemStack()));
+    }
+
     private CrateClickResult click(Player player, int slot, ItemCrate itemCrate) {
         ItemCrateClickResult clickResult = itemCrate.click(player);
         updateItemStack(slot, clickResult);
@@ -82,11 +87,6 @@ public abstract class AbstractCrate implements Crate {
         Validation.isTrue(slot >= 0, "Slot cannot be less than zero");
         Validation.isTrue(slot < inventory.getSize(), "Slot cannot be higher than inv size");
         inventory.setItem(slot, itemStack);
-    }
-
-    public void render() {
-        Map<Integer, ItemCrate> itemCrates = getContent();
-        itemCrates.forEach((slot, itemCrate) -> inventory.setItem(slot, itemCrate.getItemStack()));
     }
 
     public Inventory getInventory() {

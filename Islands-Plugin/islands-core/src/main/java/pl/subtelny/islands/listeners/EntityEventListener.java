@@ -5,9 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.projectiles.ProjectileSource;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
@@ -27,11 +25,31 @@ public class EntityEventListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
+    public void onEntityPickupItem(EntityPickupItemEvent e) {
+        Location location = e.getItem().getLocation();
+        LivingEntity entity = e.getEntity();
+        IslandActionGuardResult result = islandActionGuard.accessToItem(entity, location);
+        if (result.isActionProhibited()) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityDropItem(EntityDropItemEvent e) {
+        Location location = e.getItemDrop().getLocation();
+        Entity entity = e.getEntity();
+        IslandActionGuardResult result = islandActionGuard.accessToItem(entity, location);
+        if (result.isActionProhibited()) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent e) {
         Location source = e.getLocation();
         List<Block> blocks = e.blockList();
         IslandActionGuardResult result = islandActionGuard.accessToExplodeAndValidateBlocks(source, blocks);
-        if (isAccessToActionRejected(result)) {
+        if (result.isActionProhibited()) {
             e.setCancelled(true);
         }
     }
@@ -41,7 +59,7 @@ public class EntityEventListener implements Listener {
         Entity entity = e.getEntity();
         Entity damager = getRealDamagerEntity(e.getDamager());
         IslandActionGuardResult result = islandActionGuard.accessToHit(damager, entity);
-        if (isAccessToActionRejected(result)) {
+        if (result.isActionProhibited()) {
             e.setDamage(0);
             e.setCancelled(true);
         }
@@ -57,7 +75,7 @@ public class EntityEventListener implements Listener {
         LivingEntity entity = e.getEntity();
 
         IslandActionGuardResult result = islandActionGuard.accessToInteract(player, entity);
-        if (isAccessToActionRejected(result)) {
+        if (result.isActionProhibited()) {
             e.setCancelled(true);
         }
     }
@@ -70,10 +88,6 @@ public class EntityEventListener implements Listener {
             }
         }
         return entity;
-    }
-
-    private boolean isAccessToActionRejected(IslandActionGuardResult result) {
-        return IslandActionGuardResult.ACTION_PERMITED != result;
     }
 
 }
