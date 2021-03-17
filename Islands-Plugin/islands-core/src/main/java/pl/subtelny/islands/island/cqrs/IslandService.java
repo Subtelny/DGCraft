@@ -3,6 +3,7 @@ package pl.subtelny.islands.island.cqrs;
 import org.bukkit.World;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.IslandId;
+import pl.subtelny.islands.island.IslandMember;
 import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.island.module.IslandModule;
 import pl.subtelny.islands.island.module.IslandModules;
@@ -24,6 +25,12 @@ public abstract class IslandService {
 
     protected Optional<IslandModule<Island>> findIslandModule(World world) {
         return islandModules.findIslandModule(world);
+    }
+
+    protected Island getIsland(IslandMember islandMember, IslandType islandType) {
+        return islandMember.getIsland(islandType)
+                .map(this::getIsland)
+                .orElseThrow(() -> ValidationException.of("islandService.island.not_found", islandType.getInternal()));
     }
 
     protected Island getIsland(IslandId islandId) {

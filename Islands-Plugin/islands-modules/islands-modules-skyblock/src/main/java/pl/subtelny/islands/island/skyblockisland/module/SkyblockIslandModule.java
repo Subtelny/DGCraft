@@ -100,7 +100,7 @@ public class SkyblockIslandModule implements islandModuleInitable<SkyblockIsland
         IslandMember owner = request.getOwner()
                 .orElseThrow(() -> ValidationException.of("skyblockIslandModule.create_island_null_owner"));
 
-        if (!owner.getIslandMemberId().getType().equals(Islander.ISLAND_MEMBER_TYPE)) {
+        if (!owner.getIslandMemberId().getType().equals(Islander.TYPE)) {
             throw ValidationException.of("skyblockIslandModule.create_island_owner_only_islander");
         }
 

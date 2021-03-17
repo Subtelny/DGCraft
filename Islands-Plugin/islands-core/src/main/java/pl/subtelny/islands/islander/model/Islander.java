@@ -13,7 +13,7 @@ import java.util.Objects;
 
 public class Islander extends AbstractIslandMember {
 
-    public final static IslandMemberType ISLAND_MEMBER_TYPE = new IslandMemberType("ISLANDER");
+    public final static IslandMemberType TYPE = new IslandMemberType("ISLANDER");
 
     private final IslanderId islanderId;
 
@@ -35,7 +35,7 @@ public class Islander extends AbstractIslandMember {
 
     @Override
     public IslandMemberId getIslandMemberId() {
-        return IslandMemberId.of(ISLAND_MEMBER_TYPE.getInternal(), islanderId.getInternal().toString());
+        return IslandMemberId.of(TYPE.getInternal(), islanderId.getInternal().toString());
     }
 
     @Override
@@ -54,12 +54,18 @@ public class Islander extends AbstractIslandMember {
 
     @Override
     public void sendMessage(String message) {
-        getPlayer().sendMessage(message);
+        Player player = getPlayer();
+        if (player.isOnline()) {
+            player.sendMessage(message);
+        }
     }
 
     @Override
     public void sendMessage(BaseComponent component) {
-        getPlayer().sendMessage(component);
+        Player player = getPlayer();
+        if (player.isOnline()) {
+            player.sendMessage(component);
+        }
     }
 
     public Player getPlayer() {

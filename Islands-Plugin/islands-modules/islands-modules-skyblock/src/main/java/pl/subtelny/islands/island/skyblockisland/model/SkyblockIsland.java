@@ -98,7 +98,7 @@ public class SkyblockIsland extends AbstractIsland {
     }
 
     private boolean isIslander(IslandMemberId islandMemberId) {
-        return Islander.ISLAND_MEMBER_TYPE.equals(islandMemberId.getType());
+        return Islander.TYPE.equals(islandMemberId.getType());
     }
 
 }

@@ -10,7 +10,7 @@ public interface TransactionProvider {
 
     void transaction(Runnable runnable);
 
-    void transactionAsync(Runnable runnable);
+    CompletionStage<Void> transactionAsync(Runnable runnable);
 
     <T> T transactionResult(Callable<T> runnable);
 

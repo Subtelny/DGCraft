@@ -62,7 +62,7 @@ public class IslanderQueryService extends IslanderService implements IslandMembe
 
     @Override
     public IslandMemberType getType() {
-        return Islander.ISLAND_MEMBER_TYPE;
+        return Islander.TYPE;
     }
 
     private IslanderId toIslanderId(IslandMemberId islandMemberId) {

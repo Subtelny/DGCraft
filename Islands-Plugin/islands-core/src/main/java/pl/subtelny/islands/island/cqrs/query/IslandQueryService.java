@@ -28,12 +28,6 @@ public class IslandQueryService extends IslandService {
         return islandModule.getIslandCrates();
     }
 
-    public List<Island> getIslands(List<IslandId> islandIds) {
-        return islandIds.stream()
-                .flatMap(islandId -> findIsland(islandId).stream())
-                .collect(Collectors.toList());
-    }
-
     public Optional<Island> findIsland(IslandId islandId) {
         IslandType islandType = islandId.getIslandType();
         return getIslandModule(islandType)
@@ -46,15 +40,6 @@ public class IslandQueryService extends IslandService {
                 .map(islandModule -> islandModule.findIsland(location))
                 .map(island -> IslandFindResult.of(island.orElse(null)))
                 .orElseGet(IslandFindResult::notIslandWorld);
-    }
-
-    public boolean isIslandWorld(World world) {
-        return findIslandModule(world).isPresent();
-    }
-
-    private IslandModule<Island> getIslandModule(IslandType islandType) {
-        return findIslandModule(islandType)
-                .orElseThrow(() -> ValidationException.of("island.query.island_module_not_found", islandType));
     }
 
 }

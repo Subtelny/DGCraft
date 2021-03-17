@@ -70,7 +70,7 @@ public class IslanderCacheLoader implements CacheLoader<IslanderId, NullObject<I
     }
 
     private List<IslandId> getIslandIds(IslanderId islanderId) {
-        IslandMemberId islandMemberId = IslandMemberId.of(Islander.ISLAND_MEMBER_TYPE.getInternal(), islanderId.getInternal().toString());
+        IslandMemberId islandMemberId = IslandMemberId.of(Islander.TYPE.getInternal(), islanderId.getInternal().toString());
         return islandMembershipQueryService.loadIslandMemberships(islandMemberId)
                 .stream()
                 .map(IslandMembership::getIslandId)

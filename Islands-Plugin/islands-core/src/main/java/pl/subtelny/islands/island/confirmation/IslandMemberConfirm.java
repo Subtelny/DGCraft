@@ -3,6 +3,8 @@ package pl.subtelny.islands.island.confirmation;
 import org.bukkit.entity.Player;
 import pl.subtelny.core.api.confirmation.Confirmable;
 import pl.subtelny.islands.island.IslandMember;
+import pl.subtelny.islands.island.IslandMemberId;
+import pl.subtelny.islands.islander.model.Islander;
 
 import java.util.Objects;
 
@@ -18,7 +20,12 @@ public class IslandMemberConfirm implements Confirmable {
     public boolean canConfirm(Player player) {
         //TODO
         //do refaktoru gdy pojawi sie inna implementacja do IslandMembera niz tylko Islander
-        return islandMember.getIslandMemberId().getInternal().equals(player.getUniqueId().toString());
+
+        IslandMemberId islandMemberId = islandMember.getIslandMemberId();
+        if (Islander.TYPE.equals(islandMemberId.getType())) {
+            return islandMemberId.getValue().equals(player.getUniqueId().toString());
+        }
+        return false;
     }
 
     @Override

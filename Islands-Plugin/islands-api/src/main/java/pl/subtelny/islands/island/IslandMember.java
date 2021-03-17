@@ -1,6 +1,5 @@
 package pl.subtelny.islands.island;
 
-import pl.subtelny.core.api.confirmation.Confirmable;
 import pl.subtelny.utilities.messages.Messageable;
 
 import java.util.List;

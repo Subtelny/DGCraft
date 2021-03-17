@@ -10,6 +10,7 @@ import pl.subtelny.core.api.confirmation.ConfirmationService;
 import pl.subtelny.islands.configuration.IslandsConfiguration;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.IslandConfiguration;
+import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMember;
 import pl.subtelny.islands.island.confirmation.IslandConfirm;
 import pl.subtelny.islands.island.confirmation.IslandMemberConfirm;
@@ -65,22 +66,7 @@ public class IslandInviteService {
 
         Validation.isTrue(inviterIsland.isOwner(inviterIslander), "islandInvite.inviter_not_have_permission_to_invite");
         sendInvite(inviterIsland, targetIslander);
-    }
-
-    private void sendInvite(Island targetIsland, IslandMember memberToJoin) {
-        String rawContextId = getRawContextId(targetIsland, memberToJoin);
-        Confirmable confirmable = new IslandMemberConfirm(memberToJoin);
-        String title = IslandMessages.get().getFormattedMessage("islandInvite.send_invite_title", memberToJoin.getName());
-        makeConfirmation(rawContextId, memberToJoin, confirmable, acceptInviteListener(targetIsland, memberToJoin), title);
-    }
-
-    private Callback<Boolean> acceptInviteListener(Island island, IslandMember islandMember) {
-        return success -> {
-            if (success) {
-                Validation.isFalse(islandMember.hasIsland(island.getIslandType()), "islandInvite.target_already_have_island");
-                islandMembershipService.join(island, islandMember);
-            }
-        };
+        IslandMessages.get().sendTo(inviter, "islandInvite.invite_sent", targetIslander.getName());
     }
 
     public void ask(Player asker, Player target) {
@@ -93,6 +79,23 @@ public class IslandInviteService {
 
         Validation.isTrue(acceptingJoinRequests(targetIsland), "islandInvite.island_join_request_disabled");
         sendAsk(targetIsland, askerIslander);
+        IslandMessages.get().sendTo(asker, "islandInvite.ask_sent", targetIslander.getName());
+    }
+
+    private void sendInvite(Island targetIsland, IslandMember memberToJoin) {
+        String rawContextId = getRawContextId(targetIsland, memberToJoin);
+        Confirmable confirmable = new IslandMemberConfirm(memberToJoin);
+        String title = IslandMessages.get().getFormattedMessage("islandInvite.send_invite_title", memberToJoin.getName());
+        makeConfirmation(rawContextId, memberToJoin, confirmable, acceptInviteListener(targetIsland.getId(), memberToJoin), title);
+    }
+
+    private Callback<Boolean> acceptInviteListener(IslandId islandId, IslandMember islandMember) {
+        return success -> {
+            if (success) {
+                Validation.isFalse(islandMember.hasIsland(islandId.getIslandType()), "islandInvite.target_already_have_island");
+                islandMembershipService.join(islandId, islandMember);
+            }
+        };
     }
 
     private void sendAsk(Island island, IslandMember asker) {
@@ -104,15 +107,15 @@ public class IslandInviteService {
                 .map(islandMember -> (Messageable) islandMember)
                 .orElse(Messageable.EMPTY);
 
-        ConfirmContextId contextId = makeConfirmation(rawContextId, messageable, confirmable, acceptAskListener(island, asker), title);
+        ConfirmContextId contextId = makeConfirmation(rawContextId, messageable, confirmable, acceptAskListener(island.getId(), asker), title);
         island.addAskRequest(asker, contextId);
     }
 
-    private Callback<Boolean> acceptAskListener(Island island, IslandMember islandMember) {
+    private Callback<Boolean> acceptAskListener(IslandId islandId, IslandMember islandMember) {
         return success -> {
             if (success) {
-                Validation.isFalse(islandMember.hasIsland(island.getIslandType()), "islandInvite.asker_already_have_island");
-                islandMembershipService.join(island, islandMember);
+                Validation.isFalse(islandMember.hasIsland(islandId.getIslandType()), "islandInvite.asker_already_have_island");
+                islandMembershipService.join(islandId, islandMember);
             }
         };
     }

@@ -4,8 +4,10 @@ import com.google.common.collect.MapMaker;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import pl.subtelny.core.api.confirmation.ConfirmContextId;
-import pl.subtelny.islands.island.IslandConfiguration;
+import pl.subtelny.islands.event.IslandEventBus;
 import pl.subtelny.islands.island.*;
+import pl.subtelny.islands.island.events.IslandMemberJoinedIslandEvent;
+import pl.subtelny.islands.island.events.IslandMemberLeftIslandEvent;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.cuboid.Cuboid;
 import pl.subtelny.utilities.location.LocationUtil;
@@ -143,6 +145,7 @@ public abstract class AbstractIsland implements Island {
         Validation.isFalse(islandMemberIds.contains(member.getIslandMemberId()), "island.member_already_added");
         islandMemberIds.add(member.getIslandMemberId());
         member.addIsland(this);
+        IslandEventBus.call(new IslandMemberJoinedIslandEvent(member, this));
     }
 
     @Override
@@ -150,6 +153,7 @@ public abstract class AbstractIsland implements Island {
         Validation.isTrue(islandMemberIds.contains(member.getIslandMemberId()), "island.member_not_added");
         islandMemberIds.remove(member.getIslandMemberId());
         member.leaveIsland(this);
+        IslandEventBus.call(new IslandMemberLeftIslandEvent(member, this));
     }
 
     @Override

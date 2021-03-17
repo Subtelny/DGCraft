@@ -1,16 +1,12 @@
 package pl.subtelny.core.database;
 
 import org.jooq.Configuration;
-import org.jooq.TransactionalCallable;
-import org.jooq.TransactionalRunnable;
 import org.jooq.impl.DSL;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.DatabaseConnection;
 import pl.subtelny.core.api.database.TransactionProvider;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionStage;
@@ -37,8 +33,8 @@ public class TransactionProviderImpl implements TransactionProvider {
     }
 
     @Override
-    public void transactionAsync(Runnable callable) {
-        DSL.using(databaseConnection.getConfiguration())
+    public CompletionStage<Void> transactionAsync(Runnable callable) {
+        return DSL.using(databaseConnection.getConfiguration())
                 .transactionAsync(configuration -> {
                     currentTransaction.set(configuration);
                     callable.run();

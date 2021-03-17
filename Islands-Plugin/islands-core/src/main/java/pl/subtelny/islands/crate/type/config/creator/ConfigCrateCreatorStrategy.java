@@ -11,8 +11,6 @@ import pl.subtelny.crate.api.creator.CrateCreatorStrategy;
 import pl.subtelny.islands.crate.type.config.*;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.IslandConfiguration;
-import pl.subtelny.islands.island.cqrs.command.IslandCommandService;
-import pl.subtelny.utilities.configuration.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
