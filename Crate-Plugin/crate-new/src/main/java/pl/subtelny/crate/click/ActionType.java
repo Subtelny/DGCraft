@@ -2,9 +2,10 @@ package pl.subtelny.crate.click;
 
 public enum ActionType {
 
-    LEFT_CLICK;
+    LEFT_CLICK,
+    OTHER;
 
-    boolean isClick() {
+    public boolean isClick() {
         return LEFT_CLICK.equals(this);
     }
 

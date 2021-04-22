@@ -15,6 +15,7 @@ import pl.subtelny.utilities.messages.Messages;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class BaseCrate implements Crate {
 
@@ -74,7 +75,7 @@ public class BaseCrate implements Crate {
 
     @Override
     public boolean isShared() {
-        return false;
+        return shared;
     }
 
     protected CrateClickResult handleClickResult(Player player, int slot, ItemCrate itemCrate, ItemCrateClickResult clickResult) {
@@ -130,4 +131,16 @@ public class BaseCrate implements Crate {
                 });
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseCrate baseCrate = (BaseCrate) o;
+        return Objects.equals(crateId, baseCrate.crateId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(crateId);
+    }
 }

@@ -14,7 +14,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>crate-core</module>
         <module>crate-api</module>
         <module>crate-new</module>
     </modules>
