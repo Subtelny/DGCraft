@@ -6,10 +6,11 @@ import org.bukkit.entity.Player;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.core.commands.coredev.CoreDevCommand;
 import pl.subtelny.core.configuration.CoreMessages;
 import pl.subtelny.core.configuration.Locations;
 
-@PluginSubCommand(command = "global", mainCommand = CoreDevSetSpawnCommand.class)
+@PluginSubCommand(command = "setspawn", mainCommand = CoreDevCommand.class)
 public class SetSpawnGlobalCommand extends BaseCommand {
 
     private final Locations locations;

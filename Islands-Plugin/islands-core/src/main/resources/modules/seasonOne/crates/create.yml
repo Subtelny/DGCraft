@@ -1,31 +1,139 @@
 configuration:
   type: GLOBAL
-  size: 18
-  title: 'sezon 1'
-  global: true
+  title: 'Stwórz wyspe'
+  size: 27
 
 content:
   0:
-    item: GRASS
+    item: LIME_STAINED_GLASS_PANE
     amount: 1
-    name: 'Stworz wyspe'
-    lore:
-      - 'something'
-      - 'something2'
-    close-after-click: true
-    onclick:
-      rewards:
-        0:
-          island: create
+    name: ' '
   1:
-    item: GRASS
+    item: LIME_STAINED_GLASS_PANE
     amount: 1
-    name: 'Szukaj wyspe'
+    name: ' '
+  2:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  3:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  4:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  5:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  6:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  7:
+    item: LIME_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  8:
+    item: LIME_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  9:
+    item: LIME_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  10:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  11:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  12:
+    item: GRASS_PATH
+    amount: 1
+    name: '&6&lStwórz wyspę'
     lore:
-      - 'something'
-      - '&6hehe'
+      - '&f » Kliknij aby utworzyć wyspę'
+      - ''
+      - '&6Pamiętaj o:'
+      - ' &7» &e/wyspa &7- menu wyspy'
+      - ' &7» &e/wyspa zapros &7- dodaj znajomych'
+      - ' &7» &e/wyspa otworz &7- otwarta na zaproszenia'
     close-after-click: true
-    onclick:
+    on-click:
       rewards:
         0:
-          island: search
+          player-command: 'wyspa create'
+  13:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  14:
+    item: PLAYER_HEAD
+    amount: 1
+    name: '&e&lOtwarte wyspy'
+    lore:
+      - '&f » Kliknij aby zobaczyć otwarte wyspy'
+      - ''
+      - '&eInformacje:'
+      - ' &7» Jest to lista wysp które'
+      - ' &7   szukają graczy do swojej wyspy'
+      - ' '
+      - ' &7» Wyspa pokaże się dopiero gdy'
+      - ' &7   osoba akceptująca zapro. jest online'
+    on-click:
+      rewards:
+        0:
+          island-crate: 'search'
+  15:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  16:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  17:
+    item: LIME_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  18:
+    item: LIME_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  19:
+    item: LIME_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  20:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  21:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  22:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  23:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  24:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  25:
+    item: LIME_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  26:
+    item: LIME_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '

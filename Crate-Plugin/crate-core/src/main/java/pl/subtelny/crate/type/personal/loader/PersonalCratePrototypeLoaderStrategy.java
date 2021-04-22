@@ -7,8 +7,7 @@ import pl.subtelny.crate.api.loader.CratePrototypeLoadRequest;
 import pl.subtelny.crate.api.loader.CratePrototypeLoaderStrategy;
 import pl.subtelny.crate.api.type.personal.PersonalItemCrateStrategy;
 import pl.subtelny.crate.messages.CrateMessages;
-import pl.subtelny.crate.api.parser.BasicItemCrateParserStrategy;
-import pl.subtelny.crate.api.parser.CratePrototypeParserStrategy;
+import pl.subtelny.crate.api.type.basic.BasicItemCrateParserStrategy;
 import pl.subtelny.crate.api.parser.ItemCrateParserStrategy;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.api.type.personal.PersonalItemCrate;
@@ -29,7 +28,7 @@ public class PersonalCratePrototypeLoaderStrategy implements CratePrototypeLoade
     public CratePrototype load(CratePrototypeLoadRequest request) {
         File file = request.getFile();
         ItemCrateParserStrategy itemCrateStrategy = getItemCrateParserStrategy(request);
-        return new CratePrototypeParserStrategy(file, request.getPlugin(), request.getCrateKeyPrefix(), itemCrateStrategy).load("");
+        return new PersonalCratePrototypeParserStrategy(file, request.getCrateKeyPrefix(), itemCrateStrategy).load("");
     }
 
     @Override

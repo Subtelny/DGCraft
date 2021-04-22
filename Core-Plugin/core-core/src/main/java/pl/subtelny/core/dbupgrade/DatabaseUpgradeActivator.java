@@ -4,6 +4,7 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.components.core.api.DependencyActivatorPriority;
+import pl.subtelny.components.core.api.plugin.ComponentPlugin;
 import pl.subtelny.core.api.upgrade.DatabaseUpgrade;
 
 import java.util.Comparator;
@@ -21,7 +22,7 @@ public class DatabaseUpgradeActivator implements DependencyActivator {
     }
 
     @Override
-    public void activate() {
+    public void activate(ComponentPlugin componentPlugin) {
         upgrades.stream()
                 .sorted(Comparator.comparingInt(DatabaseUpgrade::order))
                 .forEach(DatabaseUpgrade::execute);

@@ -5,6 +5,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.components.core.api.DependencyActivatorPriority;
+import pl.subtelny.components.core.api.plugin.ComponentPlugin;
 import pl.subtelny.core.api.economy.EconomyProvider;
 import pl.subtelny.utilities.exception.ValidationException;
 
@@ -17,7 +18,7 @@ public class EconomyProviderImpl implements EconomyProvider, DependencyActivator
     private Economy economy;
 
     @Override
-    public void activate() {
+    public void activate(ComponentPlugin componentPlugin) {
         this.economy = setupEconomy();
     }
 

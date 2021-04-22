@@ -2,13 +2,11 @@ package pl.subtelny.crate.type.paged.creator;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.Inventory;
 import pl.subtelny.crate.api.AbstractCrate;
 import pl.subtelny.crate.api.ContentCrate;
 import pl.subtelny.crate.api.InventoryInfo;
 import pl.subtelny.crate.api.ItemCrate;
-import pl.subtelny.crate.api.type.paged.creator.PagedCrateCreatorRequest;
+import pl.subtelny.crate.api.type.paged.PagedCratePrototype;
 import pl.subtelny.crate.type.paged.PageSwitcherItemCrate;
 import pl.subtelny.crate.type.paged.PagedCrate;
 
@@ -23,12 +21,12 @@ public class PagesInitializer {
 
     private final int totalPages;
 
-    private final PagedCrateCreatorRequest request;
+    private final PagedCratePrototype prototype;
 
-    public PagesInitializer(PagedCrate pagedCrate, int totalPages, PagedCrateCreatorRequest request) {
+    public PagesInitializer(PagedCrate pagedCrate, int totalPages, PagedCratePrototype prototype) {
         this.pagedCrate = pagedCrate;
         this.totalPages = totalPages;
-        this.request = request;
+        this.prototype = prototype;
     }
 
     public AbstractCrate[] initializePages() {
@@ -41,7 +39,7 @@ public class PagesInitializer {
     }
 
     private void fillUpPagesWithNonSettledItems(AbstractCrate[] pages) {
-        Set<ItemCrate> itemCratesToAdd = request.getItemCratesToAdd();
+        Set<ItemCrate> itemCratesToAdd = prototype.getItemCratesToAdd();
         for (AbstractCrate page : pages) {
             if (itemCratesToAdd.isEmpty()) {
                 return;
@@ -54,20 +52,20 @@ public class PagesInitializer {
     }
 
     private int countEmptySlots(AbstractCrate crate) {
-        return request.getInventorySize() - crate.getContent().size();
+        return prototype.getInventorySize() - crate.getContent().size();
     }
 
     private AbstractCrate initializePage(int page) {
         Map<Integer, ItemCrate> content = getItemCrates(page);
-        InventoryInfo inventory = createInventory(request);
-        return new ContentCrate(request.getCrateKey(), request.getPermission(), inventory, content);
+        InventoryInfo inventory = createInventory(prototype);
+        return new ContentCrate(prototype.getCrateKey(), prototype.getPermission(), inventory, content);
     }
 
     private Map<Integer, ItemCrate> getItemCrates(int page) {
-        int from = page == 0 ? 0 : request.getInventorySize();
-        int to = from + request.getInventorySize();
+        int from = page == 0 ? 0 : prototype.getInventorySize();
+        int to = from + prototype.getInventorySize();
 
-        HashMap<Integer, ItemCrate> itemCrates = new HashMap<>(request.getStaticItemCrates());
+        HashMap<Integer, ItemCrate> itemCrates = new HashMap<>(prototype.getStaticContent());
         itemCrates.putAll(getItemCrates(from, to));
 
         if (page > 0) {
@@ -80,22 +78,22 @@ public class PagesInitializer {
     }
 
     private Map<Integer, ItemCrate> getItemCrates(int from, int to) {
-        Map<Integer, ItemCrate> itemCrates = request.getContent();
+        Map<Integer, ItemCrate> itemCrates = prototype.getContent();
         return itemCrates.entrySet().stream()
                 .filter(entry -> entry.getKey() >= from && entry.getKey() < to)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     private PageSwitcherItemCrate getPageSwitcherNextItemCrate() {
-        return new PageSwitcherItemCrate(request.getNextItemStack(), pagedCrate::nextPage);
+        return new PageSwitcherItemCrate(prototype.getNextPageItemStack(), pagedCrate::nextPage);
     }
 
     private PageSwitcherItemCrate getPageSwitcherPreviousItemCrate() {
-        return new PageSwitcherItemCrate(request.getPreviousItemStack(), pagedCrate::previousPage);
+        return new PageSwitcherItemCrate(prototype.getPreviousPageItemStack(), pagedCrate::previousPage);
     }
 
-    private InventoryInfo createInventory(PagedCrateCreatorRequest request) {
-        return InventoryInfo.of(request.getTitle(), request.getInventorySize());
+    private InventoryInfo createInventory(PagedCratePrototype prototype) {
+        return InventoryInfo.of(prototype.getTitle(), prototype.getInventorySize());
     }
 
 }

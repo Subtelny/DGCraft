@@ -3,13 +3,11 @@ package pl.subtelny.crate.api.prototype;
 import pl.subtelny.crate.api.CrateKey;
 import pl.subtelny.crate.api.CrateType;
 import pl.subtelny.crate.api.ItemCrate;
-import pl.subtelny.crate.api.creator.CrateCreatorRequest;
-import pl.subtelny.crate.api.type.basic.creator.BasicCrateCreatorRequest;
 
 import java.util.Map;
 import java.util.Objects;
 
-public class CratePrototype {
+public abstract class CratePrototype {
 
     private final CrateKey crateKey;
 
@@ -48,20 +46,12 @@ public class CratePrototype {
         return permission;
     }
 
-    public int getSize() {
+    public int getInventorySize() {
         return size;
     }
 
     public Map<Integer, ItemCrate> getContent() {
         return content;
-    }
-
-    public CrateCreatorRequest toCrateCreatorRequest() {
-        return BasicCrateCreatorRequest.builder(crateKey, size)
-                .setTitle(title)
-                .setPermission(permission)
-                .setContent(content)
-                .build();
     }
 
     @Override

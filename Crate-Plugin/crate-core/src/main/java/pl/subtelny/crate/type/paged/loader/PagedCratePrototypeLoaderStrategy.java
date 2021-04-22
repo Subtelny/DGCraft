@@ -9,7 +9,7 @@ import pl.subtelny.crate.api.type.paged.PagedCratePrototype;
 import pl.subtelny.crate.api.loader.CratePrototypeLoadRequest;
 import pl.subtelny.crate.api.loader.CratePrototypeLoaderStrategy;
 import pl.subtelny.crate.messages.CrateMessages;
-import pl.subtelny.crate.api.parser.BasicItemCrateParserStrategy;
+import pl.subtelny.crate.api.type.basic.BasicItemCrateParserStrategy;
 import pl.subtelny.crate.api.parser.ItemCrateParserStrategy;
 import pl.subtelny.crate.type.paged.parser.PagedCratePrototypeParserStrategy;
 import pl.subtelny.crate.api.type.personal.PersonalItemCrate;
@@ -37,7 +37,7 @@ public class PagedCratePrototypeLoaderStrategy implements CratePrototypeLoaderSt
 
     private PagedCratePrototypeParserStrategy getPagedCrateStrategy(CratePrototypeLoadRequest request) {
         ItemCrateParserStrategy itemCrateStrategy = getItemCrateStrategy(request);
-        return new PagedCratePrototypeParserStrategy(request.getFile(), request.getPlugin(), itemCrateStrategy, request.getCrateKeyPrefix());
+        return new PagedCratePrototypeParserStrategy(request.getFile(), itemCrateStrategy, request.getCrateKeyPrefix());
     }
 
     private ItemCrateParserStrategy getItemCrateStrategy(CratePrototypeLoadRequest request) {

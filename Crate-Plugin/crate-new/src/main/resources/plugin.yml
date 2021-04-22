@@ -1,0 +1,7 @@
+name: DG-Crate
+version: 1.0
+author: Subtelny
+main: pl.subtelny.crate.CrateCore
+api-version: 1.16
+depend:
+  - DG-Core

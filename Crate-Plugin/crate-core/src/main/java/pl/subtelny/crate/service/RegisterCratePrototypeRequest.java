@@ -55,6 +55,11 @@ public class RegisterCratePrototypeRequest {
         );
     }
 
+
+    public static RegisterCratePrototypeRequest of(File file, Plugin plugin, String keyPrefix, List<PathAbstractFileParserStrategy<? extends Reward>> rewards) {
+        return of(file, plugin, keyPrefix, Collections.emptyList(), Collections.emptyList(), rewards);
+    }
+
     public static RegisterCratePrototypeRequest of(File file, Plugin plugin, String keyPrefix) {
         return of(file, plugin, keyPrefix, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
     }

@@ -1,32 +1,454 @@
-# LIST OF SETTING KEYS:
-# - SPAWNERS_DISABLED
-# - SPAWN_AGGRESSIVE_MOB_DISABLED
-# - SPAWN_PASSIVE_MOB_DISABLED
+# LIST OF FLAG KEYS:
+# SPAWN_AGGRESSIVE_MOB,
+# SPAWN_PASSIVE_MOB,
+# MOB_SPAWNERS,
+# PVP,
+# GUEST_OPEN,
+# GUEST_SWITCH,
+# GUEST_PRESSURE,
+# GUEST_ENTER,
+# GUEST_DROP_ITEM,
+# GUEST_PICKUP_ITEM,
+# GUEST_FLY,
+# GUEST_LEASH_ENTITY,
+# GUEST_ATTACK_PASSIVE_MOBS,
+# GUEST_ATTACK_AGGRESSIVE_MOBS,
+# GUEST_MOUNT,
+# BREED,
+# EXPLODE
 
 
 configuration:
   type: CONFIG
-  size: 18
-  title: 'Ustawienia'
+  size: 54
+  title: 'Ustawienia wyspy'
 
 content:
   0:
-    item: GRASS
+    item: SPRUCE_SIGN
     amount: 1
-    name: 'Stworz wyspe'
-    lore:
-      - 'something'
-      - 'something2'
+    name: '&6&l » Powrót do menu wyspy'
   1:
-    item: GRASS
+    item: BLACK_STAINED_GLASS_PANE
     amount: 1
-    name: 'Szukaj wyspe'
+    name: ' '
+  2:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  3:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  4:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  5:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  6:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  7:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  8:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  9:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  17:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  18:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  19:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  20:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  21:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  22:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  23:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  24:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  25:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  26:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  27:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  35:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  36:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  44:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  45:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  46:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  47:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  48:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  49:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  50:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  51:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  52:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  53:
+    item: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    name: ' '
+  10:
+    item: WITHER_SKELETON_SPAWN_EGG
+    amount: 1
+    name: '&6&lSpawn agresywnych mobów'
     lore:
-      - 'something'
-      - '[OPTION0] Wlaczone'
-      - '[OPTION1] Wylaczone'
+      - '&7Włącza/wyłącza spawn agresywnych mobów'
+      - '&7Nie dotyczy to mob spawnerów'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
     configuration:
-      key: SPAWNERS_DISABLED
+      key: SPAWN_AGGRESSIVE_MOB
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  11:
+    item: PIG_SPAWN_EGG
+    amount: 1
+    name: '&6&lSpawn pasywnych mobów'
+    lore:
+      - '&7Włącza/wyłącza spawn pasywnych mobów'
+      - '&7Nie dotyczy to mob spawnerów'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: SPAWN_PASSIVE_MOB
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  12:
+    item: SPAWNER
+    amount: 1
+    name: '&6&lSpawn ze mobspawnerów'
+    lore:
+      - '&7Włącza/wyłącza spawn z mobspawnerów'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: MOB_SPAWNERS
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  13:
+    item: NETHERITE_SWORD
+    amount: 1
+    name: '&6&lPvP'
+    lore:
+      - '&7Włącza/wyłącza pvp'
+      - '&7Itemy nie wypadają po zginięciu'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: PVP
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  28:
+    item: BIRCH_DOOR
+    amount: 1
+    name: '&6&lOtwieranie drzwi'
+    lore:
+      - '&7Włącza/wyłącza możliwość otwierania'
+      - '&7przez graczy odwiedzających wyspę'
+      - '&7drzwi, włazów lub bram'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: GUEST_OPEN
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  29:
+    item: STONE_BUTTON
+    amount: 1
+    name: '&6&lPrzełączanie dźwigni'
+    lore:
+      - '&7Włącza/wyłącza możliwość przełączania'
+      - '&7przez graczy odwiedzających wyspę'
+      - '&7dźwigni lub przycisków'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: GUEST_SWITCH
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  30:
+    item: STONE_PRESSURE_PLATE
+    amount: 1
+    name: '&6&lNaciskanie płytek'
+    lore:
+      - '&7Włącza/wyłącza możliwość naciskania'
+      - '&7przez graczy odwiedzających wyspę'
+      - '&7płytek naciskowych'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: GUEST_PRESSURE
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  31:
+    item: PLAYER_HEAD
+    amount: 1
+    name: '&6&lWchodzenie na wyspe'
+    lore:
+      - '&7Włącza/wyłącza możliwość wchodzenia'
+      - '&7na wyspę, graczy spoza grupy'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: GUEST_ENTER
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  32:
+    item: ELYTRA
+    amount: 1
+    name: '&6&lLatanie'
+    lore:
+      - '&7Włącza/wyłącza możliwość latania'
+      - '&7przez graczy odwiedzających wyspę'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: GUEST_FLY
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  33:
+    item: MINECART
+    amount: 1
+    name: '&6&lWyrzucanie przedmiotów'
+    lore:
+      - '&7Włącza/wyłącza możliwość wyrzucania'
+      - '&7przez graczy odwiedzających wyspę'
+      - '&7przedmiotów na ziemię'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: GUEST_DROP_ITEM
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  34:
+    item: CHEST_MINECART
+    amount: 1
+    name: '&6&lPodnoszenie przedmiotów'
+    lore:
+      - '&7Włącza/wyłącza możliwość podnoszenia'
+      - '&7przez graczy odwiedzających wyspę'
+      - '&7przedmiotów z ziemii'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: GUEST_PICKUP_ITEM
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  37:
+    item: LEAD
+    amount: 1
+    name: '&6&lSmycz'
+    lore:
+      - '&7Włącza/wyłącza możliwość używania smyczy'
+      - '&7przez graczy odwiedzających wyspę'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: GUEST_LEASH_ENTITY
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  38:
+    item: LEATHER
+    amount: 1
+    name: '&6&lAtak. pasywnych mobów'
+    lore:
+      - '&7Włącza/wyłącza możliwość bicia'
+      - '&7przez graczy odwiedzających wyspę'
+      - '&7pasywnych mobów'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: GUEST_ATTACK_PASSIVE_MOBS
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  39:
+    item: STRING
+    amount: 1
+    name: '&6&lAtak. agresywnych mobów'
+    lore:
+      - '&7Włącza/wyłącza możliwość bicia'
+      - '&7przez graczy odwiedzających wyspę'
+      - '&7agresywnych mobów'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: GUEST_ATTACK_AGGRESSIVE_MOBS
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  40:
+    item: WHEAT
+    amount: 1
+    name: '&6&lRozmnażanie mobów'
+    lore:
+      - '&7Włącza/wyłącza możliwość rozmnażania'
+      - '&7przez graczy odwiedzających wyspę'
+      - '&7mobów'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: BREED
+      color: 'e'
+      faded-color: '7'
+      options:
+        - true
+        - false
+  41:
+    item: SADDLE
+    amount: 1
+    name: '&6&lDosiadanie mobów'
+    lore:
+      - '&7Włącza/wyłącza możliwość dosiadania'
+      - '&7przez graczy odwiedzających wyspę'
+      - '&7mobów oraz wagoników'
+      - ''
+      - '&6&lStatus:'
+      - '   &7&l»[OPTION0] Wlaczone'
+      - '   &7&l»[OPTION1] Wylaczone'
+    configuration:
+      key: GUEST_MOUNT
+      color: 'e'
+      faded-color: '7'
       options:
         - true
         - false

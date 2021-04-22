@@ -7,14 +7,13 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.crate.api.CrateInventory;
 import pl.subtelny.crate.api.CrateKey;
+import pl.subtelny.crate.api.service.InitializeCrateRequest;
 import pl.subtelny.crate.service.CrateRegistrationService;
 import pl.subtelny.crate.service.RegisterCratePrototypeRequest;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class CrateInitializer {
@@ -34,19 +33,27 @@ public class CrateInitializer {
         crateKeys.forEach(crateRegistrationService::unregisterCratePrototype);
     }
 
-    public List<CrateKey> initializeFromDir(File dir, Plugin plugin, String keyPrefix) {
+    public CrateKey initializeFromFile(InitializeCrateRequest request) {
+        RegisterCratePrototypeRequest registerRequest = RegisterCratePrototypeRequest.of(
+                request.getFile(),
+                request.getPlugin(),
+                request.getPrefixKey(),
+                request.getRewardFileParserStrategies()
+        );
+        return crateRegistrationService.registerCratePrototype(registerRequest);
+    }
+
+    public void initializeFromDir(File dir, Plugin plugin, String keyPrefix) {
         validateFile(dir);
         File[] files = dir.listFiles();
         if (files != null) {
-            return Arrays.stream(files)
-                    .map(file -> initializeFromFile(file, plugin, keyPrefix))
-                    .collect(Collectors.toList());
+            Arrays.stream(files)
+                    .forEach(file -> initializeFromFile(file, plugin, keyPrefix));
         }
-        return Collections.emptyList();
     }
 
-    private CrateKey initializeFromFile(File file, Plugin plugin, String keyPrefix) {
-        return crateRegistrationService.registerCratePrototype(RegisterCratePrototypeRequest.of(file, plugin, keyPrefix));
+    private void initializeFromFile(File file, Plugin plugin, String keyPrefix) {
+        crateRegistrationService.registerCratePrototype(RegisterCratePrototypeRequest.of(file, plugin, keyPrefix));
     }
 
     private void validateFile(File file) {

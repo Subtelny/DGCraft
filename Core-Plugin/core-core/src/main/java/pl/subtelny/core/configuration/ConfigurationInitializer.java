@@ -1,10 +1,9 @@
 package pl.subtelny.core.configuration;
 
-import org.bukkit.plugin.Plugin;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
-import pl.subtelny.core.Core;
+import pl.subtelny.components.core.api.plugin.ComponentPlugin;
 
 @Component
 public class ConfigurationInitializer implements DependencyActivator {
@@ -23,10 +22,9 @@ public class ConfigurationInitializer implements DependencyActivator {
     }
 
     @Override
-    public void activate() {
-        Plugin plugin = Core.plugin;
-        messages.initMessages(plugin);
-        settings.initSettings(plugin);
-        locations.initLocations(plugin);
+    public void activate(ComponentPlugin componentPlugin) {
+        messages.initMessages(componentPlugin);
+        settings.initSettings(componentPlugin);
+        locations.initLocations(componentPlugin);
     }
 }

@@ -33,9 +33,9 @@ public class IslandConfigurationLoadAction implements LoadAction<IslandConfigura
                 .where(IslandConfigurations.ISLAND_CONFIGURATIONS.ISLAND_ID.eq(islandId.getId()))
                 .fetchOne(this::getRawConfiguration);
         if (fields == null) {
-            return new IslandConfiguration(new Configuration());
+            return new IslandConfiguration();
         }
-        return new IslandConfiguration(new Configuration(fields));
+        return new IslandConfiguration(fields);
     }
 
     @Override

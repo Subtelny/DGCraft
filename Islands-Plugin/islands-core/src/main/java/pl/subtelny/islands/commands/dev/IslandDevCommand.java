@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginCommand;
 import pl.subtelny.components.core.api.Autowired;
-import pl.subtelny.islands.message.IslandMessages;
+import pl.subtelny.islands.island.message.IslandMessages;
 
 @PluginCommand(command = "islanddev", aliases = {"wyspadev", "wdev", "isdev"})
 public class IslandDevCommand extends BaseCommand {

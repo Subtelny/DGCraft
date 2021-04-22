@@ -4,16 +4,15 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.island.*;
+import pl.subtelny.islands.island.Island;
+import pl.subtelny.islands.island.IslandId;
+import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.island.cqrs.IslandService;
-import pl.subtelny.islands.island.crate.IslandCrates;
+import pl.subtelny.islands.island.crates.IslandCrates;
 import pl.subtelny.islands.island.module.IslandModule;
 import pl.subtelny.islands.island.module.IslandModules;
-import pl.subtelny.utilities.exception.ValidationException;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class IslandQueryService extends IslandService {
@@ -23,8 +22,8 @@ public class IslandQueryService extends IslandService {
         super(islandModules);
     }
 
-    public IslandCrates getIslandCrates(Island island) {
-        IslandModule<Island> islandModule = getIslandModule(island.getIslandType());
+    public IslandCrates getIslandCrates(IslandType islandType) {
+        IslandModule<Island> islandModule = getIslandModule(islandType);
         return islandModule.getIslandCrates();
     }
 

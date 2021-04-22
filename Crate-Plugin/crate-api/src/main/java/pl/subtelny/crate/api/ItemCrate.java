@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 public interface ItemCrate {
 
-    ItemCrateClickResult click(Player player);
+    ItemCrateClickResult click(Player player, CrateData crateData);
 
     ItemStack getItemStack();
 

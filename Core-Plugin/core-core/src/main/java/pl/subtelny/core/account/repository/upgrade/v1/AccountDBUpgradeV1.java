@@ -28,7 +28,6 @@ public class AccountDBUpgradeV1 implements DatabaseUpgrade {
                 .column("id", SQLDataType.UUID.nullable(false))
                 .column("name", SQLDataType.VARCHAR(16).nullable(false))
                 .column("display_name", SQLDataType.VARCHAR(16).nullable(false))
-                .column("city", SQLDataType.VARCHAR(15))
                 .column("last_online", SQLDataType.LOCALDATETIME.nullable(false).defaultValue(DSL.field("CURRENT_TIMESTAMP", SQLDataType.LOCALDATETIME)))
                 .constraints(
                         constraint("accounts_id_pk").primaryKey("id"),

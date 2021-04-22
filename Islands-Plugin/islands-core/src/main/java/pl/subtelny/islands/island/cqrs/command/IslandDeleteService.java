@@ -6,18 +6,20 @@ import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.confirmation.ConfirmationRequest;
 import pl.subtelny.core.api.confirmation.ConfirmationService;
 import pl.subtelny.core.api.database.TransactionProvider;
+import pl.subtelny.islands.event.IslandEventBus;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.IslandMember;
 import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.island.confirmation.IslandConfirm;
 import pl.subtelny.islands.island.cqrs.IslandService;
+import pl.subtelny.islands.island.events.DeletedIslandEvent;
 import pl.subtelny.islands.island.membership.IslandMemberQueryService;
 import pl.subtelny.islands.island.module.IslandModule;
 import pl.subtelny.islands.island.module.IslandModules;
 import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.message.IslandMessages;
+import pl.subtelny.islands.island.message.IslandMessages;
 import pl.subtelny.utilities.Callback;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.exception.ValidationException;
@@ -50,9 +52,8 @@ public class IslandDeleteService extends IslandService {
         this.confirmationService = confirmationService;
     }
 
-    public CompletableFuture<Void> deleteIsland(IslandId islandId) {
-        Island island = getIsland(islandId);
-        IslandModule<Island> islandModule = getIslandModule(islandId.getIslandType());
+    public CompletableFuture<Void> deleteIsland(Island island) {
+        IslandModule<Island> islandModule = getIslandModule(island.getIslandType());
         leaveMembersFromIsland(island);
         return transactionProvider.transactionAsync(() -> islandModule.removeIsland(island)).toCompletableFuture();
     }
@@ -85,7 +86,9 @@ public class IslandDeleteService extends IslandService {
     }
 
     private void deleteIsland(Islander islander, IslandId islandId) {
-        deleteIsland(islandId)
+        Island island = getIsland(islandId);
+        IslandEventBus.call(new DeletedIslandEvent(island, islander));
+        deleteIsland(island)
                 .whenComplete((unused, throwable) -> handleResult(islander, throwable));
     }
 

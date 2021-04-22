@@ -2,6 +2,7 @@ package pl.subtelny.crate.type.paged;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import pl.subtelny.crate.api.CrateData;
 import pl.subtelny.crate.api.ItemCrate;
 import pl.subtelny.crate.api.ItemCrateClickResult;
 import pl.subtelny.utilities.Notification;
@@ -20,7 +21,7 @@ public class PageSwitcherItemCrate implements ItemCrate {
     }
 
     @Override
-    public ItemCrateClickResult click(Player player) {
+    public ItemCrateClickResult click(Player player, CrateData crateData) {
         notification.sendNotification();
         return ItemCrateClickResult.success(false);
     }

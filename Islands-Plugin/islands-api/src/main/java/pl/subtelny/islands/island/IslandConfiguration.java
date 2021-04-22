@@ -1,35 +1,53 @@
 package pl.subtelny.islands.island;
 
+import pl.subtelny.islands.island.flags.IslandFlag;
+import pl.subtelny.islands.island.flags.IslandFlags;
 import pl.subtelny.utilities.configuration.Configuration;
 import pl.subtelny.utilities.configuration.datatype.DataType;
 
-public class IslandConfiguration {
+import java.util.Map;
+import java.util.Optional;
 
-    private final Configuration configuration;
+public class IslandConfiguration extends Configuration {
 
-    public IslandConfiguration(Configuration configuration) {
-        this.configuration = configuration;
+    public IslandConfiguration(Map<String, String> fields) {
+        super(fields);
+    }
+
+    public IslandConfiguration() {
+
     }
 
     public <T> String getStringValue(String key, DataType<T> dataType) {
-        return dataType.convertToString(getValue(key, dataType));
+        Optional<String> valueOpt = findValue(key);
+        return valueOpt.orElseGet(() -> IslandFlags.findIslandFlag(key)
+                .map(islandFlag -> islandFlag.getValue(this) + "")
+                .orElseGet(() -> dataType.getDefault().toString()));
     }
 
     public <T> T getValue(String key, DataType<T> dataType) {
-        return configuration.findValue(key, dataType)
+        return findValue(key, dataType)
                 .orElseGet(dataType::getDefault);
     }
 
     public <T> void updateValue(String key, DataType<T> dataType, String value) {
+        IslandFlags.findIslandFlag(key)
+                .ifPresentOrElse(
+                        islandFlag -> handleUpdateIslandFlagValue(islandFlag, value),
+                        () -> handleUpdateValue(key, dataType, value));
+    }
+
+    private <T> void handleUpdateValue(String key, DataType<T> dataType, String value) {
         if (dataType.isDefault(value)) {
-            configuration.removeValue(key);
+            removeValue(key);
         } else {
-            configuration.updateValue(key, value);
+            updateValue(key, value);
         }
     }
 
-    public Configuration getConfiguration() {
-        return configuration;
+    private void handleUpdateIslandFlagValue(IslandFlag islandFlag, String value) {
+        boolean booleanValue = Boolean.parseBoolean(value);
+        islandFlag.updateValue(this, booleanValue);
     }
 
 }

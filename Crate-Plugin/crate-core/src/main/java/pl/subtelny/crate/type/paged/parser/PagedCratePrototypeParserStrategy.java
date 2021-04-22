@@ -1,7 +1,6 @@
 package pl.subtelny.crate.type.paged.parser;
 
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import pl.subtelny.crate.api.ItemCrate;
 import pl.subtelny.crate.api.parser.CratePrototypeParserStrategy;
 import pl.subtelny.crate.api.parser.ItemCrateParserStrategy;
@@ -14,8 +13,8 @@ import java.util.Map;
 
 public class PagedCratePrototypeParserStrategy extends CratePrototypeParserStrategy {
 
-    public PagedCratePrototypeParserStrategy(File file, Plugin plugin, ItemCrateParserStrategy itemCrateParserStrategy, String crateKeyPrefix) {
-        super(file, plugin, crateKeyPrefix, itemCrateParserStrategy);
+    public PagedCratePrototypeParserStrategy(File file, ItemCrateParserStrategy itemCrateParserStrategy, String crateKeyPrefix) {
+        super(file, crateKeyPrefix, itemCrateParserStrategy);
     }
 
     @Override

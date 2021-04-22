@@ -2,6 +2,7 @@ package pl.subtelny.crate.type.global;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import pl.subtelny.crate.api.CrateData;
 import pl.subtelny.crate.api.ItemCrate;
 import pl.subtelny.crate.api.ItemCrateClickResult;
 import pl.subtelny.utilities.condition.Condition;
@@ -23,8 +24,8 @@ public class GlobalItemCrate implements ItemCrate {
     }
 
     @Override
-    public ItemCrateClickResult click(Player player) {
-        ItemCrateClickResult clickResult = itemCrate.click(player);
+    public ItemCrateClickResult click(Player player, CrateData crateData) {
+        ItemCrateClickResult clickResult = itemCrate.click(player, crateData);
         notifyPlayerAboutNotSatisfiedConditions(player, clickResult);
         return clickResult;
     }

@@ -4,9 +4,9 @@ import pl.subtelny.utilities.identity.CompoundIdentity;
 
 public class IslandId extends CompoundIdentity {
 
-	private static final int ID_POSITION = 0;
+    private static final int ID_POSITION = 0;
 
-	private static final int ISLAND_TYPE_POSITION = 1;
+    private static final int ISLAND_TYPE_POSITION = 1;
 
     private IslandId(String values) {
         super(values);
@@ -25,11 +25,11 @@ public class IslandId extends CompoundIdentity {
     }
 
     public Integer getId() {
-    	return Integer.valueOf(getAtPosition(ID_POSITION));
-	}
+        return Integer.valueOf(getAtPosition(ID_POSITION));
+    }
 
-	public IslandType getIslandType() {
-    	return IslandType.of(getAtPosition(ISLAND_TYPE_POSITION));
-	}
+    public IslandType getIslandType() {
+        return IslandType.of(getAtPosition(ISLAND_TYPE_POSITION));
+    }
 
 }

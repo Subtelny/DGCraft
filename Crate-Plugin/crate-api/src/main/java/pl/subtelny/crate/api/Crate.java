@@ -8,6 +8,8 @@ public interface Crate {
 
     CrateClickResult click(Player player, int slot);
 
+    CrateData getData();
+
     void open(Player player);
 
     default void close() {

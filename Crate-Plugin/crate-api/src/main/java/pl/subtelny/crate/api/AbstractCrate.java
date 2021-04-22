@@ -15,6 +15,8 @@ public abstract class AbstractCrate implements Crate {
 
     private final String permission;
 
+    private final CrateData crateData;
+
     protected final Set<Player> viewers;
 
     protected final Inventory inventory;
@@ -24,6 +26,7 @@ public abstract class AbstractCrate implements Crate {
         this.permission = permission;
         this.viewers = viewers;
         this.inventory = new CrateInventory(inventory, this);
+        this.crateData = new CrateData();
     }
 
     @Override
@@ -56,7 +59,7 @@ public abstract class AbstractCrate implements Crate {
     }
 
     private CrateClickResult click(Player player, int slot, ItemCrate itemCrate) {
-        ItemCrateClickResult clickResult = itemCrate.click(player);
+        ItemCrateClickResult clickResult = itemCrate.click(player, crateData);
         updateItemStack(slot, clickResult);
         return getCrateClickResult(clickResult, slot);
     }
@@ -103,6 +106,11 @@ public abstract class AbstractCrate implements Crate {
 
     public boolean isViewer(Player player) {
         return viewers.contains(player);
+    }
+
+    @Override
+    public CrateData getData() {
+        return crateData;
     }
 
     public abstract Optional<ItemCrate> getItemCrateAtSlot(int slot);

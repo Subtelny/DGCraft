@@ -1,6 +1,5 @@
 package pl.subtelny.crate.api.parser;
 
-import org.bukkit.plugin.Plugin;
 import pl.subtelny.crate.api.CrateKey;
 import pl.subtelny.crate.api.CrateType;
 import pl.subtelny.crate.api.ItemCrate;
@@ -16,33 +15,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CratePrototypeParserStrategy extends AbstractFileParserStrategy<CratePrototype> {
-
-    private final Plugin plugin;
+public abstract class CratePrototypeParserStrategy extends AbstractFileParserStrategy<CratePrototype> {
 
     private final String crateKeyPrefix;
 
     private final ItemCrateParserStrategy itemCrateParserStrategy;
 
-    public CratePrototypeParserStrategy(File file, Plugin plugin, String crateKeyPrefix, ItemCrateParserStrategy itemCrateParserStrategy) {
+    public CratePrototypeParserStrategy(File file, String crateKeyPrefix, ItemCrateParserStrategy itemCrateParserStrategy) {
         super(file);
-        this.plugin = plugin;
         this.crateKeyPrefix = crateKeyPrefix;
         this.itemCrateParserStrategy = itemCrateParserStrategy;
-    }
-
-    @Override
-    public CratePrototype load(String path) {
-        BasicInformation basicInformation = loadBasicInformation(path + ".configuration");
-        Map<Integer, ItemCrate> content = loadContent(path + ".content");
-        return new CratePrototype(
-                basicInformation.crateKey,
-                basicInformation.crateType,
-                basicInformation.title,
-                basicInformation.permission,
-                basicInformation.inventorySize,
-                content
-        );
     }
 
     @Override
@@ -94,7 +76,7 @@ public class CratePrototypeParserStrategy extends AbstractFileParserStrategy<Cra
     private CrateKey loadCrateKey() {
         String rawName = file.getName();
         String name = rawName.replace(".yml", "");
-        return crateKeyPrefix == null ? CrateKey.of(name, plugin) :  CrateKey.of(crateKeyPrefix + "-" + name, plugin);
+        return crateKeyPrefix == null ? CrateKey.of(name) : CrateKey.of(crateKeyPrefix + "-" + name);
     }
 
     public static final class BasicInformation {

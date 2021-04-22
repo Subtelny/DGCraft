@@ -10,7 +10,7 @@ import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.guard.IslandActionGuard;
+import pl.subtelny.islands.guard.IslandBuildActionGuard;
 import pl.subtelny.islands.island.Island;
 import pl.subtelny.islands.island.cqrs.query.IslandFindResult;
 import pl.subtelny.islands.island.cqrs.query.IslandQueryService;
@@ -31,7 +31,7 @@ public class StructureGrowEventListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onBlockFertilize(BlockFertilizeEvent e) {
         Player player = e.getPlayer();
-        if (player != null && player.hasPermission(IslandActionGuard.BUILD_BYPASS_PERMISSION)) {
+        if (player != null && player.hasPermission(IslandBuildActionGuard.BUILD_BYPASS_PERMISSION)) {
             return;
         }
         Location location = e.getBlock().getLocation();
@@ -42,7 +42,7 @@ public class StructureGrowEventListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onStructureGrow(StructureGrowEvent e) {
         Player player = e.getPlayer();
-        if (player != null && player.hasPermission(IslandActionGuard.BUILD_BYPASS_PERMISSION)) {
+        if (player != null && player.hasPermission(IslandBuildActionGuard.BUILD_BYPASS_PERMISSION)) {
             return;
         }
         Location location = e.getLocation();

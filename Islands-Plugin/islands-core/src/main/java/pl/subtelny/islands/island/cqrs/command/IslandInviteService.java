@@ -19,7 +19,7 @@ import pl.subtelny.islands.island.membership.IslandMemberQueryService;
 import pl.subtelny.islands.island.membership.IslandMembershipService;
 import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.message.IslandMessages;
+import pl.subtelny.islands.island.message.IslandMessages;
 import pl.subtelny.utilities.Callback;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.configuration.datatype.BooleanDataType;

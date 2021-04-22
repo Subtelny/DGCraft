@@ -7,7 +7,7 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.islands.island.cqrs.command.IslandInviteService;
-import pl.subtelny.islands.message.IslandMessages;
+import pl.subtelny.islands.island.message.IslandMessages;
 import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.messages.Messages;
 

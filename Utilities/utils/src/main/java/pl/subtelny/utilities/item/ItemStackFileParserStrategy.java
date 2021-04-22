@@ -47,7 +47,7 @@ public class ItemStackFileParserStrategy extends PathAbstractFileParserStrategy<
     }
 
     private ItemStack createItemStack(String path) {
-        Material material = Material.valueOf(configuration.getString(path + "." + getPath()));
+        Material material = Material.getMaterial(configuration.getString(path + "." + getPath()));
         int amount = configuration.getInt(path + ".amount", 1);
         ItemStack itemStack = new ItemStack(material, amount);
         itemStack.setItemMeta(updateItemMeta(path, itemStack.getItemMeta()));

@@ -8,11 +8,10 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.*;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.guard.IslandActionGuard;
@@ -40,11 +39,23 @@ public class PlayerEventListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
+    public void onPlayerTeleport(PlayerTeleportEvent e) {
+        Player player = e.getPlayer();
+        Location location = e.getTo();
+
+        IslandActionGuardResult result = islandActionGuard.accessToFly(player, location);
+        if (result.isActionProhibited()) {
+            player.setFlying(false);
+            player.setAllowFlight(false);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         Block clickedBlock = e.getClickedBlock();
         if (clickedBlock != null) {
-            IslandActionGuardResult result = islandActionGuard.accessToBuild(player, clickedBlock.getLocation());
+            IslandActionGuardResult result = islandActionGuard.accessToInteract(player, clickedBlock);
             if (result.isActionProhibited()) {
                 e.setCancelled(true);
                 e.setUseInteractedBlock(Event.Result.DENY);
@@ -87,7 +98,7 @@ public class PlayerEventListener implements Listener {
         Player player = e.getPlayer();
         Entity entity = e.getEntity();
 
-        IslandActionGuardResult result = islandActionGuard.accessToInteract(player, entity);
+        IslandActionGuardResult result = islandActionGuard.accessToLeashEntity(player, entity);
         if (result.isActionProhibited()) {
             e.setCancelled(true);
         }

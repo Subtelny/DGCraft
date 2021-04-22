@@ -1,6 +1,5 @@
 package pl.subtelny.components.core.loader;
 
-import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import pl.subtelny.commands.api.BaseCommand;
@@ -23,8 +22,8 @@ public class ComponentBukkitDependenciesLoader {
     }
 
     public void load() {
-        loadDependencyActivators(Lists.newArrayList(components));
         groupByPlugin().forEach(this::load);
+        loadDependencyActivators(components);
     }
 
     private void load(ComponentPlugin componentPlugin, List<ComponentObjectInfo> componentObjectInfos) {
@@ -32,12 +31,12 @@ public class ComponentBukkitDependenciesLoader {
         loadListeners(componentPlugin, componentObjectInfos);
     }
 
-    private void loadDependencyActivators(List<ComponentObjectInfo> componentObjectInfos) {
-        List<DependencyActivator> activators = getComponents(DependencyActivator.class, componentObjectInfos);
+    private void loadDependencyActivators(Collection<ComponentObjectInfo> componentObjectInfos) {
+        List<TypedComponentObjectInfo<DependencyActivator>> activators = getTypedComponents(DependencyActivator.class, componentObjectInfos);
         DependencyActivatorComparator dependencyActivatorComparator = new DependencyActivatorComparator();
         activators.stream()
-                .sorted(dependencyActivatorComparator)
-                .forEach(DependencyActivator::activate);
+                .sorted((t1, t2) -> dependencyActivatorComparator.compare(t1.object, t2.object))
+                .forEach(component -> component.object.activate(component.componentPlugin));
     }
 
     private void loadCommands(ComponentPlugin componentPlugin, List<ComponentObjectInfo> componentObjectInfos) {
@@ -67,6 +66,25 @@ public class ComponentBukkitDependenciesLoader {
                 .filter(component -> clazz.isAssignableFrom(component.getClass()))
                 .map(bean -> (T) bean)
                 .collect(Collectors.toList());
+    }
+
+    public <T> List<TypedComponentObjectInfo<T>> getTypedComponents(Class<T> clazz, Collection<ComponentObjectInfo> componentObjectInfos) {
+        return componentObjectInfos.stream()
+                .filter(component -> clazz.isAssignableFrom(component.getObject().getClass()))
+                .map(bean -> new TypedComponentObjectInfo<T>(bean.getComponentPlugin(), (T) bean.getObject()))
+                .collect(Collectors.toList());
+    }
+
+    private static class TypedComponentObjectInfo<T> {
+
+        private final ComponentPlugin componentPlugin;
+
+        private final T object;
+
+        private TypedComponentObjectInfo(ComponentPlugin componentPlugin, T object) {
+            this.componentPlugin = componentPlugin;
+            this.object = object;
+        }
     }
 
 }

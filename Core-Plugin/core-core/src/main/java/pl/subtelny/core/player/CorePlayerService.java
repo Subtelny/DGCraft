@@ -5,7 +5,6 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.account.Account;
 import pl.subtelny.core.api.account.Accounts;
-import pl.subtelny.core.components.CityComponent;
 import pl.subtelny.core.components.LocationsComponent;
 import pl.subtelny.utilities.exception.ValidationException;
 
@@ -16,14 +15,11 @@ public class CorePlayerService {
 
     private final Accounts accounts;
 
-    private final CityComponent cityComponent;
-
     private final LocationsComponent locationsComponent;
 
     @Autowired
-    public CorePlayerService(Accounts accounts, CityComponent cityComponent, LocationsComponent locationsComponent) {
+    public CorePlayerService(Accounts accounts, LocationsComponent locationsComponent) {
         this.accounts = accounts;
-        this.cityComponent = cityComponent;
         this.locationsComponent = locationsComponent;
         this.storage = new CorePlayerStorage();
     }
@@ -35,7 +31,7 @@ public class CorePlayerService {
     private CorePlayer buildCorePlayer(Player player) {
         Account account = accounts.findAccount(player)
                 .orElseThrow(() -> ValidationException.of("account.not_found", player.getDisplayName()));
-        return new CorePlayer(player, account, cityComponent, locationsComponent);
+        return new CorePlayer(player, account, locationsComponent);
     }
 
     public void invalidatePlayer(Player player) {

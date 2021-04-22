@@ -9,6 +9,7 @@ import pl.subtelny.islands.island.*;
 import pl.subtelny.islands.island.events.IslandMemberJoinedIslandEvent;
 import pl.subtelny.islands.island.events.IslandMemberLeftIslandEvent;
 import pl.subtelny.utilities.Validation;
+import pl.subtelny.utilities.configuration.Configuration;
 import pl.subtelny.utilities.cuboid.Cuboid;
 import pl.subtelny.utilities.location.LocationUtil;
 

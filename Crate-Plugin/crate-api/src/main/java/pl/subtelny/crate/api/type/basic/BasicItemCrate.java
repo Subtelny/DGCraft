@@ -2,6 +2,7 @@ package pl.subtelny.crate.api.type.basic;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import pl.subtelny.crate.api.CrateData;
 import pl.subtelny.crate.api.ItemCrate;
 import pl.subtelny.crate.api.ItemCrateClickResult;
 import pl.subtelny.utilities.condition.Condition;
@@ -38,7 +39,7 @@ public class BasicItemCrate implements ItemCrate {
     }
 
     @Override
-    public ItemCrateClickResult click(Player player) {
+    public ItemCrateClickResult click(Player player, CrateData crateData) {
         List<Condition> notSatisfiedConditions = getNotSatisfiedConditions(player);
         if (notSatisfiedConditions.isEmpty()) {
             admitRewards(player, rewards);

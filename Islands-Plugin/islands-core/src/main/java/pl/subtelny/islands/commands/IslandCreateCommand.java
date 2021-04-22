@@ -8,7 +8,7 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.islands.configuration.IslandsConfiguration;
 import pl.subtelny.islands.island.cqrs.command.IslandCreateService;
 import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.message.IslandMessages;
+import pl.subtelny.islands.island.message.IslandMessages;
 
 @PluginSubCommand(command = "create", aliases = "stworz", mainCommand = IslandCommand.class)
 public class IslandCreateCommand extends BaseCommand {

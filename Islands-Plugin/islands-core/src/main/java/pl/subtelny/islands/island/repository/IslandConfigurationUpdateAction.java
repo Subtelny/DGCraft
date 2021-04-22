@@ -22,7 +22,7 @@ public class IslandConfigurationUpdateAction implements UpdateAction<Island, Voi
 
     @Override
     public Void perform(Island island) {
-        Configuration configuration = island.getConfiguration().getConfiguration();
+        Configuration configuration = island.getConfiguration();
         Map<String, String> values = configuration.asMap();
 
         if (values.isEmpty()) {

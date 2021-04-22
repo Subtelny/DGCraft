@@ -4,7 +4,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import pl.subtelny.core.api.confirmation.ConfirmContextId;
-import pl.subtelny.utilities.configuration.Configuration;
 import pl.subtelny.utilities.cuboid.Cuboid;
 
 import java.time.LocalDateTime;
@@ -42,6 +41,8 @@ public interface Island {
 
     int getPoints();
 
+    void setPoints(int points);
+
     default boolean isMember(IslandMember member) {
         return isMember(member.getIslandMemberId());
     }
@@ -57,8 +58,6 @@ public interface Island {
     void changeSpawn(Location spawn);
 
     void updateCuboid(Cuboid cuboid);
-
-    void setPoints(int points);
 
     void changeBiome(Biome biome);
 

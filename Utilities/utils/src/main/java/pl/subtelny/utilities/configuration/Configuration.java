@@ -26,6 +26,10 @@ public class Configuration {
         return Optional.empty();
     }
 
+    public Optional<String> findValue(String key) {
+        return Optional.ofNullable(configuration.get(key));
+    }
+
     public Optional<String> findConfigurationValue(String key) {
         return Optional.ofNullable(configuration.get(key));
     }

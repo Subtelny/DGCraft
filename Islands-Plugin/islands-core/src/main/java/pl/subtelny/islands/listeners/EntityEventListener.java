@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.projectiles.ProjectileSource;
+import org.spigotmc.event.entity.EntityMountEvent;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.islands.guard.IslandActionGuard;
@@ -25,10 +26,33 @@ public class EntityEventListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
+    public void onEntityBreed(EntityBreedEvent e) {
+        LivingEntity breeder = e.getBreeder();
+        Location location = e.getEntity().getLocation();
+
+        IslandActionGuardResult result = islandActionGuard.accessToBreed(breeder, location);
+        if (result.isActionProhibited()) {
+            e.setCancelled(true);
+            e.setExperience(0);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityMountEvent(EntityMountEvent e) {
+        Entity entity = e.getEntity();
+        Entity mount = e.getMount();
+
+        IslandActionGuardResult result = islandActionGuard.accessToMount(entity, mount);
+        if (result.isActionProhibited()) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void onEntityPickupItem(EntityPickupItemEvent e) {
         Location location = e.getItem().getLocation();
         LivingEntity entity = e.getEntity();
-        IslandActionGuardResult result = islandActionGuard.accessToItem(entity, location);
+        IslandActionGuardResult result = islandActionGuard.accessToPickupItem(entity, location);
         if (result.isActionProhibited()) {
             e.setCancelled(true);
         }
@@ -38,7 +62,7 @@ public class EntityEventListener implements Listener {
     public void onEntityDropItem(EntityDropItemEvent e) {
         Location location = e.getItemDrop().getLocation();
         Entity entity = e.getEntity();
-        IslandActionGuardResult result = islandActionGuard.accessToItem(entity, location);
+        IslandActionGuardResult result = islandActionGuard.accessToDropItem(entity, location);
         if (result.isActionProhibited()) {
             e.setCancelled(true);
         }

@@ -12,7 +12,7 @@ import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.cqrs.query.IslandQueryService;
 import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.message.IslandMessages;
+import pl.subtelny.islands.island.message.IslandMessages;
 import pl.subtelny.utilities.exception.ValidationException;
 
 @PluginSubCommand(command = "dom", aliases = "home", mainCommand = IslandCommand.class)
