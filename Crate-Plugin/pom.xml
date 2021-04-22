@@ -15,7 +15,7 @@
 
     <modules>
         <module>crate-api</module>
-        <module>crate-new</module>
+        <module>crate-core</module>
     </modules>
 
 </project>

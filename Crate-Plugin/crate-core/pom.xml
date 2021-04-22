@@ -9,25 +9,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>crate-new</artifactId>
+    <artifactId>crate-core</artifactId>
     <dependencies>
         <dependency>
             <groupId>pl.subtelny</groupId>
             <artifactId>utils</artifactId>
             <version>1</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.subtelny</groupId>
             <artifactId>components-api</artifactId>
             <version>1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>pl.subtelny</groupId>
-            <artifactId>islands-api</artifactId>
-            <version>1</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
