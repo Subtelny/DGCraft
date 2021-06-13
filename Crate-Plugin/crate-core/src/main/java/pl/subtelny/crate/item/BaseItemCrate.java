@@ -2,8 +2,10 @@ package pl.subtelny.crate.item;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import pl.subtelny.crate.click.ActionType;
-import pl.subtelny.crate.CrateData;
+import pl.subtelny.crate.api.click.ActionType;
+import pl.subtelny.crate.api.CrateData;
+import pl.subtelny.crate.api.item.ItemCrate;
+import pl.subtelny.crate.api.item.ItemCrateClickResult;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.condition.CostCondition;
 import pl.subtelny.utilities.exception.ValidationException;
@@ -54,9 +56,9 @@ public class BaseItemCrate implements ItemCrate {
     }
 
     @Override
-    public ItemStack getItemStack(Map<String, String> values) {
+    public ItemStack getItemStack(CrateData crateData) {
         ItemStack itemStack = getItemStack();
-        return ItemStackUtil.prepareItemStack(itemStack, values);
+        return ItemStackUtil.prepareItemStack(itemStack, crateData.getValues());
     }
 
     private void validateSatisfiedConditions(Player player) {

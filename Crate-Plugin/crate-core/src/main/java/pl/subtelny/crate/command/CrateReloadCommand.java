@@ -13,7 +13,7 @@ public class CrateReloadCommand extends BaseCommand {
     private final CrateInitializer crateInitializer;
 
     @Autowired
-    protected CrateReloadCommand(CrateMessages crateMessages, CrateInitializer crateInitializer) {
+    public CrateReloadCommand(CrateMessages crateMessages, CrateInitializer crateInitializer) {
         super(crateMessages);
         this.crateInitializer = crateInitializer;
     }
@@ -29,3 +29,5 @@ public class CrateReloadCommand extends BaseCommand {
         return false;
     }
 }
+
+

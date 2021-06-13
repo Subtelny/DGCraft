@@ -1,6 +1,8 @@
 package pl.subtelny.crate;
 
-import pl.subtelny.crate.prototype.CratePrototype;
+import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.api.CrateId;
+import pl.subtelny.crate.api.prototype.CratePrototype;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,7 @@
 package pl.subtelny.islands.island.repository;
 
 import org.jooq.*;
-import org.jooq.impl.DSL;
+import org.jooq.Record;
 import pl.subtelny.generated.tables.tables.Islands;
 import pl.subtelny.core.api.repository.LoadAction;
 

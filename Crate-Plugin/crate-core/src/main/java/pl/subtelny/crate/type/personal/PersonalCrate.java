@@ -5,11 +5,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import pl.subtelny.crate.BaseCrate;
-import pl.subtelny.crate.CrateData;
-import pl.subtelny.crate.CrateId;
-import pl.subtelny.crate.click.CrateClickResult;
-import pl.subtelny.crate.item.ItemCrate;
-import pl.subtelny.crate.item.ItemCrateClickResult;
+import pl.subtelny.crate.api.CrateData;
+import pl.subtelny.crate.api.CrateId;
+import pl.subtelny.crate.api.click.CrateClickResult;
+import pl.subtelny.crate.api.item.ItemCrate;
+import pl.subtelny.crate.api.item.ItemCrateClickResult;
+import pl.subtelny.crate.api.listener.CrateListener;
+import pl.subtelny.crate.inventory.CraftCrateInventory;
 import pl.subtelny.crate.messages.CrateMessages;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.messages.Messages;
@@ -24,11 +26,12 @@ public class PersonalCrate extends BaseCrate {
     private static final String LORE_SEPARATOR = " ";
 
     public PersonalCrate(CrateId crateId,
-                         Inventory inventory,
+                         CraftCrateInventory inventory,
                          CrateData crateData,
+                         CrateListener closeCrateListener,
                          List<Condition> useConditions,
                          Map<Integer, ItemCrate> itemCrates) {
-        super(crateId, inventory, crateData, useConditions, itemCrates, false);
+        super(crateId, inventory, crateData, closeCrateListener, useConditions, itemCrates, false);
     }
 
     @Override

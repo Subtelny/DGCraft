@@ -1,11 +1,10 @@
 package pl.subtelny.crate.type.paged;
 
-import pl.subtelny.crate.CrateId;
-import pl.subtelny.crate.CrateType;
-import pl.subtelny.crate.item.ItemCrate;
+import pl.subtelny.crate.api.CrateId;
+import pl.subtelny.crate.api.CrateType;
+import pl.subtelny.crate.api.item.ItemCrate;
 import pl.subtelny.crate.item.controller.PageControllerItemCrate;
-import pl.subtelny.crate.prototype.CratePrototype;
-import pl.subtelny.utilities.Validation;
+import pl.subtelny.crate.api.prototype.CratePrototype;
 
 import java.util.*;
 
@@ -15,9 +14,9 @@ public class PagedCratePrototype extends CratePrototype {
 
     private final Map<Integer, ItemCrate> staticContent;
 
-    private final Set<ItemCrate> itemCratesToAdd = new HashSet<>();
+    private final List<ItemCrate> itemCratesToAdd = new ArrayList<>();
 
-    private final List<CratePrototype> cratePrototypes;
+    private final List<CratePrototype> pageCratePrototypes;
 
     private final PageControllerItemCrate nextPageControllerItemCrate;
 
@@ -25,14 +24,13 @@ public class PagedCratePrototype extends CratePrototype {
 
     public PagedCratePrototype(CrateId crateId,
                                Map<Integer, ItemCrate> staticContent,
-                               List<CratePrototype> cratePrototypes,
+                               List<CratePrototype> pageCratePrototypes,
                                PageControllerItemCrate nextPageControllerItemCrate,
                                PageControllerItemCrate previousPageControllerItemCrate) {
         super(crateId, 0, null, null, Collections.emptyMap(), false);
-        this.cratePrototypes = cratePrototypes;
+        this.pageCratePrototypes = pageCratePrototypes;
         this.nextPageControllerItemCrate = nextPageControllerItemCrate;
         this.previousPageControllerItemCrate = previousPageControllerItemCrate;
-        Validation.isTrue(crateId.getCrateType().equals(TYPE), "CrateId " + crateId.getInternal() + " not match to type " + TYPE.getValue());
         this.staticContent = staticContent;
     }
 
@@ -40,12 +38,12 @@ public class PagedCratePrototype extends CratePrototype {
         return staticContent;
     }
 
-    public Set<ItemCrate> getItemCratesToAdd() {
+    public List<ItemCrate> getItemCratesToAdd() {
         return itemCratesToAdd;
     }
 
-    public List<CratePrototype> getCratePrototypes() {
-        return cratePrototypes;
+    public List<CratePrototype> getPageCratePrototypes() {
+        return pageCratePrototypes;
     }
 
     public PageControllerItemCrate getNextPageControllerItemCrate() {

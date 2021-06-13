@@ -25,16 +25,16 @@ public abstract class AbstractIslandOpenCrateCommand extends BaseCommand {
         this.islandQueryService = islandQueryService;
     }
 
-    protected void openRawCrate(IslandType islandType, Player player, String crateName) {
+    protected void openCrate(IslandType islandType, Player player, String crate) {
         IslandCrates islandCrates = islandQueryService.getIslandCrates(islandType);
-        islandCrates.openCrate(player, crateName);
+        islandCrates.openCrate(player, crate);
     }
 
-    protected void openCrate(IslandType islandType, Player player, String crateName) {
+    protected void openCrateBasedOnIsland(IslandType islandType, Player player, String crate) {
         Islander islander = getIslander(player);
         IslandId islandId = getIslandId(islander, islandType);
         IslandCrates islandCrates = islandQueryService.getIslandCrates(islandId.getIslandType());
-        islandCrates.openCrate(player, islandId, crateName);
+        islandCrates.openCrate(player, islandId, crate);
     }
 
     private IslandId getIslandId(Islander islander, IslandType islandType) {

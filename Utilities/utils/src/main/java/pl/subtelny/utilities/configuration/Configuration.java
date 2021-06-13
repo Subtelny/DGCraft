@@ -19,11 +19,8 @@ public class Configuration {
     }
 
     public <T> Optional<T> findValue(String key, DataType<T> dataType) {
-        String value = configuration.get(key);
-        if (value != null) {
-            return Optional.of(dataType.convertToType(value));
-        }
-        return Optional.empty();
+        return findValue(key)
+                .map(dataType::convertToType);
     }
 
     public Optional<String> findValue(String key) {

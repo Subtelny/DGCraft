@@ -3,11 +3,11 @@ package pl.subtelny.crate.initializer;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.crate.CrateCore;
-import pl.subtelny.crate.CrateId;
-import pl.subtelny.crate.CrateService;
-import pl.subtelny.crate.prototype.CratePrototype;
-import pl.subtelny.crate.prototype.CratePrototypeLoadRequest;
-import pl.subtelny.crate.prototype.CratePrototypeLoader;
+import pl.subtelny.crate.api.CrateId;
+import pl.subtelny.crate.api.CrateRegistration;
+import pl.subtelny.crate.api.prototype.CratePrototype;
+import pl.subtelny.crate.api.prototype.CratePrototypeLoadRequest;
+import pl.subtelny.crate.api.prototype.CratePrototypeLoader;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.file.FileUtil;
 
@@ -23,14 +23,14 @@ public class CrateInitializer {
 
     private final CratePrototypeLoader cratePrototypeLoader;
 
-    private final CrateService crateService;
+    private final CrateRegistration crateRegistration;
 
     private final Set<CrateId> crateIds = new HashSet<>();
 
     @Autowired
-    public CrateInitializer(CratePrototypeLoader cratePrototypeLoader, CrateService crateService) {
+    public CrateInitializer(CratePrototypeLoader cratePrototypeLoader, CrateRegistration crateRegistration) {
         this.cratePrototypeLoader = cratePrototypeLoader;
-        this.crateService = crateService;
+        this.crateRegistration = crateRegistration;
     }
 
     public void initializeCratePrototypes() {
@@ -47,7 +47,7 @@ public class CrateInitializer {
     }
 
     public void reloadInitializedCratePrototypes() {
-        crateIds.forEach(crateService::unregisterCratePrototype);
+        crateIds.forEach(crateRegistration::unregisterCratePrototype);
         crateIds.clear();
         initializeCratePrototypes();
     }
@@ -55,7 +55,7 @@ public class CrateInitializer {
     private CrateId loadCratePrototypeFromFile(File file) {
         CratePrototypeLoadRequest request = CratePrototypeLoadRequest.builder(file).build();
         CratePrototype cratePrototype = cratePrototypeLoader.loadCratePrototype(request);
-        crateService.registerCratePrototype(cratePrototype);
+        crateRegistration.registerCratePrototype(cratePrototype);
         return cratePrototype.getCrateId();
     }
 

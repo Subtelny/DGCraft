@@ -3,6 +3,7 @@ package pl.subtelny.islands.module.skyblock.repository.load;
 import com.google.common.collect.Lists;
 import org.bukkit.Location;
 import org.jooq.*;
+import org.jooq.Record;
 import pl.subtelny.generated.tables.tables.Islands;
 import pl.subtelny.generated.tables.tables.SkyblockIslands;
 import pl.subtelny.islands.island.IslandId;

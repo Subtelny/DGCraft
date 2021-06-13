@@ -31,11 +31,10 @@ public class IslandCommand extends AbstractIslandOpenCrateCommand {
         IslandType seasonIslandType = IslandsConfiguration.ACTUAL_SEASON_ISLAND_TYPE;
 
         if (islander.hasIsland(seasonIslandType)) {
-            //openRawCrate(seasonIslandType, player, "main");
-            //return;
+            openCrateBasedOnIsland(seasonIslandType, player, "main");
+            return;
         }
-
-        openRawCrate(seasonIslandType, player, "create");
+        openCrate(seasonIslandType, player, "main");
     }
 
     @Override

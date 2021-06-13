@@ -1,23 +1,26 @@
 package pl.subtelny.islands.module.skyblock.crates;
 
-import pl.subtelny.crate.api.prototype.CratePrototype;
-import pl.subtelny.crate.api.service.CrateService;
-import pl.subtelny.islands.module.crates.IslandCrateCreatorStrategy;
+import pl.subtelny.crate.api.CrateService;
+import pl.subtelny.crate.api.prototype.CratePrototypeLoader;
+import pl.subtelny.islands.island.repository.IslandConfigurationRepository;
 import pl.subtelny.islands.module.skyblock.SkyblockIslandModule;
-
-import java.util.List;
 
 public class SkyblockIslandCratesBuilder {
 
-    private final List<IslandCrateCreatorStrategy<CratePrototype>> crateCreatorStrategies;
-
     private final CrateService crateService;
+
+    private final CratePrototypeLoader cratePrototypeLoader;
+
+    private final IslandConfigurationRepository islandConfigurationRepository;
 
     private SkyblockIslandModule module;
 
-    public SkyblockIslandCratesBuilder(List<IslandCrateCreatorStrategy<CratePrototype>> crateCreatorStrategies, CrateService crateService) {
-        this.crateCreatorStrategies = crateCreatorStrategies;
+    public SkyblockIslandCratesBuilder(CrateService crateService,
+                                       CratePrototypeLoader cratePrototypeLoader,
+                                       IslandConfigurationRepository islandConfigurationRepository) {
         this.crateService = crateService;
+        this.cratePrototypeLoader = cratePrototypeLoader;
+        this.islandConfigurationRepository = islandConfigurationRepository;
     }
 
     public SkyblockIslandCratesBuilder module(SkyblockIslandModule module) {
@@ -26,7 +29,7 @@ public class SkyblockIslandCratesBuilder {
     }
 
     public SkyblockIslandCrates build() {
-        return new SkyblockIslandCrates(crateCreatorStrategies, module, crateService);
+        return new SkyblockIslandCrates(module, crateService, cratePrototypeLoader, islandConfigurationRepository);
     }
 
 }

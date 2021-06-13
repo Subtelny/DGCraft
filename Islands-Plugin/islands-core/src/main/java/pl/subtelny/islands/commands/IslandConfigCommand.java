@@ -24,7 +24,7 @@ public class IslandConfigCommand extends AbstractIslandOpenCrateCommand {
     public void handleCommand(CommandSender sender, String[] args) {
         IslandType seasonIslandType = IslandsConfiguration.ACTUAL_SEASON_ISLAND_TYPE;
         Player player = (Player) sender;
-        openCrate(seasonIslandType, player, "config");
+        openCrateBasedOnIsland(seasonIslandType, player, "config");
     }
 
     @Override

@@ -1,9 +1,9 @@
 package pl.subtelny.crate.creator;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import pl.subtelny.crate.CrateId;
-import pl.subtelny.crate.item.ItemCrate;
-import pl.subtelny.crate.prototype.CratePrototypeCreator;
+import pl.subtelny.crate.api.CrateId;
+import pl.subtelny.crate.api.item.ItemCrate;
+import pl.subtelny.crate.api.prototype.CratePrototypeCreator;
 import pl.subtelny.utilities.ConfigUtil;
 import pl.subtelny.utilities.IntegerUtil;
 import pl.subtelny.utilities.Validation;
@@ -20,7 +20,7 @@ public abstract class AbstractCratePrototypeCreator implements CratePrototypeCre
 
     protected CrateId getCrateId(File file) {
         String id = file.getName().replace(".yml", "");
-        return CrateId.of(id, getCrateType());
+        return CrateId.of(id);
     }
 
     protected boolean isShared(YamlConfiguration configuration, String prePath) {
@@ -36,11 +36,12 @@ public abstract class AbstractCratePrototypeCreator implements CratePrototypeCre
     }
 
     protected Map<Integer, ItemCrate> getContent(YamlConfiguration configuration, String path) {
-        Set<Integer> slots = getContentSlots(configuration, path);
+        String contentPath = path(path, "content");
+        Set<Integer> slots = getContentSlots(configuration, contentPath);
         return slots.stream()
                 .collect(Collectors.toMap(
                         slot -> slot,
-                        slot -> getItemCrate(path + "." + slot)
+                        slot -> getItemCrate(contentPath + "." + slot)
                 ));
     }
 

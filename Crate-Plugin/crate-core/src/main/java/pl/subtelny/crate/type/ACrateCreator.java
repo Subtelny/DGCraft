@@ -1,7 +1,7 @@
 package pl.subtelny.crate.type;
 
-import pl.subtelny.crate.creator.CrateCreator;
-import pl.subtelny.crate.prototype.CratePrototype;
+import pl.subtelny.crate.api.creator.CrateCreator;
+import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.condition.permission.PermissionCondition;
 
@@ -12,16 +12,7 @@ import java.util.stream.Collectors;
 
 public abstract class ACrateCreator<T extends CratePrototype> implements CrateCreator<T> {
 
-    private final Class<T> clazz;
-
     protected ACrateCreator() {
-        this.clazz = (Class<T>) ((ParameterizedType) getClass()
-                .getGenericSuperclass()).getActualTypeArguments()[0];
-    }
-
-    @Override
-    public Class<T> getClazz() {
-        return clazz;
     }
 
     protected List<Condition> getUseConditions(CratePrototype createPrototype) {

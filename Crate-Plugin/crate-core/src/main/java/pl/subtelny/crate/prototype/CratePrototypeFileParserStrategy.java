@@ -1,6 +1,8 @@
 package pl.subtelny.crate.prototype;
 
-import pl.subtelny.crate.CrateType;
+import pl.subtelny.crate.api.CrateType;
+import pl.subtelny.crate.api.prototype.CratePrototype;
+import pl.subtelny.crate.api.prototype.CratePrototypeCreator;
 import pl.subtelny.utilities.Saveable;
 import pl.subtelny.utilities.file.AbstractFileParserStrategy;
 

@@ -1,10 +1,9 @@
 package pl.subtelny.crate.type.basic;
 
-import pl.subtelny.crate.CrateId;
-import pl.subtelny.crate.prototype.CratePrototype;
-import pl.subtelny.crate.CrateType;
-import pl.subtelny.crate.item.ItemCrate;
-import pl.subtelny.utilities.Validation;
+import pl.subtelny.crate.api.CrateId;
+import pl.subtelny.crate.api.prototype.CratePrototype;
+import pl.subtelny.crate.api.CrateType;
+import pl.subtelny.crate.api.item.ItemCrate;
 
 import java.util.Map;
 
@@ -19,7 +18,6 @@ public class BasicCratePrototype extends CratePrototype {
                                Map<Integer, ItemCrate> itemCrates,
                                boolean shared) {
         super(crateId, slots, title, permission, itemCrates, shared);
-        Validation.isTrue(crateId.getCrateType().equals(TYPE), "CrateId " + crateId.getInternal() + " not match to type " + TYPE.getValue());
     }
 
 }

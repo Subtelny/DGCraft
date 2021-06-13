@@ -4,11 +4,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import pl.subtelny.crate.click.ActionType;
-import pl.subtelny.crate.click.CrateClickResult;
-import pl.subtelny.crate.item.ItemCrate;
-import pl.subtelny.crate.item.ItemCrateClickResult;
-import pl.subtelny.islands.island.message.IslandMessages;
+import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.api.CrateData;
+import pl.subtelny.crate.api.CrateId;
+import pl.subtelny.crate.api.click.ActionType;
+import pl.subtelny.crate.api.click.CrateClickResult;
+import pl.subtelny.crate.api.item.ItemCrate;
+import pl.subtelny.crate.api.item.ItemCrateClickResult;
+import pl.subtelny.crate.api.listener.CrateListener;
+import pl.subtelny.crate.inventory.CraftCrateInventory;
+import pl.subtelny.crate.inventory.CrateInventory;
+import pl.subtelny.crate.messages.CrateMessages;
+import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.messages.Messages;
@@ -31,16 +38,20 @@ public class BaseCrate implements Crate {
 
     private final boolean shared;
 
+    private final CrateListener closeCrateListener;
+
     public BaseCrate(CrateId crateId,
-                     Inventory inventory,
+                     CraftCrateInventory inventory,
                      CrateData crateData,
+                     CrateListener closeCrateListener,
                      List<Condition> useConditions,
                      Map<Integer, ItemCrate> itemCrates,
                      boolean shared) {
         this.crateId = crateId;
-        this.inventory = inventory;
+        this.inventory = new CrateInventory(inventory.getName(), inventory.getSize(), this);
         this.crateData = crateData;
         this.useConditions = useConditions;
+        this.closeCrateListener = closeCrateListener;
         this.itemCrates = itemCrates;
         this.shared = shared;
     }
@@ -52,6 +63,11 @@ public class BaseCrate implements Crate {
             render();
         }
         player.openInventory(inventory);
+    }
+
+    @Override
+    public void close(Player player) {
+        closeCrateListener.handle(player, this);
     }
 
     @Override
@@ -78,6 +94,30 @@ public class BaseCrate implements Crate {
         return shared;
     }
 
+    @Override
+    public boolean addItemCrate(ItemCrate itemCrate) {
+        for (int slot = 0; slot < inventory.getSize(); slot++) {
+            if (!itemCrates.containsKey(slot)) {
+                itemCrates.put(slot, itemCrate);
+                if (!inventory.getViewers().isEmpty()) {
+                    render(slot);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void setItemCrate(int slot, ItemCrate itemCrate) {
+        Validation.isTrue(slot < inventory.getSize(), "Out of inventory size, " + slot);
+        itemCrates.put(slot, itemCrate);
+
+        if (!inventory.getViewers().isEmpty()) {
+            render(slot);
+        }
+    }
+
     protected CrateClickResult handleClickResult(Player player, int slot, ItemCrate itemCrate, ItemCrateClickResult clickResult) {
         if (!clickResult.isSuccess()) {
             informNotSatisfiedConditions(player, clickResult.getNotSatisfiedConditions());
@@ -94,7 +134,7 @@ public class BaseCrate implements Crate {
     }
 
     protected ItemStack getItemStack(ItemCrate itemCrate) {
-        return itemCrate.getItemStack(crateData.getValues());
+        return itemCrate.getItemStack(crateData);
     }
 
     protected void setItem(int slot, ItemStack itemStack) {
@@ -104,15 +144,21 @@ public class BaseCrate implements Crate {
     private void render() {
         inventory.clear();
         for (int slot = 0; slot < inventory.getSize(); slot++) {
-            ItemCrate itemCrate = itemCrates.get(slot);
-            if (itemCrate != null) {
-                setItem(slot, getItemStack(itemCrate));
-            }
+            render(slot);
+        }
+    }
+
+    private void render(int slot) {
+        ItemCrate itemCrate = itemCrates.get(slot);
+        if (itemCrate == null) {
+            inventory.clear(slot);
+        } else {
+            setItem(slot, getItemStack(itemCrate));
         }
     }
 
     private void informNotSatisfiedConditions(Player player, List<Condition> notSatisfiedConditions) {
-        Messages messages = IslandMessages.get();
+        Messages messages = CrateMessages.get();
         notSatisfiedConditions.forEach(condition -> messages.sendTo(player, condition.getMessageKey().getKey(), condition.getMessageKey().getObjects()));
     }
 

@@ -55,8 +55,7 @@ public class SkyblockIslandModule implements InitiableIslandModule<SkyblockIslan
 
     @Override
     public void initialize() {
-        islandCrates.copyResources();
-        islandCrates.initializeCrates();
+        islandCrates.reload();
     }
 
     @Override

@@ -1,9 +1,12 @@
 package pl.subtelny.crate.type.paged;
 
 import org.bukkit.entity.Player;
-import pl.subtelny.crate.*;
-import pl.subtelny.crate.click.ActionType;
-import pl.subtelny.crate.click.CrateClickResult;
+import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.api.CrateData;
+import pl.subtelny.crate.api.CrateId;
+import pl.subtelny.crate.api.click.ActionType;
+import pl.subtelny.crate.api.click.CrateClickResult;
+import pl.subtelny.crate.api.item.ItemCrate;
 import pl.subtelny.utilities.Validation;
 
 import java.util.ArrayList;
@@ -37,7 +40,7 @@ public class PagedCrate implements Crate {
 
     @Override
     public CrateData getCrateData() {
-        return CrateData.EMPTY;
+        return CrateData.empty();
     }
 
     @Override
@@ -45,17 +48,41 @@ public class PagedCrate implements Crate {
         return false;
     }
 
+    @Override
+    public boolean addItemCrate(ItemCrate itemCrate) {
+        for (Crate page : pages) {
+            if (page.addItemCrate(itemCrate)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void setItemCrate(int slot, ItemCrate itemCrate) {
+        throw new UnsupportedOperationException("Set item is unsupported for paged crate");
+    }
+
+    public List<Crate> getPages() {
+        return new ArrayList<>(pages);
+    }
+
+    public int totalOfPages() {
+        return pages.size();
+    }
+
     public void addPage(Crate crate) {
+        CrateData crateData = crate.getCrateData();
+        PagedCrateData pagedCrateData = PagedCrateData.of(crateData);
+        pagedCrateData.setPage(pages.size() - 1);
         pages.add(crate);
     }
 
-    public void openNextPage(Player player, Crate currentCratePage) {
-        int currentPage = getCurrentPage(currentCratePage);
+    public void openNextPage(Player player, int currentPage) {
         openPage(player, currentPage + 1);
     }
 
-    public void openPreviousPage(Player player, Crate currentCratePage) {
-        int currentPage = getCurrentPage(currentCratePage);
+    public void openPreviousPage(Player player, int currentPage) {
         openPage(player, currentPage - 1);
     }
 

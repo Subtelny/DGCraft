@@ -1,6 +1,8 @@
 package pl.subtelny.crate.item;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import pl.subtelny.crate.api.item.ItemCrate;
+import pl.subtelny.crate.api.item.ItemCrateWrapperParserStrategy;
 import pl.subtelny.crate.type.BaseItemCrateFileParserStrategy;
 import pl.subtelny.utilities.Saveable;
 import pl.subtelny.utilities.condition.Condition;

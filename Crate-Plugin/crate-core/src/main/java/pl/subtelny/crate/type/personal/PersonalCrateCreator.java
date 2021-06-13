@@ -1,13 +1,11 @@
 package pl.subtelny.crate.type.personal;
 
-import org.bukkit.Bukkit;
-import pl.subtelny.components.core.api.Component;
-import pl.subtelny.crate.Crate;
-import pl.subtelny.crate.CrateCreateRequest;
+import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.api.creator.CrateCreateRequest;
+import pl.subtelny.crate.inventory.CraftCrateInventory;
 import pl.subtelny.crate.type.ACrateCreator;
 import pl.subtelny.utilities.ColorUtil;
 
-@Component
 public class PersonalCrateCreator extends ACrateCreator<PersonalCratePrototype> {
 
     @Override
@@ -15,8 +13,9 @@ public class PersonalCrateCreator extends ACrateCreator<PersonalCratePrototype> 
         PersonalCratePrototype cratePrototype = request.getCratePrototype();
         return new PersonalCrate(
                 cratePrototype.getCrateId(),
-                Bukkit.createInventory(null, cratePrototype.getSize(), ColorUtil.color(cratePrototype.getTitle())),
+                new CraftCrateInventory(ColorUtil.color(cratePrototype.getTitle()), cratePrototype.getSize()),
                 request.getCrateData(),
+                request.getCloseCrateListener(),
                 getUseConditions(cratePrototype),
                 cratePrototype.getItemCrates()
         );

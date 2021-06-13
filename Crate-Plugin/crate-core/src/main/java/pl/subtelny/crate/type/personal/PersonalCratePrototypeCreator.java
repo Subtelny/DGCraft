@@ -2,10 +2,10 @@ package pl.subtelny.crate.type.personal;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import pl.subtelny.crate.creator.AbstractCratePrototypeCreator;
-import pl.subtelny.crate.CrateType;
-import pl.subtelny.crate.item.ItemCrate;
+import pl.subtelny.crate.api.CrateType;
+import pl.subtelny.crate.api.item.ItemCrate;
 import pl.subtelny.crate.item.ItemCrateFileParserStrategy;
-import pl.subtelny.crate.prototype.CratePrototype;
+import pl.subtelny.crate.api.prototype.CratePrototype;
 
 import java.io.File;
 

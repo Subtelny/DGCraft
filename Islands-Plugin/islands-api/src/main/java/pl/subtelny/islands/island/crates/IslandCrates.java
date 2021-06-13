@@ -7,7 +7,7 @@ public interface IslandCrates {
 
     void openCrate(Player player, String crateName);
 
-    void openCrate(Player player, IslandId islandId, String crateName);
+    void openCrate(Player player, IslandId islandId, String crate);
 
     void reload();
 

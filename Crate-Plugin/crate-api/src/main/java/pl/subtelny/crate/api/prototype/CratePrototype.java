@@ -1,41 +1,39 @@
 package pl.subtelny.crate.api.prototype;
 
-import pl.subtelny.crate.api.CrateKey;
-import pl.subtelny.crate.api.CrateType;
-import pl.subtelny.crate.api.ItemCrate;
+import pl.subtelny.crate.api.CrateId;
+import pl.subtelny.crate.api.item.ItemCrate;
 
 import java.util.Map;
-import java.util.Objects;
 
 public abstract class CratePrototype {
 
-    private final CrateKey crateKey;
+    private final CrateId crateId;
 
-    private final CrateType crateType;
+    private final int size;
 
     private final String title;
 
     private final String permission;
 
-    private final int size;
+    private final Map<Integer, ItemCrate> itemCrates;
 
-    private final Map<Integer, ItemCrate> content;
+    private final boolean shared;
 
-    public CratePrototype(CrateKey crateKey, CrateType crateType, String title, String permission, int size, Map<Integer, ItemCrate> content) {
-        this.crateKey = crateKey;
-        this.crateType = crateType;
+    public CratePrototype(CrateId crateId, int size, String title, String permission, Map<Integer, ItemCrate> itemCrates, boolean shared) {
+        this.crateId = crateId;
+        this.size = size;
         this.title = title;
         this.permission = permission;
-        this.size = size;
-        this.content = content;
+        this.itemCrates = itemCrates;
+        this.shared = shared;
     }
 
-    public CrateKey getCrateKey() {
-        return crateKey;
+    public CrateId getCrateId() {
+        return crateId;
     }
 
-    public CrateType getCrateType() {
-        return crateType;
+    public int getSize() {
+        return size;
     }
 
     public String getTitle() {
@@ -46,24 +44,11 @@ public abstract class CratePrototype {
         return permission;
     }
 
-    public int getInventorySize() {
-        return size;
+    public Map<Integer, ItemCrate> getItemCrates() {
+        return itemCrates;
     }
 
-    public Map<Integer, ItemCrate> getContent() {
-        return content;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CratePrototype that = (CratePrototype) o;
-        return size == that.size && Objects.equals(crateKey, that.crateKey) && Objects.equals(crateType, that.crateType) && Objects.equals(title, that.title) && Objects.equals(permission, that.permission) && Objects.equals(content, that.content);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(crateKey, crateType, title, permission, size, content);
+    public boolean isShared() {
+        return shared;
     }
 }

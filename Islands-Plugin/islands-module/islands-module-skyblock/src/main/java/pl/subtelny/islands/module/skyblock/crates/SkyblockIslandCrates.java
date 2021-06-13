@@ -1,108 +1,57 @@
 package pl.subtelny.islands.module.skyblock.crates;
 
 import org.bukkit.entity.Player;
-import pl.subtelny.crate.api.Crate;
-import pl.subtelny.crate.api.CrateKey;
-import pl.subtelny.crate.api.CrateType;
-import pl.subtelny.crate.api.prototype.CratePrototype;
-import pl.subtelny.crate.api.service.CrateService;
-import pl.subtelny.crate.api.service.InitializeCrateRequest;
-import pl.subtelny.islands.Islands;
+import pl.subtelny.crate.api.CrateService;
+import pl.subtelny.crate.api.prototype.CratePrototypeLoader;
 import pl.subtelny.islands.island.IslandId;
 import pl.subtelny.islands.island.crates.IslandCrates;
-import pl.subtelny.islands.island.module.IslandModule;
-import pl.subtelny.islands.module.crates.IslandCrateCreatorStrategy;
-import pl.subtelny.islands.module.crates.reward.open.OpenIslandCrateRewardFileParserStrategy;
+import pl.subtelny.islands.island.repository.IslandConfigurationRepository;
+import pl.subtelny.islands.module.skyblock.SkyblockIslandModule;
+import pl.subtelny.islands.module.skyblock.crates.config.ConfigCrateManager;
+import pl.subtelny.islands.module.skyblock.crates.main.MainCrateManager;
 import pl.subtelny.islands.module.skyblock.model.SkyblockIsland;
+import pl.subtelny.utilities.Preconditions;
 import pl.subtelny.utilities.exception.ValidationException;
-import pl.subtelny.utilities.file.FileUtil;
-import pl.subtelny.utilities.file.PathAbstractFileParserStrategy;
-import pl.subtelny.utilities.reward.Reward;
 
-import java.io.File;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class SkyblockIslandCrates implements IslandCrates {
 
-    private final List<IslandCrateCreatorStrategy<CratePrototype>> crateCreatorStrategies;
+    private final SkyblockIslandModule islandModule;
 
-    private final IslandModule<SkyblockIsland> islandModule;
+    private final Map<String, CrateManager> crateManagers = new HashMap<>();
 
-    private final CrateService crateService;
-
-    private final List<CrateKey> crateKeys = new ArrayList<>();
-
-    public SkyblockIslandCrates(List<IslandCrateCreatorStrategy<CratePrototype>> crateCreatorStrategies,
-                                IslandModule<SkyblockIsland> islandModule,
-                                CrateService crateService) {
-        this.crateCreatorStrategies = crateCreatorStrategies;
-        this.islandModule = islandModule;
-        this.crateService = crateService;
+    public SkyblockIslandCrates(SkyblockIslandModule islandModule,
+                                CrateService crateService,
+                                CratePrototypeLoader cratePrototypeLoader,
+                                IslandConfigurationRepository islandConfigurationRepository) {
+        this.islandModule = Preconditions.notNull(islandModule, "IslandModule cannot be null");
+        crateManagers.put("config", new ConfigCrateManager(islandModule, crateService, cratePrototypeLoader, islandConfigurationRepository));
+        crateManagers.put("main", new MainCrateManager(islandModule, crateService, cratePrototypeLoader));
     }
 
     @Override
-    public void openCrate(Player player, String crateName) {
-        CrateKey crateKey = prepareCrateKey(crateName);
-        Crate crate = crateService.getCrate(crateKey);
-        crate.open(player);
+    public void openCrate(Player player, String crate) {
+        getCrateManager(crate).open(player);
     }
 
     @Override
-    public void openCrate(Player player, IslandId islandId, String crateName) {
-        CrateKey crateKey = prepareCrateKey(crateName);
-        CratePrototype cratePrototype = crateService.getCratePrototype(crateKey);
-
+    public void openCrate(Player player, IslandId islandId, String crate) {
         SkyblockIsland skyblockIsland = islandModule.findIsland(islandId)
                 .orElseThrow(() -> ValidationException.of("skyblockIslandCrates.island_not_found"));
-
-        Crate crate = getStrategy(cratePrototype.getCrateType())
-                .map(strategy -> strategy.create(cratePrototype, skyblockIsland))
-                .orElseGet(() -> crateService.getCrate(cratePrototype));
-        crate.open(player);
+        getCrateManager(crate).open(player, skyblockIsland);
     }
 
     @Override
     public void reload() {
-        uninitializeCrates();
-        initializeCrates();
+        crateManagers.values().forEach(CrateManager::reload);
     }
 
-    public void copyResources() {
-        String moduleName = islandModule.getIslandType().getInternal();
-        FileUtil.copyFile(Islands.PLUGIN, "modules/" + moduleName + "/crates/config.yml");
-        FileUtil.copyFile(Islands.PLUGIN, "modules/" + moduleName + "/crates/create.yml");
-        FileUtil.copyFile(Islands.PLUGIN, "modules/" + moduleName + "/crates/search.yml");
-    }
-
-    public void initializeCrates() {
-        File crates = new File(islandModule.getConfiguration().getModuleDir(), "crates");
-        File[] files = crates.listFiles();
-        List<CrateKey> crateKeys = Arrays.stream(files)
-                .map(this::initializeCrate)
-                .collect(Collectors.toList());
-        this.crateKeys.addAll(crateKeys);
-    }
-
-    private CrateKey initializeCrate(File file) {
-        List<PathAbstractFileParserStrategy<? extends Reward>> rewards = Collections.singletonList(new OpenIslandCrateRewardFileParserStrategy(file, this));
-        String prefix = islandModule.getIslandType().getInternal();
-        return crateService.initializeCrate(InitializeCrateRequest.of(file, Islands.PLUGIN, prefix, rewards));
-    }
-
-    private void uninitializeCrates() {
-        crateService.unitializeCrates(crateKeys);
-        crateKeys.clear();
-    }
-
-    private Optional<IslandCrateCreatorStrategy<CratePrototype>> getStrategy(CrateType crateType) {
-        return crateCreatorStrategies.stream()
-                .filter(islandCrateCreatorStrategy -> islandCrateCreatorStrategy.getType().equals(crateType))
-                .findFirst();
-    }
-
-    private CrateKey prepareCrateKey(String name) {
-        return CrateKey.of(islandModule.getIslandType().getInternal(), name);
+    private CrateManager getCrateManager(String crateName) {
+        return Optional.ofNullable(crateManagers.get(crateName))
+                .orElseThrow(() -> ValidationException.of("skyblockIslandCrates.crate_manager_not_found", crateName));
     }
 
 }

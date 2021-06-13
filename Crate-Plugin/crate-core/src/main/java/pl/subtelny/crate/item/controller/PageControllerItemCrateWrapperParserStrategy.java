@@ -1,8 +1,8 @@
 package pl.subtelny.crate.item.controller;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import pl.subtelny.crate.item.ItemCrate;
-import pl.subtelny.crate.item.ItemCrateWrapperParserStrategy;
+import pl.subtelny.crate.api.item.ItemCrate;
+import pl.subtelny.crate.api.item.ItemCrateWrapperParserStrategy;
 
 public class PageControllerItemCrateWrapperParserStrategy implements ItemCrateWrapperParserStrategy {
 

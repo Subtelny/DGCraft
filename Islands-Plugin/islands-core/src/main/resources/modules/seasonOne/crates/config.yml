@@ -19,7 +19,7 @@
 
 
 configuration:
-  type: CONFIG
+  type: PERSONAL
   size: 54
   title: 'Ustawienia wyspy'
 

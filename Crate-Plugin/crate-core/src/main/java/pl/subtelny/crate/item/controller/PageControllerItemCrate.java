@@ -2,13 +2,12 @@ package pl.subtelny.crate.item.controller;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import pl.subtelny.crate.click.ActionType;
-import pl.subtelny.crate.CrateData;
-import pl.subtelny.crate.item.ItemCrate;
-import pl.subtelny.crate.item.ItemCrateClickResult;
-import pl.subtelny.crate.type.paged.PageController;
-
-import java.util.Map;
+import pl.subtelny.crate.api.CrateData;
+import pl.subtelny.crate.api.click.ActionType;
+import pl.subtelny.crate.api.item.ItemCrate;
+import pl.subtelny.crate.api.item.ItemCrateClickResult;
+import pl.subtelny.crate.type.paged.PagedCrate;
+import pl.subtelny.crate.type.paged.PagedCrateData;
 
 public class PageControllerItemCrate implements ItemCrate {
 
@@ -36,24 +35,20 @@ public class PageControllerItemCrate implements ItemCrate {
     }
 
     @Override
-    public ItemStack getItemStack(Map<String, String> values) {
-        return itemCrate.getItemStack(values);
+    public ItemStack getItemStack(CrateData crateData) {
+        return itemCrate.getItemStack(crateData);
     }
 
     private void changePage(Player player, CrateData crateData) {
-        crateData.<PageController>findData("pageController")
-                .ifPresent(pageController -> pageController.openPage(player, pageToOpen(crateData)));
-    }
+        PagedCrateData pagedCrateData = PagedCrateData.of(crateData);
+        PagedCrate pagedCrate = pagedCrateData.getPagedCrate();
+        int page = pagedCrateData.getPage();
 
-    private int pageToOpen(CrateData crateData) {
-        int page = crateData.<Integer>findData("pageNumber").orElse(0);
         if (next) {
-            return page + 1;
+            pagedCrate.openNextPage(player, page);
+        } else {
+            pagedCrate.openPreviousPage(player, page);
         }
-        if (page == 0) {
-            return 0;
-        }
-        return page - 1;
     }
 
 }

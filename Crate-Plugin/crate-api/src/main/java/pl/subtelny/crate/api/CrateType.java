@@ -4,18 +4,14 @@ import java.util.Objects;
 
 public class CrateType {
 
-    private final String type;
+    private final String value;
 
-    private CrateType(String type) {
-        this.type = type;
+    public CrateType(String value) {
+        this.value = value;
     }
 
-    public static CrateType of(String type) {
-        return new CrateType(type);
-    }
-
-    public String getType() {
-        return type;
+    public String getValue() {
+        return value;
     }
 
     @Override
@@ -23,11 +19,11 @@ public class CrateType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CrateType crateType = (CrateType) o;
-        return Objects.equals(type, crateType.type);
+        return Objects.equals(value, crateType.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type);
+        return Objects.hash(value);
     }
 }

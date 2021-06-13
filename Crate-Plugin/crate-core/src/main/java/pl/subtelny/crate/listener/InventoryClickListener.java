@@ -11,9 +11,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.crate.Crate;
-import pl.subtelny.crate.CrateInventory;
-import pl.subtelny.crate.click.ActionType;
+import pl.subtelny.crate.api.Crate;
+import pl.subtelny.crate.inventory.CrateInventory;
+import pl.subtelny.crate.api.click.ActionType;
 import pl.subtelny.crate.messages.CrateMessages;
 import pl.subtelny.utilities.exception.ValidationException;
 

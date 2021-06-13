@@ -3,7 +3,8 @@ package pl.subtelny.crate;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.economy.EconomyProvider;
-import pl.subtelny.crate.item.ItemCrateWrapperParserStrategy;
+import pl.subtelny.crate.api.item.ItemCrateWrapperParserStrategy;
+import pl.subtelny.crate.item.config.ConfigItemCrateWrapperParserStrategy;
 import pl.subtelny.crate.item.controller.PageControllerItemCrateWrapperParserStrategy;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.condition.CostCondition;
@@ -21,7 +22,6 @@ import pl.subtelny.utilities.reward.money.MoneyRewardFileParserStrategy;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -35,8 +35,9 @@ public class DefaultParsersStrategies {
     }
 
     public List<ItemCrateWrapperParserStrategy> getDefaultItemCrateWrapperParsers() {
-        return Collections.singletonList(
-                new PageControllerItemCrateWrapperParserStrategy()
+        return Arrays.asList(
+                new PageControllerItemCrateWrapperParserStrategy(),
+                new ConfigItemCrateWrapperParserStrategy()
         );
     }
 

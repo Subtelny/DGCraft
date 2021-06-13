@@ -5,17 +5,16 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.core.api.economy.EconomyProvider;
-import pl.subtelny.crate.api.prototype.CratePrototype;
-import pl.subtelny.crate.api.service.CrateService;
+import pl.subtelny.crate.api.CrateService;
+import pl.subtelny.crate.api.prototype.CratePrototypeLoader;
 import pl.subtelny.islands.island.IslandType;
 import pl.subtelny.islands.island.configuration.ConfigurationReloadableImpl;
 import pl.subtelny.islands.island.configuration.ReloadableConfiguration;
 import pl.subtelny.islands.island.membership.repository.IslandMembershipRepository;
 import pl.subtelny.islands.island.message.IslandMessages;
-import pl.subtelny.islands.module.InitiableIslandModule;
 import pl.subtelny.islands.island.repository.IslandConfigurationRepository;
+import pl.subtelny.islands.module.InitiableIslandModule;
 import pl.subtelny.islands.module.IslandModuleCreator;
-import pl.subtelny.islands.module.crates.IslandCrateCreatorStrategy;
 import pl.subtelny.islands.module.skyblock.configuration.SkyblockIslandModuleConfiguration;
 import pl.subtelny.islands.module.skyblock.crates.SkyblockIslandCratesBuilder;
 import pl.subtelny.islands.module.skyblock.creator.SkyblockIslandCreator;
@@ -25,7 +24,6 @@ import pl.subtelny.islands.module.skyblock.remover.SkyblockIslandRemover;
 import pl.subtelny.islands.module.skyblock.repository.SkyblockIslandRepository;
 
 import java.io.File;
-import java.util.List;
 
 @Component
 public class SkyblockIslandModuleCreator implements IslandModuleCreator<SkyblockIsland> {
@@ -40,23 +38,22 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
 
     private final IslandConfigurationRepository islandConfigurationRepository;
 
-    private final List<IslandCrateCreatorStrategy<CratePrototype>> crateCreatorStrategies;
-
     private final CrateService crateService;
+
+    private final CratePrototypeLoader cratePrototypeLoader;
 
     @Autowired
     public SkyblockIslandModuleCreator(EconomyProvider economyProvider,
                                        ConnectionProvider connectionProvider,
                                        IslandMembershipRepository islandMembershipRepository,
                                        IslandConfigurationRepository islandConfigurationRepository,
-                                       List<IslandCrateCreatorStrategy<CratePrototype>> crateCreatorStrategies,
-                                       CrateService crateService) {
+                                       CrateService crateService, CratePrototypeLoader cratePrototypeLoader) {
         this.economyProvider = economyProvider;
         this.connectionProvider = connectionProvider;
         this.islandMembershipRepository = islandMembershipRepository;
         this.islandConfigurationRepository = islandConfigurationRepository;
-        this.crateCreatorStrategies = crateCreatorStrategies;
         this.crateService = crateService;
+        this.cratePrototypeLoader = cratePrototypeLoader;
     }
 
     @Override
@@ -79,7 +76,7 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
     }
 
     private SkyblockIslandCratesBuilder getSkyblockIslandCratesBuilder() {
-        return new SkyblockIslandCratesBuilder(crateCreatorStrategies, crateService);
+        return new SkyblockIslandCratesBuilder(crateService, cratePrototypeLoader, islandConfigurationRepository);
     }
 
     private SkyblockIslandRemover getIslandRemover(SkyblockIslandOrganizer islandOrganizer, SkyblockIslandRepository repository) {

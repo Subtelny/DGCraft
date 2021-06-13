@@ -2,11 +2,11 @@ package pl.subtelny.crate.type.paged;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import pl.subtelny.crate.creator.AbstractCratePrototypeCreator;
-import pl.subtelny.crate.CrateType;
-import pl.subtelny.crate.item.ItemCrate;
+import pl.subtelny.crate.api.CrateType;
+import pl.subtelny.crate.api.item.ItemCrate;
 import pl.subtelny.crate.item.ItemCrateFileParserStrategy;
 import pl.subtelny.crate.item.controller.PageControllerItemCrate;
-import pl.subtelny.crate.prototype.CratePrototype;
+import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.type.basic.BasicCratePrototypeCreator;
 import pl.subtelny.crate.type.personal.PersonalCratePrototype;
 import pl.subtelny.utilities.ConfigUtil;
