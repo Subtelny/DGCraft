@@ -3,9 +3,9 @@ package pl.subtelny.islands.module.skyblock.repository;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import pl.subtelny.core.api.repository.Storage;
 import pl.subtelny.islands.module.skyblock.IslandCoordinates;
-import pl.subtelny.islands.island.IslandId;
-import pl.subtelny.islands.island.model.AbstractIsland;
-import pl.subtelny.islands.island.repository.IslandStorage;
+import pl.subtelny.islands.api.IslandId;
+import pl.subtelny.islands.api.model.AbstractIsland;
+import pl.subtelny.islands.api.repository.IslandStorage;
 import pl.subtelny.islands.module.skyblock.model.SkyblockIsland;
 import pl.subtelny.utilities.NullObject;
 

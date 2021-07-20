@@ -3,11 +3,11 @@ package pl.subtelny.islands.guard;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import pl.subtelny.islands.island.Island;
-import pl.subtelny.islands.island.IslandConfiguration;
-import pl.subtelny.islands.island.cqrs.query.IslandFindResult;
-import pl.subtelny.islands.island.cqrs.query.IslandQueryService;
-import pl.subtelny.islands.island.flags.IslandFlags;
+import pl.subtelny.islands.api.Island;
+import pl.subtelny.islands.api.IslandConfiguration;
+import pl.subtelny.islands.api.cqrs.query.IslandFindResult;
+import pl.subtelny.islands.api.cqrs.query.IslandQueryService;
+import pl.subtelny.islands.api.flags.IslandFlags;
 import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.utilities.entity.EntityTypeUtils;
 

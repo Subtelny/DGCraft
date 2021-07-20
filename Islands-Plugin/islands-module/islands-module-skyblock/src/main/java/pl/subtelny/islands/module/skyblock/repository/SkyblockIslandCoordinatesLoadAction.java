@@ -6,7 +6,7 @@ import pl.subtelny.core.api.repository.LoadAction;
 import pl.subtelny.generated.tables.tables.Islands;
 import pl.subtelny.generated.tables.tables.SkyblockIslands;
 import pl.subtelny.islands.module.skyblock.IslandCoordinates;
-import pl.subtelny.islands.island.IslandType;
+import pl.subtelny.islands.api.IslandType;
 
 import java.util.List;
 

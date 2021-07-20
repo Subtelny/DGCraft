@@ -1,6 +1,6 @@
 package pl.subtelny.islands.islander.repository.anemia;
 
-import pl.subtelny.islands.island.IslanderId;
+import pl.subtelny.islands.api.IslanderId;
 
 import java.util.Objects;
 

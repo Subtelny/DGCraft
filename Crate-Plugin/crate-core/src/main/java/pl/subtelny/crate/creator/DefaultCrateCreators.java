@@ -5,7 +5,7 @@ import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.type.basic.BasicCrateCreator;
 import pl.subtelny.crate.type.basic.BasicCratePrototype;
 import pl.subtelny.crate.type.paged.PagedCrateCreator;
-import pl.subtelny.crate.type.paged.PagedCratePrototype;
+import pl.subtelny.crate.api.prototype.paged.PagedCratePrototype;
 import pl.subtelny.crate.type.personal.PersonalCrateCreator;
 import pl.subtelny.crate.type.personal.PersonalCratePrototype;
 

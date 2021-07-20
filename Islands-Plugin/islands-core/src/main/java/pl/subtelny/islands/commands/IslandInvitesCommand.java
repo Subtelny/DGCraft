@@ -4,10 +4,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
+import pl.subtelny.islands.api.IslandType;
+import pl.subtelny.islands.api.message.IslandMessages;
+import pl.subtelny.islands.api.module.IslandModules;
 import pl.subtelny.islands.configuration.IslandsConfiguration;
-import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.island.cqrs.query.IslandQueryService;
-import pl.subtelny.islands.island.message.IslandMessages;
 import pl.subtelny.islands.islander.IslanderQueryService;
 
 @PluginSubCommand(command = "zaproszenia", aliases = {"invites", "invs"}, mainCommand = IslandCommand.class)
@@ -16,8 +16,8 @@ public class IslandInvitesCommand extends AbstractIslandOpenCrateCommand {
     @Autowired
     public IslandInvitesCommand(IslandMessages messages,
                                 IslanderQueryService islanderQueryService,
-                                IslandQueryService islandQueryService) {
-        super(messages, islanderQueryService, islandQueryService);
+                                IslandModules islandModules) {
+        super(messages, islanderQueryService, islandModules);
     }
 
     @Override

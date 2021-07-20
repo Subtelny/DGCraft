@@ -1,6 +1,6 @@
 package pl.subtelny.core.api.database;
 
-import org.jooq.Configuration;
+import org.jooq.DSLContext;
 
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -16,6 +16,6 @@ public interface TransactionProvider {
 
     <T> CompletionStage<T> transactionResultAsync(Callable<T> runnable);
 
-    Optional<Configuration> getCurrentTransaction();
+    Optional<DSLContext> getCurrentTransaction();
 
 }

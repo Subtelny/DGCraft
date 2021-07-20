@@ -36,8 +36,8 @@ public class ItemStackFileParserStrategy extends PathAbstractFileParserStrategy<
     public ItemStack load(String path) {
         try {
             return createItemStack(path);
-        } catch (NullPointerException e) {
-            throw ValidationException.of("NPE while creating ItemStack, path " + path + ", " + file.getName(), e);
+        } catch (NullPointerException | IllegalArgumentException e) {
+            throw ValidationException.of("Error while creating ItemStack, path " + path + ", " + file.getName(), e);
         }
     }
 

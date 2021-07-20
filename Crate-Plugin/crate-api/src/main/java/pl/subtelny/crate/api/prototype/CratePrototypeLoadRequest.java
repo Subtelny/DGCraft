@@ -1,5 +1,6 @@
 package pl.subtelny.crate.api.prototype;
 
+import pl.subtelny.crate.api.item.ItemCrateLoadRequest;
 import pl.subtelny.crate.api.item.ItemCrateWrapperParserStrategy;
 import pl.subtelny.utilities.condition.Condition;
 import pl.subtelny.utilities.condition.CostCondition;
@@ -16,26 +17,14 @@ public class CratePrototypeLoadRequest {
 
     private final List<CratePrototypeCreator> cratePrototypeCreators;
 
-    private final List<ItemCrateWrapperParserStrategy> itemCrateWrapperParserStrategies;
+    private final ItemCrateLoadRequest itemCrateLoadRequest;
 
-    private final List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers;
-
-    private final List<PathAbstractFileParserStrategy<? extends CostCondition>> costConditionParsers;
-
-    private final List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers;
-
-    public CratePrototypeLoadRequest(
-            File file, List<CratePrototypeCreator> cratePrototypeCreators,
-            List<ItemCrateWrapperParserStrategy> itemCrateWrapperParserStrategies,
-            List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers,
-            List<PathAbstractFileParserStrategy<? extends CostCondition>> costConditionParsers,
-            List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers) {
+    public CratePrototypeLoadRequest(File file,
+            List<CratePrototypeCreator> cratePrototypeCreators,
+            ItemCrateLoadRequest itemCrateLoadRequest) {
         this.file = file;
         this.cratePrototypeCreators = cratePrototypeCreators;
-        this.itemCrateWrapperParserStrategies = itemCrateWrapperParserStrategies;
-        this.rewardParsers = rewardParsers;
-        this.costConditionParsers = costConditionParsers;
-        this.conditionParsers = conditionParsers;
+        this.itemCrateLoadRequest = itemCrateLoadRequest;
     }
 
     public File getFile() {
@@ -46,20 +35,8 @@ public class CratePrototypeLoadRequest {
         return cratePrototypeCreators;
     }
 
-    public List<ItemCrateWrapperParserStrategy> getItemCrateWrapperParserStrategies() {
-        return itemCrateWrapperParserStrategies;
-    }
-
-    public List<PathAbstractFileParserStrategy<? extends Reward>> getRewardParsers() {
-        return rewardParsers;
-    }
-
-    public List<PathAbstractFileParserStrategy<? extends CostCondition>> getCostConditionParsers() {
-        return costConditionParsers;
-    }
-
-    public List<PathAbstractFileParserStrategy<? extends Condition>> getConditionParsers() {
-        return conditionParsers;
+    public ItemCrateLoadRequest getItemCrateLoadRequest() {
+        return itemCrateLoadRequest;
     }
 
     public static Builder builder(File file) {
@@ -110,7 +87,8 @@ public class CratePrototypeLoadRequest {
         }
 
         public CratePrototypeLoadRequest build() {
-            return new CratePrototypeLoadRequest(file, cratePrototypeCreators, itemCrateWrapperParserStrategies, rewardParsers, costConditionParsers, conditionParsers);
+            ItemCrateLoadRequest itemCrateLoadRequest = new ItemCrateLoadRequest(file, itemCrateWrapperParserStrategies, rewardParsers, costConditionParsers, conditionParsers);
+            return new CratePrototypeLoadRequest(file, cratePrototypeCreators, itemCrateLoadRequest);
         }
 
     }

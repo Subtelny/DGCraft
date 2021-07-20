@@ -27,10 +27,6 @@ public class Configuration {
         return Optional.ofNullable(configuration.get(key));
     }
 
-    public Optional<String> findConfigurationValue(String key) {
-        return Optional.ofNullable(configuration.get(key));
-    }
-
     public void updateValue(String key, String value) {
         configuration.put(key, value);
     }

@@ -6,7 +6,7 @@ import org.jooq.Record1;
 import pl.subtelny.core.api.repository.UpdateAction;
 import pl.subtelny.generated.tables.tables.Islanders;
 import pl.subtelny.generated.tables.tables.records.IslandersRecord;
-import pl.subtelny.islands.island.IslanderId;
+import pl.subtelny.islands.api.IslanderId;
 import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
 
 import java.util.UUID;

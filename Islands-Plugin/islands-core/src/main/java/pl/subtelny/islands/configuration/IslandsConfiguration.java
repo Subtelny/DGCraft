@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import pl.subtelny.islands.Islands;
-import pl.subtelny.islands.island.IslandType;
+import pl.subtelny.islands.api.IslandType;
 import pl.subtelny.utilities.file.FileUtil;
 
 import java.io.File;

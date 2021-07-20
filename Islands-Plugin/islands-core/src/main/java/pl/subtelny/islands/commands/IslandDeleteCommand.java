@@ -6,9 +6,9 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.islands.configuration.IslandsConfiguration;
-import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.island.cqrs.command.IslandDeleteService;
-import pl.subtelny.islands.island.message.IslandMessages;
+import pl.subtelny.islands.api.IslandType;
+import pl.subtelny.islands.api.cqrs.command.IslandDeleteService;
+import pl.subtelny.islands.api.message.IslandMessages;
 
 @PluginSubCommand(command = "delete", aliases = "usun", mainCommand = IslandCommand.class)
 public class IslandDeleteCommand extends BaseCommand {

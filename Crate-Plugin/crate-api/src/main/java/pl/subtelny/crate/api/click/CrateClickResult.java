@@ -4,7 +4,8 @@ public enum CrateClickResult {
 
     SUCCESS,
     CANT_USE,
-    ERROR
+    ERROR,
+    CLOSE_INV
 
 
 }

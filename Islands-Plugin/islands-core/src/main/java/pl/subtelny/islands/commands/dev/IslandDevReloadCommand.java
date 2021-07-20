@@ -4,9 +4,9 @@ import org.bukkit.command.CommandSender;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
-import pl.subtelny.islands.island.message.IslandMessages;
-import pl.subtelny.islands.island.module.IslandModule;
-import pl.subtelny.islands.island.module.IslandModules;
+import pl.subtelny.islands.api.message.IslandMessages;
+import pl.subtelny.islands.api.module.IslandModule;
+import pl.subtelny.islands.api.module.IslandModules;
 
 @PluginSubCommand(command = "reload", mainCommand = IslandDevCommand.class)
 public class IslandDevReloadCommand extends BaseCommand {

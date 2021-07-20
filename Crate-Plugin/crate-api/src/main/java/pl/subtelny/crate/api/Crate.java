@@ -13,7 +13,7 @@ public interface Crate {
         //Noop
     }
 
-    CrateClickResult click(Player player, ActionType actionType, int slot);
+    CrateClickResult click(Player player, ActionType clickType, int slot);
 
     CrateId getCrateId();
 

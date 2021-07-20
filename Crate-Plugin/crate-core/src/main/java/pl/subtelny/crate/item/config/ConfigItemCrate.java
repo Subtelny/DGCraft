@@ -73,6 +73,7 @@ public class ConfigItemCrate implements ItemCrate {
             this.currentOption = 0;
         }
         ItemStack itemStack = getItemStack(configuration, crateData);
+        configuration.updateValue(key, options.get(this.currentOption));
         return getItemCrateClickResult(itemStack, result);
     }
 

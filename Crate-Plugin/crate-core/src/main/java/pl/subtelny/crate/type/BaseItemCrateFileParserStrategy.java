@@ -14,6 +14,7 @@ import pl.subtelny.utilities.reward.Reward;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,16 +38,6 @@ public class BaseItemCrateFileParserStrategy extends AbstractFileParserStrategy<
         this.conditionParsers = conditionParsers;
     }
 
-    public BaseItemCrateFileParserStrategy(File file,
-                                           List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers,
-                                           List<PathAbstractFileParserStrategy<? extends CostCondition>> costConditionParsers,
-                                           List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers) {
-        super(file);
-        this.rewardParsers = rewardParsers;
-        this.costConditionParsers = costConditionParsers;
-        this.conditionParsers = conditionParsers;
-    }
-
     @Override
     public BaseItemCrate load(String path) {
         ItemStackFileParserStrategy itemStackFileParserStrategy = new ItemStackFileParserStrategy(configuration, file);
@@ -59,8 +50,10 @@ public class BaseItemCrateFileParserStrategy extends AbstractFileParserStrategy<
     }
 
     private List<Reward> loadRewards(String path) {
-        String rewardsPath = path + ". on-click.rewards";
-        return getStringStream(rewardsPath)
+        String rewardsPath = path + ".on-click.rewards";
+        return ConfigUtil.getSectionKeys(configuration, rewardsPath)
+                .orElseGet(HashSet::new)
+                .stream()
                 .map(key -> loadReward(rewardsPath + "." + key))
                 .collect(Collectors.toList());
     }

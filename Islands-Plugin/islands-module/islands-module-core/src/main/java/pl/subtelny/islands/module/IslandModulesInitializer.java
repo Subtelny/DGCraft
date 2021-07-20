@@ -1,8 +1,8 @@
 package pl.subtelny.islands.module;
 
 import org.bukkit.plugin.Plugin;
-import pl.subtelny.islands.island.Island;
-import pl.subtelny.islands.island.module.IslandModule;
+import pl.subtelny.islands.api.Island;
+import pl.subtelny.islands.api.module.IslandModule;
 import pl.subtelny.utilities.file.FileUtil;
 import pl.subtelny.utilities.file.ObjectFileParserStrategy;
 

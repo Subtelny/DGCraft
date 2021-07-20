@@ -3,25 +3,28 @@ package pl.subtelny.islands.module.skyblock;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import pl.subtelny.islands.island.IslandCreateRequest;
-import pl.subtelny.islands.island.IslandId;
-import pl.subtelny.islands.island.IslandMember;
-import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.island.configuration.ReloadableConfiguration;
-import pl.subtelny.islands.island.crates.IslandCrates;
-import pl.subtelny.islands.module.InitiableIslandModule;
-import pl.subtelny.islands.island.module.IslandModuleConfiguration;
+import pl.subtelny.core.api.database.ConnectionProvider;
+import pl.subtelny.islands.api.IslandCreateRequest;
+import pl.subtelny.islands.api.IslandId;
+import pl.subtelny.islands.api.IslandMember;
+import pl.subtelny.islands.api.IslandType;
+import pl.subtelny.islands.api.configuration.ReloadableConfiguration;
+import pl.subtelny.islands.api.module.IslandModuleConfiguration;
+import pl.subtelny.islands.api.module.component.CratesComponent;
+import pl.subtelny.islands.api.module.component.IslandComponent;
 import pl.subtelny.islands.islander.model.Islander;
+import pl.subtelny.islands.module.InitiableIslandModule;
+import pl.subtelny.islands.module.skyblock.component.SkyblockIslandComponentsBuilder;
 import pl.subtelny.islands.module.skyblock.configuration.SkyblockIslandModuleConfiguration;
-import pl.subtelny.islands.module.skyblock.crates.SkyblockIslandCrates;
-import pl.subtelny.islands.module.skyblock.crates.SkyblockIslandCratesBuilder;
 import pl.subtelny.islands.module.skyblock.creator.SkyblockIslandCreator;
 import pl.subtelny.islands.module.skyblock.model.SkyblockIsland;
+import pl.subtelny.islands.module.skyblock.organizer.SkyblockIslandOrganizer;
 import pl.subtelny.islands.module.skyblock.remover.SkyblockIslandRemover;
 import pl.subtelny.islands.module.skyblock.repository.SkyblockIslandRepository;
 import pl.subtelny.utilities.exception.ValidationException;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -35,27 +38,26 @@ public class SkyblockIslandModule implements InitiableIslandModule<SkyblockIslan
 
     private final SkyblockIslandRemover islandRemover;
 
-    private final SkyblockIslandCrates islandCrates;
-
     private final ReloadableConfiguration<SkyblockIslandModuleConfiguration> configuration;
+
+    private final Map<Class<? extends IslandComponent>, IslandComponent> islandComponents;
 
     public SkyblockIslandModule(IslandType islandType,
                                 ReloadableConfiguration<SkyblockIslandModuleConfiguration> configuration,
                                 SkyblockIslandRepository repository,
-                                SkyblockIslandCreator islandCreator,
-                                SkyblockIslandRemover islandRemover,
-                                SkyblockIslandCratesBuilder skyblockIslandCratesBuilder) {
+                                SkyblockIslandOrganizer organizer,
+                                SkyblockIslandComponentsBuilder skyblockIslandComponentsBuilder) {
         this.islandType = islandType;
         this.configuration = configuration;
-        this.islandRemover = islandRemover;
         this.repository = repository;
-        this.islandCreator = islandCreator;
-        this.islandCrates = skyblockIslandCratesBuilder.module(this).build();
+        this.islandRemover = new SkyblockIslandRemover(repository, organizer);
+        this.islandCreator = new SkyblockIslandCreator(repository, organizer);
+        this.islandComponents = skyblockIslandComponentsBuilder.module(this).build();
     }
 
     @Override
     public void initialize() {
-        islandCrates.reload();
+        reloadCrates();
     }
 
     @Override
@@ -72,6 +74,11 @@ public class SkyblockIslandModule implements InitiableIslandModule<SkyblockIslan
     public Optional<SkyblockIsland> findIsland(Location location) {
         IslandCoordinates islandCoordinates = configuration.get().toIslandCoords(location);
         return repository.findIsland(islandCoordinates);
+    }
+
+    @Override
+    public <C extends IslandComponent> C getComponent(Class<C> clazz) {
+        return (C) islandComponents.get(clazz);
     }
 
     @Override
@@ -93,7 +100,7 @@ public class SkyblockIslandModule implements InitiableIslandModule<SkyblockIslan
         IslandMember owner = request.getOwner()
                 .orElseThrow(() -> ValidationException.of("skyblockIslandModule.create_island_null_owner"));
 
-        if (!owner.getIslandMemberId().getType().equals(Islander.TYPE)) {
+        if (!Islander.TYPE.equals(owner.getIslandMemberId().getType())) {
             throw ValidationException.of("skyblockIslandModule.create_island_owner_only_islander");
         }
 
@@ -118,11 +125,6 @@ public class SkyblockIslandModule implements InitiableIslandModule<SkyblockIslan
     }
 
     @Override
-    public void reloadCrates() {
-        islandCrates.reload();
-    }
-
-    @Override
     public void reloadAll() {
         reloadConfiguration();
         reloadCrates();
@@ -133,9 +135,8 @@ public class SkyblockIslandModule implements InitiableIslandModule<SkyblockIslan
         return configuration.get();
     }
 
-    @Override
-    public IslandCrates getIslandCrates() {
-        return islandCrates;
+    private void reloadCrates() {
+        getComponent(CratesComponent.class).reload();
     }
 
     @Override

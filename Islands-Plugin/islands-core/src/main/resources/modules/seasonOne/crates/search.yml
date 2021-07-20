@@ -13,7 +13,7 @@ search-item:
     - '  - {MEMBER} {MEMBER-STATUS}'
     - 'Opis: {DESC}'
 
-controls:
+page-controllers:
   next:
     item: STONE
     amount: 1
@@ -22,7 +22,6 @@ controls:
     item: STONE
     amount: 1
     name: 'PREVIOUS'
-
 
 content:
   0:

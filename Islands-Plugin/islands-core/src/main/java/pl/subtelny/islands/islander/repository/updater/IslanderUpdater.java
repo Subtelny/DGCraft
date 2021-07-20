@@ -3,7 +3,7 @@ package pl.subtelny.islands.islander.repository.updater;
 import org.jooq.DSLContext;
 import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.core.api.repository.Updater;
-import pl.subtelny.islands.island.IslanderId;
+import pl.subtelny.islands.api.IslanderId;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.islander.repository.anemia.IslanderAnemia;
 

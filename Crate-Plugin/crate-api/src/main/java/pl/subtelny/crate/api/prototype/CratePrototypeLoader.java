@@ -8,4 +8,6 @@ public interface CratePrototypeLoader {
 
     CratePrototype loadCratePrototype(CratePrototypeLoadRequest request);
 
+    CratePrototype loadCratePrototype(CratePrototypeLoadGlobalRequest request);
+
 }

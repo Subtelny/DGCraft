@@ -3,24 +3,23 @@ package pl.subtelny.islands.module.skyblock;
 import net.milkbowl.vault.economy.Economy;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
+import pl.subtelny.core.api.confirmation.ConfirmationService;
 import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.core.api.economy.EconomyProvider;
 import pl.subtelny.crate.api.CrateService;
+import pl.subtelny.crate.api.item.ItemCrateLoader;
 import pl.subtelny.crate.api.prototype.CratePrototypeLoader;
-import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.island.configuration.ConfigurationReloadableImpl;
-import pl.subtelny.islands.island.configuration.ReloadableConfiguration;
-import pl.subtelny.islands.island.membership.repository.IslandMembershipRepository;
-import pl.subtelny.islands.island.message.IslandMessages;
-import pl.subtelny.islands.island.repository.IslandConfigurationRepository;
+import pl.subtelny.islands.api.IslandType;
+import pl.subtelny.islands.api.configuration.ConfigurationReloadableImpl;
+import pl.subtelny.islands.api.configuration.ReloadableConfiguration;
+import pl.subtelny.islands.api.membership.repository.IslandMembershipRepository;
+import pl.subtelny.islands.api.repository.IslandConfigurationRepository;
 import pl.subtelny.islands.module.InitiableIslandModule;
 import pl.subtelny.islands.module.IslandModuleCreator;
+import pl.subtelny.islands.module.skyblock.component.SkyblockIslandComponentsBuilder;
 import pl.subtelny.islands.module.skyblock.configuration.SkyblockIslandModuleConfiguration;
-import pl.subtelny.islands.module.skyblock.crates.SkyblockIslandCratesBuilder;
-import pl.subtelny.islands.module.skyblock.creator.SkyblockIslandCreator;
 import pl.subtelny.islands.module.skyblock.model.SkyblockIsland;
 import pl.subtelny.islands.module.skyblock.organizer.SkyblockIslandOrganizer;
-import pl.subtelny.islands.module.skyblock.remover.SkyblockIslandRemover;
 import pl.subtelny.islands.module.skyblock.repository.SkyblockIslandRepository;
 
 import java.io.File;
@@ -42,18 +41,27 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
 
     private final CratePrototypeLoader cratePrototypeLoader;
 
+    private final ItemCrateLoader itemCrateLoader;
+
+    private final ConfirmationService confirmationService;
+
     @Autowired
     public SkyblockIslandModuleCreator(EconomyProvider economyProvider,
                                        ConnectionProvider connectionProvider,
                                        IslandMembershipRepository islandMembershipRepository,
                                        IslandConfigurationRepository islandConfigurationRepository,
-                                       CrateService crateService, CratePrototypeLoader cratePrototypeLoader) {
+                                       CrateService crateService,
+                                       CratePrototypeLoader cratePrototypeLoader,
+                                       ItemCrateLoader itemCrateLoader,
+                                       ConfirmationService confirmationService) {
         this.economyProvider = economyProvider;
         this.connectionProvider = connectionProvider;
         this.islandMembershipRepository = islandMembershipRepository;
         this.islandConfigurationRepository = islandConfigurationRepository;
         this.crateService = crateService;
         this.cratePrototypeLoader = cratePrototypeLoader;
+        this.itemCrateLoader = itemCrateLoader;
+        this.confirmationService = confirmationService;
     }
 
     @Override
@@ -61,26 +69,26 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
         IslandType islandType = new IslandType(moduleDir.getName());
         ReloadableConfiguration<SkyblockIslandModuleConfiguration> configuration = getConfiguration(moduleDir);
 
-        SkyblockIslandOrganizer islandOrganizer = new SkyblockIslandOrganizer(configuration, islandType);
-        islandOrganizer.initialize(connectionProvider);
+        SkyblockIslandOrganizer islandOrganizer = new SkyblockIslandOrganizer(configuration, islandType, connectionProvider);
+        islandOrganizer.initialize();
 
         IslandExtendCalculator extendCalculator = new IslandExtendCalculator(configuration);
         SkyblockIslandRepository repository = getRepository(islandType, extendCalculator);
         return new SkyblockIslandModule(islandType,
                 configuration,
                 repository,
-                getIslandCreator(repository, islandOrganizer),
-                getIslandRemover(islandOrganizer, repository),
-                getSkyblockIslandCratesBuilder()
+                islandOrganizer,
+                getSkyblockIslandComponentsBuilder()
         );
     }
 
-    private SkyblockIslandCratesBuilder getSkyblockIslandCratesBuilder() {
-        return new SkyblockIslandCratesBuilder(crateService, cratePrototypeLoader, islandConfigurationRepository);
-    }
-
-    private SkyblockIslandRemover getIslandRemover(SkyblockIslandOrganizer islandOrganizer, SkyblockIslandRepository repository) {
-        return new SkyblockIslandRemover(repository, islandOrganizer);
+    private SkyblockIslandComponentsBuilder getSkyblockIslandComponentsBuilder() {
+        return new SkyblockIslandComponentsBuilder(confirmationService,
+                crateService,
+                cratePrototypeLoader,
+                itemCrateLoader,
+                islandConfigurationRepository,
+                islandMembershipRepository);
     }
 
     @Override
@@ -100,14 +108,6 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
                 extendCalculator,
                 islandMembershipRepository,
                 islandConfigurationRepository);
-    }
-
-    private SkyblockIslandCreator getIslandCreator(SkyblockIslandRepository repository,
-                                                   SkyblockIslandOrganizer islandOrganizer) {
-        return new SkyblockIslandCreator(
-                repository,
-                islandOrganizer,
-                IslandMessages.get());
     }
 
 

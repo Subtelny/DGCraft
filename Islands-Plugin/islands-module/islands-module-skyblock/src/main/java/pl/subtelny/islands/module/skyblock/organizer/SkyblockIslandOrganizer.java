@@ -4,8 +4,8 @@ import org.bukkit.Location;
 import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.core.api.worldedit.OperationStatus;
 import pl.subtelny.islands.module.skyblock.IslandCoordinates;
-import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.island.configuration.Configuration;
+import pl.subtelny.islands.api.IslandType;
+import pl.subtelny.islands.api.configuration.Configuration;
 import pl.subtelny.islands.module.skyblock.IslandExtendCalculator;
 import pl.subtelny.islands.module.skyblock.configuration.SkyblockIslandModuleConfiguration;
 import pl.subtelny.islands.module.skyblock.organizer.generator.SkyblockIslandGenerator;
@@ -26,16 +26,20 @@ public class SkyblockIslandOrganizer {
 
     private final Configuration<SkyblockIslandModuleConfiguration> configuration;
 
+    private final ConnectionProvider connectionProvider;
+
     public SkyblockIslandOrganizer(Configuration<SkyblockIslandModuleConfiguration> configuration,
-                                   IslandType islandType) {
+                                   IslandType islandType,
+                                   ConnectionProvider connectionProvider) {
         this.configuration = configuration;
+        this.connectionProvider = connectionProvider;
         this.islandGenerator = new SkyblockIslandGenerator();
         this.islandCleaner = new SkyblockIslandCleaner();
         this.coordinates = new SkyblockIslandCoordinates(islandType);
         this.extendCalculator = new IslandExtendCalculator(configuration);
     }
 
-    public void initialize(ConnectionProvider connectionProvider) {
+    public void initialize() {
         coordinates.initialize(connectionProvider);
     }
 

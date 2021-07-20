@@ -6,7 +6,8 @@ import pl.subtelny.crate.api.CrateService;
 import pl.subtelny.crate.api.creator.CrateCreateRequest;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.api.prototype.CratePrototypeLoader;
-import pl.subtelny.islands.island.repository.IslandConfigurationRepository;
+import pl.subtelny.islands.api.module.component.CratesComponent;
+import pl.subtelny.islands.api.repository.IslandConfigurationRepository;
 import pl.subtelny.islands.module.skyblock.SkyblockIslandModule;
 import pl.subtelny.islands.module.skyblock.crates.ACrateManager;
 import pl.subtelny.islands.module.skyblock.model.SkyblockIsland;
@@ -14,7 +15,7 @@ import pl.subtelny.utilities.exception.ValidationException;
 
 public class ConfigCrateManager extends ACrateManager {
 
-    public static final String CONFIG_FILE_NAME = "config.yml";
+    private static final String CONFIG_FILE_NAME = "config.yml";
 
     private final IslandConfigurationRepository islandConfigurationRepository;
 
@@ -23,8 +24,9 @@ public class ConfigCrateManager extends ACrateManager {
     public ConfigCrateManager(SkyblockIslandModule islandModule,
                               CrateService crateService,
                               CratePrototypeLoader cratePrototypeLoader,
-                              IslandConfigurationRepository islandConfigurationRepository) {
-        super(crateService, cratePrototypeLoader, islandModule.getIslandType().getInternal());
+                              IslandConfigurationRepository islandConfigurationRepository,
+                              CratesComponent islandCrates) {
+        super(crateService, cratePrototypeLoader, islandModule.getIslandType().getInternal(), islandCrates);
         this.islandConfigurationRepository = islandConfigurationRepository;
     }
 

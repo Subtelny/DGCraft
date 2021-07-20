@@ -24,19 +24,6 @@ public class ItemCrateFileParserStrategy extends AbstractFileParserStrategy<Item
 
     private final List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers;
 
-    public ItemCrateFileParserStrategy(YamlConfiguration configuration,
-                                       File file,
-                                       List<ItemCrateWrapperParserStrategy> itemCrateParsers,
-                                       List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers,
-                                       List<PathAbstractFileParserStrategy<? extends CostCondition>> costConditionParsers,
-                                       List<PathAbstractFileParserStrategy<? extends Condition>> conditionParsers) {
-        super(configuration, file);
-        this.itemCrateParsers = itemCrateParsers;
-        this.rewardParsers = rewardParsers;
-        this.costConditionParsers = costConditionParsers;
-        this.conditionParsers = conditionParsers;
-    }
-
     public ItemCrateFileParserStrategy(File file,
                                        List<ItemCrateWrapperParserStrategy> itemCrateParsers,
                                        List<PathAbstractFileParserStrategy<? extends Reward>> rewardParsers,
@@ -63,7 +50,6 @@ public class ItemCrateFileParserStrategy extends AbstractFileParserStrategy<Item
     public Saveable set(String path, ItemCrate value) {
         return null;
     }
-
 
     private static class ItemCrateConstructor {
 

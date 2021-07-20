@@ -1,16 +1,18 @@
 package pl.subtelny.crate.type.paged;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import pl.subtelny.crate.api.item.paged.PageControllerItemCrate;
+import pl.subtelny.crate.api.prototype.paged.PagedCratePrototype;
 import pl.subtelny.crate.creator.AbstractCratePrototypeCreator;
 import pl.subtelny.crate.api.CrateType;
 import pl.subtelny.crate.api.item.ItemCrate;
 import pl.subtelny.crate.item.ItemCrateFileParserStrategy;
-import pl.subtelny.crate.item.controller.PageControllerItemCrate;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 import pl.subtelny.crate.type.basic.BasicCratePrototypeCreator;
 import pl.subtelny.crate.type.personal.PersonalCratePrototype;
 import pl.subtelny.utilities.ConfigUtil;
 import pl.subtelny.utilities.IntegerUtil;
+import pl.subtelny.utilities.file.FileParserStrategy;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,18 +21,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class PagedCratePrototypeCreator extends AbstractCratePrototypeCreator {
+public class PagedCratePrototypeCreator extends AbstractCratePrototypeCreator<PagedCratePrototype> {
 
-    private final ItemCrateFileParserStrategy itemCrateFileParserStrategy;
+    private final FileParserStrategy<ItemCrate> itemCrateFileParserStrategy;
 
-    public PagedCratePrototypeCreator(ItemCrateFileParserStrategy itemCrateFileParserStrategy) {
+    public PagedCratePrototypeCreator(FileParserStrategy<ItemCrate> itemCrateFileParserStrategy) {
         this.itemCrateFileParserStrategy = itemCrateFileParserStrategy;
     }
 
     @Override
-    public CratePrototype create(File file, YamlConfiguration config, String path) {
+    public PagedCratePrototype create(File file, YamlConfiguration config, String path) {
         return new PagedCratePrototype(
                 getCrateId(file),
+                getTitle(config, path),
                 getContent(config, "static-content"),
                 getPages(file, config, path),
                 getPageControllerItemCrate("page-controllers.next"),

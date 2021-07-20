@@ -6,10 +6,10 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.components.core.api.DependencyActivator;
 import pl.subtelny.components.core.api.plugin.ComponentPlugin;
-import pl.subtelny.islands.island.Island;
-import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.island.module.IslandModule;
-import pl.subtelny.islands.island.module.IslandModules;
+import pl.subtelny.islands.api.Island;
+import pl.subtelny.islands.api.IslandType;
+import pl.subtelny.islands.api.module.IslandModule;
+import pl.subtelny.islands.api.module.IslandModules;
 
 import java.util.ArrayList;
 import java.util.Collections;

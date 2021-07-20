@@ -1,6 +1,8 @@
 package pl.subtelny.core.database;
 
+import org.bukkit.Bukkit;
 import org.jooq.Configuration;
+import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
@@ -27,7 +29,7 @@ public class TransactionProviderImpl implements TransactionProvider {
     public void transaction(Runnable callable) {
         DSL.using(databaseConnection.getConfiguration())
                 .transaction(configuration -> {
-                    currentTransaction.set(configuration);
+                    setCurrentTransaction(configuration);
                     callable.run();
                 });
     }
@@ -36,7 +38,7 @@ public class TransactionProviderImpl implements TransactionProvider {
     public CompletionStage<Void> transactionAsync(Runnable callable) {
         return DSL.using(databaseConnection.getConfiguration())
                 .transactionAsync(configuration -> {
-                    currentTransaction.set(configuration);
+                    setCurrentTransaction(configuration);
                     callable.run();
                 });
     }
@@ -45,7 +47,7 @@ public class TransactionProviderImpl implements TransactionProvider {
     public <T> T transactionResult(Callable<T> callable) {
         return DSL.using(databaseConnection.getConfiguration())
                 .transactionResult(configuration -> {
-                    currentTransaction.set(configuration);
+                    setCurrentTransaction(configuration);
                     return callable.call();
                 });
     }
@@ -54,14 +56,22 @@ public class TransactionProviderImpl implements TransactionProvider {
     public <T> CompletionStage<T> transactionResultAsync(Callable<T> callable) {
         return DSL.using(databaseConnection.getConfiguration())
                 .transactionResultAsync(configuration -> {
-                    currentTransaction.set(configuration);
+                    setCurrentTransaction(configuration);
                     return callable.call();
                 });
     }
 
     @Override
-    public Optional<Configuration> getCurrentTransaction() {
-        return Optional.ofNullable(currentTransaction.get());
+    public Optional<DSLContext> getCurrentTransaction() {
+        return Optional.ofNullable(currentTransaction.get())
+                .map(DSL::using);
+    }
+
+    private void setCurrentTransaction(Configuration currentTransaction) {
+        if (Bukkit.isPrimaryThread()) {
+            throw new IllegalStateException("Cannot run transaction at primary thread");
+        }
+        this.currentTransaction.set(currentTransaction);
     }
 
 }

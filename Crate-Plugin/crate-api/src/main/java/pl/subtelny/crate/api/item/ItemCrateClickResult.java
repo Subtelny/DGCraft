@@ -3,6 +3,7 @@ package pl.subtelny.crate.api.item;
 import org.bukkit.inventory.ItemStack;
 import pl.subtelny.utilities.condition.Condition;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class ItemCrateClickResult {
         this.closeCrate = closeCrate;
     }
 
+    @Nullable
     public ItemStack getNewItemStack() {
         return newItemStack;
     }

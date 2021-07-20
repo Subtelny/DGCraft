@@ -5,8 +5,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import pl.subtelny.core.api.account.Account;
 import pl.subtelny.islands.configuration.IslandsConfiguration;
-import pl.subtelny.islands.island.*;
-import pl.subtelny.islands.island.membership.model.AbstractIslandMember;
+import pl.subtelny.islands.api.*;
+import pl.subtelny.islands.api.membership.model.AbstractIslandMember;
 
 import java.util.List;
 import java.util.Objects;
@@ -55,17 +55,14 @@ public class Islander extends AbstractIslandMember {
     @Override
     public void sendMessage(String message) {
         Player player = getPlayer();
-        if (player.isOnline()) {
+        if (player != null && player.isOnline()) {
             player.sendMessage(message);
         }
     }
 
     @Override
     public void sendMessage(BaseComponent component) {
-        Player player = getPlayer();
-        if (player.isOnline()) {
-            player.sendMessage(component);
-        }
+        sendMessage(component.toLegacyText());
     }
 
     public Player getPlayer() {

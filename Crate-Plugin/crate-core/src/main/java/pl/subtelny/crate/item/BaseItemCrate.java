@@ -14,7 +14,6 @@ import pl.subtelny.utilities.messages.MessageKey;
 import pl.subtelny.utilities.reward.Reward;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 

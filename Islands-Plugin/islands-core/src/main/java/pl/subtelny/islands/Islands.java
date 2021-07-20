@@ -3,7 +3,7 @@ package pl.subtelny.islands;
 import pl.subtelny.components.core.api.ComponentProvider;
 import pl.subtelny.components.core.api.plugin.ComponentPlugin;
 import pl.subtelny.islands.configuration.IslandsConfiguration;
-import pl.subtelny.islands.island.message.IslandMessages;
+import pl.subtelny.islands.api.message.IslandMessages;
 
 public class Islands extends ComponentPlugin {
 

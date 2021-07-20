@@ -1,7 +1,7 @@
 package pl.subtelny.commands.api;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_16_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_17_R1.CraftServer;
 import org.bukkit.plugin.Plugin;
 import pl.subtelny.utilities.exception.ValidationException;
 

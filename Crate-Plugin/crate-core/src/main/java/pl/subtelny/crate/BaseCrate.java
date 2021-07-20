@@ -1,7 +1,6 @@
 package pl.subtelny.crate;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import pl.subtelny.crate.api.Crate;
@@ -67,7 +66,9 @@ public class BaseCrate implements Crate {
 
     @Override
     public void close(Player player) {
-        closeCrateListener.handle(player, this);
+        if (closeCrateListener != null) {
+            closeCrateListener.handle(player, this);
+        }
     }
 
     @Override
@@ -75,6 +76,9 @@ public class BaseCrate implements Crate {
         validateUseConditions(player);
 
         ItemCrate itemCrate = itemCrates.get(slot);
+        if (itemCrate == null) {
+            return CrateClickResult.CANT_USE;
+        }
         ItemCrateClickResult clickResult = itemCrate.click(player, actionType, crateData);
         return handleClickResult(player, slot, itemCrate, clickResult);
     }
@@ -118,14 +122,14 @@ public class BaseCrate implements Crate {
         }
     }
 
-    protected CrateClickResult handleClickResult(Player player, int slot, ItemCrate itemCrate, ItemCrateClickResult clickResult) {
+    protected CrateClickResult handleClickResult(Player player, int slot, ItemCrate itemCrate, ItemCrateClickResult
+            clickResult) {
         if (!clickResult.isSuccess()) {
             informNotSatisfiedConditions(player, clickResult.getNotSatisfiedConditions());
             return CrateClickResult.CANT_USE;
         }
         if (clickResult.isCloseCrate()) {
-            player.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
-            return CrateClickResult.ERROR;
+            return CrateClickResult.CLOSE_INV;
         }
         if (clickResult.isUpdateItemStack()) {
             inventory.setItem(slot, clickResult.getNewItemStack());

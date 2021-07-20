@@ -1,6 +1,6 @@
 package pl.subtelny.islands.module.crates.reward.open;
 
-import pl.subtelny.islands.island.crates.IslandCrates;
+import pl.subtelny.islands.api.module.component.CratesComponent;
 import pl.subtelny.utilities.Saveable;
 import pl.subtelny.utilities.file.PathAbstractFileParserStrategy;
 
@@ -8,9 +8,9 @@ import java.io.File;
 
 public class OpenIslandCrateRewardFileParserStrategy extends PathAbstractFileParserStrategy<OpenIslandCrateReward> {
 
-    private final IslandCrates islandCrates;
+    private final CratesComponent islandCrates;
 
-    public OpenIslandCrateRewardFileParserStrategy(File file, IslandCrates islandCrates) {
+    public OpenIslandCrateRewardFileParserStrategy(File file, CratesComponent islandCrates) {
         super(file);
         this.islandCrates = islandCrates;
     }

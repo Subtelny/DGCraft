@@ -2,9 +2,9 @@ package pl.subtelny.islands.module.skyblock;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.file.YamlConfiguration;
-import pl.subtelny.islands.island.configuration.IslandExtendConfiguration;
-import pl.subtelny.islands.island.configuration.IslandExtendLevel;
-import pl.subtelny.islands.island.configuration.IslandExtendLevelFileParserStrategy;
+import pl.subtelny.islands.api.configuration.IslandExtendConfiguration;
+import pl.subtelny.islands.api.configuration.IslandExtendLevel;
+import pl.subtelny.islands.api.configuration.IslandExtendLevelFileParserStrategy;
 import pl.subtelny.islands.module.skyblock.configuration.SkyblockIslandModuleConfiguration;
 import pl.subtelny.utilities.ConfigUtil;
 

@@ -1,7 +1,7 @@
 package pl.subtelny.islands.islander;
 
 import org.bukkit.entity.Player;
-import pl.subtelny.islands.island.IslanderId;
+import pl.subtelny.islands.api.IslanderId;
 
 public abstract class IslanderService {
 

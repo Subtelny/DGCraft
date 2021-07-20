@@ -24,8 +24,11 @@ public class ConnectionConfigurationProviderImpl implements ConnectionProvider {
 
     @Override
     public DSLContext getCurrentConnection() {
-        Configuration configuration = transactionProvider.getCurrentTransaction()
-                .orElseGet(databaseConnection::getConfiguration);
-        return DSL.using(configuration);
+        return transactionProvider.getCurrentTransaction()
+                .orElseGet(() -> DSL.using(getConfiguration()));
+    }
+
+    private Configuration getConfiguration() {
+        return databaseConnection.getConfiguration();
     }
 }

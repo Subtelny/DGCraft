@@ -6,8 +6,8 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.islands.configuration.IslandsConfiguration;
-import pl.subtelny.islands.island.membership.IslandMembershipService;
-import pl.subtelny.islands.island.message.IslandMessages;
+import pl.subtelny.islands.api.membership.IslandMembershipService;
+import pl.subtelny.islands.api.message.IslandMessages;
 
 @PluginSubCommand(command = "wyjdz", aliases = "leave", mainCommand = IslandCommand.class)
 public class IslandLeaveCommand extends BaseCommand {

@@ -53,7 +53,7 @@ content:
     amount: 1
     name: ' '
   12:
-    item: GRASS_PATH
+    item: GRASS_BLOCK
     amount: 1
     name: '&6&lStwórz wyspę'
     lore:

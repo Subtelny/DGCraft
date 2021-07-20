@@ -1,8 +1,8 @@
 package pl.subtelny.islands.module.skyblock.configuration;
 
 import org.bukkit.Location;
-import pl.subtelny.islands.island.configuration.IslandExtendConfiguration;
-import pl.subtelny.islands.island.module.IslandModuleConfiguration;
+import pl.subtelny.islands.api.configuration.IslandExtendConfiguration;
+import pl.subtelny.islands.api.module.IslandModuleConfiguration;
 import pl.subtelny.islands.module.skyblock.IslandCoordinates;
 
 import java.io.File;

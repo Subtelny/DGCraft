@@ -6,7 +6,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.islands.island.cqrs.query.IslandQueryService;
+import pl.subtelny.islands.api.cqrs.query.IslandQueryService;
 import pl.subtelny.islands.islander.IslanderQueryService;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package pl.subtelny.islands.islander.repository.storage;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import pl.subtelny.core.api.repository.LoadingStorage;
-import pl.subtelny.islands.island.IslanderId;
+import pl.subtelny.islands.api.IslanderId;
 import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.utilities.NullObject;
 

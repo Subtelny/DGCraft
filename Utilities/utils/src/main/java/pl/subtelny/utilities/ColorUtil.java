@@ -15,6 +15,9 @@ public final class ColorUtil {
     }
 
     public static String color(String value) {
+        if (value == null) {
+            return null;
+        }
         return ChatColor.translateAlternateColorCodes('&', value);
     }
 

@@ -1,34 +1,33 @@
 package pl.subtelny.islands.module.skyblock.repository;
 
 import org.bukkit.Location;
-import org.jooq.DSLContext;
 import pl.subtelny.core.api.database.ConnectionProvider;
-import pl.subtelny.islands.island.repository.IslandConfigurationRepository;
+import pl.subtelny.core.api.repository.HeavyRepository;
+import pl.subtelny.generated.tables.tables.Islands;
+import pl.subtelny.generated.tables.tables.SkyblockIslands;
+import pl.subtelny.generated.tables.tables.records.IslandsRecord;
+import pl.subtelny.islands.api.IslandId;
+import pl.subtelny.islands.api.IslandType;
+import pl.subtelny.islands.api.membership.model.IslandMembership;
+import pl.subtelny.islands.api.membership.repository.IslandMembershipRepository;
+import pl.subtelny.islands.api.repository.IslandConfigurationRepository;
+import pl.subtelny.islands.api.repository.anemia.IslandAnemia;
+import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.islands.module.skyblock.IslandCoordinates;
-import pl.subtelny.islands.island.IslandId;
-import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.island.membership.model.IslandMembership;
-import pl.subtelny.islands.island.membership.repository.IslandMembershipRepository;
-import pl.subtelny.islands.island.repository.IslandRemoveAction;
 import pl.subtelny.islands.module.skyblock.IslandExtendCalculator;
 import pl.subtelny.islands.module.skyblock.model.SkyblockIsland;
 import pl.subtelny.islands.module.skyblock.repository.anemia.SkyblockIslandAnemia;
-import pl.subtelny.islands.module.skyblock.repository.anemia.SkyblockIslandAnemiaFactory;
 import pl.subtelny.islands.module.skyblock.repository.load.SkyblockIslandLoadRequest;
 import pl.subtelny.islands.module.skyblock.repository.load.SkyblockIslandLoader;
-import pl.subtelny.islands.module.skyblock.repository.update.SkyblockIslandAnemiaUpdateAction;
-import pl.subtelny.islands.islander.model.Islander;
 import pl.subtelny.utilities.NullObject;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class SkyblockIslandRepository {
+public class SkyblockIslandRepository extends HeavyRepository {
 
     private final IslandType islandType;
-
-    private final ConnectionProvider connectionProvider;
 
     private final SkyblockIslandLoader islandLoader;
 
@@ -36,16 +35,19 @@ public class SkyblockIslandRepository {
 
     private final IslandMembershipRepository membershipRepository;
 
+    private final IslandConfigurationRepository configurationRepository;
+
     public SkyblockIslandRepository(IslandType islandType,
                                     ConnectionProvider connectionProvider,
                                     IslandExtendCalculator extendCalculator,
                                     IslandMembershipRepository membershipRepository,
-                                    IslandConfigurationRepository islandConfigurationRepository) {
+                                    IslandConfigurationRepository configurationRepository) {
+        super(connectionProvider);
         this.islandType = islandType;
-        this.connectionProvider = connectionProvider;
         this.membershipRepository = membershipRepository;
+        this.configurationRepository = configurationRepository;
         this.islandStorage = new SkyblockIslandStorage();
-        this.islandLoader = new SkyblockIslandLoader(connectionProvider, membershipRepository, islandConfigurationRepository, extendCalculator);
+        this.islandLoader = new SkyblockIslandLoader(connectionProvider, membershipRepository, configurationRepository, extendCalculator);
     }
 
     public Optional<SkyblockIsland> findIsland(IslandId islandId) {
@@ -74,37 +76,40 @@ public class SkyblockIslandRepository {
     }
 
     public void removeIsland(SkyblockIsland island) {
-        clearIslandMembers(island);
-        DSLContext connection = connectionProvider.getCurrentConnection();
-        IslandRemoveAction action = new IslandRemoveAction(connection);
-        action.perform(island.getId());
-        islandStorage.invalidate(island);
+        session((context) -> {
+            Integer id = island.getId().getId();
+            context.deleteFrom(Islands.ISLANDS).where(Islands.ISLANDS.ID.eq(id));
+            context.deleteFrom(SkyblockIslands.SKYBLOCK_ISLANDS).where(SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID.eq(id));
+
+            membershipRepository.removeIslandMemberships(island.getId());
+            configurationRepository.removeConfiguration(island.getId());
+            islandStorage.invalidate(island);
+        });
     }
 
     public IslandId createIsland(Location spawn, IslandCoordinates coords, Islander owner) {
-        IslandId island = createIsland(spawn, coords);
-        IslandMembership islandMembership = IslandMembership.owner(owner.getIslandMemberId(), island);
-        membershipRepository.saveIslandMembership(islandMembership);
-        return island;
-    }
+        IslandAnemia islandAnemia = new IslandAnemia(spawn, islandType);
+        SkyblockIslandAnemia anemia = new SkyblockIslandAnemia(islandAnemia, coords);
+        return session(context -> {
+            IslandsRecord islandsRecord = islandAnemia.toRecord(context);
+            islandsRecord.insert();
 
-    public IslandId createIsland(Location spawn, IslandCoordinates coords) {
-        SkyblockIslandAnemia anemia = new SkyblockIslandAnemia(spawn, coords, islandType);
-        return saveIsland(anemia);
+            IslandId islandId = IslandId.of(islandsRecord.getId(), islandType);
+            islandAnemia.setIslandId(islandId);
+            anemia.toRecord(context).insert();
+
+            IslandMembership islandMembership = IslandMembership.owner(owner.getIslandMemberId(), islandId);
+            membershipRepository.saveIslandMembership(islandMembership);
+            return islandId;
+        });
     }
 
     public void saveIsland(SkyblockIsland island) {
-        SkyblockIslandAnemia anemia = SkyblockIslandAnemiaFactory.toAnemia(island);
-        saveIsland(anemia);
-    }
-
-    private void clearIslandMembers(SkyblockIsland island) {
-        membershipRepository.removeIslandMemberships(island.getId());
-    }
-
-    private IslandId saveIsland(SkyblockIslandAnemia anemia) {
-        DSLContext connection = connectionProvider.getCurrentConnection();
-        SkyblockIslandAnemiaUpdateAction action = new SkyblockIslandAnemiaUpdateAction(connection);
-        return action.perform(anemia);
+        session(context -> {
+            SkyblockIslandAnemia anemia = SkyblockIslandAnemia.toAnemia(island);
+            anemia.getIslandAnemia().toRecord(context).update();
+            anemia.toRecord(context).update();
+            configurationRepository.saveConfiguration(island);
+        });
     }
 }

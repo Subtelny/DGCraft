@@ -4,9 +4,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import pl.subtelny.islands.module.skyblock.IslandCoordinates;
-import pl.subtelny.islands.island.IslandId;
-import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.island.repository.IslandLoadRequest;
+import pl.subtelny.islands.api.IslandId;
+import pl.subtelny.islands.api.IslandType;
+import pl.subtelny.islands.api.repository.IslandLoadRequest;
 
 public class SkyblockIslandLoadRequest extends IslandLoadRequest {
 

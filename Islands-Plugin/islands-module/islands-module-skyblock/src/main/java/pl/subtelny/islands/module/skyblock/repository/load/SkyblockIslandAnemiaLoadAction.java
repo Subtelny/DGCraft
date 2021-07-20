@@ -2,14 +2,15 @@ package pl.subtelny.islands.module.skyblock.repository.load;
 
 import com.google.common.collect.Lists;
 import org.bukkit.Location;
-import org.jooq.*;
 import org.jooq.Record;
+import org.jooq.*;
 import pl.subtelny.generated.tables.tables.Islands;
 import pl.subtelny.generated.tables.tables.SkyblockIslands;
-import pl.subtelny.islands.island.IslandId;
-import pl.subtelny.islands.island.IslandType;
+import pl.subtelny.islands.api.IslandId;
+import pl.subtelny.islands.api.IslandType;
+import pl.subtelny.islands.api.repository.IslandAnemiaLoadAction;
+import pl.subtelny.islands.api.repository.anemia.IslandAnemia;
 import pl.subtelny.islands.module.skyblock.IslandCoordinates;
-import pl.subtelny.islands.island.repository.IslandAnemiaLoadAction;
 import pl.subtelny.islands.module.skyblock.repository.anemia.SkyblockIslandAnemia;
 import pl.subtelny.utilities.location.LocationSerializer;
 
@@ -63,14 +64,9 @@ public class SkyblockIslandAnemiaLoadAction extends IslandAnemiaLoadAction<Skybl
         int z = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.Z);
         IslandCoordinates islandCoordinates = new IslandCoordinates(x, z);
         int extendLevel = record.get(SkyblockIslands.SKYBLOCK_ISLANDS.EXTEND_LEVEL);
-        return new SkyblockIslandAnemia(
-                islandId,
-                createdDate,
-                spawn,
-                islandCoordinates,
-                extendLevel,
-                points,
-                islandType);
+
+        IslandAnemia islandAnemia = new IslandAnemia(islandId, islandType, createdDate, spawn, points);
+        return new SkyblockIslandAnemia(islandAnemia, islandCoordinates, extendLevel);
     }
 
 }

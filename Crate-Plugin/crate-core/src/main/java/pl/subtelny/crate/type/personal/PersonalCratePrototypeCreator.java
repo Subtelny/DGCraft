@@ -1,24 +1,23 @@
 package pl.subtelny.crate.type.personal;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import pl.subtelny.crate.creator.AbstractCratePrototypeCreator;
 import pl.subtelny.crate.api.CrateType;
 import pl.subtelny.crate.api.item.ItemCrate;
-import pl.subtelny.crate.item.ItemCrateFileParserStrategy;
-import pl.subtelny.crate.api.prototype.CratePrototype;
+import pl.subtelny.crate.creator.AbstractCratePrototypeCreator;
+import pl.subtelny.utilities.file.FileParserStrategy;
 
 import java.io.File;
 
-public class PersonalCratePrototypeCreator extends AbstractCratePrototypeCreator {
+public class PersonalCratePrototypeCreator extends AbstractCratePrototypeCreator<PersonalCratePrototype> {
 
-    private final ItemCrateFileParserStrategy itemCrateFileParserStrategy;
+    private final FileParserStrategy<ItemCrate> itemCrateFileParserStrategy;
 
-    public PersonalCratePrototypeCreator(ItemCrateFileParserStrategy itemCrateFileParserStrategy) {
+    public PersonalCratePrototypeCreator(FileParserStrategy<ItemCrate> itemCrateFileParserStrategy) {
         this.itemCrateFileParserStrategy = itemCrateFileParserStrategy;
     }
 
     @Override
-    public CratePrototype create(File file, YamlConfiguration config, String path) {
+    public PersonalCratePrototype create(File file, YamlConfiguration config, String path) {
         return new PersonalCratePrototype(
                 getCrateId(file),
                 getSize(config, path),

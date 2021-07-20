@@ -2,6 +2,7 @@ package pl.subtelny.utilities.collection;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +30,13 @@ public final class CollectionUtil {
             return stream.collect(Collectors.toSet());
         }
         throw new IllegalArgumentException("Not found strategy for collection type " + collectionType);
+    }
+
+    public static <T> List<T> concat(List<T> listOne, List<T> listTwo) {
+        List<T> newList = new ArrayList<>();
+        newList.addAll(listOne);
+        newList.addAll(listTwo);
+        return newList;
     }
 
 }

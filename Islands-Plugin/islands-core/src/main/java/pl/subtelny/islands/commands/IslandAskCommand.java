@@ -6,10 +6,12 @@ import org.bukkit.entity.Player;
 import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
-import pl.subtelny.islands.island.cqrs.command.IslandInviteService;
-import pl.subtelny.islands.island.message.IslandMessages;
+import pl.subtelny.islands.api.IslandId;
+import pl.subtelny.islands.api.cqrs.command.IslandInviteService;
+import pl.subtelny.islands.api.message.IslandMessages;
+import pl.subtelny.islands.configuration.IslandsConfiguration;
+import pl.subtelny.utilities.IntegerUtil;
 import pl.subtelny.utilities.exception.ValidationException;
-import pl.subtelny.utilities.messages.Messages;
 
 import java.util.Optional;
 
@@ -18,13 +20,9 @@ public class IslandAskCommand extends BaseCommand {
 
     private final IslandInviteService islandInviteService;
 
-    private final Messages messages;
-
     @Autowired
-    public IslandAskCommand(IslandMessages messages,
-                            IslandInviteService islandInviteService) {
-        super(messages);
-        this.messages = messages;
+    public IslandAskCommand(IslandInviteService islandInviteService) {
+        super(IslandMessages.get());
         this.islandInviteService = islandInviteService;
     }
 
@@ -34,6 +32,14 @@ public class IslandAskCommand extends BaseCommand {
             usage(sender);
         } else {
             Player player = (Player) sender;
+            String arg = args[0];
+
+            if (IntegerUtil.isInt(arg)) {
+                IslandId islandId = IslandId.of(Integer.valueOf(arg), IslandsConfiguration.ACTUAL_SEASON_ISLAND_TYPE);
+                islandInviteService.ask(player, islandId);
+                return;
+            }
+
             Player playerToJoin = getPlayer(args[0]);
             islandInviteService.ask(player, playerToJoin);
         }
@@ -46,7 +52,7 @@ public class IslandAskCommand extends BaseCommand {
     }
 
     private void usage(CommandSender sender) {
-        messages.sendTo(sender, "command.island.ask.usage");
+        IslandMessages.get().sendTo(sender, "command.island.ask.usage");
     }
 
     @Override

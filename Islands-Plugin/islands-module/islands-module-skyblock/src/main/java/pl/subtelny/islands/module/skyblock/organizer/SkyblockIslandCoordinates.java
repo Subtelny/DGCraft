@@ -3,7 +3,7 @@ package pl.subtelny.islands.module.skyblock.organizer;
 import org.jooq.DSLContext;
 import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.islands.module.skyblock.IslandCoordinates;
-import pl.subtelny.islands.island.IslandType;
+import pl.subtelny.islands.api.IslandType;
 import pl.subtelny.islands.module.skyblock.repository.SkyblockIslandCoordinatesLoadAction;
 import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.exception.ValidationException;

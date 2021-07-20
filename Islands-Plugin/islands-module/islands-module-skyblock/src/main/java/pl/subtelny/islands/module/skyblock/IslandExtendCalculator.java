@@ -3,9 +3,9 @@ package pl.subtelny.islands.module.skyblock;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import pl.subtelny.islands.island.configuration.Configuration;
-import pl.subtelny.islands.island.configuration.IslandExtendConfiguration;
-import pl.subtelny.islands.island.configuration.IslandExtendLevel;
+import pl.subtelny.islands.api.configuration.Configuration;
+import pl.subtelny.islands.api.configuration.IslandExtendConfiguration;
+import pl.subtelny.islands.api.configuration.IslandExtendLevel;
 import pl.subtelny.islands.module.skyblock.configuration.SkyblockIslandModuleConfiguration;
 import pl.subtelny.utilities.cuboid.Cuboid;
 

@@ -2,30 +2,29 @@ package pl.subtelny.crate.prototype;
 
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.crate.api.prototype.CratePrototype;
-import pl.subtelny.crate.api.prototype.CratePrototypeCreator;
-import pl.subtelny.crate.api.prototype.CratePrototypeLoadRequest;
-import pl.subtelny.crate.api.prototype.CratePrototypeLoader;
+import pl.subtelny.crate.api.item.ItemCrate;
+import pl.subtelny.crate.api.item.ItemCrateLoader;
+import pl.subtelny.crate.api.prototype.*;
 import pl.subtelny.crate.creator.DefaultCratePrototypeCreators;
-import pl.subtelny.crate.DefaultParsersStrategies;
-import pl.subtelny.crate.item.ItemCrateFileParserStrategy;
 import pl.subtelny.utilities.Validation;
+import pl.subtelny.utilities.file.FileParserStrategy;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static pl.subtelny.utilities.collection.CollectionUtil.concat;
+
 @Component
 public class CratePrototypeLoaderImpl implements CratePrototypeLoader {
 
-    private final DefaultParsersStrategies defaultParsersStrategies;
+    private final ItemCrateLoader itemCrateLoader;
 
     @Autowired
-    public CratePrototypeLoaderImpl(DefaultParsersStrategies defaultParsersStrategies) {
-        this.defaultParsersStrategies = defaultParsersStrategies;
+    public CratePrototypeLoaderImpl(ItemCrateLoader itemCrateLoader) {
+        this.itemCrateLoader = itemCrateLoader;
     }
 
     @Override
@@ -50,33 +49,26 @@ public class CratePrototypeLoaderImpl implements CratePrototypeLoader {
         return loadCratePrototype(file, request);
     }
 
+    @Override
+    public CratePrototype loadCratePrototype(CratePrototypeLoadGlobalRequest request) {
+        File file = request.getFile();
+        Validation.isTrue(file.isFile(), "File is not has not configuration extension, " + file.getName());
+
+        FileParserStrategy<ItemCrate> itemCrateFileParserStrategy = itemCrateLoader.getItemCrateFileParserStrategy(request.getItemCrateLoadRequest());
+        CratePrototypeCreator<?> creator = DefaultCratePrototypeCreators.getDefaultCratePrototypeCreator(request.getCrateType(), itemCrateFileParserStrategy);
+        return creator.create(file);
+    }
+
     private CratePrototype loadCratePrototype(File file, CratePrototypeLoadRequest request) {
-        ItemCrateFileParserStrategy itemCrateStrategy = getItemCrateFileParserStrategy(file, request);
+        FileParserStrategy<ItemCrate> itemCrateStrategy = itemCrateLoader.getItemCrateFileParserStrategy(request.getItemCrateLoadRequest());
         CratePrototypeFileParserStrategy cratePrototypeStrategy = getCratePrototypeFileParserStrategy(file, itemCrateStrategy, request);
         return cratePrototypeStrategy.load("");
     }
 
-    private CratePrototypeFileParserStrategy getCratePrototypeFileParserStrategy(File file, ItemCrateFileParserStrategy itemCrateFileParserStrategy, CratePrototypeLoadRequest request) {
+    private CratePrototypeFileParserStrategy getCratePrototypeFileParserStrategy(File file, FileParserStrategy<ItemCrate> itemCrateFileParserStrategy, CratePrototypeLoadRequest request) {
         List<CratePrototypeCreator> defaultCreators = DefaultCratePrototypeCreators.getDefaultCratePrototypeCreators(itemCrateFileParserStrategy);
         List<CratePrototypeCreator> concatCreators = concat(request.getCratePrototypeCreators(), defaultCreators);
         return new CratePrototypeFileParserStrategy(file, concatCreators);
-    }
-
-    private ItemCrateFileParserStrategy getItemCrateFileParserStrategy(File file, CratePrototypeLoadRequest request) {
-        return new ItemCrateFileParserStrategy(
-                file,
-                concat(request.getItemCrateWrapperParserStrategies(), defaultParsersStrategies.getDefaultItemCrateWrapperParsers()),
-                concat(request.getRewardParsers(), defaultParsersStrategies.getDefaultRewardParsers(file)),
-                concat(request.getCostConditionParsers(), defaultParsersStrategies.getDefaultCostConditionParsers(file)),
-                concat(request.getConditionParsers(), defaultParsersStrategies.getDefaultConditionParsers(file))
-        );
-    }
-
-    private <T> List<T> concat(List<T> listOne, List<T> listTwo) {
-        List<T> newList = new ArrayList<>();
-        newList.addAll(listOne);
-        newList.addAll(listTwo);
-        return newList;
     }
 
 }

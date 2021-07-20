@@ -3,13 +3,14 @@ package pl.subtelny.islands.module.skyblock.repository.load;
 import org.bukkit.Location;
 import org.jooq.DSLContext;
 import pl.subtelny.core.api.database.ConnectionProvider;
-import pl.subtelny.islands.island.IslandConfiguration;
-import pl.subtelny.islands.island.IslandId;
-import pl.subtelny.islands.island.IslandMemberId;
-import pl.subtelny.islands.island.IslandType;
-import pl.subtelny.islands.island.membership.model.IslandMembership;
-import pl.subtelny.islands.island.membership.repository.IslandMembershipRepository;
-import pl.subtelny.islands.island.repository.IslandConfigurationRepository;
+import pl.subtelny.islands.api.IslandConfiguration;
+import pl.subtelny.islands.api.IslandId;
+import pl.subtelny.islands.api.IslandMemberId;
+import pl.subtelny.islands.api.IslandType;
+import pl.subtelny.islands.api.membership.model.IslandMembership;
+import pl.subtelny.islands.api.membership.repository.IslandMembershipRepository;
+import pl.subtelny.islands.api.repository.IslandConfigurationRepository;
+import pl.subtelny.islands.api.repository.anemia.IslandAnemia;
 import pl.subtelny.islands.module.skyblock.IslandExtendCalculator;
 import pl.subtelny.islands.module.skyblock.repository.anemia.SkyblockIslandAnemia;
 import pl.subtelny.islands.module.skyblock.IslandCoordinates;
@@ -58,13 +59,14 @@ public class SkyblockIslandLoader {
     }
 
     private SkyblockIsland mapAnemiaToDomain(SkyblockIslandAnemia anemia) {
-        Location spawn = anemia.getSpawn();
-        LocalDateTime creationDate = anemia.getCreatedDate();
-        IslandId islandId = anemia.getIslandId();
-        IslandType islandType = anemia.getIslandType();
+        IslandAnemia islandAnemia = anemia.getIslandAnemia();
+        Location spawn = islandAnemia.getSpawn();
+        LocalDateTime creationDate = islandAnemia.getCreatedDate();
+        IslandId islandId = islandAnemia.getIslandId();
+        IslandType islandType = islandAnemia.getIslandType();
         IslandCoordinates islandCoordinates = anemia.getIslandCoordinates();
         int extendLevel = anemia.getExtendLevel();
-        int points = anemia.getPoints();
+        int points = islandAnemia.getPoints();
         Cuboid cuboid = calculateCuboid(islandCoordinates, extendLevel);
 
         IslandConfiguration configuration = islandConfigurationRepository.loadConfiguration(islandId);

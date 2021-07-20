@@ -7,12 +7,12 @@ import pl.subtelny.commands.api.BaseCommand;
 import pl.subtelny.commands.api.PluginSubCommand;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.islands.configuration.IslandsConfiguration;
-import pl.subtelny.islands.island.Island;
-import pl.subtelny.islands.island.IslandId;
-import pl.subtelny.islands.island.cqrs.query.IslandQueryService;
+import pl.subtelny.islands.api.Island;
+import pl.subtelny.islands.api.IslandId;
+import pl.subtelny.islands.api.cqrs.query.IslandQueryService;
 import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.island.message.IslandMessages;
+import pl.subtelny.islands.api.message.IslandMessages;
 import pl.subtelny.utilities.exception.ValidationException;
 
 @PluginSubCommand(command = "dom", aliases = "home", mainCommand = IslandCommand.class)

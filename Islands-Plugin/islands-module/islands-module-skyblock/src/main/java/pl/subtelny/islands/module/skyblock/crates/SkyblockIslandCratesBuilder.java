@@ -1,8 +1,9 @@
 package pl.subtelny.islands.module.skyblock.crates;
 
 import pl.subtelny.crate.api.CrateService;
+import pl.subtelny.crate.api.item.ItemCrateLoader;
 import pl.subtelny.crate.api.prototype.CratePrototypeLoader;
-import pl.subtelny.islands.island.repository.IslandConfigurationRepository;
+import pl.subtelny.islands.api.repository.IslandConfigurationRepository;
 import pl.subtelny.islands.module.skyblock.SkyblockIslandModule;
 
 public class SkyblockIslandCratesBuilder {
@@ -11,15 +12,19 @@ public class SkyblockIslandCratesBuilder {
 
     private final CratePrototypeLoader cratePrototypeLoader;
 
+    private final ItemCrateLoader itemCrateLoader;
+
     private final IslandConfigurationRepository islandConfigurationRepository;
 
     private SkyblockIslandModule module;
 
     public SkyblockIslandCratesBuilder(CrateService crateService,
                                        CratePrototypeLoader cratePrototypeLoader,
+                                       ItemCrateLoader itemCrateLoader,
                                        IslandConfigurationRepository islandConfigurationRepository) {
         this.crateService = crateService;
         this.cratePrototypeLoader = cratePrototypeLoader;
+        this.itemCrateLoader = itemCrateLoader;
         this.islandConfigurationRepository = islandConfigurationRepository;
     }
 
@@ -28,8 +33,8 @@ public class SkyblockIslandCratesBuilder {
         return this;
     }
 
-    public SkyblockIslandCrates build() {
-        return new SkyblockIslandCrates(module, crateService, cratePrototypeLoader, islandConfigurationRepository);
+    public SkyblockIslandCratesComponent build() {
+        return new SkyblockIslandCratesComponent(module, crateService, cratePrototypeLoader, itemCrateLoader, islandConfigurationRepository);
     }
 
 }

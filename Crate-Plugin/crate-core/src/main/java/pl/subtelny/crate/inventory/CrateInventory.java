@@ -1,6 +1,6 @@
 package pl.subtelny.crate.inventory;
 
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftInventoryCustom;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftInventoryCustom;
 import pl.subtelny.crate.api.Crate;
 
 import java.util.Objects;
