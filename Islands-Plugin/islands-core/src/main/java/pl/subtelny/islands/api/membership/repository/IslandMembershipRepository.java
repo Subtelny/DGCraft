@@ -29,7 +29,8 @@ public class IslandMembershipRepository extends HeavyRepository {
     public void removeIslandMemberships(IslandId islandId) {
         session(context -> {
             context.deleteFrom(IslandMemberships.ISLAND_MEMBERSHIPS)
-                    .where(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID.eq(islandId.getInternal()));
+                    .where(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID.eq(islandId.getInternal()))
+                    .execute();
         });
     }
 
@@ -41,7 +42,7 @@ public class IslandMembershipRepository extends HeavyRepository {
                     .where(
                             IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_ID.eq(islandId.getInternal())
                                     .and(IslandMemberships.ISLAND_MEMBERSHIPS.ISLAND_MEMBER_ID.eq(islandMemberId.getInternal()))
-                    );
+                    ).execute();
         });
     }
 

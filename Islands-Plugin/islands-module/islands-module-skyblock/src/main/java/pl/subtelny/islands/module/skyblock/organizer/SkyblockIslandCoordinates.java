@@ -36,7 +36,7 @@ public class SkyblockIslandCoordinates {
     public IslandCoordinates getFreeCoords() {
         IslandCoordinates coords = freeCoords.poll();
         if (coords == null) {
-            throw ValidationException.of("skyblockIslandCreator.out_of_free_coords");
+            throw ValidationException.of("skyblockIslandCoordinates.out_of_free_coords");
         }
         return coords;
     }

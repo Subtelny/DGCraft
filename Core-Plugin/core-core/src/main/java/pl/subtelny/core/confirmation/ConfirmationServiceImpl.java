@@ -73,6 +73,7 @@ public class ConfirmationServiceImpl implements ConfirmationService {
     private void sendMessage(Messageable messageable, String title, ConfirmContextId confirmContextId) {
         String message = messages.getColoredFormattedMessage("confirmation.message", title);
         TextComponent controls = getControls(confirmContextId);
+
         TextComponent component = new TextComponent(new ComponentBuilder()
                 .append(message)
                 .append(controls)

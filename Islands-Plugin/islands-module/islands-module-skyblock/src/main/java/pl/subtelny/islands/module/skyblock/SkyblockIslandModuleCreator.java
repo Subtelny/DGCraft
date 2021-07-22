@@ -5,6 +5,7 @@ import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
 import pl.subtelny.core.api.confirmation.ConfirmationService;
 import pl.subtelny.core.api.database.ConnectionProvider;
+import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.core.api.economy.EconomyProvider;
 import pl.subtelny.crate.api.CrateService;
 import pl.subtelny.crate.api.item.ItemCrateLoader;
@@ -12,6 +13,7 @@ import pl.subtelny.crate.api.prototype.CratePrototypeLoader;
 import pl.subtelny.islands.api.IslandType;
 import pl.subtelny.islands.api.configuration.ConfigurationReloadableImpl;
 import pl.subtelny.islands.api.configuration.ReloadableConfiguration;
+import pl.subtelny.islands.api.membership.IslandMemberQueryService;
 import pl.subtelny.islands.api.membership.repository.IslandMembershipRepository;
 import pl.subtelny.islands.api.repository.IslandConfigurationRepository;
 import pl.subtelny.islands.module.InitiableIslandModule;
@@ -29,6 +31,8 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
 
     private static final String MODULE_TYPE = "SKYBLOCK";
 
+    private final TransactionProvider transactionProvider;
+
     private final EconomyProvider economyProvider;
 
     private final ConnectionProvider connectionProvider;
@@ -36,6 +40,8 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
     private final IslandMembershipRepository islandMembershipRepository;
 
     private final IslandConfigurationRepository islandConfigurationRepository;
+
+    private final IslandMemberQueryService islandMemberQueryService;
 
     private final CrateService crateService;
 
@@ -46,18 +52,22 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
     private final ConfirmationService confirmationService;
 
     @Autowired
-    public SkyblockIslandModuleCreator(EconomyProvider economyProvider,
+    public SkyblockIslandModuleCreator(TransactionProvider transactionProvider,
+                                       EconomyProvider economyProvider,
                                        ConnectionProvider connectionProvider,
                                        IslandMembershipRepository islandMembershipRepository,
                                        IslandConfigurationRepository islandConfigurationRepository,
+                                       IslandMemberQueryService islandMemberQueryService,
                                        CrateService crateService,
                                        CratePrototypeLoader cratePrototypeLoader,
                                        ItemCrateLoader itemCrateLoader,
                                        ConfirmationService confirmationService) {
+        this.transactionProvider = transactionProvider;
         this.economyProvider = economyProvider;
         this.connectionProvider = connectionProvider;
         this.islandMembershipRepository = islandMembershipRepository;
         this.islandConfigurationRepository = islandConfigurationRepository;
+        this.islandMemberQueryService = islandMemberQueryService;
         this.crateService = crateService;
         this.cratePrototypeLoader = cratePrototypeLoader;
         this.itemCrateLoader = itemCrateLoader;
@@ -77,18 +87,22 @@ public class SkyblockIslandModuleCreator implements IslandModuleCreator<Skyblock
         return new SkyblockIslandModule(islandType,
                 configuration,
                 repository,
-                islandOrganizer,
-                getSkyblockIslandComponentsBuilder()
+                getSkyblockIslandComponentsBuilder(repository, islandOrganizer)
         );
     }
 
-    private SkyblockIslandComponentsBuilder getSkyblockIslandComponentsBuilder() {
-        return new SkyblockIslandComponentsBuilder(confirmationService,
+    private SkyblockIslandComponentsBuilder getSkyblockIslandComponentsBuilder(SkyblockIslandRepository repository,
+                                                                               SkyblockIslandOrganizer islandOrganizer) {
+        return new SkyblockIslandComponentsBuilder(transactionProvider,
+                repository,
+                islandOrganizer,
+                confirmationService,
                 crateService,
                 cratePrototypeLoader,
                 itemCrateLoader,
                 islandConfigurationRepository,
-                islandMembershipRepository);
+                islandMembershipRepository,
+                islandMemberQueryService);
     }
 
     @Override

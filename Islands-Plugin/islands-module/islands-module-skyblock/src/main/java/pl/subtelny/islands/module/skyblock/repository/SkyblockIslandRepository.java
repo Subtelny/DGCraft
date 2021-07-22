@@ -3,6 +3,7 @@ package pl.subtelny.islands.module.skyblock.repository;
 import org.bukkit.Location;
 import pl.subtelny.core.api.database.ConnectionProvider;
 import pl.subtelny.core.api.repository.HeavyRepository;
+import pl.subtelny.generated.tables.tables.IslandConfigurations;
 import pl.subtelny.generated.tables.tables.Islands;
 import pl.subtelny.generated.tables.tables.SkyblockIslands;
 import pl.subtelny.generated.tables.tables.records.IslandsRecord;
@@ -78,8 +79,9 @@ public class SkyblockIslandRepository extends HeavyRepository {
     public void removeIsland(SkyblockIsland island) {
         session((context) -> {
             Integer id = island.getId().getId();
-            context.deleteFrom(Islands.ISLANDS).where(Islands.ISLANDS.ID.eq(id));
-            context.deleteFrom(SkyblockIslands.SKYBLOCK_ISLANDS).where(SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID.eq(id));
+            context.deleteFrom(IslandConfigurations.ISLAND_CONFIGURATIONS).where(IslandConfigurations.ISLAND_CONFIGURATIONS.ISLAND_ID.eq(id)).execute();
+            context.deleteFrom(SkyblockIslands.SKYBLOCK_ISLANDS).where(SkyblockIslands.SKYBLOCK_ISLANDS.ISLAND_ID.eq(id)).execute();
+            context.deleteFrom(Islands.ISLANDS).where(Islands.ISLANDS.ID.eq(id)).execute();
 
             membershipRepository.removeIslandMemberships(island.getId());
             configurationRepository.removeConfiguration(island.getId());

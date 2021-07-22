@@ -41,10 +41,10 @@ public class SkyblockIslandInviteComponent implements InviteComponent<Islander, 
 
     @Override
     public void invite(Islander inviter, Islander target) {
-        Validation.isFalse(target.hasIsland(islandModule.getIslandType()), "islandInvite.target_already_have_island", target.getName());
+        Validation.isFalse(target.hasIsland(islandModule.getIslandType()), "skyblockIsland.invite.target_already_have_island", target.getName());
 
         SkyblockIsland inviterIsland = getIsland(inviter);
-        Validation.isTrue(inviterIsland.isOwner(inviter), "islandInvite.inviter_not_have_permission_to_invite");
+        Validation.isTrue(inviterIsland.isOwner(inviter), "skyblockIsland.invite.inviter_not_have_permission_to_invite");
 
         sendInvite(inviterIsland, target);
         IslandMessages.get().sendTo(inviter, "islandInvite.invite_sent", target.getName());
@@ -59,24 +59,24 @@ public class SkyblockIslandInviteComponent implements InviteComponent<Islander, 
 
     @Override
     public void ask(Islander asker, SkyblockIsland target) {
-        Validation.isFalse(asker.hasIsland(islandModule.getIslandType()), "islandInvite.asker_already_have_island", target.getName());
-        Validation.isTrue(acceptingJoinRequests(target), "islandInvite.island_join_request_disabled");
+        Validation.isFalse(asker.hasIsland(islandModule.getIslandType()), "skyblockIsland.invite.asker_already_have_island", target.getName());
+        Validation.isTrue(acceptingJoinRequests(target), "skyblockIsland.invite.island_join_request_disabled");
         sendAsk(target, asker);
-        IslandMessages.get().sendTo(asker, "islandInvite.ask_sent", target.getName());
+        IslandMessages.get().sendTo(asker, "skyblockIsland.invite.ask_sent", target.getName());
     }
 
     private SkyblockIsland getIsland(Islander islander) {
         IslandType islandType = islandModule.getIslandType();
         IslandId islandId = islander.getIsland(islandType)
-                .orElseThrow(() -> ValidationException.of("inviteComponent.islander_not_have_island", islandType.getInternal()));
+                .orElseThrow(() -> ValidationException.of("skyblockIsland.invite.islander_not_have_island", islandType.getInternal()));
         return islandModule.findIsland(islandId)
-                .orElseThrow(() -> ValidationException.of("inviteComponent.island_wrong_type", islandType.getInternal()));
+                .orElseThrow(() -> ValidationException.of("skyblockIsland.invite.island_wrong_type", islandType.getInternal()));
     }
 
     private void sendAsk(Island island, Islander asker) {
         String rawContextId = getRawContextId(island, asker);
         Confirmable confirmable = new IslandConfirm(island);
-        String title = IslandMessages.get().getFormattedMessage("islandInvite.send_ask_title", asker.getName());
+        String title = IslandMessages.get().getFormattedMessage("skyblockIsland.invite.send_ask_title", asker.getName());
         Messageable messageable = island.getOwner()
                 .map(islandMemberId -> (Messageable) new PlayerMessageable(UUID.fromString(islandMemberId.getValue())))
                 .orElse(Messageable.EMPTY);
@@ -88,7 +88,7 @@ public class SkyblockIslandInviteComponent implements InviteComponent<Islander, 
     private Callback<Boolean> acceptAskListener(IslandId islandId, IslandMember islandMember) {
         return success -> {
             if (success) {
-                Validation.isFalse(islandMember.hasIsland(islandId.getIslandType()), "islandInvite.asker_already_have_island");
+                Validation.isFalse(islandMember.hasIsland(islandId.getIslandType()), "skyblockIsland.invite.asker_already_have_island");
                 join(islandId, islandMember);
             }
         };
@@ -97,14 +97,14 @@ public class SkyblockIslandInviteComponent implements InviteComponent<Islander, 
     private void sendInvite(SkyblockIsland island, Islander target) {
         String rawContextId = getRawContextId(island, target);
         Confirmable confirmable = new IslanderConfirm(target);
-        String title = IslandMessages.get().getFormattedMessage("islandInvite.send_invite_title", target.getName());
+        String title = IslandMessages.get().getFormattedMessage("skyblockIsland.invite.send_invite_title", target.getName());
         makeConfirmation(rawContextId, target, confirmable, acceptInviteListener(island.getId(), target), title);
     }
 
     private Callback<Boolean> acceptInviteListener(IslandId islandId, IslandMember islandMember) {
         return success -> {
             if (success) {
-                Validation.isFalse(islandMember.hasIsland(islandId.getIslandType()), "islandInvite.target_already_have_island");
+                Validation.isFalse(islandMember.hasIsland(islandId.getIslandType()), "skyblockIsland.invite.target_already_have_island");
                 join(islandId, islandMember);
             }
         };
@@ -112,7 +112,7 @@ public class SkyblockIslandInviteComponent implements InviteComponent<Islander, 
 
     private void join(IslandId islandId, IslandMember islandMember) {
         SkyblockIsland skyblockIsland = islandModule.findIsland(islandId)
-                .orElseThrow(() -> ValidationException.of("inviteComponent.island_not_found", islandId.getId()));
+                .orElseThrow(() -> ValidationException.of("skyblockIsland.invite.island_not_found", islandId.getId()));
         skyblockIsland.join(islandMember);
 
         IslandMembership member = IslandMembership.member(islandMember.getIslandMemberId(), skyblockIsland.getId());

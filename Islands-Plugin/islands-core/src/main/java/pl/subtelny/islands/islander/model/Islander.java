@@ -62,7 +62,10 @@ public class Islander extends AbstractIslandMember {
 
     @Override
     public void sendMessage(BaseComponent component) {
-        sendMessage(component.toLegacyText());
+        Player player = getPlayer();
+        if (player != null && player.isOnline()) {
+            player.sendMessage(component);
+        }
     }
 
     public Player getPlayer() {

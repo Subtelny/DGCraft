@@ -3,46 +3,36 @@ package pl.subtelny.islands.api.cqrs.command;
 import org.bukkit.entity.Player;
 import pl.subtelny.components.core.api.Autowired;
 import pl.subtelny.components.core.api.Component;
-import pl.subtelny.core.api.database.TransactionProvider;
 import pl.subtelny.islands.Islands;
 import pl.subtelny.islands.api.Island;
-import pl.subtelny.islands.api.IslandCreateRequest;
+import pl.subtelny.islands.api.IslandMember;
 import pl.subtelny.islands.api.IslandType;
 import pl.subtelny.islands.api.cqrs.IslandService;
+import pl.subtelny.islands.api.message.IslandMessages;
 import pl.subtelny.islands.api.module.IslandModule;
 import pl.subtelny.islands.api.module.IslandModules;
+import pl.subtelny.islands.api.module.component.CreateComponent;
 import pl.subtelny.islands.islander.IslanderQueryService;
 import pl.subtelny.islands.islander.model.Islander;
-import pl.subtelny.islands.api.message.IslandMessages;
-import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.job.JobsProvider;
 import pl.subtelny.utilities.log.LogUtil;
 
-import java.util.concurrent.CompletableFuture;
-
 @Component
 public class IslandCreateService extends IslandService {
-
-    private final TransactionProvider transactionProvider;
 
     private final IslanderQueryService islanderQueryService;
 
     @Autowired
     public IslandCreateService(IslandModules islandModules,
-                               TransactionProvider transactionProvider,
                                IslanderQueryService islanderQueryService) {
         super(islandModules);
-        this.transactionProvider = transactionProvider;
         this.islanderQueryService = islanderQueryService;
     }
 
     public void createIsland(Player player, IslandType islandType) {
         Islander islander = islanderQueryService.getIslander(player);
-        IslandCreateRequest request = IslandCreateRequest.newBuilder(islandType)
-                .setOwner(islander)
-                .build();
-
-        createIsland(request)
+        CreateComponent<IslandMember, Island> createComponent = getCreateComponent(islandType);
+        createComponent.create(islander)
                 .whenComplete((island, throwable) -> {
                     if (throwable != null) {
                         islandFailureCreate(player, throwable);
@@ -52,22 +42,9 @@ public class IslandCreateService extends IslandService {
                 });
     }
 
-    private CompletableFuture<Island> createIsland(IslandCreateRequest request) {
-        validateIslandCreate(request);
-        IslandModule<Island> islandModule = getIslandModule(request.getIslandType());
-        return transactionProvider
-                .transactionResultAsync(() -> islandModule.createIsland(request)).toCompletableFuture()
-                .thenApply(island -> {
-                    request.getOwner().ifPresent(member -> member.addIsland(island));
-                    return island;
-                });
-    }
-
-    private void validateIslandCreate(IslandCreateRequest request) {
-        Boolean hasIsland = request.getOwner().
-                map(islandMember -> islandMember.hasIsland(request.getIslandType()))
-                .orElse(false);
-        Validation.isFalse(hasIsland, "islandCreate.already_has_island", request.getIslandType());
+    private CreateComponent<IslandMember, Island> getCreateComponent(IslandType islandType) {
+        IslandModule<Island> islandModule = getIslandModule(islandType);
+        return islandModule.getComponent(CreateComponent.class);
     }
 
     private void islandFailureCreate(Player player, Throwable throwable) {

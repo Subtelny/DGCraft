@@ -24,6 +24,9 @@ public class PlayerMessageable implements Messageable {
 
     @Override
     public void sendMessage(BaseComponent component) {
-        sendMessage(component.toLegacyText());
+        Player player = Bukkit.getPlayer(uuid);
+        if (player != null && player.isOnline()) {
+            player.sendMessage(component);
+        }
     }
 }
