@@ -19,6 +19,8 @@ public interface Crate {
 
     CrateData getCrateData();
 
+    int getSize();
+
     boolean isShared();
 
     boolean addItemCrate(ItemCrate itemCrate);

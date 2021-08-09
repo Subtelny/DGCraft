@@ -21,6 +21,7 @@ import pl.subtelny.islands.api.module.component.CratesComponent;
 import pl.subtelny.islands.module.skyblock.SkyblockIslandModule;
 import pl.subtelny.islands.module.skyblock.crates.ACrateManager;
 import pl.subtelny.islands.module.skyblock.model.SkyblockIsland;
+import pl.subtelny.utilities.Validation;
 import pl.subtelny.utilities.configuration.datatype.BooleanDataType;
 import pl.subtelny.utilities.exception.ValidationException;
 import pl.subtelny.utilities.file.FileParserStrategy;
@@ -65,9 +66,7 @@ public class SearchCrateManager extends ACrateManager {
         validateOpen();
 
         List<ItemCrate> searchItems = getSearchItems();
-        if (searchItems.isEmpty()) {
-            throw ValidationException.of("skyblockIslandModule.crate.search.empty_opened_islands");
-        }
+        Validation.isFalse(searchItems.isEmpty(), "skyblockIslandModule.crate.search.empty_opened_islands");
 
         PagedCratePrototype prototype = new PagedCratePrototype(cratePrototype.getCrateId(),
                 cratePrototype.getTitle(),

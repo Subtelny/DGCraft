@@ -94,6 +94,11 @@ public class BaseCrate implements Crate {
     }
 
     @Override
+    public int getSize() {
+        return inventory.getSize();
+    }
+
+    @Override
     public boolean isShared() {
         return shared;
     }

@@ -6,10 +6,7 @@ import pl.subtelny.crate.api.item.ItemCrate;
 import pl.subtelny.crate.api.item.paged.PageControllerItemCrate;
 import pl.subtelny.crate.api.prototype.CratePrototype;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PagedCratePrototype extends CratePrototype {
 
@@ -50,15 +47,15 @@ public class PagedCratePrototype extends CratePrototype {
     }
 
     public Map<Integer, ItemCrate> getStaticContent() {
-        return staticContent;
+        return new HashMap<>(staticContent);
     }
 
     public List<ItemCrate> getItemCratesToAdd() {
-        return itemCratesToAdd;
+        return Collections.unmodifiableList(itemCratesToAdd);
     }
 
     public List<CratePrototype> getPageCratePrototypes() {
-        return pageCratePrototypes;
+        return Collections.unmodifiableList(pageCratePrototypes);
     }
 
     public PageControllerItemCrate getNextPageControllerItemCrate() {

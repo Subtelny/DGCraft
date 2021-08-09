@@ -44,6 +44,13 @@ public class PagedCrate implements Crate {
     }
 
     @Override
+    public int getSize() {
+        return Math.toIntExact(getPages().stream()
+                .map(Crate::getSize)
+                .count());
+    }
+
+    @Override
     public boolean isShared() {
         return false;
     }
@@ -60,6 +67,16 @@ public class PagedCrate implements Crate {
 
     @Override
     public void setItemCrate(int slot, ItemCrate itemCrate) {
+        int tempSlot = slot;
+        for (Crate cratePage : pages) {
+            int cratePageSize = cratePage.getSize() - 1;
+            if (cratePageSize >= tempSlot) {
+                cratePage.setItemCrate(tempSlot, itemCrate);
+                break;
+            }
+            tempSlot -= cratePageSize;
+        }
+
         throw new UnsupportedOperationException("Set item is unsupported for paged crate");
     }
 

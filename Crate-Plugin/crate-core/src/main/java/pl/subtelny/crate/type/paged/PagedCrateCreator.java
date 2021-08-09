@@ -50,12 +50,14 @@ public class PagedCrateCreator extends ACrateCreator<PagedCratePrototype> {
     }
 
     private void fillControllerItemCrates(PagedCratePrototype pagedCratePrototype, List<Crate> totalPages) {
-        for (int pageNumber = 0; pageNumber < totalPages.size(); pageNumber++) {
-            if (totalPages.size() - 1 > pageNumber) {
-                totalPages.get(pageNumber).setItemCrate(NEXT_SLOT, pagedCratePrototype.getNextPageControllerItemCrate());
+        int totalPagesSize = totalPages.size();
+        for (int page = 0; page < totalPagesSize; page++) {
+            Crate currentPage = totalPages.get(page);
+            if (page > 0) {
+                currentPage.setItemCrate(PREVIOUS_SLOT, pagedCratePrototype.getPreviousPageControllerItemCrate());
             }
-            if (pageNumber != 0) {
-                totalPages.get(pageNumber).setItemCrate(PREVIOUS_SLOT, pagedCratePrototype.getPreviousPageControllerItemCrate());
+            if (page < totalPagesSize - 1) {
+                currentPage.setItemCrate(NEXT_SLOT, pagedCratePrototype.getNextPageControllerItemCrate());
             }
         }
     }
