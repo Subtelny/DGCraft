@@ -1,5 +1,6 @@
 package pl.subtelny.components.core.reflections;
 
+import org.reflections.Store;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import pl.subtelny.components.core.api.Component;
 
@@ -11,19 +12,19 @@ import java.util.Optional;
 public class ComponentScanner extends TypeAnnotationsScanner {
 
     @Override
-    public void scan(Object cls) {
+    public void scan(Object cls, Store store) {
         String className = getMetadataAdapter().getClassName(cls);
         List<String> classAnnotationNames = getMetadataAdapter().getClassAnnotationNames(cls);
         classAnnotationNames.stream()
                 .filter(this::acceptResult)
-                .forEach(annotationName -> computeAnnotation(className, annotationName));
+                .forEach(annotationName -> computeAnnotation(className, annotationName, store));
     }
 
-    private void computeAnnotation(String className, String annotationName) {
+    private void computeAnnotation(String className, String annotationName, Store store) {
         Optional<Class<?>> annotationClassOpt = findClassByName(annotationName);
         if (annotationClassOpt.isPresent()) {
             if (isComponent(annotationClassOpt.get())) {
-                getStore().put(annotationName, className);
+                store.put(ComponentScanner.class, annotationName, className);
             }
         }
     }
